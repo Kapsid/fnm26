@@ -19228,4 +19228,234 @@ class AppLocalizationsEl extends AppLocalizations {
   String euro28PlayoffIntroPaths(int count) {
     return 'Οι νικητές των ομίλων και οι οκτώ καλύτεροι δεύτεροι έχουν προκριθεί, και οι διοργανωτές που απέτυχαν παίρνουν τις θέσεις που τους κρατούνται. Οι τελευταίες $count θέσεις κρίνονται τον Μάρτιο σε διαδρομές τεσσάρων ομάδων: ημιτελικός σε έναν αγώνα στην έδρα της καλύτερης, μετά ένας μοναδικός τελικός.';
   }
+
+  @override
+  String get classicCupsTitle => 'Κλασικές διοργανώσεις';
+
+  @override
+  String get classicCupsIntro =>
+      'Ξαναπαίξε ένα πραγματικό Παγκόσμιο Πρωτάθλημα: τις διοργανώτριες, την κλήρωση, τη μορφή του. Διάλεξε όποια εθνική θέλεις και πήγαινέ την μέχρι το τέλος.';
+
+  @override
+  String classicEditionLabel(String year, String hosts) {
+    return 'Παγκόσμιο Πρωτάθλημα $year · $hosts';
+  }
+
+  @override
+  String classicHostsTwo(String first, String second) {
+    return '$first και $second';
+  }
+
+  @override
+  String classicHostsThree(String first, String second, String third) {
+    return '$first, $second και $third';
+  }
+
+  @override
+  String classicTeamsCount(int count) {
+    return 'Ομάδες: $count';
+  }
+
+  @override
+  String classicRealChampion(String nation) {
+    return 'Πραγματικός πρωταθλητής: $nation';
+  }
+
+  @override
+  String classicMedalsProgress(int earned, int total) {
+    return 'Μετάλλια: $earned από $total';
+  }
+
+  @override
+  String get classicPickNation => 'Διάλεξε εθνική';
+
+  @override
+  String get classicStart => 'Έναρξη τουρνουά';
+
+  @override
+  String get classicAbandonConfirm =>
+      'Εγκατάλειψη αυτής της προσπάθειας; Όλοι οι αγώνες που έχουν παιχτεί θα χαθούν.';
+
+  @override
+  String classicRunWith(String nation) {
+    return 'Προσπάθεια σε εξέλιξη: $nation';
+  }
+
+  @override
+  String get classicLockedNote =>
+      'Αυτή η διοργάνωση ανήκει στο Unlimited. Δες ήδη τις διοργανώτριες και την κλήρωση· για να την παίξεις χρειάζεσαι το Unlimited.';
+
+  @override
+  String classicPot(int pot) {
+    return 'Γκρουπ $pot';
+  }
+
+  @override
+  String get classicWonHere => 'Έχεις ήδη νικήσει με αυτή την εθνική';
+
+  @override
+  String get classicNextMatch => 'Επόμενος αγώνας';
+
+  @override
+  String get classicPlayMatch => 'Παίξε τον αγώνα';
+
+  @override
+  String get classicTabGroups => 'Όμιλοι';
+
+  @override
+  String classicMatchday(int number) {
+    return '$numberη αγωνιστική';
+  }
+
+  @override
+  String get classicBestXi => 'Καλύτερη ενδεκάδα';
+
+  @override
+  String get classicChampionTitle => 'Παγκόσμιοι πρωταθλητές!';
+
+  @override
+  String classicChampionBody(String nation, String year) {
+    return '$nation: παγκόσμιος πρωταθλητής $year.';
+  }
+
+  @override
+  String get classicOutTitle => 'Αποκλεισμός';
+
+  @override
+  String classicOutBody(String stage, String nation) {
+    return '$stage: εδώ τελειώνει ο δρόμος. Εθνική: $nation.';
+  }
+
+  @override
+  String get classicMedalsEarned => 'Μετάλλια που κέρδισες';
+
+  @override
+  String get classicNoRun =>
+      'Καμία προσπάθεια σε εξέλιξη. Διάλεξε εθνική για να ξεκινήσεις.';
+
+  @override
+  String classicPensShort(int home, int away) {
+    return 'πέναλτι $home-$away';
+  }
+
+  @override
+  String get classicMedalsTitle => 'Μετάλλια';
+
+  @override
+  String get classicMedalsAll => 'Όλες οι διοργανώσεις';
+
+  @override
+  String get classicMedalLocked => 'Απαιτεί Unlimited';
+
+  @override
+  String get classicMedalChampion => 'Πρωταθλητής';
+
+  @override
+  String get classicMedalChampionHow =>
+      'Κέρδισε τη διοργάνωση με οποιαδήποτε εθνική.';
+
+  @override
+  String get classicMedalCollection => 'Κάθε εθνική';
+
+  @override
+  String get classicMedalCollectionHow =>
+      'Κέρδισε τη διοργάνωση με κάθε συμμετέχουσα εθνική.';
+
+  @override
+  String get classicMedalContinents => 'Κάθε ήπειρος';
+
+  @override
+  String get classicMedalContinentsHow =>
+      'Κέρδισέ τη με εθνική από κάθε συνομοσπονδία που συμμετείχε.';
+
+  @override
+  String get classicMedalGiantKiller => 'Γιγαντοφόνος';
+
+  @override
+  String get classicMedalGiantKillerHow =>
+      'Κέρδισέ τη με αουτσάιντερ: ομάδα από το τελευταίο γκρουπ ή από το πιο αδύναμο τρίτο των συμμετοχών.';
+
+  @override
+  String get classicMedalRewrite => 'Ξαναγράψε την ιστορία';
+
+  @override
+  String get classicMedalRewriteHow =>
+      'Απόκλεισε την εθνική που κέρδισε πραγματικά αυτή τη διοργάνωση.';
+
+  @override
+  String get classicMedalUnbeaten => 'Αήττητος';
+
+  @override
+  String get classicMedalUnbeatenHow =>
+      'Κέρδισε τη διοργάνωση χωρίς καμία ήττα.';
+
+  @override
+  String get classicMedalGoldenBootHow =>
+      'Κάνε έναν παίκτη σου πρώτο σκόρερ του τουρνουά.';
+
+  @override
+  String get classicMedalGrandSlam => 'Γκραν σλαμ';
+
+  @override
+  String get classicMedalGrandSlamHow => 'Κέρδισε και τις επτά διοργανώσεις.';
+
+  @override
+  String get classicMedalSevenFlags => 'Επτά σημαίες';
+
+  @override
+  String get classicMedalSevenFlagsHow =>
+      'Κέρδισε με επτά διαφορετικές εθνικές.';
+
+  @override
+  String get classicMedalConfederations => 'Έξι συνομοσπονδίες';
+
+  @override
+  String get classicMedalConfederationsHow =>
+      'Κέρδισε με εθνική από καθεμία από τις έξι συνομοσπονδίες.';
+
+  @override
+  String get classicMedalOneNation => 'Μία εθνική, κάθε εποχή';
+
+  @override
+  String get classicMedalOneNationHow =>
+      'Κέρδισε κάθε διοργάνωση με την ίδια εθνική.';
+
+  @override
+  String get classicMedalPerfect => 'Τελειομανής';
+
+  @override
+  String get classicMedalPerfectHow =>
+      'Κέρδισε όλα τα μετάλλια μίας διοργάνωσης.';
+
+  @override
+  String get classicNationRussia => 'Ρωσία';
+
+  @override
+  String get classicNationSerbiaMontenegro => 'Σερβία και Μαυροβούνιο';
+
+  @override
+  String get paywallBenefitClassicCups =>
+      'Όλες οι κλασικές διοργανώσεις: ξαναπαίξε και τα Παγκόσμια Πρωταθλήματα του 2002, του 2010 και του 2022, με τις πραγματικές κληρώσεις.';
+
+  @override
+  String get editorClassicBlurb =>
+      'Οι ομάδες όλων των περασμένων Παγκόσμιων Πρωταθλημάτων: δύναμη, εμφανίσεις και παίκτες.';
+
+  @override
+  String get editorClassicStar => 'Καλύτερος παίκτης';
+
+  @override
+  String get editorClassicDepth => 'Πάγκος';
+
+  @override
+  String get editorClassicKit => 'Χρώματα εμφάνισης';
+
+  @override
+  String get editorClassicPrimary => 'Φανέλα';
+
+  @override
+  String get editorClassicSecondary => 'Λεπτομέρειες';
+
+  @override
+  String get editorClassicReset => 'Επαναφορά αυτής της ομάδας';
 }

@@ -1,0 +1,456 @@
+{
+ "year": 2002,
+ "free": false,
+ "hosts": [
+  190,
+  170
+ ],
+ "hostLabel": "koreaJapan",
+ "opener": "2002-05-31",
+ "calendar": {
+  "gaps": [
+   5,
+   6
+  ],
+  "knockouts": {
+   "R16": [
+    15,
+    18
+   ],
+   "QF": [
+    21,
+    22
+   ],
+   "SF": [
+    25,
+    26
+   ],
+   "3RD": [
+    29,
+    29
+   ],
+   "FINAL": [
+    30,
+    30
+   ]
+  }
+ },
+ "cities": [
+  {
+   "host": 190,
+   "city": "Seoul",
+   "seats": 64000
+  },
+  {
+   "host": 190,
+   "city": "Busan",
+   "seats": 53000
+  },
+  {
+   "host": 190,
+   "city": "Daegu",
+   "seats": 65000
+  },
+  {
+   "host": 190,
+   "city": "Incheon",
+   "seats": 51000
+  },
+  {
+   "host": 190,
+   "city": "Gwangju",
+   "seats": 43000
+  },
+  {
+   "host": 190,
+   "city": "Daejeon",
+   "seats": 40000
+  },
+  {
+   "host": 190,
+   "city": "Ulsan",
+   "seats": 43000
+  },
+  {
+   "host": 190,
+   "city": "Suwon",
+   "seats": 43000
+  },
+  {
+   "host": 190,
+   "city": "Jeonju",
+   "seats": 42000
+  },
+  {
+   "host": 190,
+   "city": "Seogwipo",
+   "seats": 35000
+  },
+  {
+   "host": 170,
+   "city": "Yokohama",
+   "seats": 70000
+  },
+  {
+   "host": 170,
+   "city": "Saitama",
+   "seats": 63000
+  },
+  {
+   "host": 170,
+   "city": "Shizuoka",
+   "seats": 50000
+  },
+  {
+   "host": 170,
+   "city": "Osaka",
+   "seats": 50000
+  },
+  {
+   "host": 170,
+   "city": "Rifu",
+   "seats": 49000
+  },
+  {
+   "host": 170,
+   "city": "Kashima",
+   "seats": 42000
+  },
+  {
+   "host": 170,
+   "city": "Niigata",
+   "seats": 42000
+  },
+  {
+   "host": 170,
+   "city": "Oita",
+   "seats": 43000
+  },
+  {
+   "host": 170,
+   "city": "Kobe",
+   "seats": 42000
+  },
+  {
+   "host": 170,
+   "city": "Sapporo",
+   "seats": 42000
+  }
+ ],
+ "openingCity": "Seoul",
+ "finalCity": "Yokohama",
+ "groups": {
+  "A": [
+   18,
+   142,
+   64,
+   13
+  ],
+  "B": [
+   50,
+   49,
+   62,
+   146
+  ],
+  "C": [
+   58,
+   53,
+   162,
+   76
+  ],
+  "D": [
+   190,
+   40,
+   99,
+   41
+  ],
+  "E": [
+   20,
+   188,
+   42,
+   107
+  ],
+  "F": [
+   56,
+   139,
+   14,
+   51
+  ],
+  "G": [
+   26,
+   61,
+   10,
+   88
+  ],
+  "H": [
+   170,
+   7,
+   44,
+   151
+  ]
+ },
+ "teams": [
+  {
+   "nation": 18,
+   "code": "FRA",
+   "overall": 87,
+   "star": 92,
+   "depth": 82,
+   "style": "balanced"
+  },
+  {
+   "nation": 142,
+   "code": "SEN",
+   "overall": 77,
+   "star": 82,
+   "depth": 70,
+   "style": "physical"
+  },
+  {
+   "nation": 64,
+   "code": "URU",
+   "overall": 78,
+   "star": 82,
+   "depth": 71,
+   "style": "defensive"
+  },
+  {
+   "nation": 13,
+   "code": "DEN",
+   "overall": 80,
+   "star": 83,
+   "depth": 73,
+   "style": "balanced"
+  },
+  {
+   "nation": 50,
+   "code": "ESP",
+   "overall": 85,
+   "star": 89,
+   "depth": 80,
+   "style": "possession"
+  },
+  {
+   "nation": 49,
+   "code": "SVN",
+   "overall": 74,
+   "star": 78,
+   "depth": 67,
+   "style": "balanced"
+  },
+  {
+   "nation": 62,
+   "code": "PAR",
+   "overall": 78,
+   "star": 82,
+   "depth": 71,
+   "style": "defensive"
+  },
+  {
+   "nation": 146,
+   "code": "RSA",
+   "overall": 74,
+   "star": 78,
+   "depth": 67,
+   "style": "balanced"
+  },
+  {
+   "nation": 58,
+   "code": "BRA",
+   "overall": 88,
+   "star": 94,
+   "depth": 83,
+   "style": "flair"
+  },
+  {
+   "nation": 53,
+   "code": "TUR",
+   "overall": 80,
+   "star": 84,
+   "depth": 73,
+   "style": "flair"
+  },
+  {
+   "nation": 162,
+   "code": "CHN",
+   "overall": 70,
+   "star": 74,
+   "depth": 63,
+   "style": "balanced"
+  },
+  {
+   "nation": 76,
+   "code": "CRC",
+   "overall": 74,
+   "star": 78,
+   "depth": 67,
+   "style": "balanced"
+  },
+  {
+   "nation": 190,
+   "code": "KOR",
+   "overall": 77,
+   "star": 81,
+   "depth": 70,
+   "style": "highPress"
+  },
+  {
+   "nation": 40,
+   "code": "POL",
+   "overall": 76,
+   "star": 80,
+   "depth": 69,
+   "style": "balanced"
+  },
+  {
+   "nation": 99,
+   "code": "USA",
+   "overall": 77,
+   "star": 81,
+   "depth": 70,
+   "style": "direct"
+  },
+  {
+   "nation": 41,
+   "code": "POR",
+   "overall": 84,
+   "star": 90,
+   "depth": 79,
+   "style": "flair"
+  },
+  {
+   "nation": 20,
+   "code": "GER",
+   "overall": 82,
+   "star": 88,
+   "depth": 75,
+   "style": "highPress"
+  },
+  {
+   "nation": 188,
+   "code": "KSA",
+   "overall": 70,
+   "star": 74,
+   "depth": 63,
+   "style": "counter"
+  },
+  {
+   "nation": 42,
+   "code": "IRL",
+   "overall": 78,
+   "star": 81,
+   "depth": 71,
+   "style": "direct"
+  },
+  {
+   "nation": 107,
+   "code": "CMR",
+   "overall": 78,
+   "star": 83,
+   "depth": 71,
+   "style": "physical"
+  },
+  {
+   "nation": 56,
+   "code": "ARG",
+   "overall": 87,
+   "star": 91,
+   "depth": 82,
+   "style": "flair"
+  },
+  {
+   "nation": 139,
+   "code": "NGA",
+   "overall": 77,
+   "star": 82,
+   "depth": 70,
+   "style": "physical"
+  },
+  {
+   "nation": 14,
+   "code": "ENG",
+   "overall": 85,
+   "star": 89,
+   "depth": 80,
+   "style": "direct"
+  },
+  {
+   "nation": 51,
+   "code": "SWE",
+   "overall": 81,
+   "star": 85,
+   "depth": 74,
+   "style": "direct"
+  },
+  {
+   "nation": 26,
+   "code": "ITA",
+   "overall": 86,
+   "star": 91,
+   "depth": 81,
+   "style": "defensive"
+  },
+  {
+   "nation": 61,
+   "code": "ECU",
+   "overall": 74,
+   "star": 78,
+   "depth": 67,
+   "style": "balanced"
+  },
+  {
+   "nation": 10,
+   "code": "CRO",
+   "overall": 80,
+   "star": 84,
+   "depth": 73,
+   "style": "possession"
+  },
+  {
+   "nation": 88,
+   "code": "MEX",
+   "overall": 79,
+   "star": 83,
+   "depth": 72,
+   "style": "balanced"
+  },
+  {
+   "nation": 170,
+   "code": "JPN",
+   "overall": 77,
+   "star": 80,
+   "depth": 70,
+   "style": "possession"
+  },
+  {
+   "nation": 7,
+   "code": "BEL",
+   "overall": 79,
+   "star": 83,
+   "depth": 72,
+   "style": "counter"
+  },
+  {
+   "nation": 44,
+   "code": "RUS",
+   "overall": 78,
+   "star": 82,
+   "depth": 71,
+   "style": "balanced"
+  },
+  {
+   "nation": 151,
+   "code": "TUN",
+   "overall": 72,
+   "star": 76,
+   "depth": 65,
+   "style": "balanced"
+  }
+ ],
+ "result": {
+  "champion": 58,
+  "runnerUp": 20,
+  "third": 53,
+  "fourth": 190
+ }
+}

@@ -19119,4 +19119,231 @@ class AppLocalizationsSv extends AppLocalizations {
   String euro28PlayoffIntroPaths(int count) {
     return 'Gruppvinnarna och de åtta bästa grupptvåorna är vidare, och värdländer som missade tar platserna som hålls åt dem. De sista $count platserna avgörs i mars i vägar med fyra lag: en semifinal i en match hos det högst rankade laget, sedan en enda final.';
   }
+
+  @override
+  String get classicCupsTitle => 'Klassiska turneringar';
+
+  @override
+  String get classicCupsIntro =>
+      'Spela om ett riktigt världsmästerskap: värdländerna, lottningen, formatet. Välj vilken nation du vill och ta den hela vägen.';
+
+  @override
+  String classicEditionLabel(String year, String hosts) {
+    return 'Världsmästerskapet $year · $hosts';
+  }
+
+  @override
+  String classicHostsTwo(String first, String second) {
+    return '$first och $second';
+  }
+
+  @override
+  String classicHostsThree(String first, String second, String third) {
+    return '$first, $second och $third';
+  }
+
+  @override
+  String classicTeamsCount(int count) {
+    return '$count lag';
+  }
+
+  @override
+  String classicRealChampion(String nation) {
+    return 'Riktig mästare: $nation';
+  }
+
+  @override
+  String classicMedalsProgress(int earned, int total) {
+    return '$earned av $total medaljer';
+  }
+
+  @override
+  String get classicPickNation => 'Välj en nation';
+
+  @override
+  String get classicStart => 'Starta turneringen';
+
+  @override
+  String get classicAbandonConfirm =>
+      'Ge upp det här försöket? Alla matcher som spelats hittills går förlorade.';
+
+  @override
+  String classicRunWith(String nation) {
+    return 'Pågående försök med $nation';
+  }
+
+  @override
+  String get classicLockedNote =>
+      'Den här upplagan ingår i Unlimited. Titta på värdländerna och lottningen redan nu; för att spela den behövs Unlimited.';
+
+  @override
+  String classicPot(int pot) {
+    return 'Seedningsgrupp $pot';
+  }
+
+  @override
+  String get classicWonHere => 'Redan vunnen med den här nationen';
+
+  @override
+  String get classicNextMatch => 'Nästa match';
+
+  @override
+  String get classicPlayMatch => 'Spela matchen';
+
+  @override
+  String get classicTabGroups => 'Grupper';
+
+  @override
+  String classicMatchday(int number) {
+    return 'Omgång $number';
+  }
+
+  @override
+  String get classicBestXi => 'Bästa elvan';
+
+  @override
+  String get classicChampionTitle => 'Världsmästare!';
+
+  @override
+  String classicChampionBody(String nation, String year) {
+    return '$nation vinner Världsmästerskapet $year.';
+  }
+
+  @override
+  String get classicOutTitle => 'Utslagna';
+
+  @override
+  String classicOutBody(String stage, String nation) {
+    return '$stage: här tar vägen slut för $nation.';
+  }
+
+  @override
+  String get classicMedalsEarned => 'Vunna medaljer';
+
+  @override
+  String get classicNoRun =>
+      'Inget pågående försök. Välj en nation för att starta ett.';
+
+  @override
+  String classicPensShort(int home, int away) {
+    return '$home-$away efter straffar';
+  }
+
+  @override
+  String get classicMedalsTitle => 'Medaljer';
+
+  @override
+  String get classicMedalsAll => 'Alla upplagor';
+
+  @override
+  String get classicMedalLocked => 'Kräver Unlimited';
+
+  @override
+  String get classicMedalChampion => 'Mästare';
+
+  @override
+  String get classicMedalChampionHow =>
+      'Vinn upplagan med vilken nation som helst.';
+
+  @override
+  String get classicMedalCollection => 'Varje nation';
+
+  @override
+  String get classicMedalCollectionHow =>
+      'Vinn upplagan med varje nation i fältet.';
+
+  @override
+  String get classicMedalContinents => 'Varje kontinent';
+
+  @override
+  String get classicMedalContinentsHow =>
+      'Vinn den med en nation från varje representerat förbund.';
+
+  @override
+  String get classicMedalGiantKiller => 'Jättedödare';
+
+  @override
+  String get classicMedalGiantKillerHow =>
+      'Vinn den med en outsider: ett lag från sista seedningsgruppen eller den svagaste tredjedelen av fältet.';
+
+  @override
+  String get classicMedalRewrite => 'Skriv om historien';
+
+  @override
+  String get classicMedalRewriteHow =>
+      'Slå ut nationen som verkligen vann den här upplagan.';
+
+  @override
+  String get classicMedalUnbeaten => 'Obesegrad';
+
+  @override
+  String get classicMedalUnbeatenHow =>
+      'Vinn upplagan utan att förlora en match.';
+
+  @override
+  String get classicMedalGoldenBootHow =>
+      'Låt en av dina spelare bli turneringens skyttekung.';
+
+  @override
+  String get classicMedalGrandSlam => 'Grand slam';
+
+  @override
+  String get classicMedalGrandSlamHow => 'Vinn alla sju upplagorna.';
+
+  @override
+  String get classicMedalSevenFlags => 'Sju flaggor';
+
+  @override
+  String get classicMedalSevenFlagsHow => 'Vinn med sju olika nationer.';
+
+  @override
+  String get classicMedalConfederations => 'Sex förbund';
+
+  @override
+  String get classicMedalConfederationsHow =>
+      'Vinn med en nation från vart och ett av de sex kontinentala förbunden.';
+
+  @override
+  String get classicMedalOneNation => 'En nation, varje era';
+
+  @override
+  String get classicMedalOneNationHow => 'Vinn varje upplaga med samma nation.';
+
+  @override
+  String get classicMedalPerfect => 'Perfektionist';
+
+  @override
+  String get classicMedalPerfectHow => 'Ta alla medaljer i en upplaga.';
+
+  @override
+  String get classicNationRussia => 'Ryssland';
+
+  @override
+  String get classicNationSerbiaMontenegro => 'Serbien och Montenegro';
+
+  @override
+  String get paywallBenefitClassicCups =>
+      'Alla klassiska turneringar: spela också om världsmästerskapen 2002, 2010 och 2022, med de riktiga lottningarna.';
+
+  @override
+  String get editorClassicBlurb =>
+      'Lagen från alla tidigare världsmästerskap: styrka, matchställ och spelare.';
+
+  @override
+  String get editorClassicStar => 'Bästa spelare';
+
+  @override
+  String get editorClassicDepth => 'Bänk';
+
+  @override
+  String get editorClassicKit => 'Matchställets färger';
+
+  @override
+  String get editorClassicPrimary => 'Tröja';
+
+  @override
+  String get editorClassicSecondary => 'Detaljer';
+
+  @override
+  String get editorClassicReset => 'Återställ det här laget';
 }

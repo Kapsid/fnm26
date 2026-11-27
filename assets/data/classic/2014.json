@@ -1,0 +1,415 @@
+{
+ "year": 2014,
+ "free": true,
+ "hosts": [
+  58
+ ],
+ "hostLabel": "brazil",
+ "opener": "2014-06-12",
+ "calendar": {
+  "gaps": [
+   5,
+   6
+  ],
+  "knockouts": {
+   "R16": [
+    16,
+    19
+   ],
+   "QF": [
+    22,
+    23
+   ],
+   "SF": [
+    26,
+    27
+   ],
+   "3RD": [
+    30,
+    30
+   ],
+   "FINAL": [
+    31,
+    31
+   ]
+  }
+ },
+ "cities": [
+  {
+   "host": 58,
+   "city": "Rio de Janeiro",
+   "seats": 74000
+  },
+  {
+   "host": 58,
+   "city": "Brasília",
+   "seats": 69000
+  },
+  {
+   "host": 58,
+   "city": "São Paulo",
+   "seats": 62000
+  },
+  {
+   "host": 58,
+   "city": "Fortaleza",
+   "seats": 60000
+  },
+  {
+   "host": 58,
+   "city": "Belo Horizonte",
+   "seats": 58000
+  },
+  {
+   "host": 58,
+   "city": "Porto Alegre",
+   "seats": 43000
+  },
+  {
+   "host": 58,
+   "city": "Salvador",
+   "seats": 48000
+  },
+  {
+   "host": 58,
+   "city": "Recife",
+   "seats": 42000
+  },
+  {
+   "host": 58,
+   "city": "Cuiabá",
+   "seats": 39000
+  },
+  {
+   "host": 58,
+   "city": "Manaus",
+   "seats": 40000
+  },
+  {
+   "host": 58,
+   "city": "Natal",
+   "seats": 39000
+  },
+  {
+   "host": 58,
+   "city": "Curitiba",
+   "seats": 39000
+  }
+ ],
+ "openingCity": "São Paulo",
+ "finalCity": "Rio de Janeiro",
+ "groups": {
+  "A": [
+   58,
+   10,
+   88,
+   107
+  ],
+  "B": [
+   50,
+   36,
+   59,
+   156
+  ],
+  "C": [
+   60,
+   22,
+   125,
+   170
+  ],
+  "D": [
+   64,
+   76,
+   14,
+   26
+  ],
+  "E": [
+   52,
+   61,
+   18,
+   86
+  ],
+  "F": [
+   56,
+   8,
+   168,
+   139
+  ],
+  "G": [
+   20,
+   41,
+   122,
+   99
+  ],
+  "H": [
+   7,
+   101,
+   44,
+   190
+  ]
+ },
+ "teams": [
+  {
+   "nation": 58,
+   "code": "BRA",
+   "overall": 86,
+   "star": 91,
+   "depth": 81,
+   "style": "flair"
+  },
+  {
+   "nation": 10,
+   "code": "CRO",
+   "overall": 81,
+   "star": 86,
+   "depth": 74,
+   "style": "possession"
+  },
+  {
+   "nation": 88,
+   "code": "MEX",
+   "overall": 79,
+   "star": 83,
+   "depth": 72,
+   "style": "balanced"
+  },
+  {
+   "nation": 107,
+   "code": "CMR",
+   "overall": 75,
+   "star": 79,
+   "depth": 68,
+   "style": "physical"
+  },
+  {
+   "nation": 50,
+   "code": "ESP",
+   "overall": 87,
+   "star": 90,
+   "depth": 82,
+   "style": "possession"
+  },
+  {
+   "nation": 36,
+   "code": "NED",
+   "overall": 84,
+   "star": 89,
+   "depth": 79,
+   "style": "possession"
+  },
+  {
+   "nation": 59,
+   "code": "CHI",
+   "overall": 82,
+   "star": 86,
+   "depth": 75,
+   "style": "highPress"
+  },
+  {
+   "nation": 156,
+   "code": "AUS",
+   "overall": 74,
+   "star": 77,
+   "depth": 67,
+   "style": "balanced"
+  },
+  {
+   "nation": 60,
+   "code": "COL",
+   "overall": 82,
+   "star": 87,
+   "depth": 75,
+   "style": "flair"
+  },
+  {
+   "nation": 22,
+   "code": "GRE",
+   "overall": 76,
+   "star": 79,
+   "depth": 69,
+   "style": "defensive"
+  },
+  {
+   "nation": 125,
+   "code": "CIV",
+   "overall": 79,
+   "star": 83,
+   "depth": 72,
+   "style": "physical"
+  },
+  {
+   "nation": 170,
+   "code": "JPN",
+   "overall": 77,
+   "star": 80,
+   "depth": 70,
+   "style": "possession"
+  },
+  {
+   "nation": 64,
+   "code": "URU",
+   "overall": 82,
+   "star": 88,
+   "depth": 75,
+   "style": "defensive"
+  },
+  {
+   "nation": 76,
+   "code": "CRC",
+   "overall": 76,
+   "star": 80,
+   "depth": 69,
+   "style": "defensive"
+  },
+  {
+   "nation": 14,
+   "code": "ENG",
+   "overall": 83,
+   "star": 86,
+   "depth": 76,
+   "style": "direct"
+  },
+  {
+   "nation": 26,
+   "code": "ITA",
+   "overall": 83,
+   "star": 86,
+   "depth": 76,
+   "style": "defensive"
+  },
+  {
+   "nation": 52,
+   "code": "SUI",
+   "overall": 79,
+   "star": 82,
+   "depth": 72,
+   "style": "defensive"
+  },
+  {
+   "nation": 61,
+   "code": "ECU",
+   "overall": 77,
+   "star": 80,
+   "depth": 70,
+   "style": "balanced"
+  },
+  {
+   "nation": 18,
+   "code": "FRA",
+   "overall": 85,
+   "star": 88,
+   "depth": 80,
+   "style": "balanced"
+  },
+  {
+   "nation": 86,
+   "code": "HON",
+   "overall": 71,
+   "star": 74,
+   "depth": 64,
+   "style": "balanced"
+  },
+  {
+   "nation": 56,
+   "code": "ARG",
+   "overall": 86,
+   "star": 94,
+   "depth": 81,
+   "style": "flair"
+  },
+  {
+   "nation": 8,
+   "code": "BIH",
+   "overall": 77,
+   "star": 82,
+   "depth": 70,
+   "style": "balanced"
+  },
+  {
+   "nation": 168,
+   "code": "IRN",
+   "overall": 73,
+   "star": 76,
+   "depth": 66,
+   "style": "defensive"
+  },
+  {
+   "nation": 139,
+   "code": "NGA",
+   "overall": 76,
+   "star": 80,
+   "depth": 69,
+   "style": "physical"
+  },
+  {
+   "nation": 20,
+   "code": "GER",
+   "overall": 89,
+   "star": 91,
+   "depth": 84,
+   "style": "possession"
+  },
+  {
+   "nation": 41,
+   "code": "POR",
+   "overall": 83,
+   "star": 92,
+   "depth": 76,
+   "style": "flair"
+  },
+  {
+   "nation": 122,
+   "code": "GHA",
+   "overall": 76,
+   "star": 80,
+   "depth": 69,
+   "style": "physical"
+  },
+  {
+   "nation": 99,
+   "code": "USA",
+   "overall": 77,
+   "star": 80,
+   "depth": 70,
+   "style": "direct"
+  },
+  {
+   "nation": 7,
+   "code": "BEL",
+   "overall": 84,
+   "star": 88,
+   "depth": 79,
+   "style": "counter"
+  },
+  {
+   "nation": 101,
+   "code": "ALG",
+   "overall": 75,
+   "star": 79,
+   "depth": 68,
+   "style": "balanced"
+  },
+  {
+   "nation": 44,
+   "code": "RUS",
+   "overall": 78,
+   "star": 81,
+   "depth": 71,
+   "style": "balanced"
+  },
+  {
+   "nation": 190,
+   "code": "KOR",
+   "overall": 75,
+   "star": 79,
+   "depth": 68,
+   "style": "highPress"
+  }
+ ],
+ "result": {
+  "champion": 20,
+  "runnerUp": 56,
+  "third": 36,
+  "fourth": 58
+ }
+}

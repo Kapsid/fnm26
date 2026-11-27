@@ -19310,4 +19310,234 @@ class AppLocalizationsFr extends AppLocalizations {
   String euro28PlayoffIntroPaths(int count) {
     return 'Les vainqueurs de groupe et les huit meilleurs deuxièmes sont qualifiés, et les pays hôtes qui ont échoué prennent les places qui leur sont réservées. Les $count dernières places se jouent en mars en voies de quatre équipes : demi-finales en match sec chez l\'équipe la mieux classée, puis une finale unique.';
   }
+
+  @override
+  String get classicCupsTitle => 'Coupes classiques';
+
+  @override
+  String get classicCupsIntro =>
+      'Rejouez un vrai Championnat du monde : ses pays hôtes, son tirage, son format. Choisissez n\'importe quelle nation et menez-la jusqu\'au bout.';
+
+  @override
+  String classicEditionLabel(String year, String hosts) {
+    return 'Championnat du monde $year · $hosts';
+  }
+
+  @override
+  String classicHostsTwo(String first, String second) {
+    return '$first et $second';
+  }
+
+  @override
+  String classicHostsThree(String first, String second, String third) {
+    return '$first, $second et $third';
+  }
+
+  @override
+  String classicTeamsCount(int count) {
+    return '$count équipes';
+  }
+
+  @override
+  String classicRealChampion(String nation) {
+    return 'Vrai champion : $nation';
+  }
+
+  @override
+  String classicMedalsProgress(int earned, int total) {
+    return '$earned médailles sur $total';
+  }
+
+  @override
+  String get classicPickNation => 'Choisissez une nation';
+
+  @override
+  String get classicStart => 'Lancer le tournoi';
+
+  @override
+  String get classicAbandonConfirm =>
+      'Abandonner cette partie ? Tous les matchs déjà joués seront perdus.';
+
+  @override
+  String classicRunWith(String nation) {
+    return 'Partie en cours avec : $nation';
+  }
+
+  @override
+  String get classicLockedNote =>
+      'Cette édition fait partie d\'Unlimited. Découvrez dès maintenant ses pays hôtes et son tirage ; pour la jouer, il faut Unlimited.';
+
+  @override
+  String classicPot(int pot) {
+    return 'Chapeau $pot';
+  }
+
+  @override
+  String get classicWonHere => 'Déjà gagnée avec cette nation';
+
+  @override
+  String get classicNextMatch => 'Prochain match';
+
+  @override
+  String get classicPlayMatch => 'Jouer le match';
+
+  @override
+  String get classicTabGroups => 'Groupes';
+
+  @override
+  String classicMatchday(int number) {
+    return 'Journée $number';
+  }
+
+  @override
+  String get classicBestXi => 'Meilleur onze';
+
+  @override
+  String get classicChampionTitle => 'Champions du monde !';
+
+  @override
+  String classicChampionBody(String nation, String year) {
+    return '$nation remporte le Championnat du monde $year.';
+  }
+
+  @override
+  String get classicOutTitle => 'Éliminés';
+
+  @override
+  String classicOutBody(String stage, String nation) {
+    return '$stage : l\'aventure s\'arrête ici pour $nation.';
+  }
+
+  @override
+  String get classicMedalsEarned => 'Médailles gagnées';
+
+  @override
+  String get classicNoRun =>
+      'Aucune partie en cours. Choisissez une nation pour en commencer une.';
+
+  @override
+  String classicPensShort(int home, int away) {
+    return '$home-$away aux tirs au but';
+  }
+
+  @override
+  String get classicMedalsTitle => 'Médailles';
+
+  @override
+  String get classicMedalsAll => 'Toutes les éditions';
+
+  @override
+  String get classicMedalLocked => 'Nécessite Unlimited';
+
+  @override
+  String get classicMedalChampion => 'Champion';
+
+  @override
+  String get classicMedalChampionHow =>
+      'Remportez l\'édition avec n\'importe quelle nation.';
+
+  @override
+  String get classicMedalCollection => 'Toutes les nations';
+
+  @override
+  String get classicMedalCollectionHow =>
+      'Remportez l\'édition avec chaque nation de son plateau.';
+
+  @override
+  String get classicMedalContinents => 'Tous les continents';
+
+  @override
+  String get classicMedalContinentsHow =>
+      'Remportez-la avec une nation de chaque confédération présente.';
+
+  @override
+  String get classicMedalGiantKiller => 'Tombeur de géants';
+
+  @override
+  String get classicMedalGiantKillerHow =>
+      'Remportez-la avec un outsider : une équipe du dernier chapeau ou du tiers le plus faible du plateau.';
+
+  @override
+  String get classicMedalRewrite => 'Réécrire l\'histoire';
+
+  @override
+  String get classicMedalRewriteHow =>
+      'Éliminez la nation qui a vraiment remporté cette édition.';
+
+  @override
+  String get classicMedalUnbeaten => 'Invaincu';
+
+  @override
+  String get classicMedalUnbeatenHow =>
+      'Remportez l\'édition sans perdre un seul match.';
+
+  @override
+  String get classicMedalGoldenBootHow =>
+      'Faites terminer l\'un de vos joueurs meilleur buteur du tournoi.';
+
+  @override
+  String get classicMedalGrandSlam => 'Grand chelem';
+
+  @override
+  String get classicMedalGrandSlamHow => 'Remportez les sept éditions.';
+
+  @override
+  String get classicMedalSevenFlags => 'Sept drapeaux';
+
+  @override
+  String get classicMedalSevenFlagsHow =>
+      'Gagnez avec sept nations différentes.';
+
+  @override
+  String get classicMedalConfederations => 'Six confédérations';
+
+  @override
+  String get classicMedalConfederationsHow =>
+      'Gagnez avec une nation de chacune des six confédérations.';
+
+  @override
+  String get classicMedalOneNation => 'Une nation, toutes les époques';
+
+  @override
+  String get classicMedalOneNationHow =>
+      'Remportez chaque édition avec la même nation.';
+
+  @override
+  String get classicMedalPerfect => 'Perfectionniste';
+
+  @override
+  String get classicMedalPerfectHow =>
+      'Obtenez toutes les médailles d\'une édition.';
+
+  @override
+  String get classicNationRussia => 'Russie';
+
+  @override
+  String get classicNationSerbiaMontenegro => 'Serbie-et-Monténégro';
+
+  @override
+  String get paywallBenefitClassicCups =>
+      'Toutes les coupes classiques : rejouez aussi les Championnats du monde 2002, 2010 et 2022, avec leurs vrais tirages.';
+
+  @override
+  String get editorClassicBlurb =>
+      'Les équipes de tous les Championnats du monde passés : force, maillots et joueurs.';
+
+  @override
+  String get editorClassicStar => 'Meilleur joueur';
+
+  @override
+  String get editorClassicDepth => 'Banc';
+
+  @override
+  String get editorClassicKit => 'Couleurs du maillot';
+
+  @override
+  String get editorClassicPrimary => 'Maillot';
+
+  @override
+  String get editorClassicSecondary => 'Liseré';
+
+  @override
+  String get editorClassicReset => 'Réinitialiser cette équipe';
 }

@@ -29538,5 +29538,341 @@
         "type": "int"
       }
     }
+  },
+  "classicCupsTitle": "Classic Cups",
+  "@classicCupsTitle": {
+    "description": "Name of the game mode where real past World Championships are replayed; home tile and screen title."
+  },
+  "classicCupsIntro": "Replay a real World Championship: its hosts, its draw, its format. Pick any nation and take it all the way.",
+  "@classicCupsIntro": {
+    "description": "Intro line on the Classic Cups edition list."
+  },
+  "classicEditionLabel": "World Championship {year} · {hosts}",
+  "@classicEditionLabel": {
+    "description": "An edition of the World Championship. Never \"World Cup\".",
+    "placeholders": {
+      "year": {
+        "type": "String"
+      },
+      "hosts": {
+        "type": "String"
+      }
+    }
+  },
+  "classicHostsTwo": "{first} & {second}",
+  "@classicHostsTwo": {
+    "description": "Two co-host nations.",
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      }
+    }
+  },
+  "classicHostsThree": "{first}, {second} & {third}",
+  "@classicHostsThree": {
+    "description": "Three co-host nations.",
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      },
+      "third": {
+        "type": "String"
+      }
+    }
+  },
+  "classicTeamsCount": "{count} teams",
+  "@classicTeamsCount": {
+    "description": "Field size of an edition.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "classicRealChampion": "Real champion: {nation}",
+  "@classicRealChampion": {
+    "description": "Who really won that edition.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "classicMedalsProgress": "{earned} of {total} medals",
+  "@classicMedalsProgress": {
+    "description": "Medal progress count.",
+    "placeholders": {
+      "earned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "classicPickNation": "Pick a nation",
+  "@classicPickNation": {
+    "description": "Heading above the groups on an edition page."
+  },
+  "classicStart": "Start the tournament",
+  "@classicStart": {
+    "description": "Button: start a Classic Cup run with the chosen nation."
+  },
+  "classicAbandonConfirm": "Abandon this run? Every match played so far is lost.",
+  "@classicAbandonConfirm": {
+    "description": "Confirmation before abandoning a run."
+  },
+  "classicRunWith": "Run in progress with {nation}",
+  "@classicRunWith": {
+    "description": "An edition already has a run going.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "classicLockedNote": "This edition comes with Unlimited. Look around the hosts and the draw now; playing it needs Unlimited.",
+  "@classicLockedNote": {
+    "description": "Shown on an edition that needs the premium unlock."
+  },
+  "classicPot": "Pot {pot}",
+  "@classicPot": {
+    "description": "The draw pot a team came from.",
+    "placeholders": {
+      "pot": {
+        "type": "int"
+      }
+    }
+  },
+  "classicWonHere": "Already won with this nation",
+  "@classicWonHere": {
+    "description": "A nation the player has already won this edition with."
+  },
+  "classicNextMatch": "Next match",
+  "@classicNextMatch": {
+    "description": "Heading of the next-match card in a run."
+  },
+  "classicPlayMatch": "Play match",
+  "@classicPlayMatch": {
+    "description": "Button: play the next match."
+  },
+  "classicTabGroups": "Groups",
+  "@classicTabGroups": {
+    "description": "Tab: the group tables."
+  },
+  "classicMatchday": "Matchday {number}",
+  "@classicMatchday": {
+    "description": "Group-stage matchday.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "classicBestXi": "Best XI",
+  "@classicBestXi": {
+    "description": "Button: let the game pick the strongest available eleven."
+  },
+  "classicChampionTitle": "World champions!",
+  "@classicChampionTitle": {
+    "description": "Headline when the player wins the edition."
+  },
+  "classicChampionBody": "{nation} win the {year} World Championship.",
+  "@classicChampionBody": {
+    "description": "Body when the player wins.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "classicOutTitle": "Knocked out",
+  "@classicOutTitle": {
+    "description": "Headline when the player is eliminated."
+  },
+  "classicOutBody": "{stage}: the road ends here for {nation}.",
+  "@classicOutBody": {
+    "description": "Body when the player is eliminated; stage is a round name.",
+    "placeholders": {
+      "stage": {
+        "type": "String"
+      },
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "classicMedalsEarned": "Medals earned",
+  "@classicMedalsEarned": {
+    "description": "Heading listing medals just earned."
+  },
+  "classicNoRun": "No run in progress. Pick a nation to start one.",
+  "@classicNoRun": {
+    "description": "Empty state of the run screen."
+  },
+  "classicPensShort": "{home}-{away} on penalties",
+  "@classicPensShort": {
+    "description": "A shootout score.",
+    "placeholders": {
+      "home": {
+        "type": "int"
+      },
+      "away": {
+        "type": "int"
+      }
+    }
+  },
+  "classicMedalsTitle": "Medals",
+  "@classicMedalsTitle": {
+    "description": "Title of the Classic Cups medals screen."
+  },
+  "classicMedalsAll": "All editions",
+  "@classicMedalsAll": {
+    "description": "Section of medals across every edition."
+  },
+  "classicMedalLocked": "Needs Unlimited",
+  "@classicMedalLocked": {
+    "description": "A medal of an edition that needs the premium unlock."
+  },
+  "classicMedalChampion": "Champion",
+  "@classicMedalChampion": {
+    "description": "Medal name."
+  },
+  "classicMedalChampionHow": "Win the edition with any nation.",
+  "@classicMedalChampionHow": {
+    "description": "How to earn the medal."
+  },
+  "classicMedalCollection": "Every nation",
+  "@classicMedalCollection": {
+    "description": "Medal name."
+  },
+  "classicMedalCollectionHow": "Win the edition with every nation in its field.",
+  "@classicMedalCollectionHow": {
+    "description": "How to earn the medal."
+  },
+  "classicMedalContinents": "Every continent",
+  "@classicMedalContinents": {
+    "description": "Medal name."
+  },
+  "classicMedalContinentsHow": "Win it with a nation from each confederation in the field.",
+  "@classicMedalContinentsHow": {
+    "description": "How to earn the medal."
+  },
+  "classicMedalGiantKiller": "Giant-killer",
+  "@classicMedalGiantKiller": {
+    "description": "Medal name."
+  },
+  "classicMedalGiantKillerHow": "Win it with an outsider: a side from the last pot or the weakest third of the field.",
+  "@classicMedalGiantKillerHow": {
+    "description": "How to earn the medal."
+  },
+  "classicMedalRewrite": "Rewrite history",
+  "@classicMedalRewrite": {
+    "description": "Medal name."
+  },
+  "classicMedalRewriteHow": "Knock out the nation that really won this edition.",
+  "@classicMedalRewriteHow": {
+    "description": "How to earn the medal."
+  },
+  "classicMedalUnbeaten": "Unbeaten",
+  "@classicMedalUnbeaten": {
+    "description": "Medal name."
+  },
+  "classicMedalUnbeatenHow": "Win the edition without losing a match.",
+  "@classicMedalUnbeatenHow": {
+    "description": "How to earn the medal."
+  },
+  "classicMedalGoldenBootHow": "Have one of your players finish as the top scorer.",
+  "@classicMedalGoldenBootHow": {
+    "description": "How to earn the golden boot medal."
+  },
+  "classicMedalGrandSlam": "Grand slam",
+  "@classicMedalGrandSlam": {
+    "description": "Medal name."
+  },
+  "classicMedalGrandSlamHow": "Win all seven editions.",
+  "@classicMedalGrandSlamHow": {
+    "description": "How to earn the medal."
+  },
+  "classicMedalSevenFlags": "Seven flags",
+  "@classicMedalSevenFlags": {
+    "description": "Medal name."
+  },
+  "classicMedalSevenFlagsHow": "Win with seven different nations.",
+  "@classicMedalSevenFlagsHow": {
+    "description": "How to earn the medal."
+  },
+  "classicMedalConfederations": "Six confederations",
+  "@classicMedalConfederations": {
+    "description": "Medal name."
+  },
+  "classicMedalConfederationsHow": "Win with a nation from each of the six confederations.",
+  "@classicMedalConfederationsHow": {
+    "description": "How to earn the medal."
+  },
+  "classicMedalOneNation": "One nation, every era",
+  "@classicMedalOneNation": {
+    "description": "Medal name."
+  },
+  "classicMedalOneNationHow": "Win every edition with the same nation.",
+  "@classicMedalOneNationHow": {
+    "description": "How to earn the medal."
+  },
+  "classicMedalPerfect": "Perfectionist",
+  "@classicMedalPerfect": {
+    "description": "Medal name."
+  },
+  "classicMedalPerfectHow": "Earn every medal of one edition.",
+  "@classicMedalPerfectHow": {
+    "description": "How to earn the medal."
+  },
+  "classicNationRussia": "Russia",
+  "@classicNationRussia": {
+    "description": "Nation name, shown only in Classic Cups."
+  },
+  "classicNationSerbiaMontenegro": "Serbia and Montenegro",
+  "@classicNationSerbiaMontenegro": {
+    "description": "Name of the 2006 team, shown only in Classic Cups."
+  },
+  "paywallBenefitClassicCups": "Every Classic Cup: replay the 2002, 2010 and 2022 World Championships too, with their real draws.",
+  "@paywallBenefitClassicCups": {
+    "description": "Paywall benefit line: the three Classic Cups editions that need Unlimited."
+  },
+  "editorClassicBlurb": "The teams of every past World Championship: strength, kit and players.",
+  "@editorClassicBlurb": {
+    "description": "Editor section blurb for Classic Cups."
+  },
+  "editorClassicStar": "Best player",
+  "@editorClassicStar": {
+    "description": "Editor: the rating of the team's best player."
+  },
+  "editorClassicDepth": "Bench",
+  "@editorClassicDepth": {
+    "description": "Editor: the rating of the team's bench."
+  },
+  "editorClassicKit": "Kit colours",
+  "@editorClassicKit": {
+    "description": "Editor: the team kit section."
+  },
+  "editorClassicPrimary": "Shirt",
+  "@editorClassicPrimary": {
+    "description": "Editor: the main kit colour."
+  },
+  "editorClassicSecondary": "Trim",
+  "@editorClassicSecondary": {
+    "description": "Editor: the second kit colour."
+  },
+  "editorClassicReset": "Reset this team",
+  "@editorClassicReset": {
+    "description": "Editor: drop every edit of this team."
   }
 }

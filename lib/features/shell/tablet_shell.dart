@@ -86,6 +86,7 @@ const Set<String> tabletReadyPaths = <String>{
   Routes.campaigns,
   Routes.campaignBrief,
   Routes.campaignVerdict,
+  ...Routes.classicRoutes,
   Routes.editor,
   Routes.editorPack,
   ...Routes.editorSections,

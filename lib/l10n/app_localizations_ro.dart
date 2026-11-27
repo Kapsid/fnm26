@@ -19557,4 +19557,232 @@ class AppLocalizationsRo extends AppLocalizations {
   String euro28PlayoffIntroPaths(int count) {
     return 'Câștigătoarele grupelor și cele mai bune opt ocupante ale locului doi s-au calificat, iar gazdele care au ratat ocupă locurile rezervate lor. Ultimele $count locuri se decid în martie în trasee de câte patru echipe: semifinale într-un singur meci la echipa mai bine clasată, apoi o finală unică.';
   }
+
+  @override
+  String get classicCupsTitle => 'Cupe clasice';
+
+  @override
+  String get classicCupsIntro =>
+      'Rejoacă un Campionat Mondial real: gazdele, tragerea la sorți, formatul. Alege orice națională și du-o până la capăt.';
+
+  @override
+  String classicEditionLabel(String year, String hosts) {
+    return 'Campionatul Mondial $year · $hosts';
+  }
+
+  @override
+  String classicHostsTwo(String first, String second) {
+    return '$first și $second';
+  }
+
+  @override
+  String classicHostsThree(String first, String second, String third) {
+    return '$first, $second și $third';
+  }
+
+  @override
+  String classicTeamsCount(int count) {
+    return '$count echipe';
+  }
+
+  @override
+  String classicRealChampion(String nation) {
+    return 'Campioana reală: $nation';
+  }
+
+  @override
+  String classicMedalsProgress(int earned, int total) {
+    return '$earned din $total medalii';
+  }
+
+  @override
+  String get classicPickNation => 'Alege o națională';
+
+  @override
+  String get classicStart => 'Începe turneul';
+
+  @override
+  String get classicAbandonConfirm =>
+      'Renunți la această încercare? Toate meciurile jucate până acum se pierd.';
+
+  @override
+  String classicRunWith(String nation) {
+    return 'Încercare în curs cu $nation';
+  }
+
+  @override
+  String get classicLockedNote =>
+      'Această ediție face parte din Unlimited. Poți vedea acum gazdele și tragerea la sorți; pentru a o juca ai nevoie de Unlimited.';
+
+  @override
+  String classicPot(int pot) {
+    return 'Urna $pot';
+  }
+
+  @override
+  String get classicWonHere => 'Deja câștigată cu această națională';
+
+  @override
+  String get classicNextMatch => 'Meciul următor';
+
+  @override
+  String get classicPlayMatch => 'Joacă meciul';
+
+  @override
+  String get classicTabGroups => 'Grupe';
+
+  @override
+  String classicMatchday(int number) {
+    return 'Etapa $number';
+  }
+
+  @override
+  String get classicBestXi => 'Cel mai bun unsprezece';
+
+  @override
+  String get classicChampionTitle => 'Campioni mondiali!';
+
+  @override
+  String classicChampionBody(String nation, String year) {
+    return '$nation câștigă Campionatul Mondial $year.';
+  }
+
+  @override
+  String get classicOutTitle => 'Eliminați';
+
+  @override
+  String classicOutBody(String stage, String nation) {
+    return '$stage: aici se termină drumul pentru $nation.';
+  }
+
+  @override
+  String get classicMedalsEarned => 'Medalii obținute';
+
+  @override
+  String get classicNoRun =>
+      'Nicio încercare în curs. Alege o națională pentru a începe.';
+
+  @override
+  String classicPensShort(int home, int away) {
+    return '$home-$away la penalty-uri';
+  }
+
+  @override
+  String get classicMedalsTitle => 'Medalii';
+
+  @override
+  String get classicMedalsAll => 'Toate edițiile';
+
+  @override
+  String get classicMedalLocked => 'Necesită Unlimited';
+
+  @override
+  String get classicMedalChampion => 'Campion';
+
+  @override
+  String get classicMedalChampionHow => 'Câștigă ediția cu orice națională.';
+
+  @override
+  String get classicMedalCollection => 'Fiecare națională';
+
+  @override
+  String get classicMedalCollectionHow =>
+      'Câștigă ediția cu fiecare națională participantă.';
+
+  @override
+  String get classicMedalContinents => 'Fiecare continent';
+
+  @override
+  String get classicMedalContinentsHow =>
+      'Câștig-o cu o națională din fiecare confederație prezentă.';
+
+  @override
+  String get classicMedalGiantKiller => 'Doborâtor de giganți';
+
+  @override
+  String get classicMedalGiantKillerHow =>
+      'Câștig-o cu o outsideră: o echipă din ultima urnă sau din treimea cea mai slabă a turneului.';
+
+  @override
+  String get classicMedalRewrite => 'Rescrie istoria';
+
+  @override
+  String get classicMedalRewriteHow =>
+      'Elimină naționala care a câștigat cu adevărat această ediție.';
+
+  @override
+  String get classicMedalUnbeaten => 'Neînvins';
+
+  @override
+  String get classicMedalUnbeatenHow =>
+      'Câștigă ediția fără să pierzi niciun meci.';
+
+  @override
+  String get classicMedalGoldenBootHow =>
+      'Fă ca unul dintre jucătorii tăi să termine golgheterul turneului.';
+
+  @override
+  String get classicMedalGrandSlam => 'Marele șlem';
+
+  @override
+  String get classicMedalGrandSlamHow => 'Câștigă toate cele șapte ediții.';
+
+  @override
+  String get classicMedalSevenFlags => 'Șapte steaguri';
+
+  @override
+  String get classicMedalSevenFlagsHow =>
+      'Câștigă cu șapte naționale diferite.';
+
+  @override
+  String get classicMedalConfederations => 'Șase confederații';
+
+  @override
+  String get classicMedalConfederationsHow =>
+      'Câștigă cu o națională din fiecare dintre cele șase confederații.';
+
+  @override
+  String get classicMedalOneNation => 'O națională, fiecare epocă';
+
+  @override
+  String get classicMedalOneNationHow =>
+      'Câștigă fiecare ediție cu aceeași națională.';
+
+  @override
+  String get classicMedalPerfect => 'Perfecționist';
+
+  @override
+  String get classicMedalPerfectHow => 'Obține toate medaliile unei ediții.';
+
+  @override
+  String get classicNationRussia => 'Rusia';
+
+  @override
+  String get classicNationSerbiaMontenegro => 'Serbia și Muntenegru';
+
+  @override
+  String get paywallBenefitClassicCups =>
+      'Toate cupele clasice: rejoacă și Campionatele Mondiale din 2002, 2010 și 2022, cu tragerile lor la sorți reale.';
+
+  @override
+  String get editorClassicBlurb =>
+      'Echipele tuturor Campionatelor Mondiale trecute: forță, echipamente și jucători.';
+
+  @override
+  String get editorClassicStar => 'Cel mai bun jucător';
+
+  @override
+  String get editorClassicDepth => 'Banca de rezerve';
+
+  @override
+  String get editorClassicKit => 'Culorile echipamentului';
+
+  @override
+  String get editorClassicPrimary => 'Tricou';
+
+  @override
+  String get editorClassicSecondary => 'Detalii';
+
+  @override
+  String get editorClassicReset => 'Resetează această echipă';
 }

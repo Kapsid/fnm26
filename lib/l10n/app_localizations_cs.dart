@@ -19512,4 +19512,231 @@ class AppLocalizationsCs extends AppLocalizations {
   String euro28PlayoffIntroPaths(int count) {
     return 'Vítězové skupin a osm nejlepších týmů na druhých místech postupují a pořadatelé, kteří neuspěli, dostávají vyhrazená místa. Poslední $count místa se hrají v březnu v cestách po čtyřech týmech: semifinále v jednom zápase u výše postaveného týmu, pak jediné finále.';
   }
+
+  @override
+  String get classicCupsTitle => 'Klasické poháry';
+
+  @override
+  String get classicCupsIntro =>
+      'Zahrajte si znovu skutečné mistrovství světa: jeho pořadatele, los i formát. Vyberte si jakýkoli tým a dotáhněte ho až na vrchol.';
+
+  @override
+  String classicEditionLabel(String year, String hosts) {
+    return 'Mistrovství světa $year · $hosts';
+  }
+
+  @override
+  String classicHostsTwo(String first, String second) {
+    return '$first a $second';
+  }
+
+  @override
+  String classicHostsThree(String first, String second, String third) {
+    return '$first, $second a $third';
+  }
+
+  @override
+  String classicTeamsCount(int count) {
+    return 'Týmů: $count';
+  }
+
+  @override
+  String classicRealChampion(String nation) {
+    return 'Skutečný vítěz: $nation';
+  }
+
+  @override
+  String classicMedalsProgress(int earned, int total) {
+    return 'Medaile: $earned z $total';
+  }
+
+  @override
+  String get classicPickNation => 'Vyberte tým';
+
+  @override
+  String get classicStart => 'Začít turnaj';
+
+  @override
+  String get classicAbandonConfirm =>
+      'Opravdu ukončit tento turnaj? Všechny dosud odehrané zápasy budou ztraceny.';
+
+  @override
+  String classicRunWith(String nation) {
+    return 'Rozehraný turnaj: $nation';
+  }
+
+  @override
+  String get classicLockedNote =>
+      'Tento ročník je součástí verze Unlimited. Pořadatele a los si můžete prohlédnout hned, hrát ho lze s Unlimited.';
+
+  @override
+  String classicPot(int pot) {
+    return 'Koš $pot';
+  }
+
+  @override
+  String get classicWonHere => 'S tímto týmem už jste vyhráli';
+
+  @override
+  String get classicNextMatch => 'Další zápas';
+
+  @override
+  String get classicPlayMatch => 'Hrát zápas';
+
+  @override
+  String get classicTabGroups => 'Skupiny';
+
+  @override
+  String classicMatchday(int number) {
+    return '$number. kolo';
+  }
+
+  @override
+  String get classicBestXi => 'Nejlepší jedenáctka';
+
+  @override
+  String get classicChampionTitle => 'Mistři světa!';
+
+  @override
+  String classicChampionBody(String nation, String year) {
+    return '$nation: mistři světa $year.';
+  }
+
+  @override
+  String get classicOutTitle => 'Vyřazeni';
+
+  @override
+  String classicOutBody(String stage, String nation) {
+    return '$stage: tady cesta končí. Tým: $nation.';
+  }
+
+  @override
+  String get classicMedalsEarned => 'Získané medaile';
+
+  @override
+  String get classicNoRun => 'Žádný rozehraný turnaj. Vyberte tým a začněte.';
+
+  @override
+  String classicPensShort(int home, int away) {
+    return 'penalty $home:$away';
+  }
+
+  @override
+  String get classicMedalsTitle => 'Medaile';
+
+  @override
+  String get classicMedalsAll => 'Všechny ročníky';
+
+  @override
+  String get classicMedalLocked => 'Vyžaduje Unlimited';
+
+  @override
+  String get classicMedalChampion => 'Mistr';
+
+  @override
+  String get classicMedalChampionHow => 'Vyhrajte ročník s jakýmkoli týmem.';
+
+  @override
+  String get classicMedalCollection => 'Každý tým';
+
+  @override
+  String get classicMedalCollectionHow =>
+      'Vyhrajte ročník s každým týmem, který se ho účastnil.';
+
+  @override
+  String get classicMedalContinents => 'Každý kontinent';
+
+  @override
+  String get classicMedalContinentsHow =>
+      'Vyhrajte ho s týmem z každé konfederace, která v turnaji byla.';
+
+  @override
+  String get classicMedalGiantKiller => 'Přemožitel obrů';
+
+  @override
+  String get classicMedalGiantKillerHow =>
+      'Vyhrajte ho s outsiderem: s týmem z posledního koše nebo z nejslabší třetiny pole.';
+
+  @override
+  String get classicMedalRewrite => 'Přepsat dějiny';
+
+  @override
+  String get classicMedalRewriteHow =>
+      'Vyřaďte tým, který tento ročník doopravdy vyhrál.';
+
+  @override
+  String get classicMedalUnbeaten => 'Bez porážky';
+
+  @override
+  String get classicMedalUnbeatenHow =>
+      'Vyhrajte ročník, aniž byste prohráli jediný zápas.';
+
+  @override
+  String get classicMedalGoldenBootHow =>
+      'Ať je jeden z vašich hráčů nejlepším střelcem turnaje.';
+
+  @override
+  String get classicMedalGrandSlam => 'Grand slam';
+
+  @override
+  String get classicMedalGrandSlamHow => 'Vyhrajte všech sedm ročníků.';
+
+  @override
+  String get classicMedalSevenFlags => 'Sedm vlajek';
+
+  @override
+  String get classicMedalSevenFlagsHow => 'Vyhrajte se sedmi různými týmy.';
+
+  @override
+  String get classicMedalConfederations => 'Šest konfederací';
+
+  @override
+  String get classicMedalConfederationsHow =>
+      'Vyhrajte s týmem z každé ze šesti konfederací.';
+
+  @override
+  String get classicMedalOneNation => 'Jeden tým, každá éra';
+
+  @override
+  String get classicMedalOneNationHow =>
+      'Vyhrajte každý ročník se stejným týmem.';
+
+  @override
+  String get classicMedalPerfect => 'Perfekcionista';
+
+  @override
+  String get classicMedalPerfectHow =>
+      'Získejte všechny medaile jednoho ročníku.';
+
+  @override
+  String get classicNationRussia => 'Rusko';
+
+  @override
+  String get classicNationSerbiaMontenegro => 'Srbsko a Černá Hora';
+
+  @override
+  String get paywallBenefitClassicCups =>
+      'Všechny klasické poháry: zahrajte si znovu i mistrovství světa 2002, 2010 a 2022 se skutečnými losy.';
+
+  @override
+  String get editorClassicBlurb =>
+      'Týmy všech minulých mistrovství světa: síla, dresy a hráči.';
+
+  @override
+  String get editorClassicStar => 'Nejlepší hráč';
+
+  @override
+  String get editorClassicDepth => 'Lavička';
+
+  @override
+  String get editorClassicKit => 'Barvy dresů';
+
+  @override
+  String get editorClassicPrimary => 'Dres';
+
+  @override
+  String get editorClassicSecondary => 'Lemování';
+
+  @override
+  String get editorClassicReset => 'Obnovit tento tým';
 }

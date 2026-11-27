@@ -19463,4 +19463,232 @@ class AppLocalizationsUk extends AppLocalizations {
   String euro28PlayoffIntroPaths(int count) {
     return 'Переможці груп і вісім найкращих других команд пройшли, а господарі, які не пройшли, займають зарезервовані для них місця. Останні $count місця розіграють у березні в шляхах по чотири команди: півфінал в одному матчі в кращої за рейтингом команди, потім єдиний фінал.';
   }
+
+  @override
+  String get classicCupsTitle => 'Класичні турніри';
+
+  @override
+  String get classicCupsIntro =>
+      'Зіграй заново справжній Чемпіонат світу: господарів, жеребкування, формат. Обери будь-яку збірну й доведи її до кінця.';
+
+  @override
+  String classicEditionLabel(String year, String hosts) {
+    return 'Чемпіонат світу $year · $hosts';
+  }
+
+  @override
+  String classicHostsTwo(String first, String second) {
+    return '$first і $second';
+  }
+
+  @override
+  String classicHostsThree(String first, String second, String third) {
+    return '$first, $second і $third';
+  }
+
+  @override
+  String classicTeamsCount(int count) {
+    return 'Команд: $count';
+  }
+
+  @override
+  String classicRealChampion(String nation) {
+    return 'Справжній чемпіон: $nation';
+  }
+
+  @override
+  String classicMedalsProgress(int earned, int total) {
+    return 'Медалі: $earned з $total';
+  }
+
+  @override
+  String get classicPickNation => 'Обери збірну';
+
+  @override
+  String get classicStart => 'Почати турнір';
+
+  @override
+  String get classicAbandonConfirm =>
+      'Покинути цю спробу? Усі зіграні досі матчі буде втрачено.';
+
+  @override
+  String classicRunWith(String nation) {
+    return 'Спроба триває: $nation';
+  }
+
+  @override
+  String get classicLockedNote =>
+      'Це видання входить до Unlimited. Господарів і жеребкування можна переглянути вже зараз, а грати з Unlimited.';
+
+  @override
+  String classicPot(int pot) {
+    return 'Кошик $pot';
+  }
+
+  @override
+  String get classicWonHere => 'Уже виграно з цією збірною';
+
+  @override
+  String get classicNextMatch => 'Наступний матч';
+
+  @override
+  String get classicPlayMatch => 'Зіграти матч';
+
+  @override
+  String get classicTabGroups => 'Групи';
+
+  @override
+  String classicMatchday(int number) {
+    return '$number-й тур';
+  }
+
+  @override
+  String get classicBestXi => 'Найкраща одинадцятка';
+
+  @override
+  String get classicChampionTitle => 'Чемпіони світу!';
+
+  @override
+  String classicChampionBody(String nation, String year) {
+    return '$nation: чемпіон світу $year.';
+  }
+
+  @override
+  String get classicOutTitle => 'Вибули';
+
+  @override
+  String classicOutBody(String stage, String nation) {
+    return '$stage: тут шлях завершується. Збірна: $nation.';
+  }
+
+  @override
+  String get classicMedalsEarned => 'Здобуті медалі';
+
+  @override
+  String get classicNoRun =>
+      'Немає спроби, що триває. Обери збірну, щоб почати.';
+
+  @override
+  String classicPensShort(int home, int away) {
+    return 'пенальті $home-$away';
+  }
+
+  @override
+  String get classicMedalsTitle => 'Медалі';
+
+  @override
+  String get classicMedalsAll => 'Усі видання';
+
+  @override
+  String get classicMedalLocked => 'Потрібен Unlimited';
+
+  @override
+  String get classicMedalChampion => 'Чемпіон';
+
+  @override
+  String get classicMedalChampionHow => 'Виграй видання з будь-якою збірною.';
+
+  @override
+  String get classicMedalCollection => 'Кожна збірна';
+
+  @override
+  String get classicMedalCollectionHow =>
+      'Виграй видання з кожною його учасницею.';
+
+  @override
+  String get classicMedalContinents => 'Кожен континент';
+
+  @override
+  String get classicMedalContinentsHow =>
+      'Виграй його зі збірною з кожної присутньої конфедерації.';
+
+  @override
+  String get classicMedalGiantKiller => 'Вбивця гігантів';
+
+  @override
+  String get classicMedalGiantKillerHow =>
+      'Виграй його з аутсайдером: командою з останнього кошика або з найслабшої третини учасників.';
+
+  @override
+  String get classicMedalRewrite => 'Переписати історію';
+
+  @override
+  String get classicMedalRewriteHow =>
+      'Виведи з турніру збірну, яка насправді виграла це видання.';
+
+  @override
+  String get classicMedalUnbeaten => 'Без поразок';
+
+  @override
+  String get classicMedalUnbeatenHow =>
+      'Виграй видання, не програвши жодного матчу.';
+
+  @override
+  String get classicMedalGoldenBootHow =>
+      'Нехай один із твоїх гравців стане найкращим бомбардиром турніру.';
+
+  @override
+  String get classicMedalGrandSlam => 'Великий шолом';
+
+  @override
+  String get classicMedalGrandSlamHow => 'Виграй усі сім видань.';
+
+  @override
+  String get classicMedalSevenFlags => 'Сім прапорів';
+
+  @override
+  String get classicMedalSevenFlagsHow =>
+      'Вигравай із сімома різними збірними.';
+
+  @override
+  String get classicMedalConfederations => 'Шість конфедерацій';
+
+  @override
+  String get classicMedalConfederationsHow =>
+      'Вигравай зі збірною з кожної з шести конфедерацій.';
+
+  @override
+  String get classicMedalOneNation => 'Одна збірна, кожна епоха';
+
+  @override
+  String get classicMedalOneNationHow =>
+      'Виграй кожне видання з тією самою збірною.';
+
+  @override
+  String get classicMedalPerfect => 'Перфекціоніст';
+
+  @override
+  String get classicMedalPerfectHow => 'Здобудь усі медалі одного видання.';
+
+  @override
+  String get classicNationRussia => 'Росія';
+
+  @override
+  String get classicNationSerbiaMontenegro => 'Сербія і Чорногорія';
+
+  @override
+  String get paywallBenefitClassicCups =>
+      'Усі класичні турніри: зіграй заново й чемпіонати світу 2002, 2010 і 2022 років зі справжніми жеребкуваннями.';
+
+  @override
+  String get editorClassicBlurb =>
+      'Команди всіх минулих чемпіонатів світу: сила, форма та гравці.';
+
+  @override
+  String get editorClassicStar => 'Найкращий гравець';
+
+  @override
+  String get editorClassicDepth => 'Лава запасних';
+
+  @override
+  String get editorClassicKit => 'Кольори форми';
+
+  @override
+  String get editorClassicPrimary => 'Футболка';
+
+  @override
+  String get editorClassicSecondary => 'Оздоблення';
+
+  @override
+  String get editorClassicReset => 'Скинути цю команду';
 }

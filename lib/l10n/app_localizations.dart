@@ -28946,6 +28946,384 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The group winners and the eight best runners-up are through, and hosts who missed out take the places held for them. The last {count} places are won in four-team paths in March: one-leg semi-finals at the higher-ranked side, then a one-off final.'**
   String euro28PlayoffIntroPaths(int count);
+
+  /// Name of the game mode where real past World Championships are replayed; home tile and screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'Classic Cups'**
+  String get classicCupsTitle;
+
+  /// Intro line on the Classic Cups edition list.
+  ///
+  /// In en, this message translates to:
+  /// **'Replay a real World Championship: its hosts, its draw, its format. Pick any nation and take it all the way.'**
+  String get classicCupsIntro;
+
+  /// An edition of the World Championship. Never "World Cup".
+  ///
+  /// In en, this message translates to:
+  /// **'World Championship {year} · {hosts}'**
+  String classicEditionLabel(String year, String hosts);
+
+  /// Two co-host nations.
+  ///
+  /// In en, this message translates to:
+  /// **'{first} & {second}'**
+  String classicHostsTwo(String first, String second);
+
+  /// Three co-host nations.
+  ///
+  /// In en, this message translates to:
+  /// **'{first}, {second} & {third}'**
+  String classicHostsThree(String first, String second, String third);
+
+  /// Field size of an edition.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} teams'**
+  String classicTeamsCount(int count);
+
+  /// Who really won that edition.
+  ///
+  /// In en, this message translates to:
+  /// **'Real champion: {nation}'**
+  String classicRealChampion(String nation);
+
+  /// Medal progress count.
+  ///
+  /// In en, this message translates to:
+  /// **'{earned} of {total} medals'**
+  String classicMedalsProgress(int earned, int total);
+
+  /// Heading above the groups on an edition page.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a nation'**
+  String get classicPickNation;
+
+  /// Button: start a Classic Cup run with the chosen nation.
+  ///
+  /// In en, this message translates to:
+  /// **'Start the tournament'**
+  String get classicStart;
+
+  /// Confirmation before abandoning a run.
+  ///
+  /// In en, this message translates to:
+  /// **'Abandon this run? Every match played so far is lost.'**
+  String get classicAbandonConfirm;
+
+  /// An edition already has a run going.
+  ///
+  /// In en, this message translates to:
+  /// **'Run in progress with {nation}'**
+  String classicRunWith(String nation);
+
+  /// Shown on an edition that needs the premium unlock.
+  ///
+  /// In en, this message translates to:
+  /// **'This edition comes with Unlimited. Look around the hosts and the draw now; playing it needs Unlimited.'**
+  String get classicLockedNote;
+
+  /// The draw pot a team came from.
+  ///
+  /// In en, this message translates to:
+  /// **'Pot {pot}'**
+  String classicPot(int pot);
+
+  /// A nation the player has already won this edition with.
+  ///
+  /// In en, this message translates to:
+  /// **'Already won with this nation'**
+  String get classicWonHere;
+
+  /// Heading of the next-match card in a run.
+  ///
+  /// In en, this message translates to:
+  /// **'Next match'**
+  String get classicNextMatch;
+
+  /// Button: play the next match.
+  ///
+  /// In en, this message translates to:
+  /// **'Play match'**
+  String get classicPlayMatch;
+
+  /// Tab: the group tables.
+  ///
+  /// In en, this message translates to:
+  /// **'Groups'**
+  String get classicTabGroups;
+
+  /// Group-stage matchday.
+  ///
+  /// In en, this message translates to:
+  /// **'Matchday {number}'**
+  String classicMatchday(int number);
+
+  /// Button: let the game pick the strongest available eleven.
+  ///
+  /// In en, this message translates to:
+  /// **'Best XI'**
+  String get classicBestXi;
+
+  /// Headline when the player wins the edition.
+  ///
+  /// In en, this message translates to:
+  /// **'World champions!'**
+  String get classicChampionTitle;
+
+  /// Body when the player wins.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} win the {year} World Championship.'**
+  String classicChampionBody(String nation, String year);
+
+  /// Headline when the player is eliminated.
+  ///
+  /// In en, this message translates to:
+  /// **'Knocked out'**
+  String get classicOutTitle;
+
+  /// Body when the player is eliminated; stage is a round name.
+  ///
+  /// In en, this message translates to:
+  /// **'{stage}: the road ends here for {nation}.'**
+  String classicOutBody(String stage, String nation);
+
+  /// Heading listing medals just earned.
+  ///
+  /// In en, this message translates to:
+  /// **'Medals earned'**
+  String get classicMedalsEarned;
+
+  /// Empty state of the run screen.
+  ///
+  /// In en, this message translates to:
+  /// **'No run in progress. Pick a nation to start one.'**
+  String get classicNoRun;
+
+  /// A shootout score.
+  ///
+  /// In en, this message translates to:
+  /// **'{home}-{away} on penalties'**
+  String classicPensShort(int home, int away);
+
+  /// Title of the Classic Cups medals screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Medals'**
+  String get classicMedalsTitle;
+
+  /// Section of medals across every edition.
+  ///
+  /// In en, this message translates to:
+  /// **'All editions'**
+  String get classicMedalsAll;
+
+  /// A medal of an edition that needs the premium unlock.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs Unlimited'**
+  String get classicMedalLocked;
+
+  /// Medal name.
+  ///
+  /// In en, this message translates to:
+  /// **'Champion'**
+  String get classicMedalChampion;
+
+  /// How to earn the medal.
+  ///
+  /// In en, this message translates to:
+  /// **'Win the edition with any nation.'**
+  String get classicMedalChampionHow;
+
+  /// Medal name.
+  ///
+  /// In en, this message translates to:
+  /// **'Every nation'**
+  String get classicMedalCollection;
+
+  /// How to earn the medal.
+  ///
+  /// In en, this message translates to:
+  /// **'Win the edition with every nation in its field.'**
+  String get classicMedalCollectionHow;
+
+  /// Medal name.
+  ///
+  /// In en, this message translates to:
+  /// **'Every continent'**
+  String get classicMedalContinents;
+
+  /// How to earn the medal.
+  ///
+  /// In en, this message translates to:
+  /// **'Win it with a nation from each confederation in the field.'**
+  String get classicMedalContinentsHow;
+
+  /// Medal name.
+  ///
+  /// In en, this message translates to:
+  /// **'Giant-killer'**
+  String get classicMedalGiantKiller;
+
+  /// How to earn the medal.
+  ///
+  /// In en, this message translates to:
+  /// **'Win it with an outsider: a side from the last pot or the weakest third of the field.'**
+  String get classicMedalGiantKillerHow;
+
+  /// Medal name.
+  ///
+  /// In en, this message translates to:
+  /// **'Rewrite history'**
+  String get classicMedalRewrite;
+
+  /// How to earn the medal.
+  ///
+  /// In en, this message translates to:
+  /// **'Knock out the nation that really won this edition.'**
+  String get classicMedalRewriteHow;
+
+  /// Medal name.
+  ///
+  /// In en, this message translates to:
+  /// **'Unbeaten'**
+  String get classicMedalUnbeaten;
+
+  /// How to earn the medal.
+  ///
+  /// In en, this message translates to:
+  /// **'Win the edition without losing a match.'**
+  String get classicMedalUnbeatenHow;
+
+  /// How to earn the golden boot medal.
+  ///
+  /// In en, this message translates to:
+  /// **'Have one of your players finish as the top scorer.'**
+  String get classicMedalGoldenBootHow;
+
+  /// Medal name.
+  ///
+  /// In en, this message translates to:
+  /// **'Grand slam'**
+  String get classicMedalGrandSlam;
+
+  /// How to earn the medal.
+  ///
+  /// In en, this message translates to:
+  /// **'Win all seven editions.'**
+  String get classicMedalGrandSlamHow;
+
+  /// Medal name.
+  ///
+  /// In en, this message translates to:
+  /// **'Seven flags'**
+  String get classicMedalSevenFlags;
+
+  /// How to earn the medal.
+  ///
+  /// In en, this message translates to:
+  /// **'Win with seven different nations.'**
+  String get classicMedalSevenFlagsHow;
+
+  /// Medal name.
+  ///
+  /// In en, this message translates to:
+  /// **'Six confederations'**
+  String get classicMedalConfederations;
+
+  /// How to earn the medal.
+  ///
+  /// In en, this message translates to:
+  /// **'Win with a nation from each of the six confederations.'**
+  String get classicMedalConfederationsHow;
+
+  /// Medal name.
+  ///
+  /// In en, this message translates to:
+  /// **'One nation, every era'**
+  String get classicMedalOneNation;
+
+  /// How to earn the medal.
+  ///
+  /// In en, this message translates to:
+  /// **'Win every edition with the same nation.'**
+  String get classicMedalOneNationHow;
+
+  /// Medal name.
+  ///
+  /// In en, this message translates to:
+  /// **'Perfectionist'**
+  String get classicMedalPerfect;
+
+  /// How to earn the medal.
+  ///
+  /// In en, this message translates to:
+  /// **'Earn every medal of one edition.'**
+  String get classicMedalPerfectHow;
+
+  /// Nation name, shown only in Classic Cups.
+  ///
+  /// In en, this message translates to:
+  /// **'Russia'**
+  String get classicNationRussia;
+
+  /// Name of the 2006 team, shown only in Classic Cups.
+  ///
+  /// In en, this message translates to:
+  /// **'Serbia and Montenegro'**
+  String get classicNationSerbiaMontenegro;
+
+  /// Paywall benefit line: the three Classic Cups editions that need Unlimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Every Classic Cup: replay the 2002, 2010 and 2022 World Championships too, with their real draws.'**
+  String get paywallBenefitClassicCups;
+
+  /// Editor section blurb for Classic Cups.
+  ///
+  /// In en, this message translates to:
+  /// **'The teams of every past World Championship: strength, kit and players.'**
+  String get editorClassicBlurb;
+
+  /// Editor: the rating of the team's best player.
+  ///
+  /// In en, this message translates to:
+  /// **'Best player'**
+  String get editorClassicStar;
+
+  /// Editor: the rating of the team's bench.
+  ///
+  /// In en, this message translates to:
+  /// **'Bench'**
+  String get editorClassicDepth;
+
+  /// Editor: the team kit section.
+  ///
+  /// In en, this message translates to:
+  /// **'Kit colours'**
+  String get editorClassicKit;
+
+  /// Editor: the main kit colour.
+  ///
+  /// In en, this message translates to:
+  /// **'Shirt'**
+  String get editorClassicPrimary;
+
+  /// Editor: the second kit colour.
+  ///
+  /// In en, this message translates to:
+  /// **'Trim'**
+  String get editorClassicSecondary;
+
+  /// Editor: drop every edit of this team.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset this team'**
+  String get editorClassicReset;
 }
 
 class _AppLocalizationsDelegate

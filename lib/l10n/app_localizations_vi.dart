@@ -18971,4 +18971,233 @@ class AppLocalizationsVi extends AppLocalizations {
   String euro28PlayoffIntroPaths(int count) {
     return 'Các đội nhất bảng và tám đội nhì bảng tốt nhất đã giành vé, và các đội chủ nhà bị trượt nhận suất dành cho họ. $count suất cuối được định đoạt vào tháng 3 ở các nhánh bốn đội: bán kết một trận trên sân đội xếp hạng cao hơn, rồi một trận chung kết duy nhất.';
   }
+
+  @override
+  String get classicCupsTitle => 'Giải đấu kinh điển';
+
+  @override
+  String get classicCupsIntro =>
+      'Chơi lại một Giải vô địch thế giới có thật: nước chủ nhà, lễ bốc thăm và thể thức. Chọn bất kỳ đội tuyển nào và đưa họ đi đến cùng.';
+
+  @override
+  String classicEditionLabel(String year, String hosts) {
+    return 'Giải vô địch thế giới $year · $hosts';
+  }
+
+  @override
+  String classicHostsTwo(String first, String second) {
+    return '$first và $second';
+  }
+
+  @override
+  String classicHostsThree(String first, String second, String third) {
+    return '$first, $second và $third';
+  }
+
+  @override
+  String classicTeamsCount(int count) {
+    return '$count đội';
+  }
+
+  @override
+  String classicRealChampion(String nation) {
+    return 'Nhà vô địch thật: $nation';
+  }
+
+  @override
+  String classicMedalsProgress(int earned, int total) {
+    return '$earned/$total huy chương';
+  }
+
+  @override
+  String get classicPickNation => 'Chọn một đội tuyển';
+
+  @override
+  String get classicStart => 'Bắt đầu giải đấu';
+
+  @override
+  String get classicAbandonConfirm =>
+      'Bỏ lượt chơi này? Mọi trận đã đá sẽ bị mất.';
+
+  @override
+  String classicRunWith(String nation) {
+    return 'Đang chơi cùng $nation';
+  }
+
+  @override
+  String get classicLockedNote =>
+      'Kỳ giải này thuộc Unlimited. Bạn có thể xem ngay nước chủ nhà và lễ bốc thăm; để chơi cần có Unlimited.';
+
+  @override
+  String classicPot(int pot) {
+    return 'Nhóm hạt giống $pot';
+  }
+
+  @override
+  String get classicWonHere => 'Đã vô địch với đội tuyển này';
+
+  @override
+  String get classicNextMatch => 'Trận tiếp theo';
+
+  @override
+  String get classicPlayMatch => 'Đá trận đấu';
+
+  @override
+  String get classicTabGroups => 'Bảng đấu';
+
+  @override
+  String classicMatchday(int number) {
+    return 'Lượt trận $number';
+  }
+
+  @override
+  String get classicBestXi => 'Đội hình mạnh nhất';
+
+  @override
+  String get classicChampionTitle => 'Vô địch thế giới!';
+
+  @override
+  String classicChampionBody(String nation, String year) {
+    return '$nation vô địch Giải vô địch thế giới $year.';
+  }
+
+  @override
+  String get classicOutTitle => 'Bị loại';
+
+  @override
+  String classicOutBody(String stage, String nation) {
+    return '$stage: hành trình của $nation dừng lại ở đây.';
+  }
+
+  @override
+  String get classicMedalsEarned => 'Huy chương đã giành';
+
+  @override
+  String get classicNoRun =>
+      'Không có lượt chơi nào. Chọn một đội tuyển để bắt đầu.';
+
+  @override
+  String classicPensShort(int home, int away) {
+    return '$home-$away trên chấm luân lưu';
+  }
+
+  @override
+  String get classicMedalsTitle => 'Huy chương';
+
+  @override
+  String get classicMedalsAll => 'Mọi kỳ giải';
+
+  @override
+  String get classicMedalLocked => 'Cần Unlimited';
+
+  @override
+  String get classicMedalChampion => 'Nhà vô địch';
+
+  @override
+  String get classicMedalChampionHow =>
+      'Vô địch kỳ giải với bất kỳ đội tuyển nào.';
+
+  @override
+  String get classicMedalCollection => 'Mọi đội tuyển';
+
+  @override
+  String get classicMedalCollectionHow =>
+      'Vô địch kỳ giải với từng đội tuyển tham dự.';
+
+  @override
+  String get classicMedalContinents => 'Mọi châu lục';
+
+  @override
+  String get classicMedalContinentsHow =>
+      'Vô địch với một đội từ mỗi liên đoàn châu lục có mặt.';
+
+  @override
+  String get classicMedalGiantKiller => 'Kẻ hạ gục gã khổng lồ';
+
+  @override
+  String get classicMedalGiantKillerHow =>
+      'Vô địch với một đội cửa dưới: từ nhóm hạt giống cuối hoặc một phần ba yếu nhất giải.';
+
+  @override
+  String get classicMedalRewrite => 'Viết lại lịch sử';
+
+  @override
+  String get classicMedalRewriteHow =>
+      'Loại đội tuyển đã thực sự vô địch kỳ giải này.';
+
+  @override
+  String get classicMedalUnbeaten => 'Bất bại';
+
+  @override
+  String get classicMedalUnbeatenHow =>
+      'Vô địch kỳ giải mà không thua trận nào.';
+
+  @override
+  String get classicMedalGoldenBootHow =>
+      'Để một cầu thủ của bạn trở thành vua phá lưới giải.';
+
+  @override
+  String get classicMedalGrandSlam => 'Grand slam';
+
+  @override
+  String get classicMedalGrandSlamHow => 'Vô địch cả bảy kỳ giải.';
+
+  @override
+  String get classicMedalSevenFlags => 'Bảy lá cờ';
+
+  @override
+  String get classicMedalSevenFlagsHow =>
+      'Vô địch với bảy đội tuyển khác nhau.';
+
+  @override
+  String get classicMedalConfederations => 'Sáu liên đoàn';
+
+  @override
+  String get classicMedalConfederationsHow =>
+      'Vô địch với một đội từ mỗi liên đoàn trong sáu liên đoàn châu lục.';
+
+  @override
+  String get classicMedalOneNation => 'Một đội tuyển, mọi thời đại';
+
+  @override
+  String get classicMedalOneNationHow =>
+      'Vô địch mọi kỳ giải với cùng một đội tuyển.';
+
+  @override
+  String get classicMedalPerfect => 'Người cầu toàn';
+
+  @override
+  String get classicMedalPerfectHow => 'Giành mọi huy chương của một kỳ giải.';
+
+  @override
+  String get classicNationRussia => 'Nga';
+
+  @override
+  String get classicNationSerbiaMontenegro => 'Serbia và Montenegro';
+
+  @override
+  String get paywallBenefitClassicCups =>
+      'Mọi giải đấu kinh điển: chơi lại cả các Giải vô địch thế giới 2002, 2010 và 2022 với lễ bốc thăm thật.';
+
+  @override
+  String get editorClassicBlurb =>
+      'Các đội tuyển của mọi Giải vô địch thế giới đã qua: sức mạnh, áo đấu và cầu thủ.';
+
+  @override
+  String get editorClassicStar => 'Cầu thủ hay nhất';
+
+  @override
+  String get editorClassicDepth => 'Dự bị';
+
+  @override
+  String get editorClassicKit => 'Màu áo đấu';
+
+  @override
+  String get editorClassicPrimary => 'Áo';
+
+  @override
+  String get editorClassicSecondary => 'Viền';
+
+  @override
+  String get editorClassicReset => 'Đặt lại đội này';
 }

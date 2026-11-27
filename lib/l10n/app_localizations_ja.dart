@@ -18453,4 +18453,220 @@ class AppLocalizationsJa extends AppLocalizations {
   String euro28PlayoffIntroPaths(int count) {
     return '各組の1位と2位の上位8チームは出場決定、敗退した開催国は確保された枠に入る。残り$count枠は3月の4チームによるパスで決まる。準決勝は上位チームのホームで一発勝負、その後は一発勝負の決勝。';
   }
+
+  @override
+  String get classicCupsTitle => 'クラシックカップ';
+
+  @override
+  String get classicCupsIntro =>
+      '実際の世界選手権をもう一度。開催国も組み合わせ抽選も大会方式もそのまま。好きな代表を選んで頂点まで導こう。';
+
+  @override
+  String classicEditionLabel(String year, String hosts) {
+    return '世界選手権 $year · $hosts';
+  }
+
+  @override
+  String classicHostsTwo(String first, String second) {
+    return '$first・$second';
+  }
+
+  @override
+  String classicHostsThree(String first, String second, String third) {
+    return '$first・$second・$third';
+  }
+
+  @override
+  String classicTeamsCount(int count) {
+    return '$countチーム';
+  }
+
+  @override
+  String classicRealChampion(String nation) {
+    return '実際の優勝国: $nation';
+  }
+
+  @override
+  String classicMedalsProgress(int earned, int total) {
+    return 'メダル $earned/$total';
+  }
+
+  @override
+  String get classicPickNation => '代表を選ぶ';
+
+  @override
+  String get classicStart => '大会を始める';
+
+  @override
+  String get classicAbandonConfirm => 'この挑戦をやめますか? これまでに戦った試合はすべて失われます。';
+
+  @override
+  String classicRunWith(String nation) {
+    return '$nationで挑戦中';
+  }
+
+  @override
+  String get classicLockedNote =>
+      'この大会はUnlimitedに含まれます。開催国と組み合わせは今すぐ見られますが、プレイするにはUnlimitedが必要です。';
+
+  @override
+  String classicPot(int pot) {
+    return 'ポット$pot';
+  }
+
+  @override
+  String get classicWonHere => 'この代表で優勝済み';
+
+  @override
+  String get classicNextMatch => '次の試合';
+
+  @override
+  String get classicPlayMatch => '試合をする';
+
+  @override
+  String get classicTabGroups => 'グループ';
+
+  @override
+  String classicMatchday(int number) {
+    return '第$number節';
+  }
+
+  @override
+  String get classicBestXi => 'ベストイレブン';
+
+  @override
+  String get classicChampionTitle => '世界王者!';
+
+  @override
+  String classicChampionBody(String nation, String year) {
+    return '$nationが世界選手権$yearを制覇。';
+  }
+
+  @override
+  String get classicOutTitle => '敗退';
+
+  @override
+  String classicOutBody(String stage, String nation) {
+    return '$stage: $nationの挑戦はここで終わり。';
+  }
+
+  @override
+  String get classicMedalsEarned => '獲得したメダル';
+
+  @override
+  String get classicNoRun => '進行中の挑戦はありません。代表を選んで始めましょう。';
+
+  @override
+  String classicPensShort(int home, int away) {
+    return 'PK $home-$away';
+  }
+
+  @override
+  String get classicMedalsTitle => 'メダル';
+
+  @override
+  String get classicMedalsAll => '全大会';
+
+  @override
+  String get classicMedalLocked => 'Unlimitedが必要';
+
+  @override
+  String get classicMedalChampion => '優勝';
+
+  @override
+  String get classicMedalChampionHow => 'どの代表でもいいので大会を制覇する。';
+
+  @override
+  String get classicMedalCollection => 'すべての代表';
+
+  @override
+  String get classicMedalCollectionHow => '出場したすべての代表で大会を制覇する。';
+
+  @override
+  String get classicMedalContinents => 'すべての大陸';
+
+  @override
+  String get classicMedalContinentsHow => '出場した各連盟の代表でそれぞれ制覇する。';
+
+  @override
+  String get classicMedalGiantKiller => 'ジャイアントキリング';
+
+  @override
+  String get classicMedalGiantKillerHow => '格下で制覇する: 最終ポット、または出場国の下位3分の1のチーム。';
+
+  @override
+  String get classicMedalRewrite => '歴史を塗り替える';
+
+  @override
+  String get classicMedalRewriteHow => 'この大会で実際に優勝した代表を敗退させる。';
+
+  @override
+  String get classicMedalUnbeaten => '無敗';
+
+  @override
+  String get classicMedalUnbeatenHow => '一度も負けずに大会を制覇する。';
+
+  @override
+  String get classicMedalGoldenBootHow => '自チームの選手を大会得点王にする。';
+
+  @override
+  String get classicMedalGrandSlam => 'グランドスラム';
+
+  @override
+  String get classicMedalGrandSlamHow => '7大会すべてを制覇する。';
+
+  @override
+  String get classicMedalSevenFlags => '7つの国旗';
+
+  @override
+  String get classicMedalSevenFlagsHow => '7つの異なる代表で優勝する。';
+
+  @override
+  String get classicMedalConfederations => '6つの連盟';
+
+  @override
+  String get classicMedalConfederationsHow => '6つの大陸連盟それぞれの代表で優勝する。';
+
+  @override
+  String get classicMedalOneNation => '一つの代表、すべての時代';
+
+  @override
+  String get classicMedalOneNationHow => 'すべての大会を同じ代表で制覇する。';
+
+  @override
+  String get classicMedalPerfect => '完璧主義者';
+
+  @override
+  String get classicMedalPerfectHow => '一つの大会のメダルをすべて獲得する。';
+
+  @override
+  String get classicNationRussia => 'ロシア';
+
+  @override
+  String get classicNationSerbiaMontenegro => 'セルビア・モンテネグロ';
+
+  @override
+  String get paywallBenefitClassicCups =>
+      'すべてのクラシックカップ: 2002年、2010年、2022年の世界選手権も実際の組み合わせで再現してプレイできます。';
+
+  @override
+  String get editorClassicBlurb => '過去のすべての世界選手権の代表: 実力、ユニフォーム、選手。';
+
+  @override
+  String get editorClassicStar => '最高の選手';
+
+  @override
+  String get editorClassicDepth => '控え';
+
+  @override
+  String get editorClassicKit => 'ユニフォームの色';
+
+  @override
+  String get editorClassicPrimary => 'シャツ';
+
+  @override
+  String get editorClassicSecondary => 'アクセント';
+
+  @override
+  String get editorClassicReset => 'このチームをリセット';
 }

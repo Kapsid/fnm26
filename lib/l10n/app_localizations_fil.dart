@@ -19147,4 +19147,234 @@ class AppLocalizationsFil extends AppLocalizations {
   String euro28PlayoffIntroPaths(int count) {
     return 'Pasok na ang mga nanalo sa group at ang walong pinakamahusay na pumangalawa, at ang mga host na hindi nakapasok ay kukuha ng mga puwestong nakalaan sa kanila. Ang huling $count puwesto ay pagpapasyahan sa Marso sa mga landas na may apat na koponan: isang laro na semi-final sa mas mataas ang ranggo, saka isang laro na final.';
   }
+
+  @override
+  String get classicCupsTitle => 'Mga Klasikong Torneo';
+
+  @override
+  String get classicCupsIntro =>
+      'Laruing muli ang isang tunay na Kampeonato ng Mundo: ang mga host, ang draw, ang format. Pumili ng kahit anong pambansang koponan at dalhin ito hanggang dulo.';
+
+  @override
+  String classicEditionLabel(String year, String hosts) {
+    return 'Kampeonato ng Mundo $year · $hosts';
+  }
+
+  @override
+  String classicHostsTwo(String first, String second) {
+    return '$first at $second';
+  }
+
+  @override
+  String classicHostsThree(String first, String second, String third) {
+    return '$first, $second at $third';
+  }
+
+  @override
+  String classicTeamsCount(int count) {
+    return '$count koponan';
+  }
+
+  @override
+  String classicRealChampion(String nation) {
+    return 'Tunay na kampeon: $nation';
+  }
+
+  @override
+  String classicMedalsProgress(int earned, int total) {
+    return '$earned sa $total medalya';
+  }
+
+  @override
+  String get classicPickNation => 'Pumili ng pambansang koponan';
+
+  @override
+  String get classicStart => 'Simulan ang torneo';
+
+  @override
+  String get classicAbandonConfirm =>
+      'Iwanan ang subok na ito? Mawawala ang lahat ng larong nalaro na.';
+
+  @override
+  String classicRunWith(String nation) {
+    return 'Kasalukuyang subok kasama ang $nation';
+  }
+
+  @override
+  String get classicLockedNote =>
+      'Bahagi ng Unlimited ang edisyong ito. Silipin na ang mga host at ang draw; kailangan ng Unlimited para malaro ito.';
+
+  @override
+  String classicPot(int pot) {
+    return 'Pot $pot';
+  }
+
+  @override
+  String get classicWonHere => 'Napanalunan na gamit ang koponang ito';
+
+  @override
+  String get classicNextMatch => 'Susunod na laro';
+
+  @override
+  String get classicPlayMatch => 'Laruin ang laro';
+
+  @override
+  String get classicTabGroups => 'Mga grupo';
+
+  @override
+  String classicMatchday(int number) {
+    return 'Matchday $number';
+  }
+
+  @override
+  String get classicBestXi => 'Pinakamahusay na labing-isa';
+
+  @override
+  String get classicChampionTitle => 'Mga kampeon ng mundo!';
+
+  @override
+  String classicChampionBody(String nation, String year) {
+    return 'Nanalo ang $nation sa Kampeonato ng Mundo $year.';
+  }
+
+  @override
+  String get classicOutTitle => 'Natanggal';
+
+  @override
+  String classicOutBody(String stage, String nation) {
+    return '$stage: dito nagtatapos ang daan ng $nation.';
+  }
+
+  @override
+  String get classicMedalsEarned => 'Mga nakuhang medalya';
+
+  @override
+  String get classicNoRun =>
+      'Walang kasalukuyang subok. Pumili ng pambansang koponan para magsimula.';
+
+  @override
+  String classicPensShort(int home, int away) {
+    return '$home-$away sa penalty';
+  }
+
+  @override
+  String get classicMedalsTitle => 'Mga medalya';
+
+  @override
+  String get classicMedalsAll => 'Lahat ng edisyon';
+
+  @override
+  String get classicMedalLocked => 'Kailangan ng Unlimited';
+
+  @override
+  String get classicMedalChampion => 'Kampeon';
+
+  @override
+  String get classicMedalChampionHow =>
+      'Ipanalo ang edisyon gamit ang kahit anong koponan.';
+
+  @override
+  String get classicMedalCollection => 'Bawat koponan';
+
+  @override
+  String get classicMedalCollectionHow =>
+      'Ipanalo ang edisyon gamit ang bawat kalahok na koponan.';
+
+  @override
+  String get classicMedalContinents => 'Bawat kontinente';
+
+  @override
+  String get classicMedalContinentsHow =>
+      'Ipanalo ito gamit ang koponan mula sa bawat kumpederasyong naroon.';
+
+  @override
+  String get classicMedalGiantKiller => 'Pumapatay ng higante';
+
+  @override
+  String get classicMedalGiantKillerHow =>
+      'Ipanalo ito gamit ang isang underdog: koponan mula sa huling pot o sa pinakamahinang ikatlo ng mga kalahok.';
+
+  @override
+  String get classicMedalRewrite => 'Isulat muli ang kasaysayan';
+
+  @override
+  String get classicMedalRewriteHow =>
+      'Patalsikin ang koponang tunay na nanalo sa edisyong ito.';
+
+  @override
+  String get classicMedalUnbeaten => 'Walang talo';
+
+  @override
+  String get classicMedalUnbeatenHow =>
+      'Ipanalo ang edisyon nang walang talo kahit isa.';
+
+  @override
+  String get classicMedalGoldenBootHow =>
+      'Gawing top scorer ng torneo ang isa sa iyong mga manlalaro.';
+
+  @override
+  String get classicMedalGrandSlam => 'Grand slam';
+
+  @override
+  String get classicMedalGrandSlamHow => 'Ipanalo ang lahat ng pitong edisyon.';
+
+  @override
+  String get classicMedalSevenFlags => 'Pitong bandila';
+
+  @override
+  String get classicMedalSevenFlagsHow =>
+      'Manalo gamit ang pitong magkakaibang koponan.';
+
+  @override
+  String get classicMedalConfederations => 'Anim na kumpederasyon';
+
+  @override
+  String get classicMedalConfederationsHow =>
+      'Manalo gamit ang koponan mula sa bawat isa sa anim na kumpederasyon.';
+
+  @override
+  String get classicMedalOneNation => 'Isang koponan, bawat panahon';
+
+  @override
+  String get classicMedalOneNationHow =>
+      'Ipanalo ang bawat edisyon gamit ang parehong koponan.';
+
+  @override
+  String get classicMedalPerfect => 'Perpeksiyonista';
+
+  @override
+  String get classicMedalPerfectHow =>
+      'Makuha ang lahat ng medalya ng isang edisyon.';
+
+  @override
+  String get classicNationRussia => 'Russia';
+
+  @override
+  String get classicNationSerbiaMontenegro => 'Serbia at Montenegro';
+
+  @override
+  String get paywallBenefitClassicCups =>
+      'Bawat klasikong torneo: laruin muli pati ang Kampeonato ng Mundo ng 2002, 2010 at 2022, kasama ang tunay nilang mga draw.';
+
+  @override
+  String get editorClassicBlurb =>
+      'Ang mga koponan ng bawat nakaraang Kampeonato ng Mundo: lakas, uniporme at mga manlalaro.';
+
+  @override
+  String get editorClassicStar => 'Pinakamahusay na manlalaro';
+
+  @override
+  String get editorClassicDepth => 'Bangko';
+
+  @override
+  String get editorClassicKit => 'Mga kulay ng uniporme';
+
+  @override
+  String get editorClassicPrimary => 'Jersey';
+
+  @override
+  String get editorClassicSecondary => 'Gilid';
+
+  @override
+  String get editorClassicReset => 'I-reset ang koponang ito';
 }

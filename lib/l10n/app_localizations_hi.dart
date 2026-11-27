@@ -19034,4 +19034,229 @@ class AppLocalizationsHi extends AppLocalizations {
   String euro28PlayoffIntroPaths(int count) {
     return 'ग्रुप विजेता और आठ सर्वश्रेष्ठ उपविजेता क्वालिफ़ाई कर चुके हैं, और चूकने वाले मेज़बान अपने लिए रखी गई जगहें लेते हैं। आखिरी $count जगहें मार्च में चार टीमों के पाथ में तय होती हैं: ऊँची रैंक वाली टीम के मैदान पर एक मैच का सेमीफ़ाइनल, फिर एक ही मैच का फ़ाइनल।';
   }
+
+  @override
+  String get classicCupsTitle => 'क्लासिक कप';
+
+  @override
+  String get classicCupsIntro =>
+      'एक असली विश्व चैंपियनशिप फिर से खेलें: उसके मेज़बान, उसका ड्रॉ, उसका प्रारूप। कोई भी राष्ट्रीय टीम चुनें और उसे आख़िर तक ले जाएँ।';
+
+  @override
+  String classicEditionLabel(String year, String hosts) {
+    return 'विश्व चैंपियनशिप $year · $hosts';
+  }
+
+  @override
+  String classicHostsTwo(String first, String second) {
+    return '$first और $second';
+  }
+
+  @override
+  String classicHostsThree(String first, String second, String third) {
+    return '$first, $second और $third';
+  }
+
+  @override
+  String classicTeamsCount(int count) {
+    return '$count टीमें';
+  }
+
+  @override
+  String classicRealChampion(String nation) {
+    return 'असली चैंपियन: $nation';
+  }
+
+  @override
+  String classicMedalsProgress(int earned, int total) {
+    return '$total में से $earned पदक';
+  }
+
+  @override
+  String get classicPickNation => 'एक राष्ट्रीय टीम चुनें';
+
+  @override
+  String get classicStart => 'टूर्नामेंट शुरू करें';
+
+  @override
+  String get classicAbandonConfirm =>
+      'क्या यह प्रयास छोड़ना है? अब तक खेले गए सभी मैच खो जाएँगे।';
+
+  @override
+  String classicRunWith(String nation) {
+    return 'जारी प्रयास: $nation';
+  }
+
+  @override
+  String get classicLockedNote =>
+      'यह संस्करण Unlimited में शामिल है। मेज़बान और ड्रॉ अभी देखें; इसे खेलने के लिए Unlimited चाहिए।';
+
+  @override
+  String classicPot(int pot) {
+    return 'पॉट $pot';
+  }
+
+  @override
+  String get classicWonHere => 'इस टीम के साथ पहले ही जीत चुके हैं';
+
+  @override
+  String get classicNextMatch => 'अगला मैच';
+
+  @override
+  String get classicPlayMatch => 'मैच खेलें';
+
+  @override
+  String get classicTabGroups => 'ग्रुप';
+
+  @override
+  String classicMatchday(int number) {
+    return 'मैचडे $number';
+  }
+
+  @override
+  String get classicBestXi => 'सर्वश्रेष्ठ एकादश';
+
+  @override
+  String get classicChampionTitle => 'विश्व चैंपियन!';
+
+  @override
+  String classicChampionBody(String nation, String year) {
+    return '$nation ने विश्व चैंपियनशिप $year जीती।';
+  }
+
+  @override
+  String get classicOutTitle => 'बाहर';
+
+  @override
+  String classicOutBody(String stage, String nation) {
+    return '$stage: $nation का सफ़र यहीं ख़त्म होता है।';
+  }
+
+  @override
+  String get classicMedalsEarned => 'जीते गए पदक';
+
+  @override
+  String get classicNoRun =>
+      'कोई प्रयास जारी नहीं है। शुरू करने के लिए एक राष्ट्रीय टीम चुनें।';
+
+  @override
+  String classicPensShort(int home, int away) {
+    return 'पेनल्टी पर $home-$away';
+  }
+
+  @override
+  String get classicMedalsTitle => 'पदक';
+
+  @override
+  String get classicMedalsAll => 'सभी संस्करण';
+
+  @override
+  String get classicMedalLocked => 'Unlimited ज़रूरी';
+
+  @override
+  String get classicMedalChampion => 'चैंपियन';
+
+  @override
+  String get classicMedalChampionHow => 'किसी भी टीम के साथ यह संस्करण जीतें।';
+
+  @override
+  String get classicMedalCollection => 'हर टीम';
+
+  @override
+  String get classicMedalCollectionHow =>
+      'इसमें भाग लेने वाली हर टीम के साथ संस्करण जीतें।';
+
+  @override
+  String get classicMedalContinents => 'हर महाद्वीप';
+
+  @override
+  String get classicMedalContinentsHow =>
+      'मौजूद हर परिसंघ की एक टीम के साथ इसे जीतें।';
+
+  @override
+  String get classicMedalGiantKiller => 'दिग्गजों का शिकारी';
+
+  @override
+  String get classicMedalGiantKillerHow =>
+      'किसी कमज़ोर टीम के साथ जीतें: आख़िरी पॉट या सबसे कमज़ोर एक-तिहाई में से।';
+
+  @override
+  String get classicMedalRewrite => 'इतिहास फिर से लिखें';
+
+  @override
+  String get classicMedalRewriteHow =>
+      'उस टीम को बाहर करें जिसने यह संस्करण असल में जीता था।';
+
+  @override
+  String get classicMedalUnbeaten => 'अजेय';
+
+  @override
+  String get classicMedalUnbeatenHow => 'बिना कोई मैच हारे यह संस्करण जीतें।';
+
+  @override
+  String get classicMedalGoldenBootHow =>
+      'अपने किसी खिलाड़ी को टूर्नामेंट का शीर्ष स्कोरर बनाएँ।';
+
+  @override
+  String get classicMedalGrandSlam => 'ग्रैंड स्लैम';
+
+  @override
+  String get classicMedalGrandSlamHow => 'सभी सात संस्करण जीतें।';
+
+  @override
+  String get classicMedalSevenFlags => 'सात झंडे';
+
+  @override
+  String get classicMedalSevenFlagsHow => 'सात अलग-अलग टीमों के साथ जीतें।';
+
+  @override
+  String get classicMedalConfederations => 'छह परिसंघ';
+
+  @override
+  String get classicMedalConfederationsHow =>
+      'छह परिसंघों में से हर एक की टीम के साथ जीतें।';
+
+  @override
+  String get classicMedalOneNation => 'एक टीम, हर दौर';
+
+  @override
+  String get classicMedalOneNationHow => 'हर संस्करण एक ही टीम के साथ जीतें।';
+
+  @override
+  String get classicMedalPerfect => 'पूर्णतावादी';
+
+  @override
+  String get classicMedalPerfectHow => 'एक संस्करण के सभी पदक जीतें।';
+
+  @override
+  String get classicNationRussia => 'रूस';
+
+  @override
+  String get classicNationSerbiaMontenegro => 'सर्बिया और मोंटेनेग्रो';
+
+  @override
+  String get paywallBenefitClassicCups =>
+      'हर क्लासिक कप: 2002, 2010 और 2022 की विश्व चैंपियनशिप भी उनके असली ड्रॉ के साथ फिर से खेलें।';
+
+  @override
+  String get editorClassicBlurb =>
+      'पिछली सभी विश्व चैंपियनशिप की टीमें: ताक़त, किट और खिलाड़ी।';
+
+  @override
+  String get editorClassicStar => 'सर्वश्रेष्ठ खिलाड़ी';
+
+  @override
+  String get editorClassicDepth => 'बेंच';
+
+  @override
+  String get editorClassicKit => 'किट के रंग';
+
+  @override
+  String get editorClassicPrimary => 'शर्ट';
+
+  @override
+  String get editorClassicSecondary => 'ट्रिम';
+
+  @override
+  String get editorClassicReset => 'इस टीम को रीसेट करें';
 }

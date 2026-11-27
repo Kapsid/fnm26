@@ -121,7 +121,7 @@ Play refuses to update over a build signed with a different key.
 |---|---|
 | Product ID | **`com.fnm.fnm.premium`** (must match `kPremiumProductId`; cannot be changed or reused) |
 | Name | Unlimited / Neomezené FNM |
-| Description | the same two promises the in-app wall makes: endless cycles and more saves |
+| Description | the same promises the in-app wall makes: endless cycles, more saves, and every Classic Cup (the 2002, 2010 and 2022 World Championships to replay; never "World Cup") |
 | Price | **EUR 12.99**, let Play convert the other countries |
 
 Then **Activate** it. An inactive product is invisible to the app, which then

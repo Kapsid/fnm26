@@ -19038,4 +19038,232 @@ class AppLocalizationsTr extends AppLocalizations {
   String euro28PlayoffIntroPaths(int count) {
     return 'Grup birincileri ve en iyi sekiz grup ikincisi katılım hakkı kazandı, kaçıran ev sahipleri de onlara ayrılan yerleri alır. Son $count yer martta dört takımlı yollarda belirlenir: daha üst sıradaki takımın evinde tek maçlık yarı final, ardından tek maçlık final.';
   }
+
+  @override
+  String get classicCupsTitle => 'Klasik Turnuvalar';
+
+  @override
+  String get classicCupsIntro =>
+      'Gerçek bir Dünya Şampiyonası\'nı yeniden oyna: ev sahipleri, kura ve format aynen. Dilediğin milli takımı seç ve onu sonuna kadar götür.';
+
+  @override
+  String classicEditionLabel(String year, String hosts) {
+    return 'Dünya Şampiyonası $year · $hosts';
+  }
+
+  @override
+  String classicHostsTwo(String first, String second) {
+    return '$first ve $second';
+  }
+
+  @override
+  String classicHostsThree(String first, String second, String third) {
+    return '$first, $second ve $third';
+  }
+
+  @override
+  String classicTeamsCount(int count) {
+    return 'Takım sayısı: $count';
+  }
+
+  @override
+  String classicRealChampion(String nation) {
+    return 'Gerçek şampiyon: $nation';
+  }
+
+  @override
+  String classicMedalsProgress(int earned, int total) {
+    return 'Madalya: $earned/$total';
+  }
+
+  @override
+  String get classicPickNation => 'Bir milli takım seç';
+
+  @override
+  String get classicStart => 'Turnuvayı başlat';
+
+  @override
+  String get classicAbandonConfirm =>
+      'Bu denemeden vazgeçilsin mi? Şimdiye kadar oynanan tüm maçlar kaybolur.';
+
+  @override
+  String classicRunWith(String nation) {
+    return 'Devam eden deneme: $nation';
+  }
+
+  @override
+  String get classicLockedNote =>
+      'Bu turnuva Unlimited\'a dahildir. Ev sahiplerine ve kuraya şimdiden göz atabilirsin; oynamak için Unlimited gerekir.';
+
+  @override
+  String classicPot(int pot) {
+    return '$pot. torba';
+  }
+
+  @override
+  String get classicWonHere => 'Bu milli takımla zaten kazanıldı';
+
+  @override
+  String get classicNextMatch => 'Sıradaki maç';
+
+  @override
+  String get classicPlayMatch => 'Maçı oyna';
+
+  @override
+  String get classicTabGroups => 'Gruplar';
+
+  @override
+  String classicMatchday(int number) {
+    return '$number. hafta';
+  }
+
+  @override
+  String get classicBestXi => 'En iyi on bir';
+
+  @override
+  String get classicChampionTitle => 'Dünya şampiyonu!';
+
+  @override
+  String classicChampionBody(String nation, String year) {
+    return '$nation: $year dünya şampiyonu.';
+  }
+
+  @override
+  String get classicOutTitle => 'Elendi';
+
+  @override
+  String classicOutBody(String stage, String nation) {
+    return '$stage: yol burada bitiyor. Takım: $nation.';
+  }
+
+  @override
+  String get classicMedalsEarned => 'Kazanılan madalyalar';
+
+  @override
+  String get classicNoRun =>
+      'Devam eden deneme yok. Başlamak için bir milli takım seç.';
+
+  @override
+  String classicPensShort(int home, int away) {
+    return 'penaltılar $home-$away';
+  }
+
+  @override
+  String get classicMedalsTitle => 'Madalyalar';
+
+  @override
+  String get classicMedalsAll => 'Tüm turnuvalar';
+
+  @override
+  String get classicMedalLocked => 'Unlimited gerekir';
+
+  @override
+  String get classicMedalChampion => 'Şampiyon';
+
+  @override
+  String get classicMedalChampionHow =>
+      'Turnuvayı herhangi bir milli takımla kazan.';
+
+  @override
+  String get classicMedalCollection => 'Her takım';
+
+  @override
+  String get classicMedalCollectionHow =>
+      'Turnuvayı katılan her milli takımla kazan.';
+
+  @override
+  String get classicMedalContinents => 'Her kıta';
+
+  @override
+  String get classicMedalContinentsHow =>
+      'Turnuvayı katılan her konfederasyondan bir takımla kazan.';
+
+  @override
+  String get classicMedalGiantKiller => 'Dev avcısı';
+
+  @override
+  String get classicMedalGiantKillerHow =>
+      'Turnuvayı bir sürprizle kazan: son torbadan ya da alanın en zayıf üçte birinden bir takımla.';
+
+  @override
+  String get classicMedalRewrite => 'Tarihi yeniden yaz';
+
+  @override
+  String get classicMedalRewriteHow =>
+      'Bu turnuvayı gerçekte kazanan takımı ele.';
+
+  @override
+  String get classicMedalUnbeaten => 'Yenilgisiz';
+
+  @override
+  String get classicMedalUnbeatenHow => 'Turnuvayı hiç maç kaybetmeden kazan.';
+
+  @override
+  String get classicMedalGoldenBootHow =>
+      'Oyuncularından biri turnuvanın gol kralı olsun.';
+
+  @override
+  String get classicMedalGrandSlam => 'Büyük slam';
+
+  @override
+  String get classicMedalGrandSlamHow => 'Yedi turnuvanın hepsini kazan.';
+
+  @override
+  String get classicMedalSevenFlags => 'Yedi bayrak';
+
+  @override
+  String get classicMedalSevenFlagsHow => 'Yedi farklı milli takımla kazan.';
+
+  @override
+  String get classicMedalConfederations => 'Altı konfederasyon';
+
+  @override
+  String get classicMedalConfederationsHow =>
+      'Altı konfederasyonun her birinden bir takımla kazan.';
+
+  @override
+  String get classicMedalOneNation => 'Tek takım, her dönem';
+
+  @override
+  String get classicMedalOneNationHow =>
+      'Her turnuvayı aynı milli takımla kazan.';
+
+  @override
+  String get classicMedalPerfect => 'Mükemmeliyetçi';
+
+  @override
+  String get classicMedalPerfectHow =>
+      'Bir turnuvanın tüm madalyalarını kazan.';
+
+  @override
+  String get classicNationRussia => 'Rusya';
+
+  @override
+  String get classicNationSerbiaMontenegro => 'Sırbistan-Karadağ';
+
+  @override
+  String get paywallBenefitClassicCups =>
+      'Tüm klasik turnuvalar: 2002, 2010 ve 2022 Dünya Şampiyonalarını da gerçek kuralarıyla yeniden oyna.';
+
+  @override
+  String get editorClassicBlurb =>
+      'Geçmiş tüm Dünya Şampiyonalarının takımları: güç, formalar ve oyuncular.';
+
+  @override
+  String get editorClassicStar => 'En iyi oyuncu';
+
+  @override
+  String get editorClassicDepth => 'Yedek kulübesi';
+
+  @override
+  String get editorClassicKit => 'Forma renkleri';
+
+  @override
+  String get editorClassicPrimary => 'Forma';
+
+  @override
+  String get editorClassicSecondary => 'Şerit';
+
+  @override
+  String get editorClassicReset => 'Bu takımı sıfırla';
 }
