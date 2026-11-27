@@ -1171,9 +1171,15 @@ void main() {
           }
         }
       }
+      // Half the quiet time is the rule for a match of ordinary
+      // possession. A very one-sided one (under 38% or over 62% of the ball,
+      // a 1-4 with 35% say) spends its quiet spells handing the ball to the
+      // side the next moment belongs to, which is the other rule this layer
+      // keeps, so it is held to 40%; the whole sample below to 60%.
+      final lopsided = share < 0.38 || share > 0.62;
       expect(
         owed / quiet,
-        greaterThanOrEqualTo(0.5),
+        greaterThanOrEqualTo(lopsided ? 0.4 : 0.5),
         reason:
             'match $seed: owed side on the ball '
             '${(100 * owed / quiet).toStringAsFixed(0)}% of quiet time',
@@ -1188,6 +1194,7 @@ void main() {
       'over $checked matches',
     );
     expect(checked, greaterThanOrEqualTo(5));
+    expect(owedTotal / quietTotal, greaterThanOrEqualTo(0.6));
   });
 
   test('a staging context says how much ball time each side is owed', () {
