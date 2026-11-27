@@ -5,6 +5,7 @@
 import 'dart:math' as math;
 
 import 'package:fnm/core/rng/seeded_rng.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
@@ -24,47 +25,162 @@ typedef ClassicGoal = ({int fixture, int minute, int player, int nation});
 /// Where a run stands.
 enum ClassicRunStatus { active, champion, eliminated }
 
-/// The manager's own set-up for his next match.
+/// The manager's own set-up for his next match: everything the career's
+/// tactics screen sets (the shape and its switched places, the XI, the style
+/// and its six dials, the full-backs, each slot's role and run, the throw-ins
+/// and the set-piece takers), kept in the run's own storage.
 class ClassicLineup {
   const ClassicLineup({
     this.formation = Formation.f433,
     this.style = Playstyle.balanced,
     this.xi = const [],
+    this.instructions,
+    this.fullBacks = FullBackPushes.neutral,
+    this.switches = SlotSwitches.none,
+    this.throwInStyle = ThrowInStyle.neutral,
+    this.roles = SlotRoles.none,
+    this.arrows = SlotArrows.none,
+    this.penaltyTaker,
+    this.deadBallTaker,
+    this.throwInTaker,
   });
 
-  factory ClassicLineup.fromJson(Map<String, Object?> j) => ClassicLineup(
-    formation: Formation.values.firstWhere(
+  factory ClassicLineup.fromJson(Map<String, Object?> j) {
+    final formation = Formation.values.firstWhere(
       (f) => f.name == j['f'],
       orElse: () => Formation.f433,
-    ),
-    style: Playstyle.values.firstWhere(
-      (s) => s.name == j['s'],
-      orElse: () => Playstyle.balanced,
-    ),
-    xi: ((j['xi'] as List?) ?? const []).cast<int>(),
-  );
+    );
+    int? id(Object? v) => v is int ? v : null;
+    final dials = j['ins'];
+    return ClassicLineup(
+      formation: formation,
+      style: Playstyle.values.firstWhere(
+        (s) => s.name == j['s'],
+        orElse: () => Playstyle.balanced,
+      ),
+      xi: ((j['xi'] as List?) ?? const []).cast<int>(),
+      instructions: dials is List && dials.length == 6
+          ? TacticalInstructions(
+              mentality: dials[0] as int,
+              pressing: dials[1] as int,
+              tempo: dials[2] as int,
+              width: dials[3] as int,
+              defensiveLine: dials[4] as int,
+              directness: dials[5] as int,
+            )
+          : null,
+      fullBacks: FullBackPushes.fromJson(j['fb']),
+      switches: SlotSwitches.fromJson(j['sw']).validFor(formation),
+      throwInStyle: ThrowInStyleX.parse('${j['ti'] ?? ''}'),
+      roles: SlotRoles.fromJson(j['ro']),
+      arrows: SlotArrows.fromJson(j['ar']),
+      penaltyTaker: id(j['pk']),
+      deadBallTaker: id(j['db']),
+      throwInTaker: id(j['tt']),
+    );
+  }
 
   final Formation formation;
   final Playstyle style;
 
-  /// The chosen XI in slot order; empty lets the best fit pick.
+  /// The chosen XI in slot order (-1 an empty slot); empty lets the best fit
+  /// pick.
   final List<int> xi;
 
-  ClassicLineup copyWith({
-    Formation? formation,
-    Playstyle? style,
-    List<int>? xi,
-  }) => ClassicLineup(
-    formation: formation ?? this.formation,
-    style: style ?? this.style,
-    xi: xi ?? this.xi,
+  /// The six dials, or null for [style]'s own (a run from before them).
+  final TacticalInstructions? instructions;
+  final FullBackPushes fullBacks;
+  final SlotSwitches switches;
+  final ThrowInStyle throwInStyle;
+  final SlotRoles roles;
+  final SlotArrows arrows;
+
+  /// The named takers; null lets the engine pick.
+  final int? penaltyTaker;
+  final int? deadBallTaker;
+  final int? throwInTaker;
+
+  /// The dials the side plays: its own, or its style's.
+  TacticalInstructions get dials =>
+      instructions ?? style.instructions ?? const TacticalInstructions();
+
+  /// The place each slot plays, its switches applied.
+  List<PlayerPosition> get positions => switches.apply(formation);
+
+  /// The career's [Tactic] for this set-up, with [lineup] as its XI.
+  Tactic tactic(List<int?> lineup) => Tactic(
+    formation: formation,
+    lineup: lineup,
+    instructions: dials,
+    playstyle: PlaystyleX.matching(dials),
+    fullBacks: fullBacks,
+    switches: switches,
+    throwInStyle: throwInStyle,
+    roles: roles,
+    arrows: arrows,
   );
 
-  Map<String, Object?> toJson() => {
-    'f': formation.name,
-    's': style.name,
-    if (xi.isNotEmpty) 'xi': xi,
-  };
+  /// [t] as set on the tactics screen, the takers kept.
+  ClassicLineup withTactic(Tactic t) => ClassicLineup(
+    formation: t.formation,
+    style: t.playstyle,
+    xi: [for (final id in t.lineup) id ?? -1],
+    instructions: t.instructions,
+    fullBacks: t.fullBacks,
+    switches: t.switches,
+    throwInStyle: t.throwInStyle,
+    roles: t.roles,
+    arrows: t.arrows,
+    penaltyTaker: penaltyTaker,
+    deadBallTaker: deadBallTaker,
+    throwInTaker: throwInTaker,
+  );
+
+  /// This set-up with its takers named (null for the engine's pick).
+  ClassicLineup withTakers({
+    required int? penalty,
+    required int? deadBall,
+    required int? throwIn,
+  }) => ClassicLineup(
+    formation: formation,
+    style: style,
+    xi: xi,
+    instructions: instructions,
+    fullBacks: fullBacks,
+    switches: switches,
+    throwInStyle: throwInStyle,
+    roles: roles,
+    arrows: arrows,
+    penaltyTaker: penalty,
+    deadBallTaker: deadBall,
+    throwInTaker: throwIn,
+  );
+
+  Map<String, Object?> toJson() {
+    final i = instructions;
+    return {
+      'f': formation.name,
+      's': style.name,
+      if (xi.isNotEmpty) 'xi': xi,
+      if (i != null)
+        'ins': [
+          i.mentality,
+          i.pressing,
+          i.tempo,
+          i.width,
+          i.defensiveLine,
+          i.directness,
+        ],
+      if (fullBacks != FullBackPushes.neutral) 'fb': fullBacks.toJson(),
+      if (switches.bySlot.isNotEmpty) 'sw': switches.toJson(),
+      if (throwInStyle != ThrowInStyle.neutral) 'ti': throwInStyle.name,
+      if (roles.bySlot.isNotEmpty) 'ro': roles.toJson(),
+      if (arrows.bySlot.isNotEmpty) 'ar': arrows.toJson(),
+      'pk': ?penaltyTaker,
+      'db': ?deadBallTaker,
+      'tt': ?throwInTaker,
+    };
+  }
 }
 
 /// One Classic Cup run: the edition, the manager's nation and every match of
@@ -231,9 +347,16 @@ class ClassicTournament {
   /// The manager's XI for the next match: his own pick where every man is
   /// fit and free, filled from the best fit otherwise.
   List<Player> myXi() {
+    final byId = {for (final p in availableOf(me)) p.id: p};
+    return [for (final id in myLineup()) ?byId[id ?? -1]];
+  }
+
+  /// [myXi] by slot, as the tactics screen lays it out: each of the eleven
+  /// slots' man (null only when nobody is left to fill one).
+  List<int?> myLineup() {
     final pool = availableOf(me);
     final byId = {for (final p in pool) p.id: p};
-    final slots = run.lineup.formation.positions;
+    final slots = run.lineup.positions;
     final chosen = <int?>[
       for (var i = 0; i < 11; i++)
         if (i < run.lineup.xi.length && byId.containsKey(run.lineup.xi[i]))
@@ -247,10 +370,12 @@ class ClassicTournament {
     ];
     // Each open slot takes the best fit for it among the men not picked.
     final fill = bestEleven(run.lineup.formation, rest, slots: slots);
-    return [
-      for (var i = 0; i < 11; i++) ?byId[chosen[i] ?? fill[i] ?? -1],
-    ];
+    return [for (var i = 0; i < 11; i++) chosen[i] ?? fill[i]];
   }
+
+  /// [id] if he starts, else null (the engine's own pick).
+  static int? _ifIn(int? id, List<Player> xi) =>
+      id != null && xi.any((p) => p.id == id) ? id : null;
 
   static double _strength(List<Player> xi) => xi.isEmpty
       ? 50
@@ -271,8 +396,18 @@ class ClassicTournament {
           nationId: nationId,
           xi: xi,
           formation: run.lineup.formation,
-          instructions:
-              run.lineup.style.instructions ?? const TacticalInstructions(),
+          instructions: run.lineup.dials,
+          // Everything the tactics screen set, read as a career's match
+          // reads its tactic: the switched places, each slot's role and
+          // run, the full-backs, the throw-ins and the named takers.
+          switches: run.lineup.switches,
+          slotRoles: run.lineup.roles,
+          arrows: run.lineup.arrows,
+          fullBacks: run.lineup.fullBacks,
+          throwInStyle: run.lineup.throwInStyle,
+          penaltyTakerId: _ifIn(run.lineup.penaltyTaker, xi),
+          deadBallTakerId: _ifIn(run.lineup.deadBallTaker, xi),
+          throwInTakerId: _ifIn(run.lineup.throwInTaker, xi),
         ),
         bench: [
           for (final p in pool)

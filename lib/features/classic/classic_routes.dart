@@ -9,6 +9,7 @@ import 'package:fnm/features/classic/classic_editor_screen.dart';
 import 'package:fnm/features/classic/classic_match_host.dart';
 import 'package:fnm/features/classic/classic_medals_screen.dart';
 import 'package:fnm/features/classic/classic_run_screen.dart';
+import 'package:fnm/features/classic/classic_tactics_host.dart';
 import 'package:go_router/go_router.dart';
 
 /// The Classic Cups routes, kept here so the router gains one line.
@@ -31,6 +32,10 @@ List<GoRoute> classicGoRoutes() {
     GoRoute(
       path: Routes.classicMatch,
       builder: (context, state) => ClassicMatchHost(year: year(state)),
+    ),
+    GoRoute(
+      path: Routes.classicTactics,
+      builder: (context, state) => ClassicTacticsHost(year: year(state)),
     ),
     GoRoute(
       path: Routes.classicMedals,

@@ -320,6 +320,10 @@ abstract final class Routes {
   /// A Classic Cup run's next match, live. Expects `?year=`.
   static const classicMatch = '/classic/match';
 
+  /// A Classic Cup run's tactics, on the career's tactics screen. Expects
+  /// `?year=`.
+  static const classicTactics = '/classic/tactics';
+
   /// The Classic Cups medals; `?year=` for one edition's only.
   static const classicMedals = '/classic/medals';
 
@@ -383,6 +387,7 @@ abstract final class Routes {
     classicEdition,
     classicRun,
     classicMatch,
+    classicTactics,
     classicMedals,
     editorClassic,
   ];

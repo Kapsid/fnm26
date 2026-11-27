@@ -163,10 +163,12 @@ AppBar classicAppBar(
     icon: const Icon(Icons.arrow_back, color: AppColors.primary),
     onPressed: onBack,
   ),
-  title: Text(
+  // An edition's name runs long ("World Championship 2026 · United States,
+  // Canada & Mexico"): it wraps, and scales down only if even two lines
+  // will not fit, so it is never cut short.
+  title: ClassicFitTitle(
     title,
-    maxLines: 1,
-    overflow: TextOverflow.ellipsis,
+    maxHeight: kToolbarHeight - 8,
     style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
   ),
   centerTitle: true,
@@ -195,5 +197,50 @@ class ClassicKitSwatch extends StatelessWidget {
         ],
       ),
     ),
+  );
+}
+
+/// A title that is never cut short: it takes the width it is given, wraps
+/// over as many lines as it needs, and scales down when they are taller
+/// than [maxHeight] (an app bar's).
+class ClassicFitTitle extends StatelessWidget {
+  const ClassicFitTitle(
+    this.text, {
+    this.style,
+    this.textAlign = TextAlign.center,
+    this.maxHeight = double.infinity,
+    super.key,
+  });
+
+  final String text;
+  final TextStyle? style;
+  final TextAlign textAlign;
+  final double maxHeight;
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
+      // softWrap and overflow set here: an app bar's title style asks for
+      // one line, ellipsised.
+      final label = Text(
+        text,
+        textAlign: textAlign,
+        softWrap: true,
+        overflow: TextOverflow.visible,
+        style: style,
+      );
+      if (!constraints.hasBoundedWidth) return label;
+      return ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: constraints.hasBoundedHeight
+              ? constraints.maxHeight.clamp(0, maxHeight)
+              : maxHeight,
+        ),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: SizedBox(width: constraints.maxWidth, child: label),
+        ),
+      );
+    },
   );
 }
