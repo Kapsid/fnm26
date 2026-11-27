@@ -11,7 +11,8 @@ import 'package:flutter/services.dart';
 /// no-op when [enabled] is false (the settings toggle).
 abstract final class MatchFeedback {
   /// Told of every cue given (not those muted by the setting), by name:
-  /// `goal`, `kickoff`, `redCard`, `fullTime`. For tests only.
+  /// `goal`, `kickoff`, `redCard`, `fullTime`, `shootoutGoal`,
+  /// `shootoutMiss`, `shootoutWinner`. For tests only.
   @visibleForTesting
   static void Function(String cue)? debugOnCue;
 
@@ -22,6 +23,33 @@ abstract final class MatchFeedback {
     debugOnCue?.call('goal');
     // The strongest tap and a long buzz after it: a goal is felt in the
     // hand (the picture does not blink for it).
+    HapticFeedback.heavyImpact();
+    HapticFeedback.vibrate();
+    SystemSound.play(SystemSoundType.alert);
+  }
+
+  /// A shootout kick scored (not the deciding one): the goal's heavy tap
+  /// without its long buzz or tone, a shade lighter than a goal in play,
+  /// as there may be ten of them in a row.
+  static void shootoutGoal(bool enabled) {
+    if (!enabled) return;
+    debugOnCue?.call('shootoutGoal');
+    HapticFeedback.heavyImpact();
+  }
+
+  /// A shootout kick saved, wide or off the woodwork (not the deciding
+  /// one): a light tick.
+  static void shootoutMiss(bool enabled) {
+    if (!enabled) return;
+    debugOnCue?.call('shootoutMiss');
+    HapticFeedback.lightImpact();
+  }
+
+  /// The kick that decides the shootout, whatever became of it: felt as a
+  /// goal in play is (the heavy tap, the long buzz and the tone).
+  static void shootoutWinner(bool enabled) {
+    if (!enabled) return;
+    debugOnCue?.call('shootoutWinner');
     HapticFeedback.heavyImpact();
     HapticFeedback.vibrate();
     SystemSound.play(SystemSoundType.alert);

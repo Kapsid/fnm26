@@ -14,14 +14,18 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
+import 'package:fnm/domain/services/match/pitch/moment_staging.dart';
 import 'package:fnm/domain/services/match/pitch/referee_card.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
+import 'package:fnm/features/match/match_feedback.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
+import 'package:fnm/features/match/penalty_order_sheet.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
 import 'package:fnm/features/match/pitch/pitch_match_view.dart';
 import 'package:fnm/features/match/pitch/pitch_mode_controller.dart';
@@ -29,8 +33,10 @@ import 'package:fnm/features/match/pitch/pitch_playback.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/match/pitch/referee_painter.dart';
+import 'package:fnm/features/match/pitch/shootout_stage.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/widgets/primary_button.dart';
 import 'package:fnm/shared/widgets/whole_text.dart' show initialledName;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -169,8 +175,8 @@ MatchResult _liveResim(MatchPreview p, int salt) => playWithAiExtraTimeSub(
   fixtureId: p.fixture.id,
 );
 
-int _salt(MatchPreview p, bool Function(MatchResult r) wanted) {
-  for (var salt = 1; salt < 4000; salt++) {
+int _salt(MatchPreview p, bool Function(MatchResult r) wanted, {int from = 1}) {
+  for (var salt = from; salt < 4000; salt++) {
     if (wanted(_liveResim(p, salt))) return salt;
   }
   throw StateError('no salt found');
@@ -189,6 +195,7 @@ Future<ProviderContainer> _pump(
   WeatherKind? weather,
   Size size = const Size(400, 2000),
   FormFactor? formFactor,
+  bool haptics = true,
 }) async {
   if (resetPrefs) SharedPreferences.setMockInitialValues(prefs);
   tester.view
@@ -198,7 +205,7 @@ Future<ProviderContainer> _pump(
   final c = ProviderContainer(
     overrides: [
       matchPreviewProvider(1).overrideWith((ref) async => preview),
-      soundHapticsEnabledProvider.overrideWith((ref) => true),
+      soundHapticsEnabledProvider.overrideWith((ref) => haptics),
       matchAttemptSaltProvider.overrideWithValue(() => salt),
       pitchStadiumBakerProvider.overrideWithValue(_InstantBaker(_image)),
       // Built in place: the isolate build is checked on its own
@@ -273,6 +280,11 @@ const String _buzz = 'HapticFeedback.vibrate null';
 
 int _count(String kind) => _feedback.where((f) => f == kind).length;
 
+const String _light = 'HapticFeedback.vibrate HapticFeedbackType.lightImpact';
+
+/// Every cue [MatchFeedback] gave, by name.
+final List<String> _cues = [];
+
 /// A goal's tone (desktop only, but asked for on every platform).
 const String _alert = 'SystemSound.play SystemSoundType.alert';
 
@@ -304,6 +316,93 @@ int _goalSalt(MatchPreview p, bool Function(int minute) minutes) =>
       return g.isNotEmpty && minutes(g.first.minute);
     });
 
+/// A level semi-final that goes to penalties: from salt 300 on, the first
+/// is one with a kick saved before the end (the sheet's own takers).
+int _shootoutSalt(MatchPreview p, {int from = 300}) => _salt(p, (r) {
+  final et = r.extraTime;
+  return et != null &&
+      et.homeScore == et.awayScore &&
+      !r.events.any((e) => e.minute >= 119);
+}, from: from);
+
+/// The shootout strip's outcome and how many kicks it shows.
+({KnockoutOutcome outcome, int revealed}) _strip(WidgetTester tester) {
+  final w =
+      tester.widget(
+            find.byWidgetPredicate(
+              (w) => w.runtimeType.toString() == '_ShootoutStrip',
+            ),
+          )
+          as dynamic;
+  return (outcome: w.outcome as KnockoutOutcome, revealed: w.revealed as int);
+}
+
+ShootoutStageController? _stage(WidgetTester tester) =>
+    tester.widget<PitchMatchView>(find.byType(PitchMatchView)).shootout;
+
+/// What each of [kicks] should be felt as: a scored kick a heavy tap, a
+/// missed one a light tick, the last (the one that decides it) a goal's.
+List<String> _shootoutCues(List<StagedShootoutKick> kicks) => [
+  for (final (i, k) in kicks.indexed)
+    if (i == kicks.length - 1)
+      'shootoutWinner'
+    else if (k.kick.result == KickResult.scored)
+      'shootoutGoal'
+    else
+      'shootoutMiss',
+];
+
+/// The shootout cues given so far, in order.
+List<String> get _kickCues => [
+  for (final c in _cues)
+    if (c.startsWith('shootout')) c,
+];
+
+/// Names the sheet's own takers.
+Future<void> _takeThem(WidgetTester tester) async {
+  // The sheet slides up first.
+  await tester.pump(const Duration(seconds: 1));
+  await tester.tap(
+    find.descendant(
+      of: find.byType(PenaltyOrderSheet),
+      matching: find.byType(PrimaryButton),
+    ),
+  );
+  await tester.pump();
+  await tester.pump(const Duration(milliseconds: 500));
+}
+
+/// On the 2D TV, plays a level semi-final through its intervals to the
+/// taker sheet (the shootout's kicks still to come).
+Future<void> _pitchToSheet(WidgetTester tester, {bool haptics = true}) async {
+  final preview = _preview(round: 'SF');
+  await _pump(
+    tester,
+    preview: preview,
+    salt: _shootoutSalt(preview),
+    prefs: {kMatchViewModePrefsKey: 'pitch'},
+    haptics: haptics,
+  );
+  await _until(tester, () => _ready(tester) && _clock(tester).playing);
+  final pb = _pb(tester);
+  Future<void> through(Duration whistle, String heading) async {
+    await _seek(tester, whistle - const Duration(milliseconds: 100));
+    await _until(tester, () => find.text(heading).evaluate().isNotEmpty);
+    await tester.tap(find.text(enL.matchContinue).last);
+    await tester.pump();
+    await _until(tester, () => _clock(tester).playing);
+  }
+
+  await through(pb.halfTime, enL.matchHalfTime);
+  await through(pb.extraTimeStart!, enL.matchExtraTimeAhead);
+  await through(pb.extraTimeHalf!, enL.matchExtraTimeHalf);
+  await _seek(tester, pb.pacer.screenAt(120, 0, within: 0.5));
+  await _until(
+    tester,
+    () => find.byType(PenaltyOrderSheet).evaluate().isNotEmpty,
+  );
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -313,6 +412,8 @@ void main() {
 
   setUp(() {
     _feedback.clear();
+    _cues.clear();
+    MatchFeedback.debugOnCue = _cues.add;
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(SystemChannels.platform, (call) async {
           if (call.method == 'HapticFeedback.vibrate' ||
@@ -324,6 +425,7 @@ void main() {
   });
 
   tearDown(() {
+    MatchFeedback.debugOnCue = null;
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(SystemChannels.platform, null);
   });
@@ -441,6 +543,120 @@ void main() {
       await _until(tester, () => !_clock(tester).playing);
       await tester.pump(const Duration(seconds: 2));
       expect(_count(_buzz) + _count(_heavy) + _count(_alert), 0);
+    });
+  });
+
+  group('the shootout', () {
+    testWidgets('2D TV: each kick is felt once as its result lands, a goal '
+        'heavy, a miss light, the deciding kick as a goal', (tester) async {
+      await _pitchToSheet(tester);
+      _feedback.clear();
+      _cues.clear();
+      await _takeThem(tester);
+      await _until(tester, () => _stage(tester)?.running ?? false);
+      final stage = _stage(tester)!;
+      final kicks = stage.kicks;
+      // Nothing before the first ball arrives.
+      await tester.pump(const Duration(milliseconds: 2500));
+      expect(_kickCues, isEmpty);
+      await tester.pump(const Duration(milliseconds: 700));
+      expect(_kickCues, _shootoutCues(kicks).take(1));
+      for (var i = 0; i < 4000 && stage.running; i++) {
+        await tester.pump(const Duration(milliseconds: 16));
+        // Never ahead of the tally, never behind it.
+        expect(_kickCues, hasLength(_strip(tester).revealed));
+      }
+      await tester.pump(const Duration(seconds: 1));
+      final cues = _shootoutCues(kicks);
+      expect(cues, contains('shootoutMiss'), reason: 'a miss to feel');
+      expect(_kickCues, cues);
+      // On the platform: one heavy tap per goal and for the winner, one
+      // light tick per miss, and the long buzz and the tone for the
+      // winner alone.
+      expect(_count(_heavy), cues.where((c) => c != 'shootoutMiss').length);
+      expect(_count(_light), cues.where((c) => c == 'shootoutMiss').length);
+      expect((_count(_buzz), _count(_alert)), (1, 1));
+    });
+
+    testWidgets('a switch to the Timeline and back mid-shootout feels no '
+        'kick twice and skips none', (tester) async {
+      await _pitchToSheet(tester);
+      await _takeThem(tester);
+      await _until(tester, () => _stage(tester)?.running ?? false);
+      final stage = _stage(tester)!;
+      final kicks = stage.kicks;
+      await _until(tester, () => _strip(tester).revealed >= 2);
+      _screen(tester).switchMode();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 800));
+      expect(_strip(tester).revealed, greaterThanOrEqualTo(3));
+      expect(_kickCues, hasLength(_strip(tester).revealed));
+      _screen(tester).switchMode();
+      await tester.pump();
+      await _until(tester, () => _ready(tester) && stage.running);
+      // The kick restaged from its start is the next one, not the last.
+      await tester.pump(const Duration(milliseconds: 1000));
+      expect(_kickCues, hasLength(_strip(tester).revealed));
+      await _until(
+        tester,
+        () => _strip(tester).revealed == kicks.length && !stage.running,
+      );
+      await tester.pump(const Duration(seconds: 1));
+      expect(_kickCues, _shootoutCues(kicks));
+    });
+
+    testWidgets('Timeline: each kick the strip reveals is felt once', (
+      tester,
+    ) async {
+      final preview = _preview(round: 'SF');
+      await _pump(
+        tester,
+        preview: preview,
+        salt: _shootoutSalt(preview),
+        prefs: {kMatchViewModePrefsKey: 'timeline'},
+      );
+      for (
+        var i = 0;
+        i < 4000 && find.byType(PenaltyOrderSheet).evaluate().isEmpty;
+        i++
+      ) {
+        await tester.pump(const Duration(milliseconds: 300));
+        final prompt = find.byType(HalfTimePrompt);
+        if (prompt.evaluate().isNotEmpty) {
+          await tester.tap(
+            find.descendant(of: prompt, matching: find.text(enL.matchContinue)),
+          );
+          await tester.pump();
+        }
+      }
+      expect(find.byType(PenaltyOrderSheet), findsOneWidget);
+      _feedback.clear();
+      _cues.clear();
+      await _takeThem(tester);
+      final kicks = ShootoutStaging.order(_strip(tester).outcome);
+      for (var i = 0; i < 400 && _strip(tester).revealed < kicks.length; i++) {
+        await tester.pump(const Duration(milliseconds: 50));
+        expect(_kickCues, hasLength(_strip(tester).revealed));
+      }
+      await tester.pump(const Duration(seconds: 2));
+      expect(_kickCues, _shootoutCues(kicks));
+      expect((_count(_buzz), _count(_alert)), (1, 1));
+    });
+
+    testWidgets('with sound and haptics off, the kicks are not felt', (
+      tester,
+    ) async {
+      await _pitchToSheet(tester, haptics: false);
+      await _takeThem(tester);
+      await _until(tester, () => _stage(tester)?.running ?? false);
+      final stage = _stage(tester)!;
+      await _until(tester, () => !stage.running);
+      await tester.pump(const Duration(seconds: 1));
+      expect(_strip(tester).revealed, stage.kicks.length);
+      expect(_cues, isEmpty);
+      // (The buttons' own clicks aside.)
+      expect(_feedback.where((f) => f.startsWith('HapticFeedback')), isEmpty);
+      expect(_count(_alert), 0);
     });
   });
 
