@@ -5,6 +5,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/services/competition/euro_playoffs.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/press/conference.dart';
 import 'package:fnm/domain/services/press/expectation.dart';
@@ -178,7 +179,11 @@ class PressDesk {
           date: f.date,
           scored: mine(f),
           conceded: theirs(f),
-          knockout: Rounds.isKnockout(f.round),
+          // Europe's two-legged play-off ties (EPL1, EPL2) are knockouts
+          // too, though their codes carry no knockout suffix.
+          knockout:
+              Rounds.isKnockout(f.round) ||
+              EuroPlayoffs.rounds.contains(f.round),
           // The group's last game for him: nothing of his left to play in it.
           lastGroupMatch:
               f.groupId != null &&

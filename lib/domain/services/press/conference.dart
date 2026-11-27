@@ -64,7 +64,9 @@ enum PreviewCampaign {
     'AQ4' ||
     'AQ5L1' ||
     'OFINAL' => worldPlayoff,
-    'EPSF' => continentalPlayoff,
+    // Europe's play-off: a path's semi-final, or the first leg of a
+    // two-legged tie in the EURO 2028 shape (`EuroPlayoffs.legOneRound`).
+    'EPSF' || 'EPL1' => continentalPlayoff,
     _ => null,
   };
 }
