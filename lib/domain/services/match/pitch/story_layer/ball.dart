@@ -480,6 +480,13 @@ extension _BallMechanics on _Builder {
         : null;
     recentOnBall.add(to.index);
     if (recentOnBall.length > 4) recentOnBall.removeAt(0);
+    if (passer != null &&
+        f.pass &&
+        agents[passer].side == to.side &&
+        agents[passer].slot == sides[to.side].gkSlot) {
+      fromKeeper = to.index;
+      fromKeeperAt = t;
+    }
     final side = sides[to.side];
     if (to.side != possession) {
       sides[possession].counterUntil = -1;

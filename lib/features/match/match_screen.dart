@@ -446,6 +446,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   int _penRevealed = 0;
   Timer? _penTimer;
 
+  /// How many shootout kicks have been felt in the hand so far (see
+  /// [_feelShootout]): never more than [_penRevealed], and never back.
+  int _penFelt = 0;
+
   /// The five takers the manager has named, in the order they step up. Null
   /// until they choose, or until they dismiss the sheet, which takes the
   /// automatic order. Sudden death cycles back through the same list.
@@ -669,6 +673,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       final res = _result;
       if (res != null) _koOutcome = _knockoutOutcome(preview, res);
       _penRevealed = 0;
+      _penFelt = 0;
     });
     _startShootout();
   }
@@ -732,6 +737,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
         return;
       }
       setState(() => _penRevealed++);
+      _feelShootout();
       if (_penRevealed >= _penTotal) t.cancel();
     });
   }
@@ -740,6 +746,31 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   void _onShootoutResult(int index) {
     if (!mounted) return;
     setState(() => _penRevealed = math.max(_penRevealed, index + 1));
+    _feelShootout();
+  }
+
+  /// The haptic for the shootout kick just revealed, on either view: a
+  /// heavy tap for a goal, a light tick for a miss, and the deciding kick
+  /// felt as a goal in play is. Each kick is felt once at most: one the
+  /// tally has already passed is not felt again (a switch of view restages
+  /// only the kicks still to come), and when several land at once only the
+  /// newest is felt, so a jump never rattles off a row of them.
+  void _feelShootout() {
+    final o = _koOutcome;
+    final upTo = math.min(_penRevealed, _penTotal);
+    if (o == null || upTo <= _penFelt) return;
+    _penFelt = upTo;
+    final enabled = ref.read(soundHapticsEnabledProvider);
+    if (upTo >= _penTotal) {
+      MatchFeedback.shootoutWinner(enabled);
+      return;
+    }
+    final kick = ShootoutStaging.order(o)[upTo - 1].kick;
+    if (kick.result == KickResult.scored) {
+      MatchFeedback.shootoutGoal(enabled);
+    } else {
+      MatchFeedback.shootoutMiss(enabled);
+    }
   }
 
   void _begin() {
@@ -1774,6 +1805,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
         _penTimer?.cancel();
         _penTimer = null;
         _penRevealed = _penTotal;
+        // Landed at once, not watched: the full-time buzz below is felt,
+        // not the kicks.
+        _penFelt = _penTotal;
         _stage?.settle();
       }
     });

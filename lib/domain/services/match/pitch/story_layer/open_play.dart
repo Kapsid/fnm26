@@ -14,7 +14,12 @@ const double _tackleReach = 3.4;
 
 /// The odds that a spell ending in the other half, off the middle, ends
 /// with a cross that a defender in the box heads clear.
-const double _crossOdds = 0.85;
+///
+/// 0.85 until a keeper's ball had to be lost in a challenge rather than
+/// kicked to an opponent (`_keeperDuel`), which left a little less of the
+/// quiet play to the side on the ball near the other box; 0.95 keeps the
+/// crosses where they were (about 1.3 a match).
+const double _crossOdds = 0.95;
 
 /// The odds that a man taking the ball with an opponent near him takes him
 /// on: a dribble before he looks for the pass.
@@ -22,6 +27,17 @@ const double _dribbleOdds = 0.22;
 
 /// The height a cross is met at, and a header cleared from.
 const double _headerHeight = 1.7;
+
+/// How near a keeper's long ball the man marking its team-mate has to be
+/// to contest it, and how far goal side of him he meets it.
+const double _duelReach = 12;
+const double _duelGap = 1.4;
+
+/// How near the ball the marker has to be as it lands to win it.
+const double _duelWin = 3.5;
+
+/// The longest the contest at the end of a keeper's long ball takes.
+const double _duelSeconds = 0.35;
 
 /// Open play's own incidents in the quiet time between the staged moments
 /// (1.1.4 feedback: too little happening between the shots). None of them
@@ -66,6 +82,94 @@ extension _OpenPlay on _Builder {
     final plan = _planFlight(t, a, presser, intercept: true, quick: true);
     if (t + plan.$2 > stop - 0.05) return false;
     _startFlight(t, a, presser, intercept: true, quick: true, pass: false);
+    return true;
+  }
+
+  /// A keeper who must give the ball up now kicks it long for a team-mate
+  /// up the pitch with a man on him, and that man wins it as it lands
+  /// ([_winDuel]): the ball changes hands in midfield, not at the keeper's
+  /// boot. True when the kick is on its way.
+  bool _keeperDuel(double t, _Agent a, double stop) {
+    final minute = pacer.matchAt(_Builder._dur(t)).minute;
+    final dir = _dir(a.side, minute);
+    final ball = _ballPoint(a);
+    final from = xToDepth(ball.x, dir);
+    final avoid = _busyAhead(t);
+    _Agent? best;
+    _Agent? bestBy;
+    var bestScore = -double.infinity;
+    for (final m in agents) {
+      if (!m.present || m.side != a.side || m == a || m.walkStart != null) {
+        continue;
+      }
+      if (m.slot == sides[m.side].gkSlot || _departsWithin(m, t, 6)) continue;
+      if (avoid.contains(m.id)) continue;
+      final d = m.pos.distanceTo(ball);
+      final gain = xToDepth(m.pos.x, dir) - from;
+      if (d < 8 || d > 62 || gain < 0) continue;
+      _Agent? by;
+      var near = _duelReach;
+      for (final o in agents) {
+        if (!o.present || o.side == a.side || o.walkStart != null) continue;
+        if (o.slot == sides[o.side].gkSlot || _departsWithin(o, t, 6)) {
+          continue;
+        }
+        if (avoid.contains(o.id)) continue;
+        final od = o.pos.distanceTo(m.pos);
+        if (od < near) {
+          near = od;
+          by = o;
+        }
+      }
+      if (by == null) continue;
+      final plan = _planFlight(t, a, m, intercept: false);
+      if (t + plan.$2 + _duelSeconds > stop - 0.05) continue;
+      final score = -(d - 42).abs() / 8 - near / 3 + rng.nextDouble();
+      if (score > bestScore) {
+        bestScore = score;
+        best = m;
+        bestBy = by;
+      }
+    }
+    if (best == null || bestBy == null) return false;
+    final plan = _planFlight(t, a, best, intercept: false);
+    // A long one is up for a header; a short one is a ball into feet,
+    // nicked off his toes.
+    duelAerial = plan.$3 > 0;
+    _startFlight(
+      t,
+      a,
+      best,
+      intercept: false,
+      peak: duelAerial ? math.max(plan.$3, 4.5) : null,
+      toHeight: duelAerial ? _headerHeight : 0,
+    );
+    duelFor = best.index;
+    duelBy = bestBy.index;
+    return true;
+  }
+
+  /// The ball has come down to the team-mate a keeper kicked it long for:
+  /// the man marking him wins it, a header or a toe-poke away. True when
+  /// he did.
+  bool _winDuel(double t, _Agent a) {
+    final by = duelBy;
+    duelFor = null;
+    duelBy = null;
+    if (by == null) return false;
+    final o = agents[by];
+    if (!o.present || o.walkStart != null) return false;
+    // Only a man on top of him wins it: one left behind is no contest.
+    if (o.pos.distanceTo(_ballPoint(a)) > _duelWin) return false;
+    _startFlight(
+      t,
+      a,
+      o,
+      intercept: true,
+      quick: true,
+      pass: false,
+      fromHeight: duelAerial ? _headerHeight : 0,
+    );
     return true;
   }
 
