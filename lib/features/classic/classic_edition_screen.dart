@@ -321,7 +321,9 @@ class _GroupCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         classicNationName(l, world, id, edition: edition),
-                        maxLines: 1,
+                        // Two lines, not an ellipsis: "Dél-afrikai
+                        // Köztársaság" is a whole name.
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: AppTypography.bodyMedium.copyWith(
                           fontWeight: run?.nationId == id && !run!.finished

@@ -11,6 +11,7 @@ import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/domain/entities/formation.dart';
+import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/entities/tactic_preset.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/classic/classic_format.dart';
@@ -24,15 +25,22 @@ import 'package:fnm/features/classic/classic_match_host.dart';
 import 'package:fnm/features/classic/classic_medals_screen.dart';
 import 'package:fnm/features/classic/classic_providers.dart';
 import 'package:fnm/features/classic/classic_run_screen.dart';
+import 'package:fnm/features/classic/classic_tactics_host.dart';
 import 'package:fnm/features/home/home_screen.dart';
+import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/match/penalty_order_sheet.dart';
 import 'package:fnm/features/match/pitch/pitch_match_view.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/paywall/paywall_sheet.dart';
+import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
+import 'package:fnm/features/tactics/nation_squad_tab.dart';
+import 'package:fnm/features/tactics/pitch_plan.dart';
 import 'package:fnm/features/tactics/tactic_preset_providers.dart';
+import 'package:fnm/features/tactics/tactics_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/widgets/app_bottom_nav.dart';
 import 'package:fnm/shared/widgets/primary_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -401,6 +409,129 @@ void main() {
 
       final after = await tester.runAsync(() => _rows(db));
       expect(after, before, reason: 'nothing written to the save database');
+    });
+
+    testWidgets('the run\'s tactics are the career\'s tactics screen: a new '
+        'shape, a role and a run, a man swapped in, all of it in the match '
+        'the live screen plays; no career written', (tester) async {
+      final (c, db) = await _noCareer(
+        tester,
+        classic(seed: () => 7, salt: () => 3),
+      );
+      final spain = id('ESP');
+      late Map<String, int> before;
+      await tester.runAsync(() async {
+        await c.read(classicPlayServiceProvider).start(2014, spain);
+        before = await _rows(db);
+      });
+      expect(before['careers'], 0);
+
+      await _open(tester, c, '${Routes.classicRun}?year=2014');
+      // One place for the XI: the run's tab is Tactics, not a squad editor.
+      expect(find.byKey(ClassicRunScreen.tacticsTabKey), findsOneWidget);
+      expect(find.text(enL.classicBestXi), findsNothing);
+      await tester.tap(find.byKey(ClassicRunScreen.tacticsKey));
+      await settle(tester);
+      expect(find.byType(ClassicTacticsHost), findsOneWidget);
+      expect(find.byType(TacticsScreen), findsOneWidget);
+      // None of a career's furniture.
+      expect(find.byType(AppBottomNav), findsNothing);
+      expect(find.byType(NationSquadTab), findsNothing);
+      expect(find.byTooltip(enL.tacticsTooltipCallUps), findsNothing);
+
+      // A new shape.
+      await tester.ensureVisible(find.byType(FormationField));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(FormationField));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('4-4-2').last);
+      await settle(tester);
+
+      // A role and a run for the slot-10 striker.
+      final pitch = find.byKey(const ValueKey('pitchDisc10'));
+      await tester.fling(
+        find.byType(ListView).first,
+        const Offset(0, 2000),
+        3000,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(PitchPlanKeys.rolesMode));
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(pitch);
+      await tester.pumpAndSettle();
+      await tester.tap(pitch);
+      await tester.pumpAndSettle();
+      expect(find.byKey(PitchPlanKeys.sheet), findsOneWidget);
+      final role = PlayerRole.values.firstWhere(
+        (r) =>
+            r != PlayerRole.none &&
+            find.byKey(PitchPlanKeys.role(r)).evaluate().isNotEmpty,
+      );
+      await tester.tap(find.byKey(PitchPlanKeys.role(role)));
+      await tester.pumpAndSettle();
+      final arrow = MoveArrow.values.firstWhere(
+        (a) =>
+            a != MoveArrow.none &&
+            find.byKey(PitchPlanKeys.arrow(a)).evaluate().isNotEmpty,
+      );
+      await tester.ensureVisible(find.byKey(PitchPlanKeys.arrow(arrow)));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(PitchPlanKeys.arrow(arrow)));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(PitchPlanKeys.close));
+      await settle(tester);
+
+      // A man from the bench into slot 9, picked by tap as in a career.
+      await tester.fling(
+        find.byType(ListView).first,
+        const Offset(0, 2000),
+        3000,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(PitchPlanKeys.playersMode));
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.byKey(const ValueKey('pitchDisc9')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('pitchDisc9')));
+      await tester.pumpAndSettle();
+      final outside = find.byWidgetPredicate(
+        (w) => w is ListTile && w.onTap != null && !w.selected,
+      );
+      expect(outside, findsWidgets);
+      final pickedName =
+          ((tester.widget<ListTile>(outside.first).title! as Text).data)!;
+      await tester.tap(outside.first);
+      await settle(tester);
+
+      final stored = (await tester.runAsync(
+        () => c.read(classicStoreProvider).run(2014),
+      ))!;
+      final squad = world.squads(2014)[spain]!;
+      final picked = squad.firstWhere((p) => p.name == pickedName);
+      expect(stored.lineup.formation, Formation.f442);
+      expect(stored.lineup.roles.bySlot[10], role);
+      expect(stored.lineup.arrows.bySlot[10], arrow);
+      expect(stored.lineup.xi[9], picked.id);
+
+      // Play: the live match is fed exactly that.
+      await tester.tap(find.byKey(ClassicTacticsHost.playKey));
+      await settle(tester);
+      expect(find.byType(MatchScreen), findsOneWidget);
+      final preview = (await ProviderScope.containerOf(
+        tester.element(find.byType(MatchScreen)),
+      ).read(matchPreviewProvider(kClassicCareerId).future))!;
+      final mine = preview.playerIsHome ? preview.homeTeam : preview.awayTeam;
+      expect(mine.nationId, spain);
+      expect(mine.formation, Formation.f442);
+      expect(mine.slotRoles.bySlot[10], role);
+      expect(mine.arrows.bySlot[10], arrow);
+      expect(mine.xi[9].id, picked.id);
+      expect(mine.xi.map((p) => p.id), stored.lineup.xi);
+
+      final after = await tester.runAsync(() => _rows(db));
+      expect(after, before, reason: 'nothing written to the save database');
+      expect(after!['careers'], 0);
+      await tester.pumpWidget(const SizedBox());
     });
 
     testWidgets('the Pitch view plays it too', (tester) async {

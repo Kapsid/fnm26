@@ -299,9 +299,14 @@ squadDataProvider = FutureProvider.autoDispose.family<SquadData?, int>((
 
 /// Mutates and persists the team tactic for a save.
 class TacticService {
-  TacticService(this._ref);
+  /// [pool], when given, answers who may be picked instead of the career's
+  /// called-up squad (a Classic Cup's tournament squad: see
+  /// `classicTacticsOverrides`).
+  TacticService(this._ref, {Future<List<Player>> Function(int careerId)? pool})
+    : _pool = pool;
 
   final Ref _ref;
+  final Future<List<Player>> Function(int careerId)? _pool;
 
   /// The write in flight, so the next waits for it.
   ///
@@ -329,14 +334,15 @@ class TacticService {
     if (current == null) return;
     final pool = await _availablePool(careerId);
     await repo.saveTactic(careerId, change(current, pool));
-    _ref
-      ..invalidate(tacticDataProvider)
-      // The forced "reshape your XI" event reads the saved lineup. On a phone
-      // the hub is rebuilt on the way back and asks again, but the tablet
-      // keeps the event button in the shell's top bar for the whole session,
-      // so its answer was never thrown away: the manager fixed the XI and the
-      // button went on sending him back to fix it.
-      ..invalidate(nextEventProvider(careerId));
+    _ref.invalidate(tacticDataProvider);
+    // The forced "reshape your XI" event reads the saved lineup. On a phone
+    // the hub is rebuilt on the way back and asks again, but the tablet
+    // keeps the event button in the shell's top bar for the whole session,
+    // so its answer was never thrown away: the manager fixed the XI and the
+    // button went on sending him back to fix it. A tactic that is not a
+    // career's (a Classic run's, with a pool of its own) has no hub: asking
+    // again would read a save that does not exist.
+    if (_pool == null) _ref.invalidate(nextEventProvider(careerId));
     // And the match about to be played. The pre-match screen holds it open
     // underneath tactics, and refreshing it on the way back missed every other
     // way in (the set-up warning) and any write still landing.
@@ -344,6 +350,7 @@ class TacticService {
   }
 
   Future<List<Player>> _availablePool(int careerId) async {
+    if (_pool case final pool?) return pool(careerId);
     final career = await _ref.read(careerRepositoryProvider).byId(careerId);
     if (career == null) return const [];
     final pool = [

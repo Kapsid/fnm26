@@ -46,6 +46,7 @@ import 'package:fnm/features/tactics/squad_tablet_layout.dart';
 import 'package:fnm/features/tactics/tactic_library_sheet.dart';
 import 'package:fnm/features/tactics/tactic_preset_providers.dart';
 import 'package:fnm/features/tactics/tactic_preset_tile.dart';
+import 'package:fnm/features/tactics/tactics_host.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -160,14 +161,20 @@ class TacticsScreen extends ConsumerWidget {
     final l = AppLocalizations.of(context);
     final dataAsync = ref.watch(tacticDataProvider(careerId));
     final service = ref.read(tacticServiceProvider);
+    // A career's, or a mode that feeds the screen its own tactic (a Classic
+    // Cup run), without the career's furniture.
+    final host = ref.watch(tacticsHostProvider);
+    final tabs = host.career ? 4 : 3;
     // The manager's kit colours, giving the squad on the pitch a real team
     // identity. Resolved via the career's nation; null until loaded.
-    final career = ref.watch(careerByIdProvider(careerId)).valueOrNull;
+    final career = host.career
+        ? ref.watch(careerByIdProvider(careerId)).valueOrNull
+        : null;
     final nation = career == null
         ? null
         : ref.watch(nationByIdProvider(career.nationId)).valueOrNull;
     final teamColors = nation == null
-        ? null
+        ? host.teamColors
         : KitColors.discFill(nation.primaryColor, nation.secondaryColor);
     // How long each absence really runs, in weeks and a return match.
     final outlooks =
@@ -180,8 +187,8 @@ class TacticsScreen extends ConsumerWidget {
         const <Formation, double>{};
 
     return DefaultTabController(
-      length: 4,
-      initialIndex: initialTab.clamp(0, 3),
+      length: tabs,
+      initialIndex: initialTab.clamp(0, tabs - 1),
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -190,7 +197,9 @@ class TacticsScreen extends ConsumerWidget {
             // back to the hub when opened as a root tab.
             onPressed: () => context.canPop()
                 ? context.pop()
-                : context.go('${Routes.hub}?careerId=$careerId'),
+                : context.go(
+                    host.exitRoute ?? '${Routes.hub}?careerId=$careerId',
+                  ),
           ),
           title: Text(
             l.tacticsSquad,
@@ -208,18 +217,20 @@ class TacticsScreen extends ConsumerWidget {
               SegmentTab(l.tacticsTabLineup),
               SegmentTab(l.tacticsTabInstructions),
               SegmentTab(l.tacticsTabRolesSetPieces),
-              SegmentTab(l.tacticsSquad, key: TourKeys.squadTab),
+              if (host.career)
+                SegmentTab(l.tacticsSquad, key: TourKeys.squadTab),
             ],
           ),
           // Squad, instructions, saving how they play, then who is coming
           // through: the order a manager works in.
           actions: [
-            IconButton(
-              icon: const Icon(Icons.groups, color: AppColors.primary),
-              tooltip: l.tacticsTooltipCallUps,
-              onPressed: () =>
-                  context.go('${Routes.callUps}?careerId=$careerId'),
-            ),
+            if (host.career)
+              IconButton(
+                icon: const Icon(Icons.groups, color: AppColors.primary),
+                tooltip: l.tacticsTooltipCallUps,
+                onPressed: () =>
+                    context.go('${Routes.callUps}?careerId=$careerId'),
+              ),
             // The instructions have a tab of their own now, and this still
             // goes to them — the icon is where a manager's hand already is,
             // and a shortcut to a tab is not a second version of it. The
@@ -247,19 +258,22 @@ class TacticsScreen extends ConsumerWidget {
             // The same watchlist the call-up screen carries, reachable from
             // here too: "who is coming through" is asked while looking at the
             // squad, not only while naming one.
-            IconButton(
-              icon: const Icon(Icons.school_outlined, color: AppColors.primary),
-              tooltip: l.tacticsYouth,
-              onPressed: () =>
-                  context.push('${Routes.youth}?careerId=$careerId'),
-            ),
+            if (host.career)
+              IconButton(
+                icon: const Icon(
+                  Icons.school_outlined,
+                  color: AppColors.primary,
+                ),
+                tooltip: l.tacticsYouth,
+                onPressed: () =>
+                    context.push('${Routes.youth}?careerId=$careerId'),
+              ),
           ],
         ),
-        extendBody: true,
-        bottomNavigationBar: AppBottomNav(
-          careerId: careerId,
-          current: AppTab.squad,
-        ),
+        extendBody: host.career,
+        bottomNavigationBar: host.career
+            ? AppBottomNav(careerId: careerId, current: AppTab.squad)
+            : host.footer?.call(context),
         body: dataAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, _) =>
@@ -471,7 +485,7 @@ class TacticsScreen extends ConsumerWidget {
                   //    their club, age, form and international record, filterable
                   //    and sortable. See [NationSquadTab] for why it is the pool
                   //    rather than the bench.
-                  NationSquadTab(careerId: careerId),
+                  if (host.career) NationSquadTab(careerId: careerId),
                 ],
               ),
             );
@@ -491,9 +505,14 @@ class TacticsScreen extends ConsumerWidget {
     return async.valueOrNull ?? const <int, PlayerCondition>{};
   }
 
-  void _openPlayer(BuildContext context, Player p) => context.push(
-    '${Routes.player}?careerId=$careerId&playerId=${p.id}',
-  );
+  void _openPlayer(BuildContext context, Player p) {
+    // Generated players (a Classic Cup's) have no page to open.
+    final host = ProviderScope.containerOf(context).read(tacticsHostProvider);
+    if (!host.playerPages) return;
+    unawaited(
+      context.push('${Routes.player}?careerId=$careerId&playerId=${p.id}'),
+    );
+  }
 
   /// The starting XI on the pitch, with every gesture the line-up has: tap a
   /// slot to pick, drag to swap or reshape, drop a substitute on.
@@ -679,12 +698,16 @@ class TacticsScreen extends ConsumerWidget {
       // The armband can go to a player nursing a knock — he is still the
       // captain, he just isn't playing — so the squad offered here is the
       // called-up group, not only the fit.
-      _CaptainCard(
-        careerId: careerId,
-        pool: [...data.pool, ...data.unavailable],
-        unavailable: {for (final p in data.unavailable) p.id},
-      ),
-      const SizedBox(height: AppSpacing.md),
+      // The armband is a career's (its captaincy and morale live in the
+      // save).
+      if (ref.watch(tacticsHostProvider).career) ...[
+        _CaptainCard(
+          careerId: careerId,
+          pool: [...data.pool, ...data.unavailable],
+          unavailable: {for (final p in data.unavailable) p.id},
+        ),
+        const SizedBox(height: AppSpacing.md),
+      ],
       Text(
         l.tacticsRolesSetPiecesBlurb,
         style: AppTypography.labelSmall.copyWith(
@@ -894,6 +917,7 @@ class TacticsScreen extends ConsumerWidget {
 
     final l = AppLocalizations.of(context);
     final conditions = _conditionsOf(ref, watch: false);
+    final playerPages = ref.read(tacticsHostProvider).playerPages;
     // The sheet answers with a player id, or with a place for the slot
     // itself: the position chips at its head change what the slot plays
     // within the formation (see [SlotSwitchStrip]).
@@ -990,26 +1014,27 @@ class TacticsScreen extends ConsumerWidget {
                       const SizedBox(width: AppSpacing.xs),
                       ConditionMark(condition: conditions[p.id]),
                     ],
-                    IconButton(
-                      visualDensity: VisualDensity.compact,
-                      icon: const Icon(
-                        Icons.info_outline,
-                        size: 20,
-                        color: AppColors.onSurfaceVariant,
+                    if (playerPages)
+                      IconButton(
+                        visualDensity: VisualDensity.compact,
+                        icon: const Icon(
+                          Icons.info_outline,
+                          size: 20,
+                          color: AppColors.onSurfaceVariant,
+                        ),
+                        onPressed: () {
+                          final route =
+                              '${Routes.player}?careerId=$careerId&playerId=${p.id}';
+                          // On a tablet the sheet is a root dialog: a push from
+                          // here would land on the shell navigator UNDER it, so
+                          // close it first. On a phone the sheet stays open
+                          // beneath the player page, as before.
+                          if (sheetIsDialog(context)) {
+                            Navigator.of(sheetContext).pop();
+                          }
+                          context.push(route);
+                        },
                       ),
-                      onPressed: () {
-                        final route =
-                            '${Routes.player}?careerId=$careerId&playerId=${p.id}';
-                        // On a tablet the sheet is a root dialog: a push from
-                        // here would land on the shell navigator UNDER it, so
-                        // close it first. On a phone the sheet stays open
-                        // beneath the player page, as before.
-                        if (sheetIsDialog(context)) {
-                          Navigator.of(sheetContext).pop();
-                        }
-                        context.push(route);
-                      },
-                    ),
                   ],
                 ),
                 selected: inXi,
