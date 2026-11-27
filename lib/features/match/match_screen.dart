@@ -2064,6 +2064,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
         final r = _result ?? preview.result;
         return _liveRatings(preview, r, r.events.where(_reached).toList());
       }(),
+      // His goals and assists so far, beside his name in the on-pitch list.
+      events: (_result ?? preview.result).events.where(_reached).toList(),
       // So the squad list can say who started and who came on when, rather
       // than leaving the manager to work it out from the discs on the pitch.
       cameOnAt: minutes.on,
@@ -2720,6 +2722,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                     motmId: r.manOfTheMatch?.playerId,
                     playerNationId: preview.playerNationId,
                     list: lineupList,
+                    assists: assistsByPlayerOf(r.events),
                   )
                 : lineupList;
             // The Summary, the whole match through: the ground, the day's

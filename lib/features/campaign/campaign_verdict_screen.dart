@@ -44,7 +44,8 @@ typedef CampaignRunNumbers = ({
 /// but a friendly.
 /// Finish
 /// the Legacy counts the three titles it is after: both championships' finals
-/// and the whole Nations Cup, groups and Finals Four.
+/// and the whole Nations Cup, groups and Finals Four. Home Soil counts the
+/// World Championship its nation hosts.
 bool campaignRunCounts(CampaignGoal goal, String? round) {
   if (goal == CampaignGoal.qualifyBothThenTitle ||
       goal == CampaignGoal.qualifyBothThenWorldTitle ||
@@ -58,6 +59,10 @@ bool campaignRunCounts(CampaignGoal goal, String? round) {
     return finals.contains(round) ||
         nationsCup.contains(round) ||
         (round.startsWith('C') && finals.contains(round.substring(1)));
+  }
+  // Home Soil counts the World Championship it hosts, and nothing else.
+  if (goal == CampaignGoal.hostOutOfGroupThenQuarterThenSemi) {
+    return finals.contains(round);
   }
   if (goal == CampaignGoal.qualifyWorldThenTitles) {
     return finals.contains(round) ||

@@ -179,6 +179,18 @@ abstract final class WorldCupHosts {
     return nations.any((n) => n.hostBids.containsKey(key));
   }
 
+  /// The hosts a designed scenario hands [cycle]'s World Championship (see
+  /// `HostBidding.forcedWcKind`), the lead first; empty for every ordinary
+  /// world. Read off `HostBidding.forcedWcKey` on the nations.
+  static List<int> forcedWorldHosts(int cycle, List<Nation> nations) {
+    final key = HostBidding.forcedWcKey(cycle);
+    final marked = [
+      for (final n in nations)
+        if (n.hostBids[key] case final order?) (id: n.id, order: order),
+    ]..sort((a, b) => a.order.compareTo(b.order));
+    return [for (final m in marked) m.id];
+  }
+
   /// The manager's nation for [cycle] under the current rules, or null when
   /// [cycle] keeps the legacy ones (no marker at or before it).
   static int? _managerFor(Map<int, int> managers, int cycle) {
@@ -299,7 +311,11 @@ abstract final class WorldCupHosts {
       // grounds from the next two editions. Without the stamp, nothing
       // below differs from the current rules.
       final v2 = isV2(c, nations);
-      final cross = <int>{if (c > 0) ...chain.wc[c - 1].hosts};
+      // A World Championship handed to its hosts (see [forcedWorldHosts])
+      // bars them from the summer's championships before it, as any World
+      // Championship host is barred from the next.
+      final forcedW = forcedWorldHosts(c, nations);
+      final cross = <int>{if (c > 0) ...chain.wc[c - 1].hosts, ...forcedW};
       final lodgedC = _lodgedCont(c, nations);
       final mine = <int>{if (lodgedC?.nationId != m) m};
       final contDraws = <Confederation, _Draw>{};
@@ -446,7 +462,13 @@ abstract final class WorldCupHosts {
             (id) => _wcEligible(id, nations, usedBarred, usedExclude),
           );
       final List<int> wcHosts;
-      if (wcBids.isEmpty) {
+      if (forcedW.isNotEmpty) {
+        // Handed to its hosts: they stage it in the grounds they hold that
+        // count toward the bar, and promise none (a fresh race's bars, so
+        // no ground a host planned for an ordinary bid of its own counts).
+        wcHosts = forcedW;
+        wcBars = v2 ? _Bars(HostBidComp.worldChampionship, c, nations) : null;
+      } else if (wcBids.isEmpty) {
         final all = [...nations]
           ..sort((a, b) => a.ranking.compareTo(b.ranking));
         wcHosts = all.isEmpty ? const [] : [all.first.id];
@@ -472,12 +494,18 @@ abstract final class WorldCupHosts {
             );
       chain.wc.add(
         _Draw(
-          bids: _withLodged(
-            wcBids,
-            lodgedW,
-            eligible: wcEligible,
-            partnerEligible: wcJointOk,
-          ),
+          bids: forcedW.isNotEmpty
+              ? [
+                  forcedW,
+                  for (final b in wcBids)
+                    if (!b.any(forcedW.contains)) b,
+                ]
+              : _withLodged(
+                  wcBids,
+                  lodgedW,
+                  eligible: wcEligible,
+                  partnerEligible: wcJointOk,
+                ),
           hosts: wcHosts,
           plan: wcSettled?.plan,
           broken: wcSettled?.broken ?? const {},

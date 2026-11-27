@@ -12809,6 +12809,29 @@ class AppLocalizationsHi extends AppLocalizations {
   String get campaignStars3Legacy => 'और नेशंस कप';
 
   @override
+  String get campaignHomeSoilTitle => 'अपनी ज़मीन पर';
+
+  @override
+  String get campaignHomeSoilTwist =>
+      'स्वीडन डेनमार्क और नॉर्वे के साथ विश्व चैंपियनशिप की मेज़बानी करता है, एक चक्र के लिए';
+
+  @override
+  String get campaignHomeSoilGoal => 'अपनी ज़मीन पर ग्रुप से आगे बढ़ें';
+
+  @override
+  String get campaignHomeSoilIntro =>
+      'विश्व चैंपियनशिप उत्तर की ओर आ रही है। स्वीडन मेज़बानी की अगुवाई कर रहा है, डेनमार्क और नॉर्वे उसके साथ हैं, और पूरा देश एक यादगार गर्मी की उम्मीद कर रहा है। टीम ईमानदार है पर औसत से बेहतर नहीं, और हर मेज़बान उस टीम को याद रखता है जो अपने ही दर्शकों के सामने ग्रुप चरण में बाहर हो गई। वह मेज़बान न बनें: ग्रुप से आगे बढ़ें, फिर क्वार्टरफ़ाइनल में पहुँचें और, अगर उत्तर सचमुच भरोसा करता है, तो सेमीफ़ाइनल में।';
+
+  @override
+  String get campaignStars1HomeSoil => 'ग्रुप से आगे बढ़ें';
+
+  @override
+  String get campaignStars2HomeSoil => 'क्वार्टरफ़ाइनल में पहुँचें';
+
+  @override
+  String get campaignStars3HomeSoil => 'सेमीफ़ाइनल में पहुँचें';
+
+  @override
   String get campaignSectionOneCycle => 'एक चक्र';
 
   @override

@@ -12799,6 +12799,29 @@ class AppLocalizationsTr extends AppLocalizations {
   String get campaignStars3Legacy => 'Ve Uluslar Kupası\'nı';
 
   @override
+  String get campaignHomeSoilTitle => 'Kendi Toprağında';
+
+  @override
+  String get campaignHomeSoilTwist =>
+      'İsveç, Danimarka ve Norveç ile birlikte Dünya Şampiyonası\'na ev sahipliği yapıyor, bir dönem boyunca';
+
+  @override
+  String get campaignHomeSoilGoal => 'Kendi toprağında gruptan çık';
+
+  @override
+  String get campaignHomeSoilIntro =>
+      'Dünya Şampiyonası kuzeye geliyor. Adaylığa İsveç öncülük ediyor, yanında Danimarka ve Norveç var ve bütün ülke unutulmaz bir yaz bekliyor. Kadro dürüst ama ortalamadan iyi değil ve her ev sahibi, kendi seyircisi önünde grup aşamasında elenen ev sahibini hatırlar. O ev sahibi olma: gruptan çık, ardından çeyrek finale ulaş ve kuzey gerçekten inanıyorsa yarı finale.';
+
+  @override
+  String get campaignStars1HomeSoil => 'Gruptan çık';
+
+  @override
+  String get campaignStars2HomeSoil => 'Çeyrek finale çık';
+
+  @override
+  String get campaignStars3HomeSoil => 'Yarı finale çık';
+
+  @override
   String get campaignSectionOneCycle => 'Tek dönem';
 
   @override

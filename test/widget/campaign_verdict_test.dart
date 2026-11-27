@@ -308,9 +308,11 @@ void main() {
         'NGROUP',
         'CPO',
       ]) {
-        // Young Finns: the World Championship finals are its competition.
+        // Young Finns and Home Soil: the World Championship finals are
+        // their competition.
         final worldFinals =
-            goal == CampaignGoal.qualifyWorldThenTitles &&
+            (goal == CampaignGoal.qualifyWorldThenTitles ||
+                goal == CampaignGoal.hostOutOfGroupThenQuarterThenSemi) &&
             {'GROUP', 'R16', 'FINAL'}.contains(round);
         expect(
           campaignRunCounts(goal, round),
@@ -323,7 +325,8 @@ void main() {
       expect(
         campaignRunCounts(goal, 'CQ'),
         goal != CampaignGoal.beatRivalsThenContinental &&
-            goal != CampaignGoal.qualifyWorldThenTitles,
+            goal != CampaignGoal.qualifyWorldThenTitles &&
+            goal != CampaignGoal.hostOutOfGroupThenQuarterThenSemi,
       );
     }
     for (final round in ['CGROUP', 'CFINAL', 'GROUP', 'QF', 'FINAL']) {

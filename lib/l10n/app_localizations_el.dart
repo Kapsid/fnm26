@@ -12958,6 +12958,29 @@ class AppLocalizationsEl extends AppLocalizations {
   String get campaignStars3Legacy => 'Και του Κυπέλλου Εθνών';
 
   @override
+  String get campaignHomeSoilTitle => 'Στην έδρα μας';
+
+  @override
+  String get campaignHomeSoilTwist =>
+      'Η Σουηδία διοργανώνει το Παγκόσμιο Πρωτάθλημα με τη Δανία και τη Νορβηγία, για έναν κύκλο';
+
+  @override
+  String get campaignHomeSoilGoal => 'Πέρασε από τον όμιλο στην έδρα σου';
+
+  @override
+  String get campaignHomeSoilIntro =>
+      'Το Παγκόσμιο Πρωτάθλημα έρχεται στον βορρά. Η Σουηδία ηγείται της διοργάνωσης, με τη Δανία και τη Νορβηγία στο πλευρό της, και όλη η χώρα περιμένει ένα αξέχαστο καλοκαίρι. Το ρόστερ είναι τίμιο αλλά όχι καλύτερο από μέτριο, και κάθε διοργανώτρια θυμάται εκείνη που αποκλείστηκε στη φάση των ομίλων μπροστά στο κοινό της. Μην γίνεις εσύ αυτή: πέρασε από τον όμιλο, μετά φτάσε στους προημιτελικούς και, αν ο βορράς πιστεύει πραγματικά, στους ημιτελικούς.';
+
+  @override
+  String get campaignStars1HomeSoil => 'Πρόκριση από τον όμιλο';
+
+  @override
+  String get campaignStars2HomeSoil => 'Πρόκριση στους προημιτελικούς';
+
+  @override
+  String get campaignStars3HomeSoil => 'Πρόκριση στους ημιτελικούς';
+
+  @override
   String get campaignSectionOneCycle => 'Ένας κύκλος';
 
   @override

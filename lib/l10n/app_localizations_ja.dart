@@ -12414,6 +12414,28 @@ class AppLocalizationsJa extends AppLocalizations {
   String get campaignStars3Legacy => 'さらにネーションズカップ';
 
   @override
+  String get campaignHomeSoilTitle => 'ホームの誇り';
+
+  @override
+  String get campaignHomeSoilTwist => 'スウェーデンがデンマーク、ノルウェーと共催する世界選手権、1サイクル';
+
+  @override
+  String get campaignHomeSoilGoal => '地元開催でグループリーグを突破';
+
+  @override
+  String get campaignHomeSoilIntro =>
+      '世界選手権が北欧にやって来ます。スウェーデンが招致を率い、デンマークとノルウェーが共催国に並び、国中が忘れられない夏を期待しています。チームは堅実ですが、実力は平均どまり。どの開催国も、地元の観衆の前でグループリーグ敗退を喫した開催国を覚えています。その開催国にはならないでください。グループリーグを突破し、次に準々決勝へ、そして北欧が本気で信じるなら準決勝へ。';
+
+  @override
+  String get campaignStars1HomeSoil => 'グループリーグ突破';
+
+  @override
+  String get campaignStars2HomeSoil => '準々決勝進出';
+
+  @override
+  String get campaignStars3HomeSoil => '準決勝進出';
+
+  @override
   String get campaignSectionOneCycle => '1サイクル';
 
   @override

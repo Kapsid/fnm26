@@ -581,6 +581,23 @@ class MatchStatsPanel extends StatelessWidget {
     );
   }
 
+  /// A player's goals, own goals, assists and [card] beside his name in the
+  /// full-time ratings, or null when there are none.
+  Widget? _marksOf(int playerId, MatchCard? card) {
+    final t = playerMatchTally(result.events, playerId);
+    final tally = (
+      goals: t.goals,
+      ownGoals: t.ownGoals,
+      assists: t.assists,
+      card: card,
+      injured: false,
+      cameOn: false,
+      wentOff: false,
+    );
+    if (!PlayerMatchMarks.hasAny(tally)) return null;
+    return PlayerMatchMarks(playerId: playerId, tally: tally);
+  }
+
   /// A team's players and their match marks, best first. [teamId] is the home
   /// nation id for the home block, or null for the away block.
   Widget _ratingsBlock(String teamCode, int? teamId) {
@@ -592,8 +609,6 @@ class MatchStatsPanel extends StatelessWidget {
             .firstOrNull
             ?.teamNationId ??
         -1;
-    final goals = goalsByPlayerOf(result.events, nationId: nationId);
-    final ownGoals = ownGoalsByPlayerOf(result.events, nationId: nationId);
     final cards = cardStatusFor(
       result.events,
       nationId: nationId,
@@ -635,18 +650,18 @@ class MatchStatsPanel extends StatelessWidget {
                     child: TacticalChip(r.position.label),
                   ),
                   const SizedBox(width: AppSpacing.sm),
+                  // His goals, assists and card, the same marks as the
+                  // line-ups' (live and at full time).
                   Expanded(
-                    child: Text(
-                      r.playerName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTypography.bodyMedium,
+                    child: NameWithMarks(
+                      name: Text(
+                        r.playerName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.bodyMedium,
+                      ),
+                      marks: _marksOf(r.playerId, cards[r.playerId]),
                     ),
-                  ),
-                  ...matchMarks(
-                    goals: goals[r.playerId] ?? 0,
-                    ownGoals: ownGoals[r.playerId] ?? 0,
-                    card: cards[r.playerId],
                   ),
                   const SizedBox(width: AppSpacing.xs),
                   RatingBadge(
@@ -996,31 +1011,15 @@ class MatchLineups extends StatelessWidget {
                 // under the name instead of beside it.
                 Expanded(
                   child: narrow
-                      ? _nameOver(p, _markers(p.id))
-                      : Row(
-                          children: [
-                            Flexible(
-                              flex: 3,
-                              child: Text(
-                                p.name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: AppTypography.bodyMedium,
-                              ),
-                            ),
-                            if (_markers(p.id) case final marks
-                                when marks.isNotEmpty)
-                              Flexible(
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  alignment: Alignment.centerLeft,
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: marks,
-                                  ),
-                                ),
-                              ),
-                          ],
+                      ? _nameOver(p, _markers(p.id, leadingGap: false))
+                      : NameWithMarks(
+                          name: Text(
+                            p.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTypography.bodyMedium,
+                          ),
+                          marks: _markers(p.id),
                         ),
                 ),
                 if (energy[p.id] case final e?) ...[
@@ -1032,10 +1031,13 @@ class MatchLineups extends StatelessWidget {
                   b,
                 ],
                 const SizedBox(width: AppSpacing.sm),
-                SizedBox(
-                  width: 20,
+                // At least the width of two figures, wider as the text grows:
+                // a fixed 20 broke "80" over two lines at large text.
+                ConstrainedBox(
+                  constraints: const BoxConstraints(minWidth: 20),
                   child: Text(
                     '${p.overall}',
+                    maxLines: 1,
                     textAlign: TextAlign.end,
                     style: AppTypography.labelMedium.copyWith(
                       color: AppColors.onSurfaceVariant,
@@ -1082,10 +1084,13 @@ class MatchLineups extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: 20,
+                  // At least the width of two figures, wider as the text grows:
+                  // a fixed 20 broke "80" over two lines at large text.
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(minWidth: 20),
                     child: Text(
                       '${p.overall}',
+                      maxLines: 1,
                       textAlign: TextAlign.end,
                       style: AppTypography.labelSmall.copyWith(
                         color: AppColors.onSurfaceVariant,
@@ -1177,7 +1182,7 @@ class MatchLineups extends StatelessWidget {
 
   /// A narrow column's name cell: the name on its own line, whatever he has
   /// done so far in small marks under it.
-  Widget _nameOver(Player p, List<Widget> marks) => Column(
+  Widget _nameOver(Player p, Widget? marks) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     mainAxisSize: MainAxisSize.min,
     children: [
@@ -1187,108 +1192,27 @@ class MatchLineups extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         style: AppTypography.bodyMedium,
       ),
-      if (marks.isNotEmpty)
+      if (marks != null)
         FittedBox(
+          key: ValueKey(('markersUnder', p.id)),
           fit: BoxFit.scaleDown,
           alignment: Alignment.centerLeft,
-          child: Row(
-            key: ValueKey(('markersUnder', p.id)),
-            mainAxisSize: MainAxisSize.min,
-            children: marks.skip(1).toList(),
-          ),
+          child: marks,
         ),
     ],
   );
 
   /// The small marks after a player's name for what the clock has shown him
-  /// do: goals (a count past one), assists, his card, a knock, and coming on
-  /// or going off.
-  List<Widget> _markers(int id) {
-    var goals = 0;
-    var assists = 0;
-    var cameOn = false;
-    var wentOff = false;
-    var injured = false;
-    MatchCard? card;
-    for (final e in events) {
-      switch (e.type) {
-        case MatchEventType.goal:
-          if (e.playerId == id) goals++;
-          if (e.assistPlayerId == id) assists++;
-        case MatchEventType.yellowCard:
-          if (e.playerId == id) card ??= MatchCard.yellow;
-        case MatchEventType.redCard:
-          if (e.playerId == id) {
-            card = e.secondYellow ? MatchCard.secondYellow : MatchCard.red;
-          }
-        case MatchEventType.substitution:
-          if (e.playerId == id) cameOn = true;
-          if (e.secondaryPlayerId == id) wentOff = true;
-        case MatchEventType.injury:
-          if (e.playerId == id) injured = true;
-        case MatchEventType.disallowedGoal:
-          break;
-      }
-    }
-    Widget counted(Widget icon, int n, Key key) => Row(
-      key: key,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        icon,
-        if (n > 1)
-          Text(
-            '$n',
-            style: AppTypography.labelSmall.copyWith(
-              fontSize: 10,
-              color: AppColors.onSurfaceVariant,
-            ),
-          ),
-      ],
+  /// do (see [PlayerMatchMarks]), or null when he has done nothing yet.
+  Widget? _markers(int id, {bool leadingGap = true}) {
+    final tally = playerMatchTally(events, id);
+    if (!PlayerMatchMarks.hasAny(tally)) return null;
+    return PlayerMatchMarks(
+      playerId: id,
+      tally: tally,
+      size: 13,
+      leadingGap: leadingGap,
     );
-    final marks = <Widget>[
-      if (goals > 0)
-        counted(
-          const Icon(Icons.sports_soccer, size: 12, color: AppColors.primary),
-          goals,
-          ValueKey(('goalMark', id)),
-        ),
-      if (assists > 0)
-        counted(
-          const Icon(
-            Icons.handshake_rounded,
-            size: 12,
-            color: AppColors.onSurfaceVariant,
-          ),
-          assists,
-          ValueKey(('assistMark', id)),
-        ),
-      if (card case final c?)
-        CardMark(c, size: 10, key: ValueKey(('cardMark', id))),
-      if (injured)
-        Icon(
-          Icons.medical_services,
-          size: 12,
-          color: AppColors.warning,
-          key: ValueKey(('injuryMark', id)),
-        ),
-      if (cameOn)
-        Icon(
-          Icons.arrow_upward_rounded,
-          size: 12,
-          color: AppColors.positive,
-          key: ValueKey(('subOnMark', id)),
-        ),
-      if (wentOff)
-        Icon(
-          Icons.arrow_downward_rounded,
-          size: 12,
-          color: AppColors.error,
-          key: ValueKey(('subOffMark', id)),
-        ),
-    ];
-    return [
-      for (final m in marks) ...[const SizedBox(width: 3), m],
-    ];
   }
 }
 
@@ -2509,8 +2433,13 @@ class MatchFullTimeLineups extends StatefulWidget {
     required this.motmId,
     required this.playerNationId,
     required this.list,
+    this.assists = const {},
     super.key,
   });
+
+  /// Assists per player, both sides (see [assistsByPlayerOf]): a handshake
+  /// beside his goals on the pitch and on a substitute's chip.
+  final Map<int, int> assists;
 
   final FullTimeSide home;
   final FullTimeSide away;
@@ -2647,6 +2576,7 @@ class _MatchFullTimeLineupsState extends State<MatchFullTimeLineups> {
                     cardsByPlayer: side.cards,
                     goalsByPlayer: side.goals,
                     ownGoalsByPlayer: side.ownGoals,
+                    assistsByPlayer: widget.assists,
                     ratingByPlayer: widget.ratings,
                     motmId: widget.motmId,
                     onTapSlot: (_) {},
@@ -2681,9 +2611,15 @@ class _MatchFullTimeLineupsState extends State<MatchFullTimeLineups> {
                         player: p,
                         rating: widget.ratings[p.id],
                         motm: p.id == widget.motmId,
-                        goals: side.goals[p.id] ?? 0,
-                        ownGoals: side.ownGoals[p.id] ?? 0,
-                        card: side.cards[p.id],
+                        tally: (
+                          goals: side.goals[p.id] ?? 0,
+                          ownGoals: side.ownGoals[p.id] ?? 0,
+                          assists: widget.assists[p.id] ?? 0,
+                          card: side.cards[p.id],
+                          injured: false,
+                          cameOn: true,
+                          wentOff: false,
+                        ),
                       ),
                   ],
                 ),
@@ -2805,18 +2741,16 @@ class _CameOnChip extends StatelessWidget {
     required this.player,
     required this.rating,
     required this.motm,
-    this.goals = 0,
-    this.ownGoals = 0,
-    this.card,
+    this.tally = emptyMatchTally,
     super.key,
   });
 
   final Player player;
   final double? rating;
   final bool motm;
-  final int goals;
-  final int ownGoals;
-  final MatchCard? card;
+
+  /// His goals, assists and card (he came on: no arrow needed).
+  final PlayerMatchTally tally;
 
   @override
   Widget build(BuildContext context) {
@@ -2833,12 +2767,20 @@ class _CameOnChip extends StatelessWidget {
         children: [
           TacticalChip(player.position.label),
           const SizedBox(width: 6),
-          Text(
-            surnameOf(player.name),
-            maxLines: 1,
-            style: AppTypography.bodySmall,
+          Flexible(
+            child: Text(
+              surnameOf(player.name),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.bodySmall,
+            ),
           ),
-          ...matchMarks(goals: goals, ownGoals: ownGoals, card: card),
+          if (PlayerMatchMarks.hasAny(tally, showSubs: false))
+            PlayerMatchMarks(
+              playerId: player.id,
+              tally: tally,
+              showSubs: false,
+            ),
           if (r != null) ...[
             const SizedBox(width: 6),
             RatingBadge(r, compact: true, motm: motm),
@@ -2940,11 +2882,6 @@ class MissedPenaltyMark extends StatelessWidget {
   }
 }
 
-/// Goals each of [nationId]'s players scored in [events]: own goals are the
-/// other side's, never a goal of the man who put the ball in his own net.
-/// The key of an own goal's red ball beside a player's name.
-const ownGoalMarkKey = ValueKey('ownGoalMark');
-
 /// The own goals each of [nationId]'s players put past his own keeper (an
 /// own goal is the OTHER side's goal, carried under its culprit's id).
 Map<int, int> ownGoalsByPlayerOf(
@@ -2960,6 +2897,8 @@ Map<int, int> ownGoalsByPlayerOf(
   return out;
 }
 
+/// Goals each of [nationId]'s players scored in [events]: own goals are the
+/// other side's, never a goal of the man who put the ball in his own net.
 Map<int, int> goalsByPlayerOf(
   Iterable<MatchEvent> events, {
   required int nationId,
@@ -2972,46 +2911,3 @@ Map<int, int> goalsByPlayerOf(
   }
   return out;
 }
-
-/// A player's goals and card beside his name in a list: a ball per goal
-/// (a count beside one ball from three), a red ball per own goal, then the
-/// card.
-List<Widget> matchMarks({
-  required int goals,
-  int ownGoals = 0,
-  MatchCard? card,
-}) => [
-  if (goals > 0) ...[
-    const SizedBox(width: 4),
-    for (var i = 0; i < (goals > 2 ? 1 : goals); i++)
-      const Padding(
-        padding: EdgeInsets.only(left: 1),
-        child: Icon(Icons.sports_soccer, size: 13, color: AppColors.primary),
-      ),
-    if (goals > 2)
-      Text(
-        '×$goals',
-        style: AppTypography.labelSmall.copyWith(
-          fontSize: 10,
-          color: AppColors.onSurfaceVariant,
-        ),
-      ),
-  ],
-  if (ownGoals > 0) ...[
-    const SizedBox(width: 4),
-    for (var i = 0; i < ownGoals; i++)
-      const Padding(
-        key: ownGoalMarkKey,
-        padding: EdgeInsets.only(left: 1),
-        child: Icon(
-          Icons.sports_soccer,
-          size: 13,
-          color: AppColors.error,
-        ),
-      ),
-  ],
-  if (card != null) ...[
-    const SizedBox(width: 4),
-    CardMark(card, size: 11),
-  ],
-];

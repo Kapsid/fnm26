@@ -12789,6 +12789,29 @@ class AppLocalizationsId extends AppLocalizations {
   String get campaignStars3Legacy => 'Dan Piala Bangsa-Bangsa';
 
   @override
+  String get campaignHomeSoilTitle => 'Tanah Sendiri';
+
+  @override
+  String get campaignHomeSoilTwist =>
+      'Swedia menjadi tuan rumah Kejuaraan Dunia bersama Denmark dan Norwegia, selama satu siklus';
+
+  @override
+  String get campaignHomeSoilGoal => 'Lolos dari grup di tanah sendiri';
+
+  @override
+  String get campaignHomeSoilIntro =>
+      'Kejuaraan Dunia datang ke utara. Swedia memimpin pencalonan, dengan Denmark dan Norwegia di sisinya, dan seluruh negeri menantikan musim panas yang tak terlupakan. Skuadnya jujur tetapi tidak lebih dari rata-rata, dan setiap tuan rumah mengingat tuan rumah yang tersingkir di fase grup di depan pendukungnya sendiri. Jangan jadi tuan rumah itu: lolos dari grup, lalu capai perempat final dan, jika utara benar-benar percaya, semifinal.';
+
+  @override
+  String get campaignStars1HomeSoil => 'Lolos dari grup';
+
+  @override
+  String get campaignStars2HomeSoil => 'Capai perempat final';
+
+  @override
+  String get campaignStars3HomeSoil => 'Capai semifinal';
+
+  @override
   String get campaignSectionOneCycle => 'Satu siklus';
 
   @override

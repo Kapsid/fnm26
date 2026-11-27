@@ -13017,6 +13017,29 @@ class AppLocalizationsPl extends AppLocalizations {
   String get campaignStars3Legacy => 'I Puchar Narodów';
 
   @override
+  String get campaignHomeSoilTitle => 'U siebie';
+
+  @override
+  String get campaignHomeSoilTwist =>
+      'Szwecja organizuje Mistrzostwa Świata z Danią i Norwegią, na jeden cykl';
+
+  @override
+  String get campaignHomeSoilGoal => 'Wyjść z grupy na własnej ziemi';
+
+  @override
+  String get campaignHomeSoilIntro =>
+      'Mistrzostwa Świata przyjeżdżają na północ. Szwecja przewodzi kandydaturze, u boku Danii i Norwegii, a cały kraj czeka na lato, które zostanie zapamiętane. Kadra jest solidna, ale tylko przeciętna, a każdy gospodarz pamięta tego, który odpadł w fazie grupowej przed własną publicznością. Nie bądź tym gospodarzem: wyjdź z grupy, potem dojdź do ćwierćfinału i, jeśli północ naprawdę wierzy, do półfinału.';
+
+  @override
+  String get campaignStars1HomeSoil => 'Wyjść z grupy';
+
+  @override
+  String get campaignStars2HomeSoil => 'Dojść do ćwierćfinału';
+
+  @override
+  String get campaignStars3HomeSoil => 'Dojść do półfinału';
+
+  @override
   String get campaignSectionOneCycle => 'Jeden cykl';
 
   @override

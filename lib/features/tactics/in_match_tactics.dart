@@ -17,6 +17,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactic_preset.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/match/card_status.dart';
+import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
@@ -109,6 +110,7 @@ Future<InMatchTacticsResult?> showInMatchTactics(
   Map<int, MatchCard> cardsByPlayer = const {},
   Map<int, int> energyByPlayer = const {},
   Map<int, double> ratingByPlayer = const {},
+  List<MatchEvent> events = const [],
   Map<int, int> cameOnAt = const {},
   Map<int, int> wentOffAt = const {},
   List<Color>? teamColors,
@@ -137,6 +139,7 @@ Future<InMatchTacticsResult?> showInMatchTactics(
         cardsByPlayer: cardsByPlayer,
         energyByPlayer: energyByPlayer,
         ratingByPlayer: ratingByPlayer,
+        events: events,
         cameOnAt: cameOnAt,
         wentOffAt: wentOffAt,
         teamColors: teamColors,
@@ -167,6 +170,7 @@ class _InMatchTacticsEditor extends StatefulWidget {
     this.cardsByPlayer = const {},
     this.energyByPlayer = const {},
     this.ratingByPlayer = const {},
+    this.events = const [],
     this.cameOnAt = const {},
     this.wentOffAt = const {},
     this.teamColors,
@@ -200,6 +204,10 @@ class _InMatchTacticsEditor extends StatefulWidget {
   /// mark), shown beside his energy in the on-pitch list so the manager can
   /// see who is having a poor game before taking him off.
   final Map<int, double> ratingByPlayer;
+
+  /// The match's events the clock has reached, for each man's goals and
+  /// assists beside his name in the on-pitch list (the line-ups' marks).
+  final List<MatchEvent> events;
 
   /// Players hurt this match and not yet replaced — flagged orange on the pitch
   /// so the manager knows exactly who to take off.
@@ -1182,6 +1190,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                       detail: _pitchDetail(l, p.id),
                       energy: widget.energyByPlayer[p.id],
                       rating: widget.ratingByPlayer[p.id],
+                      tally: playerMatchTally(widget.events, p.id),
                       card: widget.cardsByPlayer[p.id],
                       selected: comingOff?.id == p.id,
                       // Picking a man to come off moves the sheet to the
@@ -2106,9 +2115,13 @@ class _OnPitchRow extends StatelessWidget {
     required this.onTap,
     this.card,
     this.rating,
+    this.tally = emptyMatchTally,
   });
 
   final Player player;
+
+  /// His goals and assists so far, beside his name (his card is [card]).
+  final PlayerMatchTally tally;
 
   /// How he got here: "Started", or the minute he came on.
   final String detail;
@@ -2172,6 +2185,19 @@ class _OnPitchRow extends StatelessWidget {
                             style: AppTypography.bodyMedium,
                           ),
                         ),
+                        if (PlayerMatchMarks.hasAny(
+                          tally,
+                          showCard: false,
+                          showInjury: false,
+                          showSubs: false,
+                        ))
+                          PlayerMatchMarks(
+                            playerId: player.id,
+                            tally: tally,
+                            showCard: false,
+                            showInjury: false,
+                            showSubs: false,
+                          ),
                         if (card case final c?) ...[
                           const SizedBox(width: AppSpacing.xs),
                           CardMark(c, size: 14),

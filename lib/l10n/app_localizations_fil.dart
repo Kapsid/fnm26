@@ -12882,6 +12882,29 @@ class AppLocalizationsFil extends AppLocalizations {
   String get campaignStars3Legacy => 'At ang Nations Cup';
 
   @override
+  String get campaignHomeSoilTitle => 'Sariling Lupa';
+
+  @override
+  String get campaignHomeSoilTwist =>
+      'Ang Sweden ang host ng Kampeonato ng Mundo kasama ang Denmark at Norway, sa loob ng isang cycle';
+
+  @override
+  String get campaignHomeSoilGoal => 'Lumabas sa grupo sa sariling lupa';
+
+  @override
+  String get campaignHomeSoilIntro =>
+      'Papunta sa hilaga ang Kampeonato ng Mundo. Ang Sweden ang nangunguna sa bid, kasama ang Denmark at Norway, at umaasa ang buong bansa ng tag-init na hindi malilimutan. Matino ang squad pero karaniwan lang, at naaalala ng bawat host ang isang natanggal sa group stage sa harap ng sarili nitong mga tagahanga. Huwag maging ganoong host: lumabas sa grupo, saka umabot sa quarterfinal at, kung talagang naniniwala ang hilaga, sa semifinal.';
+
+  @override
+  String get campaignStars1HomeSoil => 'Lumabas sa grupo';
+
+  @override
+  String get campaignStars2HomeSoil => 'Umabot sa quarterfinal';
+
+  @override
+  String get campaignStars3HomeSoil => 'Umabot sa semifinal';
+
+  @override
   String get campaignSectionOneCycle => 'Isang cycle';
 
   @override
