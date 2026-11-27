@@ -259,6 +259,12 @@ class StoryDriver {
   /// default: the earlier stories were found without it.
   bool screenKnockouts = false;
 
+  /// Re-pick the whole default eleven after a call-up that left a starter
+  /// out, as the call-up itself did when the stories were found. Off for a
+  /// manager who keeps the eleven he set (the call-up refills only the
+  /// slots it emptied).
+  bool repickAtCallUp = true;
+
   static Future<StoryDriver> start(
     ProviderContainer c,
     int seed, {
@@ -496,7 +502,19 @@ class StoryDriver {
       formation: formation,
       max: 23,
     );
+    final xi = (await c.read(tacticsRepositoryProvider).tacticForCareer(
+      careerId,
+    ))?.lineup;
     await c.read(squadServiceProvider).setCallUps(careerId, picked);
+    // The call-up now refills only the slots of the starters it left out.
+    // The stories were found when it re-picked the whole default eleven
+    // over the new squad, so this manager does that himself: the same pick
+    // from the same pool, and every pinned world stays as it was found.
+    if (repickAtCallUp &&
+        xi != null &&
+        xi.whereType<int>().any((id) => !picked.contains(id))) {
+      await c.read(tacticServiceProvider).setFormation(careerId, formation);
+    }
     if (eventKind != null) await _watch(eventKind);
     c.invalidate(hubDataProvider(careerId));
   }

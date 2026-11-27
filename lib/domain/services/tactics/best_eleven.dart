@@ -107,6 +107,57 @@ List<int?> defaultEleven(
   ];
 }
 
+/// [lineup] with only its empty slots filled: every man already named keeps
+/// his slot, and each empty one takes the best of [pool] not already in the
+/// eleven, by [defaultEleven]'s rule (his own line first), chosen as a
+/// whole over the empty slots. A slot stays null only when [pool] runs out.
+///
+/// For repairs that vacate a few slots (a starter left out of the squad): a
+/// whole new [defaultEleven] there threw away every place the manager had
+/// chosen for the men who are still in it.
+List<int?> refillEleven(
+  Formation formation,
+  List<int?> lineup,
+  List<Player> pool, {
+  List<PlayerPosition>? slots,
+}) {
+  final places = slots ?? formation.positions;
+  final out = [
+    for (var i = 0; i < 11; i++) i < lineup.length ? lineup[i] : null,
+  ];
+  final empty = [
+    for (var i = 0; i < 11; i++)
+      if (out[i] == null) i,
+  ];
+  if (empty.isEmpty) return out;
+  final named = out.whereType<int>().toSet();
+  final players =
+      [
+        for (final p in pool)
+          if (!named.contains(p.id)) p,
+      ]..sort((a, b) {
+        final byOverall = b.overall.compareTo(a.overall);
+        return byOverall != 0 ? byOverall : a.id.compareTo(b.id);
+      });
+  final score = [
+    for (final i in empty)
+      [
+        for (final p in players)
+          p.overall -
+              _lineMisfit(
+                i < places.length ? places[i] : formation.positions[i],
+                p.position,
+              ),
+      ],
+  ];
+  final columns = _bestAssignment(score, players.length);
+  for (var r = 0; r < empty.length; r++) {
+    final c = columns[r];
+    if (c != null) out[empty[r]] = players[c].id;
+  }
+  return out;
+}
+
 /// [defaultEleven]'s costs: more than any rating gap once a man leaves his
 /// line, so he only does when it is empty.
 double _lineMisfit(PlayerPosition slot, PlayerPosition own) {

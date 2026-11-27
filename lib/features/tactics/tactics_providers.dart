@@ -672,11 +672,19 @@ class SquadService {
         (id) => !ids.contains(id),
       );
       if (dropped) {
+        // Only the dropped men's slots are refilled: everyone still in the
+        // squad keeps the slot the manager gave him. A whole new default XI
+        // here re-picked and re-placed the eleven every time a single
+        // starter was left out of a window's squad, so the side he had set
+        // up (and the men his slot roles and runs were drawn for) was gone
+        // after the call-up. Formation, instructions, roles and arrows were
+        // never touched, and still are not.
         await tacticRepo.saveTactic(
           careerId,
           tactic.copyWith(
-            lineup: defaultEleven(
+            lineup: refillEleven(
               tactic.formation,
+              [for (final id in tactic.lineup) ids.contains(id) ? id : null],
               squad,
               slots: tactic.positions,
             ),
