@@ -19,6 +19,7 @@ import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
+import 'package:fnm/features/tactics/player_slot_sheet.dart';
 import 'package:fnm/features/match/match_feedback.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
@@ -809,11 +810,20 @@ void main() {
           .last,
     );
     await tester.pumpAndSettle();
+    // The disc opens his sheet; Swap opens the bench.
+    await tester.tap(find.byKey(SlotSheetKeys.swap));
+    await tester.pumpAndSettle();
     final onRow = find.text(on.name).last;
     await tester.ensureVisible(onRow);
     await tester.pumpAndSettle();
     await tester.tap(onRow);
     await tester.pumpAndSettle();
+    // The sheet stays open on the new man: close it to reach Apply.
+    final sheet = find.byKey(SlotSheetKeys.swap);
+    if (sheet.evaluate().isNotEmpty) {
+      await Navigator.of(tester.element(sheet)).maybePop();
+      await tester.pumpAndSettle();
+    }
     await tester.tap(find.text(enL.tacticsApply));
     await tester.pump();
     await _until(tester, () => !_screen(tester).pitchMode.building);
@@ -1576,11 +1586,20 @@ void main() {
           .last,
     );
     await tester.pumpAndSettle();
+    // The disc opens his sheet; Swap opens the bench.
+    await tester.tap(find.byKey(SlotSheetKeys.swap));
+    await tester.pumpAndSettle();
     final onRow = find.text(on.name).last;
     await tester.ensureVisible(onRow);
     await tester.pumpAndSettle();
     await tester.tap(onRow);
     await tester.pumpAndSettle();
+    // The sheet stays open on the new man: close it to reach Apply.
+    final sheet = find.byKey(SlotSheetKeys.swap);
+    if (sheet.evaluate().isNotEmpty) {
+      await Navigator.of(tester.element(sheet)).maybePop();
+      await tester.pumpAndSettle();
+    }
     await tester.tap(find.text(enL.tacticsApply));
     await tester.pump();
     await _until(tester, () => !_screen(tester).pitchMode.building);
