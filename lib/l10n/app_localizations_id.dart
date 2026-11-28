@@ -787,6 +787,9 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'Susunan terbaik sepanjang masa';
+
+  @override
   String get recordsNoWorldHistory =>
       'Dunia belum punya sejarah. Mainkan beberapa kampanye dan para bintang sepanjang masa akan muncul di sini.';
 

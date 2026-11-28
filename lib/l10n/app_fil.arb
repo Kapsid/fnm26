@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Hindi ma-load ang record.\n{error}",
   "recordsNoLegends": "Wala pang alamat. Tapusin ang ilang kampanya at lilitaw dito ang mga dakila ng {nation}.",
   "recordsGreatestSide": "Ang pinakamahusay na koponan na kayang buuin ng {nation}.",
+  "recordsAllTimeXiSubtitle": "All-time XI",
   "recordsNoWorldHistory": "Wala pang kasaysayan ang mundo. Tapusin ang ilang kampanya at lilitaw dito ang mga dakila sa lahat ng panahon.",
   "recordsPlayToWriteHistory": "Maglaro ng ilang laro para simulang isulat ang kasaysayan ng {nation}.",
   "tacticsLineGk": "GK",

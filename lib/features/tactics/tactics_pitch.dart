@@ -390,6 +390,8 @@ class TacticsPitch extends StatelessWidget {
     this.goalsByPlayer = const {},
     this.ownGoalsByPlayer = const {},
     this.assistsByPlayer = const {},
+    this.discLabelByPlayer = const {},
+    this.showPositions = true,
     this.motmId,
     this.teamColors,
     this.fullBacks = FullBackPushes.neutral,
@@ -456,6 +458,15 @@ class TacticsPitch extends StatelessWidget {
   /// Assists each player made, a handshake on the same shoulder chip as his
   /// goals (empty draws nothing).
   final Map<int, int> assistsByPlayer;
+
+  /// What to print in a player's disc in place of his overall (the Legends
+  /// XI prints his average rating there). Empty (the default) prints every
+  /// man's overall, as always.
+  final Map<int, String> discLabelByPlayer;
+
+  /// Whether each disc wears its position badge on top (the default). The
+  /// Legends XI draws the discs without it.
+  final bool showPositions;
 
   /// The card each player is carrying in a live match — see [cardStatusFor],
   /// which the substitution lists read too, so the pitch and the lists can
@@ -831,6 +842,8 @@ class TacticsPitch extends StatelessWidget {
                         goals: goalsByPlayer[lineup[slot]] ?? 0,
                         ownGoals: ownGoalsByPlayer[lineup[slot]] ?? 0,
                         assists: assistsByPlayer[lineup[slot]] ?? 0,
+                        discLabel: discLabelByPlayer[lineup[slot]],
+                        showPosition: showPositions,
                         teamColors: teamColors,
                         fullBackSide: showArrow && shoulderFree ? side : null,
                         push: showArrow ? push : null,
@@ -1053,6 +1066,8 @@ class _PlayerNode extends StatelessWidget {
     this.goals = 0,
     this.ownGoals = 0,
     this.assists = 0,
+    this.discLabel,
+    this.showPosition = true,
     this.fullBackSide,
     this.push,
     this.switched = false,
@@ -1111,6 +1126,12 @@ class _PlayerNode extends StatelessWidget {
 
   /// The goals he set up (0 draws nothing).
   final int assists;
+
+  /// Printed in place of the overall; see [TacticsPitch.discLabelByPlayer].
+  final String? discLabel;
+
+  /// See [TacticsPitch.showPositions].
+  final bool showPosition;
 
   /// Whether the assigned player is banned or injured for the next match.
   final bool absent;
@@ -1322,7 +1343,7 @@ class _PlayerNode extends StatelessWidget {
                 // match engine will use.
                 // A dead slot shows neither: a rating of "+" is the invitation
                 // to fill it, and there is nobody to name.
-                rating: p == null ? '+' : '${effective!}',
+                rating: p == null ? '+' : (discLabel ?? '${effective!}'),
                 name: p == null ? null : (name ?? surnameOf(p.name)),
                 icon: dead
                     ? Icons.block_rounded
@@ -1337,27 +1358,28 @@ class _PlayerNode extends StatelessWidget {
             // The position, on top of the ball. Straddling the rim rather than
             // sitting above it: a badge fully outside the circle is another
             // row of node to collide with.
-            Positioned(
-              top: 0,
-              child: _RimBadge(
-                key: ValueKey('pitchPos$slot'),
-                label: position.label,
-                // A place changed within the shape keeps its fit colour on
-                // the text (that is still the thing being read) and wears the
-                // accent around it, so the change is visible without
-                // shouting over the fit cue.
-                color: fit,
-                border: switched ? switchedAccent : null,
-                // The darkest surface rather than a tint of the cue: the
-                // label is the thing being read, so it gets the most contrast
-                // the palette has.
-                background: switched
-                    ? switchedAccent.withValues(alpha: 0.24)
-                    : AppColors.surfaceContainerLowest,
-                maxWidth: metrics.node,
-                fontSize: _rimFontSize(metrics.disc),
+            if (showPosition)
+              Positioned(
+                top: 0,
+                child: _RimBadge(
+                  key: ValueKey('pitchPos$slot'),
+                  label: position.label,
+                  // A place changed within the shape keeps its fit colour on
+                  // the text (that is still the thing being read) and wears the
+                  // accent around it, so the change is visible without
+                  // shouting over the fit cue.
+                  color: fit,
+                  border: switched ? switchedAccent : null,
+                  // The darkest surface rather than a tint of the cue: the
+                  // label is the thing being read, so it gets the most contrast
+                  // the palette has.
+                  background: switched
+                      ? switchedAccent.withValues(alpha: 0.24)
+                      : AppColors.surfaceContainerLowest,
+                  maxWidth: metrics.node,
+                  fontSize: _rimFontSize(metrics.disc),
+                ),
               ),
-            ),
             // His role and his card, on the rim at the upper right, the
             // mirror of the full-back's arrow, inside his own node: the role's
             // glyph in a small ball, drawn on the card itself when he carries

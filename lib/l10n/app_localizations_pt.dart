@@ -833,6 +833,9 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'Onze de todos os tempos';
+
+  @override
   String get recordsNoWorldHistory =>
       'O mundo ainda não tem história. Dispute algumas campanhas e os grandes nomes de todos os tempos aparecerão aqui.';
 

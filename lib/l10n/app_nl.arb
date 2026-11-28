@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Record kon niet worden geladen.\n{error}",
   "recordsNoLegends": "Nog geen legendes. Speel een paar campagnes uit en de grootsten van {nation} verschijnen hier.",
   "recordsGreatestSide": "Het grootste elftal dat {nation} ooit kon opstellen.",
+  "recordsAllTimeXiSubtitle": "Elftal aller tijden",
   "recordsNoWorldHistory": "De wereld heeft nog geen geschiedenis. Speel een paar campagnes uit en de grootsten aller tijden verschijnen hier.",
   "recordsPlayToWriteHistory": "Speel enkele wedstrijden om de geschiedenis van {nation} te gaan schrijven.",
   "tacticsLineGk": "KEE",

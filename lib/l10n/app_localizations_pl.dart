@@ -783,6 +783,9 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'Jedenastka wszech czasów';
+
+  @override
   String get recordsNoWorldHistory =>
       'Świat nie ma jeszcze historii. Rozegraj kilka kampanii, a tutaj pojawią się najwięksi wszech czasów.';
 

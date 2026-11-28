@@ -787,6 +787,9 @@ class AppLocalizationsHu extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'Minden idők csapata';
+
+  @override
   String get recordsNoWorldHistory =>
       'A világnak még nincs története. Játssz le néhány kampányt, és itt jelennek meg a minden idők legnagyjai.';
 

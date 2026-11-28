@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Nie udało się wczytać bilansu.\n{error}",
   "recordsNoLegends": "Brak legend. Rozegraj kilka kampanii, a tutaj pojawią się wielcy zawodnicy. Kraj: {nation}.",
   "recordsGreatestSide": "Najlepsza drużyna, jaką może wystawić reprezentacja: {nation}.",
+  "recordsAllTimeXiSubtitle": "Jedenastka wszech czasów",
   "recordsNoWorldHistory": "Świat nie ma jeszcze historii. Rozegraj kilka kampanii, a tutaj pojawią się najwięksi wszech czasów.",
   "recordsPlayToWriteHistory": "Rozegraj kilka meczów i zacznij pisać historię. Reprezentacja: {nation}.",
   "tacticsLineGk": "BR",

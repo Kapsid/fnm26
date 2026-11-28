@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Рекорд није могао да се учита.\n{error}",
   "recordsNoLegends": "Још нема легенди. Одиграј неколико кампања и овде ће се појавити великани репрезентације: {nation}.",
   "recordsGreatestSide": "Најбољи тим који је репрезентација {nation} икад могла да изведе.",
+  "recordsAllTimeXiSubtitle": "Најбоља постава свих времена",
   "recordsNoWorldHistory": "Свет још нема историју. Одиграј неколико кампања и овде ће се појавити великани свих времена.",
   "recordsPlayToWriteHistory": "Одиграј неколико утакмица и почни да пишеш историју: {nation}.",
   "tacticsLineGk": "ГК",

@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "रिकॉर्ड लोड नहीं हो सका।\n{error}",
   "recordsNoLegends": "अभी कोई दिग्गज नहीं। कुछ सीज़न खेलें और {nation} के महान खिलाड़ी यहाँ उभरेंगे।",
   "recordsGreatestSide": "{nation} अब तक की सबसे बेहतरीन टीम उतार सकता है, यही है।",
+  "recordsAllTimeXiSubtitle": "ऑल-टाइम XI",
   "recordsNoWorldHistory": "दुनिया का अभी कोई इतिहास नहीं। कुछ सीज़न खेलें और ऑल-टाइम महान खिलाड़ी यहाँ दिखेंगे।",
   "recordsPlayToWriteHistory": "{nation} का इतिहास लिखना शुरू करने के लिए कुछ मैच खेलें।",
   "tacticsLineGk": "GK",

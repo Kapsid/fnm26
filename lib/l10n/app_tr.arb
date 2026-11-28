@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Rekor yüklenemedi.\n{error}",
   "recordsNoLegends": "Henüz efsane yok. Birkaç kampanya oyna, {nation} için büyük isimler burada ortaya çıkacak.",
   "recordsGreatestSide": "{nation} için kurulabilecek en güçlü takım.",
+  "recordsAllTimeXiSubtitle": "Tüm zamanların ilk 11'i",
   "recordsNoWorldHistory": "Dünyanın henüz bir geçmişi yok. Birkaç kampanya oyna, tüm zamanların büyükleri burada görünecek.",
   "recordsPlayToWriteHistory": "{nation} tarihini yazmaya başlamak için birkaç maç oyna.",
   "tacticsLineGk": "KL",

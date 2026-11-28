@@ -837,6 +837,9 @@ class AppLocalizationsHr extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'Najboljih 11 svih vremena';
+
+  @override
   String get recordsNoWorldHistory =>
       'Svijet još nema povijest. Odigraj nekoliko kampanja i ovdje će se pojaviti velikani svih vremena.';
 

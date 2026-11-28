@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Bilanz konnte nicht geladen werden.\n{error}",
   "recordsNoLegends": "Noch keine Legenden. Spielen Sie einige Kampagnen, dann erscheinen hier die Größen von {nation}.",
   "recordsGreatestSide": "Die beste Elf, die {nation} je aufbieten könnte.",
+  "recordsAllTimeXiSubtitle": "All-Time-Elf",
   "recordsNoWorldHistory": "Die Welt hat noch keine Geschichte. Spielen Sie einige Kampagnen, dann erscheinen hier die Größen aller Zeiten.",
   "recordsPlayToWriteHistory": "Bestreiten Sie einige Spiele, um die Geschichte von {nation} zu schreiben.",
   "tacticsLineGk": "TW",

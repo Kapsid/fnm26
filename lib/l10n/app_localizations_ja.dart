@@ -744,6 +744,9 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => '歴代ベストイレブン';
+
+  @override
   String get recordsNoWorldHistory => '世界にはまだ歴史がありません。大会を重ねれば、歴代の名選手がここに現れます。';
 
   @override

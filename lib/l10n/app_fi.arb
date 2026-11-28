@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Ennätystä ei voitu ladata.\n{error}",
   "recordsNoLegends": "Ei vielä legendoja. Pelaa muutama kampanja läpi, niin maan suurimmat nimet nousevat tähän: {nation}.",
   "recordsGreatestSide": "Paras joukkue, jonka tämä maa voisi koskaan kenttään asettaa: {nation}.",
+  "recordsAllTimeXiSubtitle": "Kaikkien aikojen avauskokoonpano",
   "recordsNoWorldHistory": "Maailmalla ei ole vielä historiaa. Pelaa muutama kampanja läpi, niin kaikkien aikojen suuruudet ilmestyvät tähän.",
   "recordsPlayToWriteHistory": "Pelaa muutama ottelu, niin historian kirjoittaminen alkaa: {nation}.",
   "tacticsLineGk": "MV",

@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Rekorden kunne ikke indlæses.\n{error}",
   "recordsNoLegends": "Ingen legender endnu. Spil nogle kampagner færdige, så dukker de største navne for {nation} op her.",
   "recordsGreatestSide": "Det bedste hold, {nation} nogensinde har kunnet stille.",
+  "recordsAllTimeXiSubtitle": "Alle tiders hold",
   "recordsNoWorldHistory": "Verden har ingen historie endnu. Spil nogle kampagner færdige, så dukker alle tiders største navne op her.",
   "recordsPlayToWriteHistory": "Spil nogle kampe for at begynde at skrive historien for {nation}.",
   "tacticsLineGk": "MM",

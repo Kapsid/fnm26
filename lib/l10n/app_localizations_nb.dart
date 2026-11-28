@@ -816,6 +816,9 @@ class AppLocalizationsNb extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'Alltidslaget';
+
+  @override
   String get recordsNoWorldHistory =>
       'Verden har ingen historie ennå. Spill noen kampanjer, så dukker alle tiders store navn opp her.';
 

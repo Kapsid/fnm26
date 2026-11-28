@@ -834,6 +834,9 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'Jedenáctka historie';
+
+  @override
   String get recordsNoWorldHistory =>
       'Svět zatím nemá žádnou historii. Odehrajte několik kampaní a objeví se zde největší legendy.';
 

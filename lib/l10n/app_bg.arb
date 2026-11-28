@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Балансът не можа да се зареди.\n{error}",
   "recordsNoLegends": "Още няма легенди. Изиграй няколко кампании и великите от {nation} ще се появят тук.",
   "recordsGreatestSide": "Най-силният състав на {nation} за всички времена.",
+  "recordsAllTimeXiSubtitle": "Състав за всички времена",
   "recordsNoWorldHistory": "Светът още няма история. Изиграй няколко кампании и великите на всички времена ще се появят тук.",
   "recordsPlayToWriteHistory": "Изиграй няколко мача, за да започнеш да пишеш историята на {nation}.",
   "tacticsLineGk": "ВР",

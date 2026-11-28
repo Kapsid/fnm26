@@ -818,6 +818,9 @@ class AppLocalizationsSv extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'Tidernas elva';
+
+  @override
   String get recordsNoWorldHistory =>
       'Världen har ingen historia ännu. Spela ut några kampanjer så dyker de största genom tiderna upp här.';
 

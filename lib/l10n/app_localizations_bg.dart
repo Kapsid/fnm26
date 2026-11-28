@@ -834,6 +834,9 @@ class AppLocalizationsBg extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'Състав за всички времена';
+
+  @override
   String get recordsNoWorldHistory =>
       'Светът още няма история. Изиграй няколко кампании и великите на всички времена ще се появят тук.';
 

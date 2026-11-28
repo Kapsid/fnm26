@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Não foi possível carregar o histórico.\n{error}",
   "recordsNoLegends": "Ainda sem lendas para {nation}. Dispute algumas campanhas e os grandes nomes vão surgir aqui.",
   "recordsGreatestSide": "O melhor onze que {nation} poderia escalar.",
+  "recordsAllTimeXiSubtitle": "Onze de todos os tempos",
   "recordsNoWorldHistory": "O mundo ainda não tem história. Dispute algumas campanhas e os grandes nomes de todos os tempos aparecerão aqui.",
   "recordsPlayToWriteHistory": "Dispute algumas partidas para começar a escrever a história desta seleção ({nation}).",
   "tacticsLineGk": "GL",

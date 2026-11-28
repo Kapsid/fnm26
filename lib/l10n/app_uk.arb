@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Не вдалося завантажити запис.\n{error}",
   "recordsNoLegends": "Легенд ще немає. Зіграй кілька кампаній, і тут з’являться великі імена. Збірна: {nation}.",
   "recordsGreatestSide": "Найсильніший склад усіх часів. Збірна: {nation}.",
+  "recordsAllTimeXiSubtitle": "Склад всіх часів",
   "recordsNoWorldHistory": "У світу ще немає історії. Зіграй кілька кампаній, і тут з’являться великі імена всіх часів.",
   "recordsPlayToWriteHistory": "Зіграй кілька матчів, щоб почати писати історію. Збірна: {nation}.",
   "tacticsLineGk": "ВР",

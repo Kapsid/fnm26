@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Nem sikerült betölteni a mérleget.\n{error}",
   "recordsNoLegends": "Még nincsenek legendák. Játssz le néhány kampányt, és itt jelennek meg {nation} nagyjai.",
   "recordsGreatestSide": "A valaha kiállítható legjobb csapat: {nation}.",
+  "recordsAllTimeXiSubtitle": "Minden idők csapata",
   "recordsNoWorldHistory": "A világnak még nincs története. Játssz le néhány kampányt, és itt jelennek meg a minden idők legnagyjai.",
   "recordsPlayToWriteHistory": "Játssz néhány meccset, hogy megkezdődjön {nation} történetének megírása.",
   "tacticsLineGk": "K",

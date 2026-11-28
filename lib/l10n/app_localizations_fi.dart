@@ -834,6 +834,9 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'Kaikkien aikojen avauskokoonpano';
+
+  @override
   String get recordsNoWorldHistory =>
       'Maailmalla ei ole vielä historiaa. Pelaa muutama kampanja läpi, niin kaikkien aikojen suuruudet ilmestyvät tähän.';
 

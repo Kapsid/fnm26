@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Не удалось загрузить статистику.\n{error}",
   "recordsNoLegends": "Легенд пока нет. Проведи несколько кампаний, и здесь появятся великие игроки сборной: {nation}.",
   "recordsGreatestSide": "Сильнейший состав в истории сборной: {nation}.",
+  "recordsAllTimeXiSubtitle": "Символическая сборная",
   "recordsNoWorldHistory": "У мира ещё нет истории. Проведи несколько кампаний, и здесь появятся великие игроки всех времён.",
   "recordsPlayToWriteHistory": "Сыграй несколько матчей, чтобы начать писать историю сборной: {nation}.",
   "tacticsLineGk": "ВР",

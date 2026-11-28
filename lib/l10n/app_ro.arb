@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Bilanțul nu a putut fi încărcat.\n{error}",
   "recordsNoLegends": "Încă nu există legende. Jucați câteva campanii și marii jucători ai echipei {nation} vor apărea aici.",
   "recordsGreatestSide": "Cea mai bună echipă pe care {nation} ar putea-o alinia vreodată.",
+  "recordsAllTimeXiSubtitle": "Echipa istoriei",
   "recordsNoWorldHistory": "Lumea nu are încă istorie. Jucați câteva campanii și marii jucători ai tuturor timpurilor vor apărea aici.",
   "recordsPlayToWriteHistory": "Jucați câteva meciuri ca să începeți să scrieți istoria echipei {nation}.",
   "tacticsLineGk": "POR",

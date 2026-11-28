@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Impossibile caricare il bilancio.\n{error}",
   "recordsNoLegends": "Ancora nessuna leggenda. Gioca qualche campagna e qui emergeranno i grandi di {nation}.",
   "recordsGreatestSide": "La squadra più forte che {nation} potrebbe mai schierare.",
+  "recordsAllTimeXiSubtitle": "Top 11 di sempre",
   "recordsNoWorldHistory": "Il mondo non ha ancora una storia. Gioca qualche campagna e qui appariranno i più grandi di sempre.",
   "recordsPlayToWriteHistory": "Gioca qualche partita per iniziare a scrivere la storia di {nation}.",
   "tacticsLineGk": "POR",

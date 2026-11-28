@@ -800,6 +800,9 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'Echipa istoriei';
+
+  @override
   String get recordsNoWorldHistory =>
       'Lumea nu are încă istorie. Jucați câteva campanii și marii jucători ai tuturor timpurilor vor apărea aici.';
 

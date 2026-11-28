@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "전적을 불러올 수 없습니다.\n{error}",
   "recordsNoLegends": "아직 레전드가 없습니다. 몇 차례 대회 주기를 치르면 {nation}의 위대한 선수들이 이곳에 등장합니다.",
   "recordsGreatestSide": "{nation} 역사상 최강의 라인업.",
+  "recordsAllTimeXiSubtitle": "역대 베스트 11",
   "recordsNoWorldHistory": "세계에 아직 역사가 없습니다. 몇 차례 대회 주기를 치르면 역대 최고의 선수들이 이곳에 나타납니다.",
   "recordsPlayToWriteHistory": "경기를 치르며 {nation}의 역사를 써 내려가세요.",
   "tacticsLineGk": "GK",
