@@ -350,10 +350,10 @@ void main() {
       expect(await stored(), contains('feat_massacre'));
     });
 
-    test('runs before any evaluation', () async {
+    test('is not run on evaluation: an older save keeps its unlocks', () async {
       await anOldSaveWithWrongUnlocks();
       await service().checkAndRecord(careerId);
-      expect(await stored(), isNot(contains('title_afcon')));
+      expect(await stored(), contains('title_afcon'));
     });
 
     test('leaves a save alone whose stints cannot tell', () async {

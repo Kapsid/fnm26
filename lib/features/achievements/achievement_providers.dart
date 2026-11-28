@@ -449,9 +449,9 @@ class AchievementService {
   /// order follows the catalogue.
   Future<List<AchievementDef>> checkAndRecord(int careerId) async {
     final comp = _ref.read(competitionRepositoryProvider);
-    // An older save's wrong unlocks are taken back before anything is
-    // evaluated, so no screen shows them again (once per save).
-    await repairTenureUnlocks(careerId);
+    // An older save's wrong unlocks (counted from a new nation's past before
+    // the tenure fix) are kept: the owner chose not to take them back.
+    // [repairTenureUnlocks] stays available but is not run.
     final stats = await computeStats(careerId);
     if (stats == null) return const [];
     final earned = AchievementCatalog.earnedIds(stats);
