@@ -28613,16 +28613,16 @@ abstract class AppLocalizations {
   /// **'Hail Mary'**
   String get campaignVaticanTitle;
 
-  /// One-line twist of the Vatican City campaign: Vatican City in San Marino's place in Europe, for a run of fifty cycles.
+  /// One-line twist of the Vatican City campaign: Vatican City in Andorra's place in Europe, for a run of fifty cycles.
   ///
   /// In en, this message translates to:
-  /// **'Vatican City takes San Marino\'s place in Europe for fifty cycles'**
+  /// **'Vatican City takes Andorra\'s place in Europe for fifty cycles'**
   String get campaignVaticanTwist;
 
-  /// Brief screen introduction of the Vatican City campaign: the smallest state in the world takes San Marino's place in Europe as a side far worse than San Marino, its players clergy, seminarians and guards, its home games on a tiny pitch inside the walls or a borrowed ground in Rome, for a run of fifty cycles; it ends on the three stars (a European Championship, a World Championship, then winning one). Names no real person.
+  /// Brief screen introduction of the Vatican City campaign: the smallest state in the world takes Andorra's place in Europe as a side far worse even than San Marino (who stays in the world), its players clergy, seminarians and guards, its home games on a tiny pitch inside the walls or a borrowed ground in Rome, for a run of fifty cycles; it ends on the three stars (a European Championship, a World Championship, then winning one). Names no real person.
   ///
   /// In en, this message translates to:
-  /// **'The smallest state in the world has a few hundred citizens, most of them clergy, a guard of Swiss halberdiers and not one footballer worth the name. In this world Vatican City plays anyway, in San Marino\'s place in Europe, and it is far worse than San Marino ever was: bishops, seminarians, museum attendants and off-duty guards, a pitch inside the walls with room for 1,500 and the odd home game on a borrowed ground in Rome. Fifty cycles is a long time, but it takes miracles all the same: reach a European Championship, then a World Championship and, if heaven is listening, win one.'**
+  /// **'The smallest state in the world has a few hundred citizens, most of them clergy, a guard of Swiss halberdiers and not one footballer worth the name. In this world Vatican City plays anyway, in Andorra\'s place in Europe, and it is far worse than even San Marino ever was: bishops, seminarians, museum attendants and off-duty guards, a pitch inside the walls with room for 1,500 and the odd home game on a borrowed ground in Rome. Fifty cycles is a long time, but it takes miracles all the same: reach a European Championship, then a World Championship and, if heaven is listening, win one.'**
   String get campaignVaticanIntro;
 
   /// One-line goal of the Vatican City campaign (its first star): qualify for a European Championship (the game's name for the continental championship of Europe).

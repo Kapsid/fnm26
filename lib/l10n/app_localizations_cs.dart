@@ -19300,11 +19300,11 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get campaignVaticanTwist =>
-      'Vatikán zaujímá místo San Marina v Evropě, na padesát cyklů';
+      'Vatikán zaujímá místo Andorry v Evropě, na padesát cyklů';
 
   @override
   String get campaignVaticanIntro =>
-      'Nejmenší stát světa má pár stovek občanů, většinou duchovních, gardu švýcarských halapartníků a ani jednoho fotbalistu, který by si to jméno zasloužil. V tomto světě Vatikán hraje i tak, na místě San Marina v Evropě, a je mnohem horší, než kdy San Marino bylo: biskupové, seminaristé, kustodi z muzeí a gardisté po službě, hřiště za hradbami pro 1 500 diváků a sem tam domácí zápas na vypůjčeném stadionu v Římě. Padesát cyklů je dlouhá doba, ale bez zázraků se to stejně neobejde: dostat se na mistrovství Evropy, pak na mistrovství světa a, pokud nebe naslouchá, ho i vyhrát.';
+      'Nejmenší stát světa má pár stovek občanů, většinou duchovních, gardu švýcarských halapartníků a ani jednoho fotbalistu, který by si to jméno zasloužil. V tomto světě Vatikán hraje i tak, na místě Andorry v Evropě, a je mnohem horší, než kdy bylo i San Marino: biskupové, seminaristé, kustodi z muzeí a gardisté po službě, hřiště za hradbami pro 1 500 diváků a sem tam domácí zápas na vypůjčeném stadionu v Římě. Padesát cyklů je dlouhá doba, ale bez zázraků se to stejně neobejde: dostat se na mistrovství Evropy, pak na mistrovství světa a, pokud nebe naslouchá, ho i vyhrát.';
 
   @override
   String get campaignVaticanGoal => 'Postoupit na mistrovství Evropy';

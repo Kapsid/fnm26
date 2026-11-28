@@ -19094,11 +19094,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get campaignVaticanTwist =>
-      'Le Vatican prend la place de Saint-Marin en Europe, pour cinquante cycles';
+      'Le Vatican prend la place d’Andorre en Europe, pour cinquante cycles';
 
   @override
   String get campaignVaticanIntro =>
-      'Le plus petit État du monde compte quelques centaines de citoyens, pour la plupart des clercs, une garde de hallebardiers suisses et pas un seul footballeur digne de ce nom. Dans ce monde, le Vatican joue quand même, à la place de Saint-Marin en Europe, et il est bien plus faible que Saint-Marin ne l’a jamais été : des évêques, des séminaristes, des gardiens de musée et des gardes en repos, un terrain dans les murs pour 1 500 spectateurs et, de temps en temps, un match à domicile dans un stade prêté à Rome. Cinquante cycles, c’est long, mais il faudra quand même des miracles : atteindre un Championnat d’Europe, puis un Championnat du monde et, si le ciel vous entend, en gagner un.';
+      'Le plus petit État du monde compte quelques centaines de citoyens, pour la plupart des clercs, une garde de hallebardiers suisses et pas un seul footballeur digne de ce nom. Dans ce monde, le Vatican joue quand même, à la place d’Andorre en Europe, et il est bien plus faible que Saint-Marin lui-même ne l’a jamais été : des évêques, des séminaristes, des gardiens de musée et des gardes en repos, un terrain dans les murs pour 1 500 spectateurs et, de temps en temps, un match à domicile dans un stade prêté à Rome. Cinquante cycles, c’est long, mais il faudra quand même des miracles : atteindre un Championnat d’Europe, puis un Championnat du monde et, si le ciel vous entend, en gagner un.';
 
   @override
   String get campaignVaticanGoal => 'Se qualifier pour un Championnat d’Europe';

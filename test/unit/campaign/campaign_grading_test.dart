@@ -238,12 +238,13 @@ void main() {
 
   test(
     'Hail Mary: Pro, hard, fifty cycles, can be continued, its dormant world in '
-    "San Marino's place",
+    "Andorra's place (San Marino's for a run started before the move)",
     () {
       const def = Campaigns.vatican;
       expect(def.nationId, 217);
       expect(def.dormantNationId, 217);
-      expect(DormantNations.replaces[217], 45);
+      expect(DormantNations.replaces[217], 2);
+      expect(DormantNations.replacedBefore[217], 45);
       expect(DormantNations.alsoReplaces[217], isNull);
       expect(DormantNations.vatican.confederation, Confederation.europe);
       // A European run: Belarus in, no donors.

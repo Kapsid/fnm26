@@ -19007,11 +19007,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get campaignVaticanTwist =>
-      'La Città del Vaticano prende il posto di San Marino in Europa, per cinquanta cicli';
+      'La Città del Vaticano prende il posto di Andorra in Europa, per cinquanta cicli';
 
   @override
   String get campaignVaticanIntro =>
-      'Lo stato più piccolo del mondo ha qualche centinaio di cittadini, quasi tutti religiosi, una guardia di alabardieri svizzeri e nemmeno un calciatore degno di questo nome. In questo mondo la Città del Vaticano gioca lo stesso, al posto di San Marino in Europa, ed è molto più debole di quanto San Marino sia mai stato: vescovi, seminaristi, custodi dei musei e guardie fuori servizio, un campo dentro le mura da 1.500 posti e ogni tanto una partita in casa su un campo prestato a Roma. Cinquanta cicli sono tanti, ma servono comunque dei miracoli: raggiungere un Campionato europeo, poi un Campionato del mondo e, se il cielo ti ascolta, vincerne uno.';
+      'Lo stato più piccolo del mondo ha qualche centinaio di cittadini, quasi tutti religiosi, una guardia di alabardieri svizzeri e nemmeno un calciatore degno di questo nome. In questo mondo la Città del Vaticano gioca lo stesso, al posto di Andorra in Europa, ed è molto più debole di quanto sia mai stato perfino San Marino: vescovi, seminaristi, custodi dei musei e guardie fuori servizio, un campo dentro le mura da 1.500 posti e ogni tanto una partita in casa su un campo prestato a Roma. Cinquanta cicli sono tanti, ma servono comunque dei miracoli: raggiungere un Campionato europeo, poi un Campionato del mondo e, se il cielo ti ascolta, vincerne uno.';
 
   @override
   String get campaignVaticanGoal => 'Qualificarsi per un Campionato europeo';

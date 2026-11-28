@@ -252,7 +252,9 @@ Map<int, int> careerWorldRanks(
   for (final kind in kinds) {
     final d = DormantNations.fromMarker(kind);
     if (d == null) continue;
-    final replaced = DormantNations.replaces[d];
+    // The place the marker records (a run started before a dormant nation
+    // moved keeps its old one).
+    final replaced = DormantNations.replacedIn(kind);
     if (replaced != null) {
       if (world.remove(replaced) == null) continue;
       for (final also in DormantNations.alsoReplaces[d] ?? const <int>{}) {

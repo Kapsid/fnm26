@@ -34,12 +34,13 @@ class DriftNationRepository implements NationRepository {
   /// bundles) pass none and read the real nations.
   final ActiveWorld? world;
 
-  /// Careers known to carry a dormant nation's marker, with the dormant ids.
+  /// Careers known to carry a dormant nation's marker, with the dormant ids
+  /// and the nation each replaces there (`DormantNations.activeIn`).
   /// Only a yes is kept: a career id is never reused and the marker is never
   /// removed, so a yes cannot go stale, while a no could if anything read the
   /// career's world before its marker landed. A no is asked again (one small
   /// indexed query).
-  final Map<int, Set<int>> _dormantByCareer = {};
+  final Map<int, Map<int, int?>> _dormantByCareer = {};
 
   @override
   Future<List<Nation>> all() async {
@@ -262,7 +263,7 @@ class DriftNationRepository implements NationRepository {
     if (active.isEmpty) return base;
     final rows = await (_db.select(
       _db.nations,
-    )..where((t) => t.id.isIn(active))).get();
+    )..where((t) => t.id.isIn(active.keys))).get();
     // A dormant nation starts where the career froze it too: a Greenland run
     // begun on the old ranking keeps its 210, a new one starts on 209.
     final dormant = {
@@ -279,17 +280,20 @@ class DriftNationRepository implements NationRepository {
     // it on every launch) would leave the replaced nation in place rather
     // than drop a nation from the world.
     final present = {
-      for (final d in active)
+      for (final d in active.keys)
         if (dormant.containsKey(d)) d,
     };
     return DormantNations.worldFrom(
       base,
       present,
       dormant: (id) => dormant[id]!,
+      // The place the career's own marker records: a run started before a
+      // dormant nation moved keeps its old one.
+      replacing: active,
     );
   }
 
-  Future<Set<int>> _dormantFor(int careerId) async {
+  Future<Map<int, int?>> _dormantFor(int careerId) async {
     final cached = _dormantByCareer[careerId];
     if (cached != null) return cached;
     final rows =
@@ -300,9 +304,7 @@ class DriftNationRepository implements NationRepository {
                   t.kind.like('${DormantNations.markerPrefix}%'),
             ))
             .get();
-    final ids = {
-      for (final r in rows) ?DormantNations.fromMarker(r.kind),
-    };
+    final ids = DormantNations.activeIn([for (final r in rows) r.kind]);
     if (ids.isNotEmpty) _dormantByCareer[careerId] = ids;
     return ids;
   }

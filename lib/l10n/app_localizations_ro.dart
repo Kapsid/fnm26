@@ -19346,11 +19346,11 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get campaignVaticanTwist =>
-      'Vaticanul ia locul San Marinoului în Europa, timp de cincizeci de cicluri';
+      'Vaticanul ia locul Andorrei în Europa, timp de cincizeci de cicluri';
 
   @override
   String get campaignVaticanIntro =>
-      'Cel mai mic stat din lume are câteva sute de cetățeni, cei mai mulți clerici, o gardă de halebardieri elvețieni și niciun fotbalist demn de acest nume. În această lume Vaticanul joacă totuși, în locul San Marinoului în Europa, și este mult mai slab decât a fost vreodată San Marino: episcopi, seminariști, supraveghetori de muzeu și gardieni în timpul liber, un teren în interiorul zidurilor pentru 1.500 de spectatori și din când în când un meci de acasă pe un stadion împrumutat la Roma. Cincizeci de cicluri înseamnă mult timp, dar tot e nevoie de minuni: ajungeți la un Campionat European, apoi la un Campionat Mondial și, dacă cerul ascultă, câștigați-l.';
+      'Cel mai mic stat din lume are câteva sute de cetățeni, cei mai mulți clerici, o gardă de halebardieri elvețieni și niciun fotbalist demn de acest nume. În această lume Vaticanul joacă totuși, în locul Andorrei în Europa, și este mult mai slab decât a fost vreodată chiar și San Marino: episcopi, seminariști, supraveghetori de muzeu și gardieni în timpul liber, un teren în interiorul zidurilor pentru 1.500 de spectatori și din când în când un meci de acasă pe un stadion împrumutat la Roma. Cincizeci de cicluri înseamnă mult timp, dar tot e nevoie de minuni: ajungeți la un Campionat European, apoi la un Campionat Mondial și, dacă cerul ascultă, câștigați-l.';
 
   @override
   String get campaignVaticanGoal => 'Calificarea la un Campionat European';

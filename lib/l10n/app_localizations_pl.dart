@@ -19111,11 +19111,11 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get campaignVaticanTwist =>
-      'Watykan zajmuje miejsce San Marino w Europie, na pięćdziesiąt cykli';
+      'Watykan zajmuje miejsce Andory w Europie, na pięćdziesiąt cykli';
 
   @override
   String get campaignVaticanIntro =>
-      'Najmniejsze państwo świata ma kilkuset obywateli, w większości duchownych, gwardię szwajcarskich halabardników i ani jednego piłkarza godnego tego miana. W tym świecie Watykan i tak gra, na miejscu San Marino w Europie, i jest dużo słabszy, niż San Marino kiedykolwiek było: biskupi, klerycy, kustosze muzeów i gwardziści po służbie, boisko w murach na 1500 widzów i od czasu do czasu mecz u siebie na pożyczonym stadionie w Rzymie. Pięćdziesiąt cykli to dużo czasu, ale i tak potrzeba cudów: awansować na Mistrzostwa Europy, potem na Mistrzostwa Świata i, jeśli niebo słucha, je wygrać.';
+      'Najmniejsze państwo świata ma kilkuset obywateli, w większości duchownych, gwardię szwajcarskich halabardników i ani jednego piłkarza godnego tego miana. W tym świecie Watykan i tak gra, na miejscu Andory w Europie, i jest dużo słabszy, niż kiedykolwiek było nawet San Marino: biskupi, klerycy, kustosze muzeów i gwardziści po służbie, boisko w murach na 1500 widzów i od czasu do czasu mecz u siebie na pożyczonym stadionie w Rzymie. Pięćdziesiąt cykli to dużo czasu, ale i tak potrzeba cudów: awansować na Mistrzostwa Europy, potem na Mistrzostwa Świata i, jeśli niebo słucha, je wygrać.';
 
   @override
   String get campaignVaticanGoal => 'Awansować na Mistrzostwa Europy';

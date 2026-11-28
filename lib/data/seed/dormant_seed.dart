@@ -3181,7 +3181,10 @@ List<Player> texasPool() => [
 /// The factor on San Marino's attributes that [vaticanSquad] was written
 /// with. The owner's call: a tiny state of bishops, much worse than San
 /// Marino. At 0.78 its best eleven rates 35 over the whole stored pool (33
-/// over the squad), nine below San Marino's 44 and the lowest in the world.
+/// over the squad), nine below San Marino's 44, fifteen below the 50 of
+/// Andorra, whose place it takes, and the lowest in the world. Still drawn
+/// from San Marino's slots, the weakest in the world, though San Marino
+/// stays in its world.
 /// A test re-derives the squad from this factor; the seed loader rewrites a
 /// stored squad that differs.
 const double vaticanAttributeFactor = 0.78;

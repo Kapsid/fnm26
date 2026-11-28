@@ -18879,11 +18879,11 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get campaignVaticanTwist =>
-      'Kota Vatican mengambil tempat San Marino di Eropah, selama lima puluh kitaran';
+      'Kota Vatican mengambil tempat Andorra di Eropah, selama lima puluh kitaran';
 
   @override
   String get campaignVaticanIntro =>
-      'Negara terkecil di dunia mempunyai beberapa ratus warga, kebanyakannya paderi, sepasukan pengawal Switzerland bersenjatakan tombak kapak dan tiada seorang pun pemain bola sepak yang layak digelar begitu. Dalam dunia ini Kota Vatican tetap bermain, di tempat San Marino di Eropah, dan ia jauh lebih lemah daripada San Marino pada bila-bila masa: biskop, pelajar seminari, penjaga muzium dan pengawal yang sedang bercuti, sebuah padang di dalam tembok untuk 1,500 penonton dan sesekali perlawanan di laman sendiri di stadium pinjaman di Rom. Lima puluh kitaran memang masa yang panjang, tetapi keajaiban tetap diperlukan: layak ke Kejohanan Eropah, kemudian ke Kejohanan Dunia dan, jika langit mendengar, menjuarainya.';
+      'Negara terkecil di dunia mempunyai beberapa ratus warga, kebanyakannya paderi, sepasukan pengawal Switzerland bersenjatakan tombak kapak dan tiada seorang pun pemain bola sepak yang layak digelar begitu. Dalam dunia ini Kota Vatican tetap bermain, di tempat Andorra di Eropah, dan ia jauh lebih lemah malah daripada San Marino pada bila-bila masa: biskop, pelajar seminari, penjaga muzium dan pengawal yang sedang bercuti, sebuah padang di dalam tembok untuk 1,500 penonton dan sesekali perlawanan di laman sendiri di stadium pinjaman di Rom. Lima puluh kitaran memang masa yang panjang, tetapi keajaiban tetap diperlukan: layak ke Kejohanan Eropah, kemudian ke Kejohanan Dunia dan, jika langit mendengar, menjuarainya.';
 
   @override
   String get campaignVaticanGoal => 'Layak ke Kejohanan Eropah';

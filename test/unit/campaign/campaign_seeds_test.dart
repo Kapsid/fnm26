@@ -899,8 +899,8 @@ void main() {
 
   group('Vatican City', () {
     const def = Campaigns.vatican;
-    // Its world: San Marino out, Vatican City in, Belarus in (a European
-    // run).
+    // Its world: Andorra out, Vatican City in, Belarus in (a European
+    // run); San Marino stays.
     final world = campaignWorld(def, nations);
 
     test('seed 217 keeps Vatican City from hosting either championship in '
@@ -929,7 +929,7 @@ void main() {
     });
 
     test('seed 217 draws Vatican City into a European qualifying group of '
-        'five, whatever the first Nations Cup, San Marino nowhere', () {
+        'five, whatever the first Nations Cup, Andorra nowhere', () {
       final mine = euroQualifyingGroups(
         def.rngSeed,
         world,
@@ -937,7 +937,11 @@ void main() {
       expect(mine, hasLength(1));
       expect(mine.single.length, 5);
       expect(inBottomPotOfFive(def.rngSeed, world, 217), isTrue);
-      expect(world.map((n) => n.id), isNot(contains(45)));
+      expect(world.map((n) => n.id), isNot(contains(2)));
+      expect(world.map((n) => n.id), contains(45));
+      // Last of the world, below San Marino.
+      final ranked = [...world]..sort((a, b) => a.ranking.compareTo(b.ranking));
+      expect(ranked.last.id, 217);
       // A swap, with Belarus: Europe's 54.
       expect(
         world.where((n) => n.confederation == Confederation.europe),

@@ -476,7 +476,7 @@ abstract final class MatchClimate {
     // Texas (dormant), in Anguilla's place: the Gulf coast's hot, humid
     // summers (El Paso's desert is its own, below).
     216: ClimateBand.subtropical,
-    // Vatican City (dormant), in San Marino's place: Rome's hot, dry
+    // Vatican City (dormant), in Andorra's place: Rome's hot, dry
     // summers and mild, wet winters.
     217: ClimateBand.mediterranean,
     // Belarus (dormant, in new careers from 1.0.9): cold winters, warm

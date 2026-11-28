@@ -595,44 +595,60 @@ void main() {
       }
     });
 
-    test('Vatican City is rated 35, nine below San Marino, the weakest side '
-        "in the world, last on the ranking, in San Marino's place", () {
-      final deep = PoolGenerator.expand(_base);
-      final byNation = <int, List<Player>>{};
-      for (final p in deep) {
-        (byNation[p.nationId] ??= []).add(p);
-      }
-      // The best eleven of the whole stored pool: 35, against San Marino's
-      // 44 (its 23 and its fringe, as every nation is stored).
-      expect(squadOverall(vaticanPool()), 35);
-      expect(squadOverall(byNation[45]!), 44);
-      // Over the 23 alone: 33 against San Marino's 43.
-      expect(squadOverall(vaticanSquad), 33);
-      expect(squadOverall(_base.where((p) => p.nationId == 45).toList()), 43);
-      // Below every nation in the world, the weakest included.
-      final weakest = byNation.values
-          .map(squadOverall)
-          .reduce((a, b) => a < b ? a : b);
-      expect(squadOverall(vaticanPool()), lessThan(weakest));
-      for (final d in dormantPool().map((p) => p.nationId).toSet()) {
-        if (d == 217) continue;
+    test(
+      'Vatican City is rated 35, nine below San Marino, below Andorra, the '
+      "weakest side in the world, last on the ranking, in Andorra's place",
+      () {
+        final deep = PoolGenerator.expand(_base);
+        final byNation = <int, List<Player>>{};
+        for (final p in deep) {
+          (byNation[p.nationId] ??= []).add(p);
+        }
+        // The best eleven of the whole stored pool: 35, against San Marino's
+        // 44 (its 23 and its fringe, as every nation is stored).
+        expect(squadOverall(vaticanPool()), 35);
+        expect(squadOverall(byNation[45]!), 44);
+        // And far below Andorra's 50, whose place it takes.
+        expect(squadOverall(byNation[2]!), 50);
+        // Over the 23 alone: 33 against San Marino's 43 and Andorra's 47.
+        expect(squadOverall(vaticanSquad), 33);
+        expect(squadOverall(_base.where((p) => p.nationId == 45).toList()), 43);
+        expect(squadOverall(_base.where((p) => p.nationId == 2).toList()), 47);
+        // Below every nation in the world, the weakest included.
+        final weakest = byNation.values
+            .map(squadOverall)
+            .reduce((a, b) => a < b ? a : b);
+        expect(squadOverall(vaticanPool()), lessThan(weakest));
+        for (final d in dormantPool().map((p) => p.nationId).toSet()) {
+          if (d == 217) continue;
+          expect(
+            squadOverall(dormantPool().where((p) => p.nationId == d).toList()),
+            greaterThan(35),
+            reason: 'dormant $d',
+          );
+        }
+        // The very bottom of the starting ranking: one below San Marino, the
+        // last of the seed's, which stays in its world.
+        final sanMarino = _nations.firstWhere((n) => n.id == 45);
         expect(
-          squadOverall(dormantPool().where((p) => p.nationId == d).toList()),
-          greaterThan(35),
-          reason: 'dormant $d',
+          sanMarino.ranking,
+          _nations.map((n) => n.ranking).reduce((a, b) => a > b ? a : b),
         );
-      }
-      // The very bottom of the starting ranking, San Marino's place.
-      final row = _nations.firstWhere((n) => n.id == 45);
-      expect(
-        DormantNations.vatican.ranking,
-        _nations.map((n) => n.ranking).reduce((a, b) => a > b ? a : b),
-      );
-      expect(DormantNations.vatican.ranking, row.ranking);
-      expect(DormantNations.vatican.confederation, row.confederation);
-      expect(DormantNations.replaces[217], 45);
-      expect(DormantNations.alsoReplaces[217], isNull);
-    });
+        expect(DormantNations.vatican.ranking, sanMarino.ranking + 1);
+        // In Andorra's place in Europe.
+        final andorra = _nations.firstWhere((n) => n.id == 2);
+        expect(DormantNations.vatican.confederation, andorra.confederation);
+        expect(DormantNations.replaces[217], 2);
+        expect(DormantNations.alsoReplaces[217], isNull);
+        // A run started before the move keeps San Marino replaced: its bare
+        // marker means the old place, a new run's records Andorra.
+        expect(DormantNations.replacedBefore[217], 45);
+        expect(DormantNations.markerFor(217), 'dormantNation:217:2');
+        expect(DormantNations.replacedIn('dormantNation:217'), 45);
+        expect(DormantNations.replacedIn(DormantNations.markerFor(217)), 2);
+        expect(DormantNations.fromMarker(DormantNations.markerFor(217)), 217);
+      },
+    );
 
     test('the Dart name pools mirror country_names.json', () {
       expect(_names[217]!.first, vaticanFirstNames);

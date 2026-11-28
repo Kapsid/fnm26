@@ -437,22 +437,29 @@ abstract final class Campaigns {
     rngSeed: 221,
   );
 
-  /// Hail Mary: Vatican City, a nation the world does not have, takes San
-  /// Marino's place in Europe for fifty cycles, from the very bottom of the
-  /// world ranking. Built the way A Greenland Century was: its own stored
-  /// pool of players (clergy, guards and staff, the names invented), the
-  /// same youth pyramid, newgens and aging as any nation's. Its squad is San
-  /// Marino's at 0.78 (see `vaticanAttributeFactor`): the weakest side in
-  /// the world, nine below San Marino. Pro, hard, and a settled run may be
-  /// moved into the saves (one minnow swapped for another). The stars are
+  /// Hail Mary: Vatican City, a nation the world does not have, takes
+  /// Andorra's place in Europe for fifty cycles, from the very bottom of the
+  /// world ranking (210th, one below San Marino, who stays). Built the way
+  /// A Greenland Century was: its own stored pool of players (clergy, guards
+  /// and staff, the names invented), the same youth pyramid, newgens and
+  /// aging as any nation's. Its squad is San Marino's at 0.78 (see
+  /// `vaticanAttributeFactor`): the weakest side in the world, nine below
+  /// San Marino and fifteen below Andorra. Pro, hard, and a settled run may
+  /// be moved into the saves (one minnow swapped for another). The stars are
   /// Zanzibar Rising's: qualify for a European Championship, qualify for a
   /// World Championship, win the World Championship, the highest reached
   /// across the fifty cycles (it settles at the world title or at the end
   /// of the last cycle). Seed 217, the first searched, keeps Vatican City
   /// from hosting either championship in any of the fifty cycles, so every
-  /// place must be won through qualifying (campaign_seeds_test.dart). Its
-  /// strength was not tuned on the lab (campaign_lab_test.dart); the badge
-  /// is the design's call.
+  /// place must be won through qualifying, and still draws it into a EURO
+  /// qualifying group of five from the Nations Cup's bottom league
+  /// (campaign_seeds_test.dart). Its strength was not tuned on the lab
+  /// (campaign_lab_test.dart); the badge is the design's call.
+  ///
+  /// Until the move to Andorra's place it took San Marino's. A run started
+  /// then keeps that world: its marker names no replaced nation, and a bare
+  /// marker means San Marino (`DormantNations.replacedBefore`); a run
+  /// started now records Andorra in its marker.
   static const vatican = CampaignDef(
     withBelarus: true,
     id: 'vatican',

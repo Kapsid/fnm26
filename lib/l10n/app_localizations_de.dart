@@ -19064,11 +19064,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get campaignVaticanTwist =>
-      'Die Vatikanstadt nimmt San Marinos Platz in Europa ein, für fünfzig Zyklen';
+      'Die Vatikanstadt nimmt Andorras Platz in Europa ein, für fünfzig Zyklen';
 
   @override
   String get campaignVaticanIntro =>
-      'Der kleinste Staat der Welt hat ein paar hundert Bürger, die meisten davon Geistliche, eine Garde Schweizer Hellebardiere und keinen einzigen Fußballer, der den Namen verdient. In dieser Welt spielt die Vatikanstadt trotzdem, auf San Marinos Platz in Europa, und sie ist viel schwächer, als San Marino je war: Bischöfe, Seminaristen, Museumsaufseher und Gardisten nach Dienstschluss, ein Platz innerhalb der Mauern für 1.500 Zuschauer und ab und zu ein Heimspiel auf einem geliehenen Platz in Rom. Fünfzig Zyklen sind eine lange Zeit, doch Wunder braucht es trotzdem: eine Europameisterschaft erreichen, dann eine Weltmeisterschaft und, wenn der Himmel zuhört, eine gewinnen.';
+      'Der kleinste Staat der Welt hat ein paar hundert Bürger, die meisten davon Geistliche, eine Garde Schweizer Hellebardiere und keinen einzigen Fußballer, der den Namen verdient. In dieser Welt spielt die Vatikanstadt trotzdem, auf Andorras Platz in Europa, und sie ist viel schwächer, als selbst San Marino je war: Bischöfe, Seminaristen, Museumsaufseher und Gardisten nach Dienstschluss, ein Platz innerhalb der Mauern für 1.500 Zuschauer und ab und zu ein Heimspiel auf einem geliehenen Platz in Rom. Fünfzig Zyklen sind eine lange Zeit, doch Wunder braucht es trotzdem: eine Europameisterschaft erreichen, dann eine Weltmeisterschaft und, wenn der Himmel zuhört, eine gewinnen.';
 
   @override
   String get campaignVaticanGoal =>

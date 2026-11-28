@@ -19253,11 +19253,11 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get campaignVaticanTwist =>
-      'Vatikan zauzima mjesto San Marina u Europi, kroz pedeset ciklusa';
+      'Vatikan zauzima mjesto Andore u Europi, kroz pedeset ciklusa';
 
   @override
   String get campaignVaticanIntro =>
-      'Najmanja država na svijetu ima nekoliko stotina građana, većinom svećenika, gardu švicarskih helebardista i nijednog nogometaša vrijednog tog imena. U ovom svijetu Vatikan ipak igra, na mjestu San Marina u Europi, i mnogo je slabiji nego što je San Marino ikad bio: biskupi, sjemeništarci, čuvari muzeja i gardisti izvan službe, igralište unutar zidina za 1500 gledatelja i ponekad domaća utakmica na posuđenom stadionu u Rimu. Pedeset ciklusa dugo je vrijeme, ali čuda su svejedno potrebna: izbori nastup na Europskom prvenstvu, zatim na Svjetskom prvenstvu i, ako nebo sluša, osvoji ga.';
+      'Najmanja država na svijetu ima nekoliko stotina građana, većinom svećenika, gardu švicarskih helebardista i nijednog nogometaša vrijednog tog imena. U ovom svijetu Vatikan ipak igra, na mjestu Andore u Europi, i mnogo je slabiji nego što je ikad bio čak i San Marino: biskupi, sjemeništarci, čuvari muzeja i gardisti izvan službe, igralište unutar zidina za 1500 gledatelja i ponekad domaća utakmica na posuđenom stadionu u Rimu. Pedeset ciklusa dugo je vrijeme, ali čuda su svejedno potrebna: izbori nastup na Europskom prvenstvu, zatim na Svjetskom prvenstvu i, ako nebo sluša, osvoji ga.';
 
   @override
   String get campaignVaticanGoal => 'Kvalificiraj se na Europsko prvenstvo';

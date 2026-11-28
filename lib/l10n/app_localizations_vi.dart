@@ -18761,11 +18761,11 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get campaignVaticanTwist =>
-      'Thành Vatican thế chỗ San Marino ở châu Âu, trong năm mươi chu kỳ';
+      'Thành Vatican thế chỗ Andorra ở châu Âu, trong năm mươi chu kỳ';
 
   @override
   String get campaignVaticanIntro =>
-      'Quốc gia nhỏ nhất thế giới chỉ có vài trăm công dân, phần lớn là giáo sĩ, một đội cận vệ cầm kích người Thụy Sĩ và không một cầu thủ nào xứng với tên gọi ấy. Trong thế giới này, Thành Vatican vẫn ra sân, thế chỗ San Marino ở châu Âu, và yếu hơn nhiều so với San Marino từng yếu: các giám mục, chủng sinh, nhân viên bảo tàng và cận vệ ngoài giờ trực, một sân bóng trong tường thành cho 1.500 khán giả và thỉnh thoảng một trận sân nhà trên sân mượn ở Roma. Năm mươi chu kỳ là một quãng thời gian dài, nhưng vẫn cần đến những phép màu: giành vé dự một kỳ Giải vô địch châu Âu, rồi một kỳ Giải vô địch thế giới và, nếu trời cao lắng nghe, vô địch thế giới.';
+      'Quốc gia nhỏ nhất thế giới chỉ có vài trăm công dân, phần lớn là giáo sĩ, một đội cận vệ cầm kích người Thụy Sĩ và không một cầu thủ nào xứng với tên gọi ấy. Trong thế giới này, Thành Vatican vẫn ra sân, thế chỗ Andorra ở châu Âu, và yếu hơn nhiều so với cả San Marino ở thời yếu nhất: các giám mục, chủng sinh, nhân viên bảo tàng và cận vệ ngoài giờ trực, một sân bóng trong tường thành cho 1.500 khán giả và thỉnh thoảng một trận sân nhà trên sân mượn ở Roma. Năm mươi chu kỳ là một quãng thời gian dài, nhưng vẫn cần đến những phép màu: giành vé dự một kỳ Giải vô địch châu Âu, rồi một kỳ Giải vô địch thế giới và, nếu trời cao lắng nghe, vô địch thế giới.';
 
   @override
   String get campaignVaticanGoal => 'Giành vé dự một kỳ Giải vô địch châu Âu';

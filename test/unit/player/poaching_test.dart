@@ -176,7 +176,7 @@ void main() {
     test('the bottom of the table and the micro-nations never ask', () {
       final w = [
         ...world(208),
-        DormantNations.vatican, // 209th, the weakest side there is
+        DormantNations.vatican, // 210th, the weakest side there is
         DormantNations.greenland,
       ];
       // Even for a home side below them on paper, they stay out.

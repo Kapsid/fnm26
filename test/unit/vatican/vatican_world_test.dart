@@ -22,9 +22,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../helpers/calendar2_draws.dart';
 import '../../story/driver.dart';
 
-/// Hail Mary's world: Vatican City in San Marino's place in Europe, from the
+/// Hail Mary's world: Vatican City in Andorra's place in Europe, from the
 /// very first draw through the next cycle, its stars (a European
-/// Championship, a World Championship, the world title), a career bundle, a cloud backup's description and a move into the saves.
+/// Championship, a World Championship, the world title), a career bundle, a
+/// cloud backup's description and a move into the saves; and a run started
+/// before the move to Andorra's place, which keeps San Marino's.
 /// Mirrors isle_of_man_world_test.dart and texas_world_test.dart.
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
@@ -32,7 +34,10 @@ void main() {
   const def = Campaigns.vatican;
   const vatican = DormantNations.vaticanId;
   const sanMarino = 45;
+  const andorra = 2;
   final marker = DormantNations.markerFor(vatican);
+  // What a run started before the move carries: no replaced nation named.
+  const oldMarker = 'dormantNation:217';
 
   /// Records a World Championship final in the career's current cycle, which
   /// is what ends a cycle.
@@ -60,38 +65,43 @@ void main() {
 
   bool names(Fixture f, int id) => f.homeNationId == id || f.awayNationId == id;
 
-  /// Nothing the career stored refers to San Marino.
-  Future<void> expectNoSanMarino(ProviderContainer c, int id) async {
+  /// Nothing the career stored refers to [gone] ([name] in its messages).
+  Future<void> expectNone(
+    ProviderContainer c,
+    int id, {
+    int gone = andorra,
+    String name = 'Andorra',
+  }) async {
     final comp = c.read(competitionRepositoryProvider);
     final fixtures = await comp.allFixtures(id);
-    expect(fixtures.where((f) => names(f, sanMarino)), isEmpty);
+    expect(fixtures.where((f) => names(f, gone)), isEmpty);
     expect(fixtures.where((f) => names(f, vatican)), isNotEmpty);
     final tiers = await c.read(careerRepositoryProvider).nationsCupTiers(id);
-    expect(tiers.keys, isNot(contains(sanMarino)));
+    expect(tiers.keys, isNot(contains(gone)));
     final ranking = (await c.read(worldRankingProvider(id).future))!;
-    expect(ranking.nations.map((n) => n.id), isNot(contains(sanMarino)));
-    expect(ranking.points.keys, isNot(contains(sanMarino)));
+    expect(ranking.nations.map((n) => n.id), isNot(contains(gone)));
+    expect(ranking.points.keys, isNot(contains(gone)));
     final cycle =
         (await c.read(careerRepositoryProvider).byId(id))!.cyclePointer;
     final snap = await c
         .read(seedRankingRepositoryProvider)
         .forCycle(id, cycle);
-    expect(snap.keys, isNot(contains(sanMarino)));
+    expect(snap.keys, isNot(contains(gone)));
     for (final h in await comp.honours(id)) {
       expect(
         [h.championId, h.coChampionId, h.runnerUpId, h.thirdId, h.thirdId2],
-        isNot(contains(sanMarino)),
+        isNot(contains(gone)),
         reason: '${h.competition} ${h.year}',
       );
     }
-    final word = RegExp(r'\bSan Marino\b');
+    final word = RegExp('\\b$name\\b');
     for (final m in await comp.messages(id)) {
       expect(word.hasMatch('${m.title} ${m.body}'), isFalse);
     }
   }
 
-  test("Vatican City's world from the first day: San Marino's place, the "
-      'last rank, its own players', () async {
+  test("Vatican City's world from the first day: Andorra's place, the "
+      'last rank below San Marino, its own players', () async {
     final c = storyContainer();
     addTearDown(c.dispose);
     final d = await StoryDriver.startCampaign(c, def);
@@ -107,10 +117,11 @@ void main() {
     expect(world, hasLength(base.length + 1));
     expect(world.map((n) => n.id), contains(DormantNations.belarusId));
     expect(world.map((n) => n.id), contains(vatican));
-    expect(world.map((n) => n.id), isNot(contains(sanMarino)));
-    // Greenland, San Marino's other stand-in, stays out: only this
-    // campaign's dormant nation joins.
-    expect(world.map((n) => n.id), isNot(contains(DormantNations.greenlandId)));
+    expect(world.map((n) => n.id), isNot(contains(andorra)));
+    // San Marino stays, and the Isle of Man, Andorra's other stand-in, stays
+    // out: only this campaign's dormant nation joins.
+    expect(world.map((n) => n.id), contains(sanMarino));
+    expect(world.map((n) => n.id), isNot(contains(DormantNations.isleOfManId)));
     bool european(int id) =>
         world.firstWhere((n) => n.id == id).confederation ==
         Confederation.europe;
@@ -135,10 +146,15 @@ void main() {
     expect(mine, hasLength(1));
     expect(mine.single.standings, hasLength(5));
 
-    // On day one Vatican City stands last, where San Marino would.
+    // On day one Vatican City stands last, one below San Marino.
     final ranking = (await c.read(worldRankingProvider(id).future))!;
     expect(ranking.nations, hasLength(base.length + 1));
     expect(ranking.nations.last.id, vatican);
+    expect(ranking.nations[ranking.nations.length - 2].id, sanMarino);
+    // In the Nations Cup's bottom league.
+    final tiers = await c.read(careerRepositoryProvider).nationsCupTiers(id);
+    final bottom = tiers.values.reduce((a, b) => a > b ? a : b);
+    expect(tiers[vatican], bottom);
 
     // The default XI is Vatican City's own.
     final tactic = await c.read(tacticsRepositoryProvider).tacticForCareer(id);
@@ -152,7 +168,7 @@ void main() {
       );
     }
 
-    await expectNoSanMarino(c, id);
+    await expectNone(c, id);
 
     // The campaign reads its own goal from the first day.
     final progress = (await c.read(campaignProgressProvider(id).future))!;
@@ -244,7 +260,7 @@ void main() {
     final career = (await c.read(careerRepositoryProvider).byId(id))!;
     expect(career.cyclePointer, 1);
     expect(career.nationId, vatican);
-    await expectNoSanMarino(c, id);
+    await expectNone(c, id);
     final fixtures = await c
         .read(competitionRepositoryProvider)
         .allFixtures(id);
@@ -324,29 +340,73 @@ void main() {
     expect(await squad(other, run.id), await squad(c, d.careerId));
     final world = await other.read(nationRepositoryProvider).forCareer(run.id);
     expect(world.map((n) => n.id), contains(vatican));
-    expect(world.map((n) => n.id), isNot(contains(sanMarino)));
-    await expectNoSanMarino(other, run.id);
+    expect(world.map((n) => n.id), isNot(contains(andorra)));
+    expect(world.map((n) => n.id), contains(sanMarino));
+    await expectNone(other, run.id);
   });
 
-  test('in the base world and an Isle of Man career San Marino stays San '
-      'Marino; in a Greenland career Greenland, not Vatican City, takes its '
-      'place', () async {
+  test('in the base world Andorra and San Marino stay; in an Isle of Man '
+      "career the Isle of Man, not Vatican City, takes Andorra's place; in a "
+      "Greenland career Greenland takes San Marino's", () async {
     final c = storyContainer();
     addTearDown(c.dispose);
     final repo = c.read(nationRepositoryProvider);
     final isle = await StoryDriver.startCampaign(c, Campaigns.isleOfMan);
     final isleWorld = await repo.forCareer(isle.careerId);
+    expect(isleWorld.map((n) => n.id), isNot(contains(andorra)));
+    expect(isleWorld.map((n) => n.id), contains(DormantNations.isleOfManId));
     expect(isleWorld.map((n) => n.id), contains(sanMarino));
     expect(isleWorld.map((n) => n.id), isNot(contains(vatican)));
     final g = await StoryDriver.startCampaign(c, Campaigns.greenland);
     final greenlandWorld = await repo.forCareer(g.careerId);
     expect(greenlandWorld.map((n) => n.id), isNot(contains(sanMarino)));
     expect(greenlandWorld.map((n) => n.id), contains(212));
+    expect(greenlandWorld.map((n) => n.id), contains(andorra));
     expect(greenlandWorld.map((n) => n.id), isNot(contains(vatican)));
-    expect((await repo.all()).map((n) => n.id), contains(sanMarino));
-    expect((await repo.all()).map((n) => n.id), isNot(contains(vatican)));
+    final all = (await repo.all()).map((n) => n.id);
+    expect(all, containsAll([sanMarino, andorra]));
+    expect(all, isNot(contains(vatican)));
     // Every database knows Vatican City, so a save's nation always has a
     // name.
     expect((await repo.byId(vatican))?.name, 'Vatican City');
+  });
+
+  test('a run started before the move keeps San Marino replaced and Andorra '
+      'in: its bare marker means the old place', () async {
+    expect(marker, isNot(oldMarker));
+    expect(DormantNations.fromMarker(oldMarker), vatican);
+    expect(DormantNations.replacedIn(oldMarker), sanMarino);
+    expect(DormantNations.replacedIn(marker), andorra);
+    final c = storyContainer();
+    addTearDown(c.dispose);
+    await c.read(seedLoaderProvider).ensureSeeded();
+    // A world written as the old build wrote it: the bare marker at
+    // creation, the ranking frozen then.
+    final career =
+        (await c
+                .read(careerServiceProvider)
+                .create(
+                  nationId: vatican,
+                  managerName: 'M',
+                  rngSeed: def.rngSeed,
+                  countsTowardSlots: false,
+                  newCareerNations: true,
+                  worldMarkers: const [oldMarker],
+                  freezeStartingRanks: true,
+                ))
+            .valueOrNull!;
+    final id = career.id;
+    final world = await c.read(nationRepositoryProvider).forCareer(id);
+    final ids = world.map((n) => n.id);
+    expect(ids, contains(vatican));
+    expect(ids, contains(andorra));
+    expect(ids, isNot(contains(sanMarino)));
+    expect(ids, contains(DormantNations.belarusId));
+    await expectNone(c, id, gone: sanMarino, name: 'San Marino');
+    // The frozen starting ranking, as the seed loader and a bundle import
+    // build it from the markers, keeps the same world.
+    final snap = await c.read(seedRankingRepositoryProvider).forCycle(id, 0);
+    expect(snap.keys, containsAll([vatican, andorra]));
+    expect(snap.keys, isNot(contains(sanMarino)));
   });
 }

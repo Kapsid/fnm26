@@ -18862,11 +18862,11 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get campaignVaticanTwist =>
-      'A Vatikán ötven ciklusra átveszi San Marino helyét Európában';
+      'A Vatikán ötven ciklusra átveszi Andorra helyét Európában';
 
   @override
   String get campaignVaticanIntro =>
-      'A világ legkisebb államának néhány száz polgára van, többségük pap, egy svájci alabárdosokból álló gárdája, és egyetlen olyan futballistája sincs, aki megérdemelné ezt a nevet. Ebben a világban a Vatikán mégis pályára lép, San Marino helyén Európában, és sokkal gyengébb, mint San Marino valaha volt: püspökök, kispapok, múzeumi teremőrök és szabadnapos gárdisták, egy pálya a falakon belül 1500 nézőnek, és néha egy hazai meccs egy kölcsönkapott római stadionban. Ötven ciklus hosszú idő, de csodák így is kellenek: kijutni egy Európa-bajnokságra, aztán egy világbajnokságra, és ha az ég is meghallgat, meg is nyerni egyet.';
+      'A világ legkisebb államának néhány száz polgára van, többségük pap, egy svájci alabárdosokból álló gárdája, és egyetlen olyan futballistája sincs, aki megérdemelné ezt a nevet. Ebben a világban a Vatikán mégis pályára lép, Andorra helyén Európában, és sokkal gyengébb, mint akár San Marino valaha volt: püspökök, kispapok, múzeumi teremőrök és szabadnapos gárdisták, egy pálya a falakon belül 1500 nézőnek, és néha egy hazai meccs egy kölcsönkapott római stadionban. Ötven ciklus hosszú idő, de csodák így is kellenek: kijutni egy Európa-bajnokságra, aztán egy világbajnokságra, és ha az ég is meghallgat, meg is nyerni egyet.';
 
   @override
   String get campaignVaticanGoal => 'Kijutni egy Európa-bajnokságra';

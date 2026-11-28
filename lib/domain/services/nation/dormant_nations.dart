@@ -116,12 +116,15 @@ abstract final class DormantNations {
     secondaryColor: '#BF0A30',
   );
 
-  /// Vatican City, the seventh: the next free id after Texas. It takes San
-  /// Marino's place in Europe and its place on the starting ranking, the
-  /// very last (209th), as Greenland does: the smallest state in the world,
-  /// a few hundred citizens, most of them clergy, and a side far weaker than
-  /// San Marino's (see `vaticanAttributeFactor`). Its colours are the flag's
-  /// yellow and white.
+  /// Vatican City, the seventh: the next free id after Texas. It takes
+  /// Andorra's place in Europe (as the Isle of Man does in its own, separate
+  /// world), so San Marino stays in its world, and starts at the very bottom
+  /// of the starting ranking, 210th, one below San Marino's 209th: the
+  /// smallest state in the world, a few hundred citizens, most of them
+  /// clergy, and a side far weaker than San Marino's or Andorra's (see
+  /// `vaticanAttributeFactor`). Runs started before the move keep San Marino
+  /// replaced (see [replacedBefore]). Its colours are the flag's yellow and
+  /// white.
   static const int vaticanId = 217;
 
   static const Nation vatican = Nation(
@@ -129,7 +132,7 @@ abstract final class DormantNations {
     name: 'Vatican City',
     code: 'VAT',
     confederation: Confederation.europe,
-    ranking: 209,
+    ranking: 210,
     primaryColor: '#FFE000',
     secondaryColor: '#FFFFFF',
   );
@@ -171,7 +174,19 @@ abstract final class DormantNations {
     isleOfManId: 2, // Andorra
     czechoslovakiaId: 12, // Czechia
     texasId: 66, // Anguilla
-    vaticanId: 45, // San Marino, as for Greenland
+    vaticanId: 2, // Andorra, as for the Isle of Man
+  };
+
+  /// The nation a dormant nation stood in for before it was moved to its
+  /// [replaces] one: what a career whose marker names no replaced nation (a
+  /// bare marker of the old shape, written at creation) still has swapped
+  /// out. Vatican City took San Marino's place until it moved to Andorra's;
+  /// a Hail Mary run started before keeps San Marino out and Andorra in. A
+  /// nation listed here has the nation it replaces written into its marker
+  /// from the move on (see [markerFor]), so every run's world is recorded in
+  /// the run, never read off the code.
+  static const Map<int, int> replacedBefore = {
+    vaticanId: 45, // San Marino
   };
 
   /// Nations a dormant nation takes out of the world as well as the one it
@@ -182,15 +197,20 @@ abstract final class DormantNations {
   };
 
   /// Every nation [dormantId]'s world goes without: the one it [replaces]
-  /// and any it [alsoReplaces].
-  static Set<int> replacedBy(int dormantId) => {
-    ?replaces[dormantId],
+  /// (or [replacing], a marker's own, see [replacedIn]) and any it
+  /// [alsoReplaces].
+  static Set<int> replacedBy(int dormantId, {int? replacing}) => {
+    ?(replacing ?? replaces[dormantId]),
     ...?alsoReplaces[dormantId],
   };
 
   /// The `draws_watched` kind (cycle 0) that makes [nationId] part of a
-  /// career's world.
-  static String markerFor(int nationId) => 'dormantNation:$nationId';
+  /// career's world. A nation that has moved ([replacedBefore]) carries the
+  /// nation it replaces now in its marker (`dormantNation:217:2`), so a bare
+  /// marker of the old shape keeps meaning the old place.
+  static String markerFor(int nationId) => replacedBefore.containsKey(nationId)
+      ? '$markerPrefix$nationId:${replaces[nationId]}'
+      : '$markerPrefix$nationId';
 
   /// The prefix every dormant marker shares.
   static const String markerPrefix = 'dormantNation:';
@@ -198,22 +218,47 @@ abstract final class DormantNations {
   /// The dormant nation a marker names, or null for any other kind.
   static int? fromMarker(String kind) {
     if (!kind.startsWith(markerPrefix)) return null;
-    final id = int.tryParse(kind.substring(markerPrefix.length));
-    return id != null && ids.contains(id) ? id : null;
+    final parts = kind.substring(markerPrefix.length).split(':');
+    if (parts.length > 2) return null;
+    final id = int.tryParse(parts.first);
+    if (id == null || !ids.contains(id)) return null;
+    if (parts.length == 2 && int.tryParse(parts[1]) == null) return null;
+    return id;
   }
+
+  /// The nation the dormant nation of marker [kind] stands in for in that
+  /// career: the one the marker records, else, for a bare marker, the place
+  /// the nation held when bare markers were written ([replacedBefore]), else
+  /// its [replaces]. Null for an [additions] nation and for any other kind.
+  static int? replacedIn(String kind) {
+    final d = fromMarker(kind);
+    if (d == null) return null;
+    final parts = kind.substring(markerPrefix.length).split(':');
+    if (parts.length == 2) return int.parse(parts[1]);
+    return replacedBefore[d] ?? replaces[d];
+  }
+
+  /// Each dormant nation the markers [kinds] name, with the nation it
+  /// replaces in that career ([replacedIn]; null for an addition).
+  static Map<int, int?> activeIn(Iterable<String> kinds) => {
+    for (final k in kinds) ?fromMarker(k): replacedIn(k),
+  };
 
   /// The world of a career holding [active] dormant nations: [base] (the
   /// ranking-ordered base world) minus each replaced nation, plus each
   /// dormant one, re-sorted by ranking. A dormant nation whose replaced
   /// nation is missing from [base] is left out, so a swap never changes the
   /// count; an [additions] nation always comes in, one more nation; one
-  /// that [alsoReplaces] others takes those out too.
+  /// that [alsoReplaces] others takes those out too. [replacing] overrides
+  /// [replaces] for a dormant nation whose career's marker records another
+  /// place (see [activeIn]).
   /// Returns [base] itself when nothing changes, so a normal career's world
   /// is the very same list.
   static List<Nation> worldFrom(
     List<Nation> base,
     Set<int> active, {
     required Nation Function(int id) dormant,
+    Map<int, int?> replacing = const {},
   }) {
     if (active.isEmpty) return base;
     // A replacing dormant nation comes in only in place of a nation the base
@@ -222,14 +267,14 @@ abstract final class DormantNations {
     final present = {for (final n in base) n.id};
     final swapped = {
       for (final d in active)
-        if (replaces[d] case final r? when present.contains(r))
+        if (replacing[d] ?? replaces[d] case final r? when present.contains(r))
           d
         else if (additions.contains(d) && !present.contains(d))
           d,
     };
     if (swapped.isEmpty) return base;
     final dropped = {
-      for (final d in swapped) ...replacedBy(d),
+      for (final d in swapped) ...replacedBy(d, replacing: replacing[d]),
     };
     final out = [
       for (final n in base)

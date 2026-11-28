@@ -18821,11 +18821,11 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get campaignVaticanTwist =>
-      'Vatikan menggantikan San Marino di Eropa, selama lima puluh siklus';
+      'Vatikan menggantikan Andorra di Eropa, selama lima puluh siklus';
 
   @override
   String get campaignVaticanIntro =>
-      'Negara terkecil di dunia punya beberapa ratus warga, kebanyakan rohaniwan, pasukan pengawal tombak dari Swiss, dan tak satu pun pesepak bola yang layak disebut begitu. Di dunia ini Vatikan tetap bermain, menggantikan San Marino di Eropa, dan jauh lebih lemah daripada San Marino kapan pun: para uskup, frater, penjaga museum, dan pengawal yang sedang libur, sebuah lapangan di dalam tembok untuk 1.500 penonton dan sesekali laga kandang di stadion pinjaman di Roma. Lima puluh siklus memang waktu yang panjang, tetapi tetap saja butuh mukjizat: lolos ke sebuah Kejuaraan Eropa, lalu ke sebuah Kejuaraan Dunia, dan, jika surga mendengar, menjuarainya.';
+      'Negara terkecil di dunia punya beberapa ratus warga, kebanyakan rohaniwan, pasukan pengawal tombak dari Swiss, dan tak satu pun pesepak bola yang layak disebut begitu. Di dunia ini Vatikan tetap bermain, menggantikan Andorra di Eropa, dan jauh lebih lemah bahkan daripada San Marino kapan pun: para uskup, frater, penjaga museum, dan pengawal yang sedang libur, sebuah lapangan di dalam tembok untuk 1.500 penonton dan sesekali laga kandang di stadion pinjaman di Roma. Lima puluh siklus memang waktu yang panjang, tetapi tetap saja butuh mukjizat: lolos ke sebuah Kejuaraan Eropa, lalu ke sebuah Kejuaraan Dunia, dan, jika surga mendengar, menjuarainya.';
 
   @override
   String get campaignVaticanGoal => 'Lolos ke sebuah Kejuaraan Eropa';
