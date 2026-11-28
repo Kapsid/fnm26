@@ -336,6 +336,9 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
   // BoardSatisfaction.stickyFormPoints), so a win never lowers it.
   final chronological =
       <({MatchOutcome outcome, double underdog, bool humiliation})>[];
+  // Alongside it: how much of each defeat the board charges, by the margin
+  // (see BoardSatisfaction.defeatShare).
+  final defeatShares = <double>[];
   for (final f in played.reversed) {
     final ranks = await ranksFor(f);
     final isHome = f.homeNationId == career.nationId;
@@ -361,6 +364,13 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
             opponentRank: theirs,
           ),
     ));
+    defeatShares.add(
+      BoardSatisfaction.defeatShare(
+        margin: against - mine,
+        ownRank: own,
+        opponentRank: theirs,
+      ),
+    );
   }
 
   // How much of a minnow the nation is: 0 for all but the weakest sides, whose
@@ -377,6 +387,7 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
                 form: BoardSatisfaction.stickyFormPoints(
                   chronological,
                   minnow: minnow,
+                  defeatShares: defeatShares,
                 ),
                 honours: honours,
                 worldRank: ranking?.position[career.nationId],

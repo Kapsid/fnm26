@@ -302,27 +302,37 @@ abstract final class BoardSatisfaction {
   /// [humiliations] runs alongside [recent], true for a defeat that is a
   /// humiliation (see [isHumiliation]), which keeps its full weight. At 0 the
   /// weights are exactly the ordinary ones.
+  ///
+  /// [defeatShares] runs alongside [recent] too: how much of a defeat's cost
+  /// the board charges (see [defeatShare]); missing entries pay in full. A
+  /// result's credit fades over the window's last [fadeSlots] places (see
+  /// [fadeOf]); its cost does not.
   static int formPoints(
     Iterable<MatchOutcome> recent, {
     Iterable<double> asUnderdog = const [],
     double minnow = 0,
     Iterable<bool> humiliations = const [],
+    Iterable<double> defeatShares = const [],
   }) {
     final underdog = asUnderdog.toList();
+    final shares = defeatShares.toList();
     final m = minnow.clamp(0.0, 1.0);
     double between(num level, num under, double d) =>
         level + (under - level) * d;
+    double share(int i) => i < shares.length ? shares[i].clamp(0.0, 1.0) : 1.0;
+    // Credit fades as it ages; a cost is charged in full until it leaves.
+    double weighed(double p, int i) => p > 0 ? p * fadeOf(i) : p * share(i);
     if (m <= 0) {
       var points = 0.0;
       var i = 0;
       for (final outcome in recent.take(formWindow)) {
         final d = i < underdog.length ? underdog[i].clamp(0.0, 1.0) : 0.0;
-        i++;
-        points += switch (outcome) {
+        points += weighed(switch (outcome) {
           MatchOutcome.win => between(win, winAsUnderdog, d),
           MatchOutcome.draw => between(draw, drawAsUnderdog, d),
           MatchOutcome.loss => between(loss, lossAsUnderdog, d),
-        };
+        }, i);
+        i++;
       }
       return points.round();
     }
@@ -335,8 +345,12 @@ abstract final class BoardSatisfaction {
       // A humiliation keeps its full weight unless it came as the clear
       // underdog.
       final humiliation = d < 1 && i < humiliated.length && humiliated[i];
-      i++;
-      points += switch (outcome) {
+      if (outcome == MatchOutcome.loss && humiliation) {
+        points += loss;
+        i++;
+        continue;
+      }
+      points += weighed(switch (outcome) {
         MatchOutcome.win => between(
           slide(win, minnowWin),
           slide(winAsUnderdog, minnowWinAsUnderdog),
@@ -347,18 +361,67 @@ abstract final class BoardSatisfaction {
           drawAsUnderdog,
           d,
         ),
-        MatchOutcome.loss =>
-          humiliation
-              ? loss
-              : between(
-                  slide(loss, minnowLoss),
-                  slide(lossAsUnderdog, minnowLossAsUnderdog),
-                  d,
-                ),
-      };
+        MatchOutcome.loss => between(
+          slide(loss, minnowLoss),
+          slide(lossAsUnderdog, minnowLossAsUnderdog),
+          d,
+        ),
+      }, i);
+      i++;
     }
     return points.round();
   }
+
+  /// How many of the window's oldest places a result's credit fades over on
+  /// its way out (see [fadeOf]).
+  static const int fadeSlots = 3;
+
+  /// How much of a result's CREDIT still counts in place [slot] of the window
+  /// (0 = the newest): all of it, then three quarters, a half and a quarter
+  /// over the last [fadeSlots] places.
+  ///
+  /// The window used to drop its oldest result whole, so the defeat that
+  /// pushed an old upset out cost the upset as well: San Marino lost 2-3 at
+  /// home to Armenia, a defeat the board charges next to nothing for, and the
+  /// gauge fell eleven points, nine of them a famous win of ten matches
+  /// before leaving the window. Fading it out over its last places costs a
+  /// quarter of it at a time. Only the credit fades: a defeat is charged in
+  /// full until it leaves, so a full window of defeats still costs exactly
+  /// what it did.
+  static double fadeOf(int slot) {
+    final fromEnd = formWindow - slot;
+    return fromEnd > fadeSlots ? 1 : fromEnd / (fadeSlots + 1);
+  }
+
+  /// What share of a defeat's cost the board charges, by the [margin] it was
+  /// lost by: [narrowDefeatShare] for one goal, [twoGoalDefeatShare] for two,
+  /// all of it for three or more.
+  ///
+  /// The board used to charge a 2-3 exactly as it charged a 0-5 (a tester:
+  /// "is there any way of scaling the satisfaction drop by the size of the
+  /// defeat?"). It is multiplied into whatever the defeat costs already, so
+  /// a narrow defeat by a clearly better side costs next to nothing.
+  ///
+  /// A defeat by a WEAKER side ([opponentRank] below [ownRank]) is charged in
+  /// full however narrow, so ten straight defeats still sink even a top side
+  /// (there is nobody above it to lose narrowly to), and a humiliation (see
+  /// [isHumiliation]) keeps its full weight regardless. Unknown ranks are
+  /// judged on the margin alone.
+  static double defeatShare({
+    required int margin,
+    int? ownRank,
+    int? opponentRank,
+  }) {
+    if (margin >= 3 || margin <= 0) return 1;
+    if (ownRank != null && opponentRank != null && opponentRank > ownRank) {
+      return 1;
+    }
+    return margin == 1 ? narrowDefeatShare : twoGoalDefeatShare;
+  }
+
+  /// See [defeatShare].
+  static const double narrowDefeatShare = 0.6;
+  static const double twoGoalDefeatShare = 0.85;
 
   /// The form term as the board actually feels it: [formPoints] over the
   /// last [formWindow] results, walked through the spell one match at a time
@@ -376,10 +439,14 @@ abstract final class BoardSatisfaction {
   /// [chronological] is every counted result of the spell, OLDEST first,
   /// with the same underdog and humiliation flags [formPoints] takes. Pure and
   /// derived from the results alone, so nothing is stored per match.
+  ///
+  /// [defeatShares] runs alongside [chronological], oldest first (see
+  /// [defeatShare]); missing entries pay in full.
   static int stickyFormPoints(
     List<({MatchOutcome outcome, double underdog, bool humiliation})>
     chronological, {
     double minnow = 0,
+    List<double> defeatShares = const [],
   }) {
     var form = 0;
     for (var k = 0; k < chronological.length; k++) {
@@ -390,6 +457,9 @@ abstract final class BoardSatisfaction {
         asUnderdog: [for (final r in window) r.underdog],
         minnow: minnow,
         humiliations: [for (final r in window) r.humiliation],
+        defeatShares: [
+          for (var j = k; j >= from; j--) defeatShares.elementAtOrNull(j) ?? 1,
+        ],
       );
       form = switch (chronological[k].outcome) {
         MatchOutcome.win => value > form ? value : form,
