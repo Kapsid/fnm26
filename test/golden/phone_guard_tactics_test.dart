@@ -34,7 +34,7 @@ void main() {
     await expectAppGolden('goldens/tactics_instructions_phone.png');
   });
 
-  testWidgets('phone tactics, roles and set pieces tab', (tester) async {
+  testWidgets('phone tactics, set pieces tab', (tester) async {
     final save = await seedSave(tester);
     await pumpRoute(
       tester,
@@ -42,9 +42,9 @@ void main() {
       '${Routes.tactics}?careerId=${save.careerId}',
       size: const Size(390, 1500),
     );
-    await tester.tap(find.text(enL.tacticsTabRolesSetPieces));
+    await tester.tap(find.text(enL.tacticsTabSetPieces));
     await settle(tester);
-    await expectAppGolden('goldens/tactics_roles_phone.png');
+    await expectAppGolden('goldens/tactics_set_pieces_phone.png');
   });
 
   testWidgets('phone squad tab', (tester) async {

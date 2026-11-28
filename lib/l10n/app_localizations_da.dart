@@ -1036,21 +1036,6 @@ class AppLocalizationsDa extends AppLocalizations {
   String get tacticsFullBackOff => 'Ingen instruks';
 
   @override
-  String tacticsFullBackUpHint(String side) {
-    return '$side: gå med frem. Lidt mere angreb, lidt mere risiko.';
-  }
-
-  @override
-  String tacticsFullBackDownHint(String side) {
-    return '$side: bliv hjemme. Lidt sikrere, lidt mindre angreb.';
-  }
-
-  @override
-  String tacticsFullBackOffHint(String side) {
-    return '$side: ingen instruks, spiller efter holdets plan.';
-  }
-
-  @override
   String tacticsFullBackSemantics(String side, String state) {
     return '$side, pil: $state';
   }
@@ -1059,10 +1044,6 @@ class AppLocalizationsDa extends AppLocalizations {
   String tacticsSubsUsed(int used, int max) {
     return 'SKIFT · $used/$max';
   }
-
-  @override
-  String get tacticsDragSubOn =>
-      'Tryk på en mand på banen for at tage ham af, eller hold og træk en indskifter hen på ham.';
 
   @override
   String get tacticsNoSubs => 'Ingen indskiftere til rådighed.';
@@ -1218,13 +1199,6 @@ class AppLocalizationsDa extends AppLocalizations {
   String get tacticsTabSetPieces => 'DØDBOLDE';
 
   @override
-  String get tacticsTabRolesSetPieces => 'ROLLER OG DØDBOLDE';
-
-  @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Giv hver startspiller en rolle. Tryk på straffespark (⚽) eller frispark (▲) for at udpege din skytte.';
-
-  @override
   String get tacticsTooltipCallUps => 'Udtagelser';
 
   @override
@@ -1258,10 +1232,6 @@ class AppLocalizationsDa extends AppLocalizations {
   @override
   String get tacticsTapSpotReplace =>
       'Tryk på hans plads på banen for at vælge en afløser.';
-
-  @override
-  String get tacticsTapOrDrag =>
-      'Tryk på en spiller for at bytte ham ud, eller hold og træk for at flytte ham.';
 
   @override
   String get tacticsPlayerRoles => 'SPILLERROLLER';
@@ -1326,11 +1296,6 @@ class AppLocalizationsDa extends AppLocalizations {
   String get tacticsSkillPas => 'PAS';
 
   @override
-  String tacticsRolePlayer(String name) {
-    return 'ROLLE · $name';
-  }
-
-  @override
   String get roleFitGood => 'Passer godt';
 
   @override
@@ -1367,34 +1332,77 @@ class AppLocalizationsDa extends AppLocalizations {
   String get tacticsRunLegendManual => 'Din instruks';
 
   @override
-  String get tacticsPitchPlanHint =>
-      'Tryk på en spillers mærke for rolle og på hans pil for løb.';
+  String get tacticsSheetPost => 'Position';
 
   @override
-  String tacticsRoleBadgeSemantics(String role) {
-    return 'Rolle: $role. Tryk for at ændre.';
+  String get tacticsSheetAdvanced => 'Avanceret';
+
+  @override
+  String get tacticsSheetAutoPick => 'Tager dem nu, automatisk';
+
+  @override
+  String get tacticsSheetFresh => 'Frisk';
+
+  @override
+  String get tacticsSheetFitHere => 'På denne position';
+
+  @override
+  String tacticsSheetFitSemantics(int dots) {
+    return 'Egnethed til positionen: $dots af 5';
   }
 
   @override
-  String tacticsRunMarkSemantics(String run) {
-    return 'Løb: $run. Tryk for at ændre.';
-  }
+  String get tacticsSheetSwap => 'Byt';
+
+  @override
+  String get tacticsSheetProfile => 'Profil';
+
+  @override
+  String get tacticsSheetRecommended => 'Anbefalet';
+
+  @override
+  String get tacticsSheetRunHint =>
+      'Tryk på en retning for din egen pil. Midten giver rollens løb tilbage.';
+
+  @override
+  String get tacticsPostDm => 'Ligger foran forsvaret og dækker det.';
+
+  @override
+  String get tacticsPostCm =>
+      'Binder forsvar og angreb sammen, arbejder begge veje.';
+
+  @override
+  String get tacticsPostAm => 'Spiller mellem kæderne, bag angriberne.';
+
+  @override
+  String get tacticsPostWideMid => 'Dybere og bredere, hjælper sin back.';
+
+  @override
+  String get tacticsPostWinger => 'Højere oppe, udfordrer backen.';
+
+  @override
+  String get tacticsPostSt => 'Fører an i angrebet og afslutter chancerne.';
+
+  @override
+  String get tacticsPitchHint =>
+      'Tryk på en spiller for at sætte position, rolle og løb. Hold og træk for at flytte ham.';
+
+  @override
+  String get tacticsSubHint =>
+      'Tryk på en spiller for at indstille eller udskifte ham. Hold og træk en indskifter hen på ham.';
+
+  @override
+  String get tacticsLegendTooltip => 'Sådan læses banen';
+
+  @override
+  String get tacticsLegendRoleTag =>
+      'Det lille mærke på en spiller er hans rolle.';
 
   @override
   String get tacticsPlanRoleHeading => 'ROLLE';
 
   @override
   String get tacticsPlanMovementHeading => 'BEVÆGELSE';
-
-  @override
-  String tacticsPlanTitle(String position, String name) {
-    return '$position · $name';
-  }
-
-  @override
-  String tacticsArrowSet(String name, String movement) {
-    return '$name: $movement';
-  }
 
   @override
   String get tacticsKeeperNoRun => 'En målmand har intet løb at vælge.';
@@ -1461,9 +1469,6 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get tacticsSave => 'Gem';
-
-  @override
-  String get tacticsTapToAssign => 'Tryk for at tildele';
 
   @override
   String get tacticsHoldDragSub =>
@@ -14313,14 +14318,6 @@ class AppLocalizationsDa extends AppLocalizations {
   String yPunditPick5(String competition, String favourite, String darkHorse) {
     return '$favourite vinder $competition, og det bliver kedeligt. Vil I have en historie, så se $darkHorse.';
   }
-
-  @override
-  String tacticsSlotSwitchHeading(String formation) {
-    return 'Position i $formation';
-  }
-
-  @override
-  String get tacticsSlotSwitchReset => 'Nulstil';
 
   @override
   String get tacticsSlotSwitchLimit =>

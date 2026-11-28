@@ -23,6 +23,7 @@ import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
     show kMatchViewModePrefsKey;
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
+import 'package:fnm/features/tactics/player_slot_sheet.dart';
 import 'package:fnm/features/tactics/tactic_preset_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/primary_button.dart';
@@ -313,6 +314,9 @@ Future<bool> _offered(
 ) async {
   await tester.tap(_onPitchName(starterName.toUpperCase()).last);
   await tester.pumpAndSettle();
+  // His sheet, then its Swap: the men who could play there.
+  await tester.tap(find.byKey(SlotSheetKeys.swap));
+  await tester.pumpAndSettle();
   if (find.text(benchName).evaluate().isEmpty) {
     for (final tab in [enL.tacticsTabOnPitch, enL.tacticsTabOtherPositions]) {
       final chip = find.text(tab);
@@ -342,6 +346,12 @@ Future<void> _substitute(
   await tester.pumpAndSettle();
   await tester.tap(target);
   await tester.pumpAndSettle();
+  // And back out of his sheet, onto the editor.
+  final sheet = find.byKey(SlotSheetKeys.sheet);
+  if (sheet.evaluate().isNotEmpty) {
+    Navigator.of(tester.element(sheet)).pop();
+    await tester.pumpAndSettle();
+  }
 }
 
 InMatchTacticsResult? _sheetResult;

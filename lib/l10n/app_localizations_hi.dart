@@ -1017,21 +1017,6 @@ class AppLocalizationsHi extends AppLocalizations {
   String get tacticsFullBackOff => 'कोई निर्देश नहीं';
 
   @override
-  String tacticsFullBackUpHint(String side) {
-    return '$side: आगे बढ़ें। थोड़ा ज़्यादा आक्रमण, थोड़ा ज़्यादा जोखिम।';
-  }
-
-  @override
-  String tacticsFullBackDownHint(String side) {
-    return '$side: पीछे रहें। थोड़ा ज़्यादा सुरक्षित, थोड़ा कम आक्रमण।';
-  }
-
-  @override
-  String tacticsFullBackOffHint(String side) {
-    return '$side: कोई निर्देश नहीं, टीम की योजना से खेलेगा।';
-  }
-
-  @override
   String tacticsFullBackSemantics(String side, String state) {
     return '$side तीर: $state';
   }
@@ -1040,10 +1025,6 @@ class AppLocalizationsHi extends AppLocalizations {
   String tacticsSubsUsed(int used, int max) {
     return 'सब · $used/$max';
   }
-
-  @override
-  String get tacticsDragSubOn =>
-      'किसी खिलाड़ी को बाहर करने के लिए मैदान पर टैप करें, या सब को पकड़कर उस पर खींचें।';
 
   @override
   String get tacticsNoSubs => 'कोई सब्स्टीट्यूट उपलब्ध नहीं।';
@@ -1199,13 +1180,6 @@ class AppLocalizationsHi extends AppLocalizations {
   String get tacticsTabSetPieces => 'सेट पीस';
 
   @override
-  String get tacticsTabRolesSetPieces => 'रोल और सेट पीस';
-
-  @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'हर स्टार्टर को एक रोल दें। टेकर तय करने के लिए पेनल्टी (⚽) या फ़्री-किक (▲) बैज पर टैप करें।';
-
-  @override
   String get tacticsTooltipCallUps => 'कॉल-अप';
 
   @override
@@ -1239,10 +1213,6 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get tacticsTapSpotReplace =>
       'रिप्लेसमेंट चुनने के लिए मैदान पर उनकी जगह टैप करें।';
-
-  @override
-  String get tacticsTapOrDrag =>
-      'खिलाड़ी को बाहर करने के लिए टैप करें, या पकड़कर खींचकर जगह बदलें।';
 
   @override
   String get tacticsPlayerRoles => 'खिलाड़ियों के रोल';
@@ -1307,11 +1277,6 @@ class AppLocalizationsHi extends AppLocalizations {
   String get tacticsSkillPas => 'पास';
 
   @override
-  String tacticsRolePlayer(String name) {
-    return 'रोल · $name';
-  }
-
-  @override
   String get roleFitGood => 'उपयुक्त';
 
   @override
@@ -1348,34 +1313,77 @@ class AppLocalizationsHi extends AppLocalizations {
   String get tacticsRunLegendManual => 'आपका निर्देश';
 
   @override
-  String get tacticsPitchPlanHint =>
-      'भूमिका के लिए खिलाड़ी के बैज पर, और रन के लिए उसके तीर पर टैप करें।';
+  String get tacticsSheetPost => 'पोज़िशन';
 
   @override
-  String tacticsRoleBadgeSemantics(String role) {
-    return 'भूमिका: $role। बदलने के लिए टैप करें।';
+  String get tacticsSheetAdvanced => 'एडवांस्ड';
+
+  @override
+  String get tacticsSheetAutoPick => 'अभी वही ले रहा है, ऑटोमैटिक';
+
+  @override
+  String get tacticsSheetFresh => 'तरोताज़ा';
+
+  @override
+  String get tacticsSheetFitHere => 'इस पोज़िशन पर';
+
+  @override
+  String tacticsSheetFitSemantics(int dots) {
+    return 'पोज़िशन के लिए फ़िट: 5 में से $dots';
   }
 
   @override
-  String tacticsRunMarkSemantics(String run) {
-    return 'रन: $run। बदलने के लिए टैप करें।';
-  }
+  String get tacticsSheetSwap => 'बदलें';
+
+  @override
+  String get tacticsSheetProfile => 'प्रोफ़ाइल';
+
+  @override
+  String get tacticsSheetRecommended => 'सुझाया गया';
+
+  @override
+  String get tacticsSheetRunHint =>
+      'अपना तीर लगाने के लिए कोई दिशा टैप करें। बीच वाला बटन भूमिका का रन वापस लाता है।';
+
+  @override
+  String get tacticsPostDm => 'डिफ़ेंस के आगे रहकर उसकी रक्षा करता है।';
+
+  @override
+  String get tacticsPostCm =>
+      'डिफ़ेंस और अटैक को जोड़ता है, दोनों तरफ़ मेहनत करता है।';
+
+  @override
+  String get tacticsPostAm => 'लाइनों के बीच, स्ट्राइकरों के पीछे खेलता है।';
+
+  @override
+  String get tacticsPostWideMid =>
+      'पीछे और चौड़ा, अपने फ़ुल-बैक की मदद करता है।';
+
+  @override
+  String get tacticsPostWinger => 'आगे रहकर फ़ुल-बैक को चुनौती देता है।';
+
+  @override
+  String get tacticsPostSt => 'अटैक की अगुवाई करता है और मौके भुनाता है।';
+
+  @override
+  String get tacticsPitchHint =>
+      'पोज़िशन, भूमिका और रन तय करने के लिए खिलाड़ी को टैप करें। जगह बदलने के लिए पकड़कर खींचें।';
+
+  @override
+  String get tacticsSubHint =>
+      'खिलाड़ी को सेट करने या बदलने के लिए टैप करें। किसी सब्स्टीट्यूट को पकड़कर उस पर खींचें।';
+
+  @override
+  String get tacticsLegendTooltip => 'पिच कैसे पढ़ें';
+
+  @override
+  String get tacticsLegendRoleTag => 'खिलाड़ी पर छोटा बैज उसकी भूमिका है।';
 
   @override
   String get tacticsPlanRoleHeading => 'भूमिका';
 
   @override
   String get tacticsPlanMovementHeading => 'मूवमेंट';
-
-  @override
-  String tacticsPlanTitle(String position, String name) {
-    return '$position · $name';
-  }
-
-  @override
-  String tacticsArrowSet(String name, String movement) {
-    return '$name: $movement';
-  }
 
   @override
   String get tacticsKeeperNoRun => 'गोलकीपर के लिए कोई रन तय नहीं होता।';
@@ -1442,9 +1450,6 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get tacticsSave => 'सेव करें';
-
-  @override
-  String get tacticsTapToAssign => 'रोल देने के लिए टैप करें';
 
   @override
   String get tacticsHoldDragSub =>
@@ -14228,14 +14233,6 @@ class AppLocalizationsHi extends AppLocalizations {
   String yPunditPick5(String competition, String favourite, String darkHorse) {
     return '$favourite $competition जीतेगा और यह उबाऊ होगा। कहानी चाहिए तो $darkHorse को देखिए।';
   }
-
-  @override
-  String tacticsSlotSwitchHeading(String formation) {
-    return '$formation के भीतर पोज़िशन';
-  }
-
-  @override
-  String get tacticsSlotSwitchReset => 'रीसेट';
 
   @override
   String get tacticsSlotSwitchLimit =>

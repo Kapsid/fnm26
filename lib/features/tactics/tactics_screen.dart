@@ -40,8 +40,8 @@ import 'package:fnm/features/tactics/full_back_instructions.dart';
 import 'package:fnm/features/tactics/nation_squad_tab.dart';
 import 'package:fnm/features/tactics/pitch_plan.dart';
 import 'package:fnm/features/tactics/player_roles_providers.dart';
+import 'package:fnm/features/tactics/player_slot_sheet.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
-import 'package:fnm/features/tactics/slot_switch_strip.dart';
 import 'package:fnm/features/tactics/squad_tablet_layout.dart';
 import 'package:fnm/features/tactics/tactic_library_sheet.dart';
 import 'package:fnm/features/tactics/tactic_preset_providers.dart';
@@ -144,8 +144,7 @@ class TacticsScreen extends ConsumerWidget {
   /// The tablet layout's root, for tests.
   static const Key tabletLayoutKey = Key('tactics.tabletLayout');
 
-  /// Which tab to open on (0 lineup, 1 instructions, 2 roles & set pieces,
-  /// 3 squad).
+  /// Which tab to open on (0 lineup, 1 instructions, 2 set pieces, 3 squad).
   ///
   /// The pre-match setup strip sends the manager here about the armband or the
   /// set-piece takers, both of which sit on tab 2, so it names it.
@@ -209,14 +208,15 @@ class TacticsScreen extends ConsumerWidget {
           // actions and read as one of them.
           centerTitle: false,
           titleSpacing: 0,
-          // Split into sections so it's not one long scroll — the pitch, each
-          // player's role, the set-piece takers, and the wider squad each get
-          // their own tab.
+          // Split into sections so it's not one long scroll — the pitch, the
+          // dials, the set-piece takers, and the wider squad each get their
+          // own tab. Each man's position, role and run are set in his sheet,
+          // from the pitch.
           bottom: AppSegmentedTabBar(
             tabs: [
               SegmentTab(l.tacticsTabLineup),
               SegmentTab(l.tacticsTabInstructions),
-              SegmentTab(l.tacticsTabRolesSetPieces),
+              SegmentTab(l.tacticsTabSetPieces),
               if (host.career)
                 SegmentTab(l.tacticsSquad, key: TourKeys.squadTab),
             ],
@@ -281,9 +281,6 @@ class TacticsScreen extends ConsumerWidget {
           data: (data) {
             if (data == null) return Center(child: Text(l.tacticsNoTacticSet));
             final tactic = data.tactic;
-            final roles =
-                ref.watch(playerRolesProvider(careerId)).valueOrNull ??
-                const <int, PlayerRole>{};
             final takers = ref
                 .watch(setPieceTakersProvider(careerId))
                 .valueOrNull;
@@ -336,13 +333,13 @@ class TacticsScreen extends ConsumerWidget {
                           injuredIds: injuredIds,
                         ),
                       ),
-                      // What the two kinds of run line are, and how to set
-                      // a role and a run from the discs.
-                      const PitchRunLegend(
-                        padding: EdgeInsets.fromLTRB(
+                      // What a tap and a hold do, and the legend behind a
+                      // small info button rather than always on show.
+                      const PitchHintRow(
+                        padding: EdgeInsetsDirectional.fromSTEB(
                           AppSpacing.marginMobile,
+                          0,
                           AppSpacing.xs,
-                          AppSpacing.marginMobile,
                           0,
                         ),
                       ),
@@ -369,15 +366,6 @@ class TacticsScreen extends ConsumerWidget {
                                   onOpen: (p) => _openPlayer(context, p),
                                 ),
                               ),
-                            // The pitch scrolls, so a drag has to start with a
-                            // hold — say so, or it just reads as the page moving.
-                            Text(
-                              l.tacticsTapOrDrag,
-                              style: AppTypography.labelSmall.copyWith(
-                                color: AppColors.onSurfaceVariant,
-                              ),
-                            ),
-                            const SizedBox(height: AppSpacing.lg),
                             // One line, not the whole grid. Nineteen shapes at
                             // three across is seven rows — about 981 points, a
                             // screen and a half of formations sitting between
@@ -466,19 +454,17 @@ class TacticsScreen extends ConsumerWidget {
                   //    it. Half of what a tactic is, and it used to live behind
                   //    an icon in the app bar.
                   _InstructionsTab(careerId: careerId, tactic: tactic),
-                  // 3. ROLES & SET PIECES — one row per starter: their job, plus
-                  //    the penalty and free-kick badges (tap to make them taker).
-                  //    The armband sits at the top of it: naming a captain is the
-                  //    same kind of decision as naming a penalty taker — one job,
-                  //    one man. It used to be an armband button on EVERY row of
-                  //    the call-up list, twenty-odd of them, which read as a
-                  //    multiple choice and buried the one name that mattered.
+                  // 3. SET PIECES — the armband, then one row per starter with
+                  //    the penalty, free-kick and throw-in badges (tap to make
+                  //    him taker). Naming a captain is the same kind of
+                  //    decision as naming a penalty taker — one job, one man.
+                  //    Roles moved to each man's sheet, from the pitch.
                   ListView(
                     padding: AppBottomNav.padScroll(
                       context,
                       const EdgeInsets.all(AppSpacing.marginMobile),
                     ),
-                    children: _rolesChildren(context, ref, l, data, t, roles),
+                    children: _setPiecesChildren(ref, l, data, t),
                   ),
                   // 4. SQUAD — the nation's whole pool: every eligible player,
                   //    their club, age, form and international record, filterable
@@ -513,10 +499,10 @@ class TacticsScreen extends ConsumerWidget {
     );
   }
 
-  /// The starting XI on the pitch, with every gesture the line-up has: tap a
-  /// slot to pick, drag to swap or reshape, drop a substitute on; and on
-  /// each disc a role badge that opens his role sheet and an arrow mark that
-  /// moves his run on one tap.
+  /// The starting XI on the pitch, with every gesture the line-up has: a tap
+  /// on a man opens his sheet (an empty slot, the men to fill it), a hold
+  /// drags him to swap or reshape, and a substitute dropped on comes on. The
+  /// role tags and run lines are read-only: they are set in the sheet.
   Widget _pitch(
     BuildContext context,
     WidgetRef ref,
@@ -538,14 +524,11 @@ class TacticsScreen extends ConsumerWidget {
       switches: tactic.switches,
       roles: pitchRolesOf(tactic, legacy),
       arrows: pitchArrowsOf(tactic),
-      onPlanSlot: (slot) => _planSlot(context, ref, data, slot, legacy),
-      onCycleArrow: (slot) => service.cycleSlotArrow(careerId, slot),
-      onCycleFullBack: (side) => service.cycleFullBack(careerId, side),
       lineup: tactic.lineup,
       byId: data.byId,
       teamColors: teamColors,
       absentIds: absentIds,
-      onTapSlot: (slot) => _pickPlayer(context, ref, data, slot),
+      onTapSlot: (slot) => unawaited(_openSlot(context, ref, data, slot)),
       onSwap: (a, b) => _dragBetweenSlots(service, tactic, a, b),
       onBenchIn: (slot, playerId) => service.setSlot(careerId, slot, playerId),
       onMoveToSpace: (slot, dropY) {
@@ -560,8 +543,8 @@ class TacticsScreen extends ConsumerWidget {
         }
       },
       // Into the zone of a place the slot may switch to: the same switch the
-      // slot's picker makes, and the shape stays. Refused only by the limit,
-      // which is then said, as in the picker.
+      // slot's sheet makes, and the shape stays. Refused only by the limit,
+      // which is then said, as in the sheet.
       onSwitchSlot: (slot, to) async {
         final applied = await service.setSlotPosition(careerId, slot, to);
         if (applied || !context.mounted) return;
@@ -574,25 +557,128 @@ class TacticsScreen extends ConsumerWidget {
     );
   }
 
-  /// Opens [slot]'s role-and-run sheet; each pick is saved as it is made.
-  Future<void> _planSlot(
+  /// A tap on [slot]: his sheet when a man plays there (position, role, run
+  /// and duties, each saved as it is picked), the men to fill it when
+  /// nobody does.
+  Future<void> _openSlot(
     BuildContext context,
     WidgetRef ref,
     TacticData data,
     int slot,
-    Map<int, PlayerRole> legacy,
-  ) {
+  ) async {
     final tactic = data.tactic;
     final service = ref.read(tacticServiceProvider);
-    return showSlotPlanSheet(
+    final player = data.byId[tactic.lineup[slot]];
+    if (player == null) {
+      final picked = await _pickCandidate(context, ref, data, slot);
+      if (picked != null) await service.setSlot(careerId, slot, picked);
+      return;
+    }
+    final l = AppLocalizations.of(context);
+    final host = ref.read(tacticsHostProvider);
+    final legacy =
+        ref.read(playerRolesProvider(careerId)).valueOrNull ??
+        const <int, PlayerRole>{};
+    final absence = data.absences[player.id];
+    final absent = data.unavailable.any((p) => p.id == player.id);
+    return showPlayerSlotSheet(
       context,
-      position: tactic.positions[slot],
-      player: data.byId[tactic.lineup[slot]],
-      role: tactic.effectiveRoleAt(slot, legacy),
-      arrow: tactic.arrowAt(slot),
+      tactic: tactic,
+      slot: slot,
+      player: player,
+      legacy: legacy,
+      condition: _conditionsOf(ref, watch: false)[player.id],
+      status: !absent
+          ? null
+          : (absence?.injuryMatches ?? 0) > 0
+          ? l.tacticsInjuredShort
+          : l.tacticsSuspendedShort,
+      onPosition: (p) => service.setSlotPosition(careerId, slot, p),
       onRole: (r) => unawaited(service.setSlotRole(careerId, slot, r)),
       onArrow: (a) => unawaited(service.setSlotArrow(careerId, slot, a)),
+      onSwap: (sheetContext) async {
+        final picked = await _pickCandidate(sheetContext, ref, data, slot);
+        if (picked == null) return null;
+        await service.setSlot(careerId, slot, picked);
+        return data.byId[picked];
+      },
+      onProfile: !host.playerPages
+          ? null
+          : () {
+              // The sheet goes first: on a tablet it is a root dialog, and
+              // the page would open under it.
+              Navigator.of(context).maybePop();
+              _openPlayer(context, player);
+            },
+      advanced: _dutyToggles(ref, l, data, player),
     );
+  }
+
+  /// The man's duties for his sheet's Advanced section: the armband (a
+  /// career's), and each set piece, as the Set pieces tab names them.
+  List<SlotSheetToggle> _dutyToggles(
+    WidgetRef ref,
+    AppLocalizations l,
+    TacticData data,
+    Player player,
+  ) {
+    final xi = [
+      for (final id in data.tactic.lineup.whereType<int>()) ?data.byId[id],
+    ];
+    final xiIds = {for (final p in xi) p.id};
+    final takers = ref.read(setPieceTakersProvider(careerId)).valueOrNull;
+    final named = (
+      penalty: xiIds.contains(takers?.penalty) ? takers?.penalty : null,
+      deadBall: xiIds.contains(takers?.deadBall) ? takers?.deadBall : null,
+    );
+    final storedThrow = ref.read(throwInTakerProvider(careerId)).valueOrNull;
+    final namedThrow = xiIds.contains(storedThrow) ? storedThrow : null;
+    final store = ref.read(setPieceTakersStoreProvider);
+    final id = player.id;
+    return [
+      if (ref.read(tacticsHostProvider).career)
+        SlotSheetToggle(
+          id: 'captain',
+          icon: Icons.military_tech_outlined,
+          label: l.squadCaptain,
+          value:
+              ref.read(armbandProvider(careerId)).valueOrNull?.captain?.id ==
+              id,
+          onChanged: (on) => unawaited(
+            setArmband(ref, careerId, ArmbandRole.captain, on ? id : null),
+          ),
+        ),
+      SlotSheetToggle(
+        id: 'penalty',
+        icon: Icons.sports_soccer,
+        label: l.tacticsPenalties,
+        value: named.penalty == id,
+        auto: named.penalty == null && SetPiecePicks.penalty(xi) == id,
+        onChanged: (on) => unawaited(
+          store.set(careerId, penalty: true, playerId: on ? id : null),
+        ),
+      ),
+      SlotSheetToggle(
+        id: 'deadBall',
+        icon: Icons.flag_rounded,
+        label: l.tacticsCornersFreeKicks,
+        value: named.deadBall == id,
+        auto: named.deadBall == null && SetPiecePicks.deadBall(xi) == id,
+        onChanged: (on) => unawaited(
+          store.set(careerId, penalty: false, playerId: on ? id : null),
+        ),
+      ),
+      SlotSheetToggle(
+        id: 'throwIn',
+        icon: SetPieceTakerSummary.throwInIcon,
+        label: l.tacticsThrowIns,
+        value: namedThrow == id,
+        auto: namedThrow == null && SetPiecePicks.throwIn(xi) == id,
+        onChanged: (on) => unawaited(
+          ref.read(throwInTakerStoreProvider).set(careerId, on ? id : null),
+        ),
+      ),
+    ];
   }
 
   /// Names the starters who cannot play the next match, and why.
@@ -646,15 +732,13 @@ class TacticsScreen extends ConsumerWidget {
     );
   }
 
-  /// The armband, the set-piece summary and one row per starter: the roles
-  /// and set pieces tab, on both layouts.
-  List<Widget> _rolesChildren(
-    BuildContext context,
+  /// The armband, the set-piece summary and one row per starter: the set
+  /// pieces tab, on both layouts.
+  List<Widget> _setPiecesChildren(
     WidgetRef ref,
     AppLocalizations l,
     TacticData data,
     _Takers t,
-    Map<int, PlayerRole> roles,
   ) {
     final xi = t.xi;
     final namedPenalty = t.namedPenalty;
@@ -678,7 +762,7 @@ class TacticsScreen extends ConsumerWidget {
         const SizedBox(height: AppSpacing.md),
       ],
       Text(
-        l.tacticsRolesSetPiecesBlurb,
+        l.tacticsSetPieceBlurb,
         style: AppTypography.labelSmall.copyWith(
           color: AppColors.onSurfaceVariant,
         ),
@@ -707,12 +791,8 @@ class TacticsScreen extends ConsumerWidget {
       ),
       const SizedBox(height: AppSpacing.sm),
       for (final p in xi)
-        _PlayerTacticRow(
+        _TakerRow(
           player: p,
-          role: switch (data.tactic.lineup.indexOf(p.id)) {
-            -1 => roles[p.id] ?? PlayerRole.none,
-            final slot => data.tactic.effectiveRoleAt(slot, roles),
-          },
           isPenaltyTaker: namedPenalty == p.id,
           isDeadBallTaker: namedDeadBall == p.id,
           isAutoPenalty: namedPenalty == null && penaltyId == p.id,
@@ -722,10 +802,6 @@ class TacticsScreen extends ConsumerWidget {
           onToggleThrowIn: () => ref
               .read(throwInTakerStoreProvider)
               .set(careerId, namedThrowIn == p.id ? null : p.id),
-          onRole: () => switch (data.tactic.lineup.indexOf(p.id)) {
-            -1 => _pickRole(context, ref, p),
-            final slot => _planSlot(context, ref, data, slot, roles),
-          },
           onTogglePenalty: () => ref
               .read(setPieceTakersStoreProvider)
               .set(
@@ -741,8 +817,7 @@ class TacticsScreen extends ConsumerWidget {
                 playerId: namedDeadBall == p.id ? null : p.id,
               ),
         ),
-      // How the throws are taken, under the men who take them: below the
-      // rows so the roles stay where a manager's thumb already knows them.
+      // How the throws are taken, under the men who take them.
       const SizedBox(height: AppSpacing.md),
       AppCard(
         child: ThrowInStylePicker(
@@ -754,112 +829,9 @@ class TacticsScreen extends ConsumerWidget {
     ];
   }
 
-  /// Opens the role picker for [player] — only the roles that suit their
-  /// position, plus "No role".
-  Future<void> _pickRole(
-    BuildContext context,
-    WidgetRef ref,
-    Player player,
-  ) async {
-    final options = [
-      for (final r in PlayerRole.values)
-        if (r == PlayerRole.none ||
-            switch (player.category) {
-              PositionCategory.forward => r.forForwards,
-              PositionCategory.midfielder => r.forMidfielders,
-              PositionCategory.defender => r.forDefenders,
-              PositionCategory.goalkeeper => false,
-            })
-          r,
-    ];
-    final l = AppLocalizations.of(context);
-    final picked = await showAdaptiveSheet<PlayerRole>(
-      context: context,
-      backgroundColor: AppColors.surfaceContainerHigh,
-      // Scroll-controlled + bounded height so a long role list scrolls INSIDE
-      // the sheet instead of overflowing the default half-screen cap and
-      // pushing the header/handle off the top (which left it unclosable).
-      isScrollControlled: true,
-      builder: (sheetContext) {
-        final maxHeight = MediaQuery.of(context).size.height * 0.7;
-        return ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: maxHeight),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.marginMobile,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // A grab handle so the panel reads as a draggable sheet.
-                Center(
-                  child: Container(
-                    width: 40,
-                    height: 4,
-                    margin: const EdgeInsets.symmetric(
-                      vertical: AppSpacing.sm,
-                    ),
-                    decoration: const BoxDecoration(
-                      color: AppColors.outlineVariant,
-                      borderRadius: AppRadii.smAll,
-                    ),
-                  ),
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        l.tacticsRolePlayer(player.name),
-                        style: AppTypography.labelMedium.copyWith(
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    ),
-                    // An explicit close so the sheet is always dismissable even
-                    // if the list is long.
-                    IconButton(
-                      icon: const Icon(Icons.close, size: 20),
-                      onPressed: () => Navigator.of(sheetContext).pop(),
-                    ),
-                  ],
-                ),
-                Flexible(
-                  child: ListView(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                    children: [
-                      for (final r in options)
-                        ListTile(
-                          title: Text(
-                            playerRoleLabel(l, r),
-                            style: AppTypography.bodyMedium,
-                          ),
-                          subtitle: Text(
-                            playerRoleBlurb(l, r),
-                            style: AppTypography.labelSmall.copyWith(
-                              color: AppColors.onSurfaceVariant,
-                            ),
-                          ),
-                          onTap: () => Navigator.of(sheetContext).pop(r),
-                        ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-    if (picked != null) {
-      await ref
-          .read(playerRolesStoreProvider)
-          .setRole(careerId, player.id, picked);
-    }
-  }
-
-  Future<void> _pickPlayer(
+  /// The men who could play [slot], best in it first, for an empty slot or
+  /// the sheet's Swap: answers with the one picked, or null.
+  Future<int?> _pickCandidate(
     BuildContext context,
     WidgetRef ref,
     TacticData data,
@@ -887,10 +859,7 @@ class TacticsScreen extends ConsumerWidget {
     final l = AppLocalizations.of(context);
     final conditions = _conditionsOf(ref, watch: false);
     final playerPages = ref.read(tacticsHostProvider).playerPages;
-    // The sheet answers with a player id, or with a place for the slot
-    // itself: the position chips at its head change what the slot plays
-    // within the formation (see [SlotSwitchStrip]).
-    final picked = await showAdaptiveSheet<Object>(
+    return showAdaptiveSheet<int>(
       context: context,
       backgroundColor: AppColors.surfaceContainer,
       builder: (sheetContext) => ListView(
@@ -901,12 +870,6 @@ class TacticsScreen extends ConsumerWidget {
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
           const SizedBox(height: AppSpacing.sm),
-          SlotSwitchStrip(
-            formation: data.tactic.formation,
-            switches: data.tactic.switches,
-            slot: slot,
-            onPick: (p) => Navigator.of(sheetContext).pop(p),
-          ),
           for (final p in candidates)
             () {
               final inXi = data.tactic.lineup.contains(p.id);
@@ -985,6 +948,7 @@ class TacticsScreen extends ConsumerWidget {
                     ],
                     if (playerPages)
                       IconButton(
+                        tooltip: l.tacticsSheetProfile,
                         visualDensity: VisualDensity.compact,
                         icon: const Icon(
                           Icons.info_outline,
@@ -1014,14 +978,6 @@ class TacticsScreen extends ConsumerWidget {
         ],
       ),
     );
-    switch (picked) {
-      case final int playerId:
-        await ref.read(tacticServiceProvider).setSlot(careerId, slot, playerId);
-      case final PlayerPosition place:
-        await ref
-            .read(tacticServiceProvider)
-            .setSlotPosition(careerId, slot, place);
-    }
   }
 
   /// Handles a pitch drag from slot [a] onto slot [b] by persisting the
@@ -1826,20 +1782,16 @@ class _ArmbandRow extends StatelessWidget {
   }
 }
 
-/// One player's role row in the tactics screen: position, name, and the role
-/// they've been given (tap to change).
-/// One starter in the merged roles & set-pieces list: their position and name,
-/// a tappable role, and penalty / free-kick badges that toggle them as the
-/// taker — so a player's whole tactical brief is set in one place.
-class _PlayerTacticRow extends StatelessWidget {
-  const _PlayerTacticRow({
+/// One starter in the set pieces list: his position and name, his technique
+/// (what matters most from a dead ball), and penalty / free-kick / throw-in
+/// badges that toggle him as the taker.
+class _TakerRow extends StatelessWidget {
+  const _TakerRow({
     required this.player,
-    required this.role,
     required this.isPenaltyTaker,
     required this.isDeadBallTaker,
     required this.isAutoPenalty,
     required this.isAutoDeadBall,
-    required this.onRole,
     required this.onTogglePenalty,
     required this.onToggleDeadBall,
     required this.isThrowInTaker,
@@ -1848,7 +1800,6 @@ class _PlayerTacticRow extends StatelessWidget {
   });
 
   final Player player;
-  final PlayerRole role;
   final bool isThrowInTaker;
   final bool isAutoThrowIn;
   final VoidCallback onToggleThrowIn;
@@ -1859,60 +1810,24 @@ class _PlayerTacticRow extends StatelessWidget {
   final bool isAutoPenalty;
   final bool isAutoDeadBall;
 
-  final VoidCallback onRole;
   final VoidCallback onTogglePenalty;
   final VoidCallback onToggleDeadBall;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final assigned = role != PlayerRole.none;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         children: [
+          SizedBox(width: 36, child: TacticalChip(player.position.label)),
+          const SizedBox(width: AppSpacing.sm),
           Expanded(
-            child: InkWell(
-              onTap: onRole,
-              borderRadius: AppRadii.smAll,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 36,
-                      child: TacticalChip(player.position.label),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            player.name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTypography.bodyMedium,
-                          ),
-                          Text(
-                            assigned
-                                ? playerRoleLabel(l, role)
-                                : l.tacticsTapToAssign,
-                            style: AppTypography.labelSmall.copyWith(
-                              color: assigned
-                                  ? AppColors.primary
-                                  : AppColors.onSurfaceVariant,
-                              fontWeight: assigned
-                                  ? FontWeight.w700
-                                  : FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            child: Text(
+              player.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.bodyMedium,
             ),
           ),
           // Technical ability — the quality that matters most for taking

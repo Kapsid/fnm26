@@ -7,6 +7,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/tactics/substitution_rules.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
+import 'package:fnm/features/tactics/player_slot_sheet.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
 import '../helpers/expect_whole.dart';
@@ -108,9 +109,20 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  /// Opens the slot picker on the pitch node showing [starterName].
+  /// Opens the slot picker on the pitch node showing [starterName]: his
+  /// sheet, then its Swap.
   Future<void> openPicker(WidgetTester tester, String starterName) async {
     await tester.tap(onPitchName(starterName.toUpperCase()));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(SlotSheetKeys.swap));
+    await tester.pumpAndSettle();
+  }
+
+  /// Closes the man's sheet the picker was opened from, if it is open.
+  Future<void> closeSheet(WidgetTester tester) async {
+    final sheet = find.byKey(SlotSheetKeys.sheet);
+    if (sheet.evaluate().isEmpty) return;
+    Navigator.of(tester.element(sheet)).pop();
     await tester.pumpAndSettle();
   }
 
@@ -148,6 +160,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(target);
     await tester.pumpAndSettle();
+    await closeSheet(tester);
   }
 
   testWidgets('a man already taken off is not offered at all', (

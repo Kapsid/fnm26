@@ -21,7 +21,6 @@ import 'package:fnm/features/federation/naturalization_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
-import 'package:fnm/features/tactics/pitch_plan.dart' show nextPitchArrow;
 import 'package:fnm/features/tactics/player_roles_providers.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
 
@@ -494,24 +493,6 @@ class TacticService {
   /// full-back's is his [FullBackPushes] arrow (see [Tactic.withArrow]).
   Future<void> setSlotArrow(int careerId, int slot, MoveArrow arrow) =>
       _update(careerId, (t, _) => t.withArrow(slot, arrow));
-
-  /// Moves [slot]'s run on to the next one its place offers, as a tap on
-  /// his arrow mark does ([nextPitchArrow]), and answers with the run the
-  /// stored tactic now has. Worked out from the stored tactic inside the
-  /// write, so quick repeat taps each move it one step.
-  Future<MoveArrow> cycleSlotArrow(int careerId, int slot) async {
-    var now = MoveArrow.none;
-    await _update(careerId, (t, _) {
-      if (slot < 0 || slot >= t.positions.length) return t;
-      final next = t.withArrow(
-        slot,
-        nextPitchArrow(t.positions[slot], t.arrowAt(slot)),
-      );
-      now = next.arrowAt(slot);
-      return next;
-    });
-    return now;
-  }
 
   /// Sets how the side takes its throw-ins (the Roles & set pieces tab).
   Future<void> setThrowInStyle(int careerId, ThrowInStyle style) =>

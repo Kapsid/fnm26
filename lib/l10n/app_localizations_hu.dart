@@ -1024,21 +1024,6 @@ class AppLocalizationsHu extends AppLocalizations {
   String get tacticsFullBackOff => 'Nincs utasítás';
 
   @override
-  String tacticsFullBackUpHint(String side) {
-    return '$side: felfut. Kicsit több támadás, kicsit több kockázat.';
-  }
-
-  @override
-  String tacticsFullBackDownHint(String side) {
-    return '$side: hátul marad. Kicsit biztonságosabb, kicsit kevesebb támadás.';
-  }
-
-  @override
-  String tacticsFullBackOffHint(String side) {
-    return '$side: nincs utasítás, a csapat terve szerint játszik.';
-  }
-
-  @override
   String tacticsFullBackSemantics(String side, String state) {
     return '$side, nyíl: $state';
   }
@@ -1047,10 +1032,6 @@ class AppLocalizationsHu extends AppLocalizations {
   String tacticsSubsUsed(int used, int max) {
     return 'CSERÉK · $used/$max';
   }
-
-  @override
-  String get tacticsDragSubOn =>
-      'Koppints egy pályán lévő játékosra a lecseréléséhez, vagy tartsd nyomva és húzz rá egy cserejátékost.';
 
   @override
   String get tacticsNoSubs => 'Nincs elérhető cserejátékos.';
@@ -1206,13 +1187,6 @@ class AppLocalizationsHu extends AppLocalizations {
   String get tacticsTabSetPieces => 'PONTRÚGÁSOK';
 
   @override
-  String get tacticsTabRolesSetPieces => 'SZEREPEK ÉS PONTRÚGÁSOK';
-
-  @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Adj minden kezdőnek szerepet. Koppints a tizenegyes (⚽) vagy szabadrúgás (▲) jelvényre a rúgó kijelöléséhez.';
-
-  @override
   String get tacticsTooltipCallUps => 'Meghívók';
 
   @override
@@ -1246,10 +1220,6 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get tacticsTapSpotReplace =>
       'Koppints a helyére a pályán a csere kiválasztásához.';
-
-  @override
-  String get tacticsTapOrDrag =>
-      'Koppints egy játékosra a lecseréléséhez, vagy tartsd nyomva és húzd át máshová.';
 
   @override
   String get tacticsPlayerRoles => 'JÁTÉKOSSZEREPEK';
@@ -1314,11 +1284,6 @@ class AppLocalizationsHu extends AppLocalizations {
   String get tacticsSkillPas => 'PAS';
 
   @override
-  String tacticsRolePlayer(String name) {
-    return 'SZEREP · $name';
-  }
-
-  @override
   String get roleFitGood => 'Illik hozzá';
 
   @override
@@ -1355,34 +1320,77 @@ class AppLocalizationsHu extends AppLocalizations {
   String get tacticsRunLegendManual => 'A te utasításod';
 
   @override
-  String get tacticsPitchPlanHint =>
-      'Koppints egy játékos jelvényére a szerephez, a nyilára a mozgáshoz.';
+  String get tacticsSheetPost => 'Poszt';
 
   @override
-  String tacticsRoleBadgeSemantics(String role) {
-    return 'Szerep: $role. Koppints a módosításhoz.';
+  String get tacticsSheetAdvanced => 'Haladó';
+
+  @override
+  String get tacticsSheetAutoPick => 'Most automatikusan ő végzi el';
+
+  @override
+  String get tacticsSheetFresh => 'Friss';
+
+  @override
+  String get tacticsSheetFitHere => 'Ezen a poszton';
+
+  @override
+  String tacticsSheetFitSemantics(int dots) {
+    return 'Alkalmasság a posztra: $dots/5';
   }
 
   @override
-  String tacticsRunMarkSemantics(String run) {
-    return 'Mozgás: $run. Koppints a módosításhoz.';
-  }
+  String get tacticsSheetSwap => 'Csere';
+
+  @override
+  String get tacticsSheetProfile => 'Profil';
+
+  @override
+  String get tacticsSheetRecommended => 'Ajánlott';
+
+  @override
+  String get tacticsSheetRunHint =>
+      'Koppints egy irányra a saját nyíladhoz. A közép visszaállítja a szerep mozgását.';
+
+  @override
+  String get tacticsPostDm => 'A védelem előtt áll, és fedezi azt.';
+
+  @override
+  String get tacticsPostCm =>
+      'Összeköti a védelmet és a támadást, mindkét irányba dolgozik.';
+
+  @override
+  String get tacticsPostAm => 'A sorok között játszik, a csatárok mögött.';
+
+  @override
+  String get tacticsPostWideMid =>
+      'Mélyebben és szélesebben, segíti a szélső védőjét.';
+
+  @override
+  String get tacticsPostWinger => 'Feljebb, megküzd a szélső védővel.';
+
+  @override
+  String get tacticsPostSt => 'Vezeti a támadást, és értékesíti a helyzeteket.';
+
+  @override
+  String get tacticsPitchHint =>
+      'Koppints egy játékosra a posztja, szerepe és mozgása beállításához. Tartsd nyomva és húzd az áthelyezéshez.';
+
+  @override
+  String get tacticsSubHint =>
+      'Koppints egy játékosra a beállításához vagy cseréjéhez. Tarts nyomva és húzz rá egy cserét.';
+
+  @override
+  String get tacticsLegendTooltip => 'Hogyan olvasd a pályát';
+
+  @override
+  String get tacticsLegendRoleTag => 'A játékoson lévő kis jelvény a szerepe.';
 
   @override
   String get tacticsPlanRoleHeading => 'SZEREP';
 
   @override
   String get tacticsPlanMovementHeading => 'MOZGÁS';
-
-  @override
-  String tacticsPlanTitle(String position, String name) {
-    return '$position · $name';
-  }
-
-  @override
-  String tacticsArrowSet(String name, String movement) {
-    return '$name: $movement';
-  }
 
   @override
   String get tacticsKeeperNoRun => 'A kapusnak nincs beállítható mozgása.';
@@ -1449,9 +1457,6 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get tacticsSave => 'Mentés';
-
-  @override
-  String get tacticsTapToAssign => 'Koppints a kijelöléshez';
 
   @override
   String get tacticsHoldDragSub =>
@@ -14247,14 +14252,6 @@ class AppLocalizationsHu extends AppLocalizations {
   String yPunditPick5(String competition, String favourite, String darkHorse) {
     return '$competition: $favourite nyer, és unalmas lesz. Ha történetet akartok, nézzétek ezt: $darkHorse.';
   }
-
-  @override
-  String tacticsSlotSwitchHeading(String formation) {
-    return 'Poszt a $formation felálláson belül';
-  }
-
-  @override
-  String get tacticsSlotSwitchReset => 'Visszaállítás';
 
   @override
   String get tacticsSlotSwitchLimit =>

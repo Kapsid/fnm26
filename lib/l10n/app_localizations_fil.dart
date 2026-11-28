@@ -1025,21 +1025,6 @@ class AppLocalizationsFil extends AppLocalizations {
   String get tacticsFullBackOff => 'Walang utos';
 
   @override
-  String tacticsFullBackUpHint(String side) {
-    return '$side: sumulong sa atake. Kaunting dagdag na atake, kaunting dagdag na panganib.';
-  }
-
-  @override
-  String tacticsFullBackDownHint(String side) {
-    return '$side: manatili sa likod. Medyo mas ligtas, medyo bawas ang atake.';
-  }
-
-  @override
-  String tacticsFullBackOffHint(String side) {
-    return '$side: walang utos, sumusunod sa plano ng koponan.';
-  }
-
-  @override
   String tacticsFullBackSemantics(String side, String state) {
     return '$side, arrow: $state';
   }
@@ -1048,10 +1033,6 @@ class AppLocalizationsFil extends AppLocalizations {
   String tacticsSubsUsed(int used, int max) {
     return 'PAMALIT · $used/$max';
   }
-
-  @override
-  String get tacticsDragSubOn =>
-      'I-tap ang manlalaro sa field para palabasin siya, o hawakan at i-drag ang pamalit papunta sa kaniya.';
 
   @override
   String get tacticsNoSubs => 'Walang available na pamalit.';
@@ -1207,13 +1188,6 @@ class AppLocalizationsFil extends AppLocalizations {
   String get tacticsTabSetPieces => 'SET PIECE';
 
   @override
-  String get tacticsTabRolesSetPieces => 'ROLE AT SET PIECE';
-
-  @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Bigyan ng role ang bawat starter. I-tap ang badge ng penalty (⚽) o free-kick (▲) para itakda ang taker mo.';
-
-  @override
   String get tacticsTooltipCallUps => 'Mga call-up';
 
   @override
@@ -1247,10 +1221,6 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String get tacticsTapSpotReplace =>
       'I-tap ang puwesto nila sa field para pumili ng kapalit.';
-
-  @override
-  String get tacticsTapOrDrag =>
-      'I-tap ang manlalaro para palitan siya, o hawakan at i-drag para ilipat.';
 
   @override
   String get tacticsPlayerRoles => 'MGA ROLE NG MANLALARO';
@@ -1315,11 +1285,6 @@ class AppLocalizationsFil extends AppLocalizations {
   String get tacticsSkillPas => 'PAS';
 
   @override
-  String tacticsRolePlayer(String name) {
-    return 'ROLE · $name';
-  }
-
-  @override
   String get roleFitGood => 'Bagay';
 
   @override
@@ -1356,34 +1321,81 @@ class AppLocalizationsFil extends AppLocalizations {
   String get tacticsRunLegendManual => 'Utos mo';
 
   @override
-  String get tacticsPitchPlanHint =>
-      'I-tap ang badge ng manlalaro para sa role, at ang arrow niya para sa takbo.';
+  String get tacticsSheetPost => 'Posisyon';
 
   @override
-  String tacticsRoleBadgeSemantics(String role) {
-    return 'Role: $role. I-tap para baguhin.';
+  String get tacticsSheetAdvanced => 'Advanced';
+
+  @override
+  String get tacticsSheetAutoPick => 'Siya ang kumukuha ngayon, awtomatiko';
+
+  @override
+  String get tacticsSheetFresh => 'Sariwa';
+
+  @override
+  String get tacticsSheetFitHere => 'Sa posisyong ito';
+
+  @override
+  String tacticsSheetFitSemantics(int dots) {
+    return 'Bagay sa posisyon: $dots sa 5';
   }
 
   @override
-  String tacticsRunMarkSemantics(String run) {
-    return 'Takbo: $run. I-tap para baguhin.';
-  }
+  String get tacticsSheetSwap => 'Palitan';
+
+  @override
+  String get tacticsSheetProfile => 'Profile';
+
+  @override
+  String get tacticsSheetRecommended => 'Inirerekomenda';
+
+  @override
+  String get tacticsSheetRunHint =>
+      'I-tap ang isang direksyon para sa sarili mong arrow. Ibinabalik ng gitna ang takbo ng role.';
+
+  @override
+  String get tacticsPostDm =>
+      'Pumupuwesto sa harap ng depensa at pinoprotektahan ito.';
+
+  @override
+  String get tacticsPostCm =>
+      'Nag-uugnay sa depensa at atake, kumikilos pasulong at paatras.';
+
+  @override
+  String get tacticsPostAm =>
+      'Naglalaro sa pagitan ng mga linya, sa likod ng mga striker.';
+
+  @override
+  String get tacticsPostWideMid =>
+      'Mas malalim at mas malapad, tumutulong sa kanyang full-back.';
+
+  @override
+  String get tacticsPostWinger => 'Mas mataas, hinaharap ang full-back.';
+
+  @override
+  String get tacticsPostSt =>
+      'Pinangungunahan ang atake at tinatapos ang mga pagkakataon.';
+
+  @override
+  String get tacticsPitchHint =>
+      'I-tap ang manlalaro para itakda ang posisyon, role at takbo niya. Hawakan at i-drag para ilipat siya.';
+
+  @override
+  String get tacticsSubHint =>
+      'I-tap ang manlalaro para i-set up o palitan siya. Hawakan at i-drag ang reserba papunta sa kanya.';
+
+  @override
+  String get tacticsLegendTooltip => 'Paano basahin ang pitch';
+
+  @override
+  String get tacticsLegendRoleTag =>
+      'Ang maliit na badge sa manlalaro ay ang role niya.';
 
   @override
   String get tacticsPlanRoleHeading => 'ROLE';
 
   @override
   String get tacticsPlanMovementHeading => 'GALAW';
-
-  @override
-  String tacticsPlanTitle(String position, String name) {
-    return '$position · $name';
-  }
-
-  @override
-  String tacticsArrowSet(String name, String movement) {
-    return '$name: $movement';
-  }
 
   @override
   String get tacticsKeeperNoRun => 'Walang takbong itatakda sa goalkeeper.';
@@ -1451,9 +1463,6 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get tacticsSave => 'I-save';
-
-  @override
-  String get tacticsTapToAssign => 'I-tap para magtakda';
 
   @override
   String get tacticsHoldDragSub =>
@@ -14310,14 +14319,6 @@ class AppLocalizationsFil extends AppLocalizations {
   String yPunditPick5(String competition, String favourite, String darkHorse) {
     return 'Mananalo ang $favourite sa $competition at nakakabagot iyon. Kung gusto ninyo ng kuwento, panoorin ang $darkHorse.';
   }
-
-  @override
-  String tacticsSlotSwitchHeading(String formation) {
-    return 'Posisyon sa loob ng $formation';
-  }
-
-  @override
-  String get tacticsSlotSwitchReset => 'I-reset';
 
   @override
   String get tacticsSlotSwitchLimit =>

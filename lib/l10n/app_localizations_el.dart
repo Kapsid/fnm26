@@ -1063,21 +1063,6 @@ class AppLocalizationsEl extends AppLocalizations {
   String get tacticsFullBackOff => 'Χωρίς οδηγία';
 
   @override
-  String tacticsFullBackUpHint(String side) {
-    return '$side: ανεβαίνει. Λίγο περισσότερη επίθεση, λίγο περισσότερο ρίσκο.';
-  }
-
-  @override
-  String tacticsFullBackDownHint(String side) {
-    return '$side: μένει πίσω. Λίγο πιο ασφαλές, λίγο λιγότερη επίθεση.';
-  }
-
-  @override
-  String tacticsFullBackOffHint(String side) {
-    return '$side: χωρίς οδηγία, ακολουθεί το πλάνο της ομάδας.';
-  }
-
-  @override
   String tacticsFullBackSemantics(String side, String state) {
     return '$side, βέλος: $state';
   }
@@ -1086,10 +1071,6 @@ class AppLocalizationsEl extends AppLocalizations {
   String tacticsSubsUsed(int used, int max) {
     return 'ΑΛΛΑΓΕΣ · $used/$max';
   }
-
-  @override
-  String get tacticsDragSubOn =>
-      'Πάτα έναν παίκτη στο γήπεδο για να βγει, ή κράτα και σύρε έναν αναπληρωματικό πάνω του.';
 
   @override
   String get tacticsNoSubs => 'Δεν υπάρχουν διαθέσιμοι αναπληρωματικοί.';
@@ -1245,13 +1226,6 @@ class AppLocalizationsEl extends AppLocalizations {
   String get tacticsTabSetPieces => 'ΣΤΑΤΙΚΕΣ ΦΑΣΕΙΣ';
 
   @override
-  String get tacticsTabRolesSetPieces => 'ΡΟΛΟΙ ΚΑΙ ΣΤΑΤΙΚΕΣ ΦΑΣΕΙΣ';
-
-  @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Δώσε ρόλο σε κάθε βασικό. Πάτα το σήμα πέναλτι (⚽) ή φάουλ (▲) για να ορίσεις εκτελεστή.';
-
-  @override
   String get tacticsTooltipCallUps => 'Κλήσεις';
 
   @override
@@ -1285,10 +1259,6 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get tacticsTapSpotReplace =>
       'Πάτα τη θέση τους στο γήπεδο για να διαλέξεις αντικαταστάτη.';
-
-  @override
-  String get tacticsTapOrDrag =>
-      'Πάτα έναν παίκτη για να τον αλλάξεις, ή κράτα και σύρε για να τον μετακινήσεις.';
 
   @override
   String get tacticsPlayerRoles => 'ΡΟΛΟΙ ΠΑΙΚΤΩΝ';
@@ -1353,11 +1323,6 @@ class AppLocalizationsEl extends AppLocalizations {
   String get tacticsSkillPas => 'ΠΑΣ';
 
   @override
-  String tacticsRolePlayer(String name) {
-    return 'ΡΟΛΟΣ · $name';
-  }
-
-  @override
   String get roleFitGood => 'Του ταιριάζει';
 
   @override
@@ -1394,34 +1359,80 @@ class AppLocalizationsEl extends AppLocalizations {
   String get tacticsRunLegendManual => 'Η οδηγία σου';
 
   @override
-  String get tacticsPitchPlanHint =>
-      'Πάτα το σήμα ενός παίκτη για τον ρόλο και το βέλος του για την κίνηση.';
+  String get tacticsSheetPost => 'Θέση';
 
   @override
-  String tacticsRoleBadgeSemantics(String role) {
-    return 'Ρόλος: $role. Πάτα για αλλαγή.';
+  String get tacticsSheetAdvanced => 'Για προχωρημένους';
+
+  @override
+  String get tacticsSheetAutoPick => 'Τα εκτελεί τώρα, αυτόματα';
+
+  @override
+  String get tacticsSheetFresh => 'Ξεκούραστος';
+
+  @override
+  String get tacticsSheetFitHere => 'Σε αυτή τη θέση';
+
+  @override
+  String tacticsSheetFitSemantics(int dots) {
+    return 'Καταλληλότητα για τη θέση: $dots από 5';
   }
 
   @override
-  String tacticsRunMarkSemantics(String run) {
-    return 'Κίνηση: $run. Πάτα για αλλαγή.';
-  }
+  String get tacticsSheetSwap => 'Αλλαγή';
+
+  @override
+  String get tacticsSheetProfile => 'Προφίλ';
+
+  @override
+  String get tacticsSheetRecommended => 'Προτείνεται';
+
+  @override
+  String get tacticsSheetRunHint =>
+      'Πάτα μια κατεύθυνση για δικό σου βέλος. Το κέντρο επαναφέρει την κίνηση του ρόλου.';
+
+  @override
+  String get tacticsPostDm =>
+      'Παίζει μπροστά από την άμυνα και την προστατεύει.';
+
+  @override
+  String get tacticsPostCm =>
+      'Ενώνει άμυνα και επίθεση, δουλεύει και προς τις δύο μεριές.';
+
+  @override
+  String get tacticsPostAm =>
+      'Παίζει ανάμεσα στις γραμμές, πίσω από τους επιθετικούς.';
+
+  @override
+  String get tacticsPostWideMid =>
+      'Πιο πίσω και πιο ανοιχτά, βοηθά τον ακραίο αμυντικό του.';
+
+  @override
+  String get tacticsPostWinger => 'Πιο ψηλά, κοντράρει τον ακραίο αμυντικό.';
+
+  @override
+  String get tacticsPostSt => 'Ηγείται της επίθεσης και τελειώνει τις φάσεις.';
+
+  @override
+  String get tacticsPitchHint =>
+      'Πάτα έναν παίκτη για να ορίσεις θέση, ρόλο και κίνηση. Κράτα και σύρε για να τον μετακινήσεις.';
+
+  @override
+  String get tacticsSubHint =>
+      'Πάτα έναν παίκτη για να τον ρυθμίσεις ή να τον αλλάξεις. Κράτα και σύρε έναν αναπληρωματικό πάνω του.';
+
+  @override
+  String get tacticsLegendTooltip => 'Πώς διαβάζεται το γήπεδο';
+
+  @override
+  String get tacticsLegendRoleTag =>
+      'Το μικρό σήμα πάνω στον παίκτη είναι ο ρόλος του.';
 
   @override
   String get tacticsPlanRoleHeading => 'ΡΟΛΟΣ';
 
   @override
   String get tacticsPlanMovementHeading => 'ΚΙΝΗΣΗ';
-
-  @override
-  String tacticsPlanTitle(String position, String name) {
-    return '$position · $name';
-  }
-
-  @override
-  String tacticsArrowSet(String name, String movement) {
-    return '$name: $movement';
-  }
 
   @override
   String get tacticsKeeperNoRun =>
@@ -1489,9 +1500,6 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get tacticsSave => 'Αποθήκευση';
-
-  @override
-  String get tacticsTapToAssign => 'Πάτα για ανάθεση';
 
   @override
   String get tacticsHoldDragSub =>
@@ -14380,14 +14388,6 @@ class AppLocalizationsEl extends AppLocalizations {
   String yPunditPick5(String competition, String favourite, String darkHorse) {
     return 'Νικητής του τουρνουά $competition θα είναι $favourite και θα είναι βαρετό. Αν θέλετε ιστορία, δείτε $darkHorse.';
   }
-
-  @override
-  String tacticsSlotSwitchHeading(String formation) {
-    return 'Θέση στο $formation';
-  }
-
-  @override
-  String get tacticsSlotSwitchReset => 'Επαναφορά';
 
   @override
   String get tacticsSlotSwitchLimit =>

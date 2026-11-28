@@ -1070,21 +1070,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get tacticsFullBackOff => 'Sem instrução';
 
   @override
-  String tacticsFullBackUpHint(String side) {
-    return '$side: apoiar o ataque. Um pouco mais de ataque, um pouco mais de risco.';
-  }
-
-  @override
-  String tacticsFullBackDownHint(String side) {
-    return '$side: ficar atrás. Um pouco mais seguro, um pouco menos de ataque.';
-  }
-
-  @override
-  String tacticsFullBackOffHint(String side) {
-    return '$side: sem instrução, segue o plano da equipa.';
-  }
-
-  @override
   String tacticsFullBackSemantics(String side, String state) {
     return '$side, seta: $state';
   }
@@ -1093,10 +1078,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String tacticsSubsUsed(int used, int max) {
     return 'SUBST. · $used/$max';
   }
-
-  @override
-  String get tacticsDragSubOn =>
-      'Toque em um jogador em campo para tirá-lo, ou segure e arraste um reserva sobre ele.';
 
   @override
   String get tacticsNoSubs => 'Sem reservas disponíveis.';
@@ -1252,13 +1233,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get tacticsTabSetPieces => 'BOLAS PARADAS';
 
   @override
-  String get tacticsTabRolesSetPieces => 'FUNÇÕES E BOLAS PARADAS';
-
-  @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Dê uma função a cada titular. Toque no emblema de pênalti (⚽) ou de falta (▲) para definir o cobrador.';
-
-  @override
   String get tacticsTooltipCallUps => 'Convocatória';
 
   @override
@@ -1292,10 +1266,6 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get tacticsTapSpotReplace =>
       'Toque na posição dele em campo para escolher um substituto.';
-
-  @override
-  String get tacticsTapOrDrag =>
-      'Toque em um jogador para trocá-lo, ou segure e arraste para movê-lo.';
 
   @override
   String get tacticsPlayerRoles => 'FUNÇÕES DOS JOGADORES';
@@ -1360,11 +1330,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get tacticsSkillPas => 'PAS';
 
   @override
-  String tacticsRolePlayer(String name) {
-    return 'FUNÇÃO · $name';
-  }
-
-  @override
   String get roleFitGood => 'Combina';
 
   @override
@@ -1401,34 +1366,77 @@ class AppLocalizationsPt extends AppLocalizations {
   String get tacticsRunLegendManual => 'A sua instrução';
 
   @override
-  String get tacticsPitchPlanHint =>
-      'Toque no emblema de um jogador para a função e na seta dele para o movimento.';
+  String get tacticsSheetPost => 'Posição';
 
   @override
-  String tacticsRoleBadgeSemantics(String role) {
-    return 'Função: $role. Toque para alterar.';
+  String get tacticsSheetAdvanced => 'Avançado';
+
+  @override
+  String get tacticsSheetAutoPick => 'Bate agora, automaticamente';
+
+  @override
+  String get tacticsSheetFresh => 'Descansado';
+
+  @override
+  String get tacticsSheetFitHere => 'Nesta posição';
+
+  @override
+  String tacticsSheetFitSemantics(int dots) {
+    return 'Adequação à posição: $dots de 5';
   }
 
   @override
-  String tacticsRunMarkSemantics(String run) {
-    return 'Movimento: $run. Toque para alterar.';
-  }
+  String get tacticsSheetSwap => 'Trocar';
+
+  @override
+  String get tacticsSheetProfile => 'Perfil';
+
+  @override
+  String get tacticsSheetRecommended => 'Recomendada';
+
+  @override
+  String get tacticsSheetRunHint =>
+      'Toque em uma direção para sua própria seta. O centro restaura o movimento da função.';
+
+  @override
+  String get tacticsPostDm => 'Fica à frente da defesa e a protege.';
+
+  @override
+  String get tacticsPostCm =>
+      'Liga defesa e ataque, trabalha nos dois sentidos.';
+
+  @override
+  String get tacticsPostAm => 'Joga entre as linhas, atrás dos atacantes.';
+
+  @override
+  String get tacticsPostWideMid => 'Mais recuado e aberto, ajuda o lateral.';
+
+  @override
+  String get tacticsPostWinger => 'Mais adiantado, encara o lateral.';
+
+  @override
+  String get tacticsPostSt => 'Comanda o ataque e finaliza as chances.';
+
+  @override
+  String get tacticsPitchHint =>
+      'Toque em um jogador para definir posição, função e movimento. Segure e arraste para movê-lo.';
+
+  @override
+  String get tacticsSubHint =>
+      'Toque em um jogador para ajustá-lo ou trocá-lo. Segure e arraste um reserva para cima dele.';
+
+  @override
+  String get tacticsLegendTooltip => 'Como ler o campo';
+
+  @override
+  String get tacticsLegendRoleTag =>
+      'O pequeno selo no jogador é a função dele.';
 
   @override
   String get tacticsPlanRoleHeading => 'FUNÇÃO';
 
   @override
   String get tacticsPlanMovementHeading => 'MOVIMENTAÇÃO';
-
-  @override
-  String tacticsPlanTitle(String position, String name) {
-    return '$position · $name';
-  }
-
-  @override
-  String tacticsArrowSet(String name, String movement) {
-    return '$name: $movement';
-  }
 
   @override
   String get tacticsKeeperNoRun => 'O goleiro não tem movimento para definir.';
@@ -1495,9 +1503,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get tacticsSave => 'Salvar';
-
-  @override
-  String get tacticsTapToAssign => 'Toque para atribuir';
 
   @override
   String get tacticsHoldDragSub =>
@@ -14403,14 +14408,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String yPunditPick5(String competition, String favourite, String darkHorse) {
     return '$favourite vai ganhar o $competition e vai ser aborrecido. Se querem uma história, vejam $darkHorse.';
   }
-
-  @override
-  String tacticsSlotSwitchHeading(String formation) {
-    return 'Posição no $formation';
-  }
-
-  @override
-  String get tacticsSlotSwitchReset => 'Redefinir';
 
   @override
   String get tacticsSlotSwitchLimit =>

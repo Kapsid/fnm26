@@ -7,18 +7,19 @@ import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/features/tactics/pitch_plan.dart';
-import 'package:fnm/features/tactics/tactics_pitch.dart';
+import 'package:fnm/features/tactics/player_slot_sheet.dart';
 
 import '../helpers/expect_whole.dart';
 import '../helpers/fixtures.dart';
 import '../helpers/pump_app.dart';
+import '../helpers/slot_sheet_pitch.dart';
 
-/// Roles and runs on the one tactics pitch: no Players / Roles & runs
-/// switch. Each disc wears a role badge that opens the slot's sheet (roles
-/// with what they do and how they suit the man, and the runs), and an arrow
-/// mark, the full-backs' push mark's own, that moves his run on one tap. A
-/// tap or a drag on the disc itself still picks or swaps the man. On a 360
-/// phone with large text and on a tablet.
+/// Position, role and run on the one tactics pitch: the discs are clean
+/// (a small role glyph, the run line) and take no tap of their own on the
+/// rim; a tap on the man opens his sheet, where his place within the shape,
+/// his role and his run are set, each landing on the pitch at once. A hold
+/// and drag still swaps. On a 360 phone with large text, in German, and on a
+/// tablet.
 void main() {
   // 4-3-3: 0 gk, 1 lb, 2 cb, 3 cb, 4 rb, 5 dm, 6 cm, 7 cm, 8 lw, 9 st, 10 rw.
   const f = Formation.f433;
@@ -37,82 +38,19 @@ void main() {
           stamina: 64,
         ),
       ),
+    200: player(
+      id: 200,
+      nationId: 1,
+      name: 'Benchman',
+      position: f.positions[9],
+    ),
   };
 
-  late Tactic tactic;
-  late List<int> tapped;
-  late List<(int, int)> swapped;
-
-  Widget harness({bool editable = true}) {
-    tactic = Tactic(
-      formation: f,
-      lineup: [for (var i = 0; i < 11; i++) 100 + i],
-    );
-    tapped = [];
-    swapped = [];
-    final byId = squad();
-    return Scaffold(
-      body: StatefulBuilder(
-        builder: (context, setState) => ListView(
-          children: [
-            AspectRatio(
-              aspectRatio: 3 / 4,
-              child: TacticsPitch(
-                formation: tactic.formation,
-                instructions: tactic.instructions,
-                lineup: tactic.lineup,
-                byId: byId,
-                fullBacks: tactic.fullBacks,
-                roles: pitchRolesOf(tactic),
-                arrows: pitchArrowsOf(tactic),
-                onTapSlot: tapped.add,
-                onSwap: (a, b) => swapped.add((a, b)),
-                onBenchIn: (_, _) {},
-                onCycleFullBack: !editable
-                    ? null
-                    : (side) async {
-                        setState(
-                          () => tactic = tactic.copyWith(
-                            fullBacks: tactic.fullBacks.cycled(side),
-                          ),
-                        );
-                        return tactic.fullBacks.of(side);
-                      },
-                onCycleArrow: !editable
-                    ? null
-                    : (slot) async {
-                        setState(
-                          () => tactic = tactic.withArrow(
-                            slot,
-                            nextPitchArrow(
-                              tactic.positions[slot],
-                              tactic.arrowAt(slot),
-                            ),
-                          ),
-                        );
-                        return tactic.arrowAt(slot);
-                      },
-                onPlanSlot: !editable
-                    ? null
-                    : (slot) => showSlotPlanSheet(
-                        context,
-                        position: tactic.positions[slot],
-                        player: byId[tactic.lineup[slot]],
-                        role: tactic.roleAt(slot),
-                        arrow: tactic.arrowAt(slot),
-                        onRole: (r) =>
-                            setState(() => tactic = tactic.withRole(slot, r)),
-                        onArrow: (a) =>
-                            setState(() => tactic = tactic.withArrow(slot, a)),
-                      ),
-              ),
-            ),
-            const PitchRunLegend(),
-          ],
-        ),
-      ),
-    );
-  }
+  SheetPitch harness() => SheetPitch(
+    Tactic(formation: f, lineup: [for (var i = 0; i < 11; i++) 100 + i]),
+    squad(),
+    bench: [squad()[200]!],
+  );
 
   void phone(WidgetTester tester, {double width = 360}) {
     tester.view
@@ -130,164 +68,235 @@ void main() {
     ),
   );
 
-  testWidgets('one pitch: no switch, and the legend and hint always shown', (
+  testWidgets('clean discs: no rim targets, nothing drawn for nothing set', (
     tester,
   ) async {
     phone(tester);
-    await tester.pumpApp(harness());
-    expect(find.byType(SegmentedButton<bool>), findsNothing);
-    expect(find.text('Roles & runs'), findsNothing);
-    expect(find.byKey(PitchPlanKeys.legend), findsOneWidget);
-    expect(find.byKey(PitchPlanKeys.hint), findsOneWidget);
-    // Every filled disc has a role badge; every outfield man an arrow mark
-    // (the full-backs their push mark), the keeper none.
+    await tester.pumpApp(harness().build());
     for (var s = 0; s < 11; s++) {
-      expect(find.byKey(PitchPlanKeys.badge(s)), findsOneWidget, reason: '$s');
-    }
-    expect(find.byKey(PitchPlanKeys.runMark(0)), findsNothing);
-    for (final s in [1, 4]) {
-      expect(find.byKey(ValueKey('pitchFullBack$s')), findsOneWidget);
-      expect(find.byKey(PitchPlanKeys.runMark(s)), findsNothing);
-    }
-    for (final s in [2, 3, 5, 6, 7, 8, 9, 10]) {
-      expect(find.byKey(PitchPlanKeys.runMark(s)), findsOneWidget);
+      expect(find.byKey(PitchPlanKeys.tag(s)), findsNothing, reason: '$s');
+      expect(find.byKey(ValueKey('pitchFullBack$s')), findsNothing);
     }
     expect(find.byKey(PitchPlanKeys.arrows), findsNothing, reason: 'no runs');
+    expect(find.byKey(PitchPlanKeys.roleRuns), findsNothing);
   });
 
-  testWidgets('a tap on the disc picks a player; the badge opens the sheet', (
-    tester,
-  ) async {
+  testWidgets('a tap on the disc opens his sheet: who he is, the roles with '
+      'their fit and the best one starred', (tester) async {
     phone(tester);
-    await tester.pumpApp(harness());
-    await tester.tap(find.byKey(const ValueKey('pitchDisc6')));
-    await tester.pumpAndSettle();
-    expect(tapped, [6]);
-    expect(find.byKey(PitchPlanKeys.sheet), findsNothing);
-
-    await tester.tap(find.byKey(PitchPlanKeys.badge(6)));
-    await tester.pumpAndSettle();
-    expect(tapped, [6], reason: 'the badge is not the player picker');
-    expect(find.byKey(PitchPlanKeys.sheet), findsOneWidget);
+    final h = harness();
+    await tester.pumpApp(h.build());
+    await openSlotSheet(tester, 6);
+    expect(
+      find.descendant(
+        of: find.byKey(SlotSheetKeys.sheet),
+        matching: find.text('PlayerG'),
+      ),
+      findsOneWidget,
+    );
+    expect(find.byKey(SlotSheetKeys.fit), findsOneWidget);
+    expect(find.byKey(SlotSheetKeys.swap), findsOneWidget);
+    expect(find.byKey(SlotSheetKeys.profile), findsOneWidget);
     // A central midfielder's options, with how each suits a technician.
     for (final r in PlayerRoleX.optionsFor(PlayerPosition.cm)) {
-      expect(find.byKey(PitchPlanKeys.role(r)), findsOneWidget);
+      expect(find.byKey(SlotSheetKeys.role(r)), findsOneWidget);
     }
     expect(
       find.descendant(
-        of: find.byKey(PitchPlanKeys.fit(PlayerRole.playmaker)),
+        of: find.byKey(SlotSheetKeys.roleFit(PlayerRole.playmaker)),
         matching: find.text('Good fit'),
       ),
       findsOneWidget,
     );
     expect(
       find.descendant(
-        of: find.byKey(PitchPlanKeys.fit(PlayerRole.boxToBox)),
+        of: find.byKey(SlotSheetKeys.roleFit(PlayerRole.boxToBox)),
         matching: find.text('Poor fit'),
       ),
       findsOneWidget,
     );
+    expect(
+      find.byKey(SlotSheetKeys.recommended(PlayerRole.playmaker)),
+      findsOneWidget,
+    );
+    expect(find.byIcon(Icons.star_rounded), findsOneWidget);
     expect(find.text('Creates chances. Far more assists.'), findsOneWidget);
 
-    await tester.tap(find.byKey(PitchPlanKeys.role(PlayerRole.playmaker)));
-    await tester.pumpAndSettle();
-    expect(tactic.roleAt(6), PlayerRole.playmaker);
-    // A central man has no sideways runs.
-    expect(find.byKey(PitchPlanKeys.arrow(MoveArrow.inside)), findsNothing);
-    await tester.tap(find.byKey(PitchPlanKeys.close));
-    await tester.pumpAndSettle();
-    expect(find.byKey(PitchPlanKeys.sheet), findsNothing);
-    expect(find.byKey(PitchPlanKeys.tag(6)), findsOneWidget);
+    await tapInSheet(tester, SlotSheetKeys.role(PlayerRole.playmaker));
+    expect(h.tactic.roleAt(6), PlayerRole.playmaker);
+    expect(find.byKey(PitchPlanKeys.tag(6)), findsOneWidget, reason: 'live');
+    // A central man has no sideways runs on his compass.
+    expect(find.byKey(SlotSheetKeys.run(MoveArrow.inside)), findsNothing);
+    expect(find.byKey(SlotSheetKeys.run(MoveArrow.forward)), findsOneWidget);
+    await closeSlotSheet(tester);
     expect(find.byKey(PitchPlanKeys.tag(7)), findsNothing);
   });
 
-  testWidgets('the badge is a 32-point target clear of the arrow mark', (
+  testWidgets("the position row switches the slot's place within the shape", (
     tester,
   ) async {
     phone(tester);
-    await tester.pumpApp(harness());
-    for (var s = 0; s < 11; s++) {
-      final badge = tester.getRect(find.byKey(PitchPlanKeys.badge(s)));
-      expect(badge.width, greaterThanOrEqualTo(32 - 1e-6), reason: '$s');
-      expect(badge.height, greaterThanOrEqualTo(32 - 1e-6), reason: '$s');
-      // Wholly inside the man's own node, so all of it takes the tap.
-      final disc = tester.getRect(find.byKey(ValueKey('pitchDisc$s')));
-      expect(badge.top, greaterThanOrEqualTo(disc.top - 7.5), reason: '$s');
-      expect(badge.right, lessThanOrEqualTo(disc.right + 5), reason: '$s');
-      // Clear of the disc's centre: a tap on the man is his.
-      expect(badge.contains(disc.center), isFalse, reason: '$s');
-      final mark = s == 1 || s == 4
-          ? find.byKey(ValueKey('pitchFullBack$s'))
-          : find.byKey(PitchPlanKeys.runMark(s));
-      if (mark.evaluate().isEmpty) continue;
-      final m = tester.getRect(mark);
-      expect(badge.overlaps(m), isFalse, reason: '$s');
+    final h = harness();
+    await tester.pumpApp(h.build());
+    await openSlotSheet(tester, 6);
+    // CM, and the two the shape allows it.
+    for (final p in [PlayerPosition.cm, PlayerPosition.dm, PlayerPosition.am]) {
+      expect(find.byKey(SlotSheetKeys.post(p)), findsOneWidget);
     }
-  });
-
-  testWidgets("a tap on the arrow mark walks the slot's runs and back", (
-    tester,
-  ) async {
-    phone(tester);
-    await tester.pumpApp(harness());
-    // The left winger: all six runs a wide man has, then none again.
-    final seen = <MoveArrow>[];
-    for (var i = 0; i <= MoveArrowX.optionsFor(PlayerPosition.lw).length; i++) {
-      await tester.tap(find.byKey(PitchPlanKeys.runMark(8)));
-      await tester.pumpAndSettle();
-      seen.add(tactic.arrowAt(8));
-    }
-    expect(seen, [
-      ...MoveArrowX.optionsFor(PlayerPosition.lw),
-      MoveArrow.none,
-    ]);
-    expect(tapped, isEmpty, reason: 'the mark is not the player picker');
-    expect(swapped, isEmpty);
-
-    // A centre-back has one run: forward, then none.
-    await tester.tap(find.byKey(PitchPlanKeys.runMark(2)));
-    await tester.pumpAndSettle();
-    expect(tactic.arrowAt(2), MoveArrow.forward);
-    expect(tactic.arrows.bySlot[2], MoveArrow.forward, reason: 'stored');
-    await tester.tap(find.byKey(PitchPlanKeys.runMark(2)));
-    await tester.pumpAndSettle();
-    expect(tactic.arrowAt(2), MoveArrow.none);
-
-    // The striker's run is drawn solid, his role's dashed one gone.
-    await tester.tap(find.byKey(PitchPlanKeys.runMark(9)));
-    await tester.pumpAndSettle();
-    final painter =
-        tester.widget<CustomPaint>(find.byKey(PitchPlanKeys.arrows)).painter!
-            as PitchRunsPainter;
+    await tapInSheet(tester, SlotSheetKeys.post(PlayerPosition.am));
+    expect(h.tactic.positions[6], PlayerPosition.am);
+    expect(h.tactic.formation, f, reason: 'the shape stays');
     expect(
-      {for (final r in painter.runs) r.slot: r.run},
-      {
-        9: const PitchRun.manual(MoveArrow.forward),
-      },
+      find.descendant(
+        of: find.byKey(const ValueKey('pitchPos6')),
+        matching: find.text('AM'),
+      ),
+      findsOneWidget,
     );
+    expect(
+      find.textContaining(
+        'Plays between the lines, behind the strikers.',
+        findRichText: true,
+      ),
+      findsOneWidget,
+    );
+    // An attacking midfielder's roles now.
+    for (final r in PlayerRoleX.optionsFor(PlayerPosition.am)) {
+      expect(find.byKey(SlotSheetKeys.role(r)), findsOneWidget);
+    }
+    await closeSlotSheet(tester);
+
+    // A second switch, then the limit: a third slot cannot change.
+    await openSlotSheet(tester, 7);
+    await tapInSheet(tester, SlotSheetKeys.post(PlayerPosition.dm));
+    await closeSlotSheet(tester);
+    await openSlotSheet(tester, 10);
+    expect(find.byKey(SlotSheetKeys.postLimit), findsOneWidget);
+    await tapInSheet(tester, SlotSheetKeys.post(PlayerPosition.rm));
+    expect(h.tactic.positions[10], PlayerPosition.rw, reason: 'refused');
+    await closeSlotSheet(tester);
   });
 
-  testWidgets("a full-back's mark keeps his push, stored as before", (
+  testWidgets('a centre-back and the keeper: no position row', (tester) async {
+    phone(tester);
+    await tester.pumpApp(harness().build());
+    await openSlotSheet(tester, 2);
+    expect(find.text('POSITION'), findsNothing);
+    expect(find.byKey(SlotSheetKeys.run(MoveArrow.forward)), findsOneWidget);
+    expect(find.byKey(SlotSheetKeys.run(MoveArrow.back)), findsNothing);
+    await closeSlotSheet(tester);
+    await openSlotSheet(tester, 0);
+    expect(find.text('POSITION'), findsNothing);
+    expect(find.text('A keeper has no run to set.'), findsOneWidget);
+    await closeSlotSheet(tester);
+  });
+
+  testWidgets('the compass: one run per man, the centre is the role run', (
     tester,
   ) async {
     phone(tester);
-    await tester.pumpApp(harness());
-    await tester.tap(find.byKey(const ValueKey('pitchFullBack1')));
-    await tester.pumpAndSettle();
-    expect(tactic.fullBacks, const FullBackPushes(left: FullBackPush.up));
-    expect(tactic.arrows, SlotArrows.none);
-    expect(tactic.arrowAt(1), MoveArrow.forward);
-    await tester.tap(find.byKey(const ValueKey('pitchFullBack1')));
-    await tester.pumpAndSettle();
-    expect(tactic.arrowAt(1), MoveArrow.back);
-    expect(tapped, isEmpty);
+    final h = harness();
+    await tester.pumpApp(h.build());
+    // The right winger, an inverted winger: his role's run drawn dashed.
+    await openSlotSheet(tester, 10);
+    await tapInSheet(tester, SlotSheetKeys.role(PlayerRole.invertedWinger));
+    expect(roleRunsOnPitch(tester)[10], const PitchRun.role(RoleRun.cutInside));
+    expect(setRunsOnPitch(tester), isEmpty);
+    // Every run a wide man has, each the only one drawn for him.
+    for (final a in MoveArrowX.optionsFor(PlayerPosition.rw)) {
+      await tapInSheet(tester, SlotSheetKeys.run(a));
+      expect(h.tactic.arrowAt(10), a);
+      expect(h.tactic.arrows.bySlot[10], a, reason: 'stored');
+      expect(setRunsOnPitch(tester), {10: PitchRun.manual(a)});
+      expect(
+        roleRunsOnPitch(tester).containsKey(10),
+        isFalse,
+        reason: 'the set arrow replaces the role run',
+      );
+      expect(
+        find.descendant(
+          of: find.byKey(SlotSheetKeys.runCaption),
+          matching: find.text(
+            switch (a) {
+              MoveArrow.forward => 'Get forward',
+              MoveArrow.back => 'Sit deeper',
+              MoveArrow.inside => 'Come inside',
+              MoveArrow.outside => 'Stay wide',
+              MoveArrow.forwardInside => 'Forward and inside',
+              MoveArrow.forwardOutside => 'Forward and wide',
+              MoveArrow.none => '',
+            },
+          ),
+        ),
+        findsOneWidget,
+      );
+    }
+    // The centre: no arrow of his own, the role's run back.
+    await tapInSheet(tester, SlotSheetKeys.run(MoveArrow.none));
+    expect(h.tactic.arrowAt(10), MoveArrow.none);
+    expect(setRunsOnPitch(tester), isEmpty);
+    expect(roleRunsOnPitch(tester)[10], const PitchRun.role(RoleRun.cutInside));
+    expect(
+      find.descendant(
+        of: find.byKey(SlotSheetKeys.runCaption),
+        matching: find.text("Role's natural run"),
+      ),
+      findsOneWidget,
+    );
+    await closeSlotSheet(tester);
+  });
+
+  testWidgets('Swap brings the man on, and the sheet follows him', (
+    tester,
+  ) async {
+    phone(tester);
+    final h = harness();
+    await tester.pumpApp(h.build());
+    await openSlotSheet(tester, 9);
+    await tapInSheet(tester, SlotSheetKeys.swap);
+    expect(h.tactic.lineup[9], 200);
+    expect(
+      find.descendant(
+        of: find.byKey(SlotSheetKeys.sheet),
+        matching: find.text('Benchman'),
+      ),
+      findsOneWidget,
+    );
+    await closeSlotSheet(tester);
+  });
+
+  testWidgets('Advanced is folded; open, its duties toggle', (tester) async {
+    phone(tester);
+    final h = harness();
+    await tester.pumpApp(h.build());
+    await openSlotSheet(tester, 9);
+    expect(find.byKey(SlotSheetKeys.toggle('penalty')), findsNothing);
+    await tapInSheet(tester, SlotSheetKeys.advanced);
+    await tapInSheet(tester, SlotSheetKeys.toggle('penalty'));
+    expect(h.duties['penalty'], isTrue);
+    await tapInSheet(tester, SlotSheetKeys.toggle('penalty'));
+    expect(h.duties['penalty'], isFalse);
+    await closeSlotSheet(tester);
+  });
+
+  testWidgets('without player pages there is no profile link', (
+    tester,
+  ) async {
+    phone(tester);
+    final h = harness()..playerPages = false;
+    await tester.pumpApp(h.build());
+    await openSlotSheet(tester, 9);
+    expect(find.byKey(SlotSheetKeys.profile), findsNothing);
+    expect(find.byKey(SlotSheetKeys.swap), findsOneWidget);
+    await closeSlotSheet(tester);
   });
 
   testWidgets('a hold and drag on a disc still swaps the two men', (
     tester,
   ) async {
     phone(tester);
-    await tester.pumpApp(harness());
+    final h = harness();
+    await tester.pumpApp(h.build());
     final from = tester.getCenter(find.byKey(const ValueKey('pitchDisc6')));
     final to = tester.getCenter(find.byKey(const ValueKey('pitchDisc7')));
     final g = await tester.startGesture(from);
@@ -298,34 +307,37 @@ void main() {
     await tester.pump();
     await g.up();
     await tester.pumpAndSettle();
-    expect(swapped, [(6, 7)]);
-    expect(tactic.arrows, SlotArrows.none, reason: 'a drag draws no run');
-    expect(find.byKey(PitchPlanKeys.sheet), findsNothing);
+    expect(h.swapped, [(6, 7)]);
+    expect(h.tactic.lineup[6], 107);
+    expect(find.byKey(SlotSheetKeys.sheet), findsNothing, reason: 'no sheet');
   });
 
-  testWidgets('read-only, a pitch shows set roles only and no marks', (
-    tester,
-  ) async {
+  testWidgets('the legend is behind a small info button', (tester) async {
     phone(tester);
-    await tester.pumpApp(harness(editable: false));
-    for (var s = 0; s < 11; s++) {
-      expect(find.byKey(PitchPlanKeys.badge(s)), findsNothing);
-      expect(find.byKey(PitchPlanKeys.runMark(s)), findsNothing);
-      expect(find.byKey(PitchPlanKeys.tag(s)), findsNothing);
-    }
+    await tester.pumpApp(
+      Scaffold(body: ListView(children: const [PitchHintRow()])),
+    );
+    expect(find.byKey(PitchPlanKeys.legend), findsNothing);
+    await tester.tap(find.byKey(PitchPlanKeys.legendButton));
+    await tester.pumpAndSettle();
+    expect(find.byKey(PitchPlanKeys.legend), findsOneWidget);
+    expectNothingCut(tester, 'the legend');
   });
 
-  for (final scale in [1.0, 1.6]) {
+  for (final scale in [1.0, 1.3, 1.6]) {
     testWidgets('nothing is cut at 360 wide, text x$scale', (tester) async {
       phone(tester);
-      await tester.pumpApp(large(harness(), scale));
-      expectNothingCut(tester, 'the pitch and legend at x$scale');
-      // The widest sheet: a winger, six runs and four roles.
-      await tester.tap(find.byKey(PitchPlanKeys.badge(10)));
+      await tester.pumpApp(large(harness().build(), scale));
+      expectNothingCut(tester, 'the pitch at x$scale');
+      // The widest sheet: a winger, two places, four roles, six runs.
+      await openSlotSheet(tester, 10);
+      await tester.drag(
+        find.byKey(SlotSheetKeys.sheet),
+        const Offset(0, -600),
+      );
       await tester.pumpAndSettle();
-      expectNothingCut(tester, 'the role sheet at x$scale');
-      await tester.tap(find.byKey(PitchPlanKeys.close));
-      await tester.pumpAndSettle();
+      expectNothingCut(tester, 'the winger sheet at x$scale');
+      await closeSlotSheet(tester);
     });
 
     testWidgets('nothing is cut in German at 360 wide, text x$scale', (
@@ -334,33 +346,36 @@ void main() {
       phone(tester);
       // German has the longest role names.
       await tester.pumpApp(
-        large(harness(), scale),
+        large(harness().build(), scale),
         locale: const Locale('de'),
       );
-      expectNothingCut(tester, 'the pitch and legend (de) at x$scale');
-      await tester.tap(find.byKey(PitchPlanKeys.badge(4)));
-      await tester.pumpAndSettle();
-      expectNothingCut(tester, 'the full-back sheet (de) at x$scale');
+      expectNothingCut(tester, 'the pitch (de) at x$scale');
+      for (final slot in [4, 8]) {
+        await openSlotSheet(tester, slot);
+        await tapInSheet(tester, SlotSheetKeys.advanced);
+        expectNothingCut(tester, 'sheet $slot (de) at x$scale');
+        await closeSlotSheet(tester);
+      }
     });
   }
 
-  testWidgets('on a tablet the sheet opens and a role sticks', (tester) async {
+  testWidgets('on a tablet the sheet is a panel beside the pitch', (
+    tester,
+  ) async {
     tester.view
       ..physicalSize = const Size(1194, 834)
       ..devicePixelRatio = 1;
     addTearDown(tester.view.reset);
-    await tester.pumpApp(harness());
-    await tester.tap(find.byKey(PitchPlanKeys.badge(9)));
-    await tester.pumpAndSettle();
-    expect(find.byKey(PitchPlanKeys.sheet), findsOneWidget);
-    await tester.tap(find.byKey(PitchPlanKeys.role(PlayerRole.falseNine)));
-    await tester.pumpAndSettle();
-    expect(tactic.roleAt(9), PlayerRole.falseNine);
-    expectNothingCut(tester, 'the tablet sheet');
-    await tester.tap(find.byKey(PitchPlanKeys.close));
-    await tester.pumpAndSettle();
+    final h = harness();
+    await tester.pumpApp(h.build());
+    await openSlotSheet(tester, 9);
+    await tapInSheet(tester, SlotSheetKeys.role(PlayerRole.falseNine));
+    expect(h.tactic.roleAt(9), PlayerRole.falseNine);
+    expectNothingCut(tester, 'the tablet panel');
+    final panel = tester.getRect(find.byKey(SlotSheetKeys.sheet));
+    expect(panel.right, lessThanOrEqualTo(1194));
+    expect(panel.width, lessThanOrEqualTo(480));
+    await closeSlotSheet(tester);
     expect(find.byKey(PitchPlanKeys.tag(9)), findsOneWidget);
-    final badge = tester.getRect(find.byKey(PitchPlanKeys.badge(9)));
-    expect(badge.width, greaterThanOrEqualTo(32 - 1e-6));
   });
 }

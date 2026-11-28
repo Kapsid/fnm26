@@ -4,13 +4,15 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
-import 'package:fnm/features/tactics/tactics_pitch.dart';
+import 'package:fnm/features/tactics/player_slot_sheet.dart';
 
 import '../helpers/fixtures.dart';
 import '../helpers/pump_app.dart';
+import '../helpers/slot_sheet_pitch.dart';
 
-/// The full-back arrows on the tactics pitch: one on each full-back's disc,
-/// cycling neutral, push on, hold back; none where the shape has no
+/// The full-backs' push on the tactics pitch: set in the man's sheet, where
+/// his compass offers push on and hold back, and drawn as a mark on his disc
+/// once set (an untouched one draws none). None where the shape has no
 /// full-back.
 void main() {
   Map<int, Player> squadFor(Formation f) => {
@@ -23,111 +25,106 @@ void main() {
       ),
   };
 
-  /// A pitch whose arrows live in the harness, as the screens keep them.
-  Widget harness(
-    Formation formation, {
-    FullBackPushes initial = FullBackPushes.neutral,
-    bool editable = true,
-    ValueChanged<int>? onTapSlot,
-  }) {
-    var arrows = initial;
-    return Scaffold(
-      body: StatefulBuilder(
-        builder: (context, setState) => ListView(
-          children: [
-            AspectRatio(
-              aspectRatio: 3 / 4,
-              child: TacticsPitch(
-                formation: formation,
-                instructions: const TacticalInstructions(),
-                lineup: [for (var i = 0; i < 11; i++) 100 + i],
-                byId: squadFor(formation),
-                fullBacks: arrows,
-                onCycleFullBack: editable
-                    ? (side) async {
-                        setState(() => arrows = arrows.cycled(side));
-                        return arrows.of(side);
-                      }
-                    : null,
-                onTapSlot: onTapSlot ?? (_) {},
-                onSwap: (_, _) {},
-                onBenchIn: (_, _) {},
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  SheetPitch pitch(
+    Formation f, {
+    FullBackPushes pushes = FullBackPushes.neutral,
+  }) => SheetPitch(
+    Tactic(
+      formation: f,
+      lineup: [for (var i = 0; i < 11; i++) 100 + i],
+      fullBacks: pushes,
+    ),
+    squadFor(f),
+  );
 
   int slotOf(Formation f, PlayerPosition p) => f.positions.indexOf(p);
+  Finder mark(int slot) => find.byKey(ValueKey('pitchFullBack$slot'));
 
-  testWidgets('tapping a full-back arrow cycles it: up, down, neutral', (
-    tester,
-  ) async {
+  void phone(WidgetTester tester) {
     tester.view
-      ..physicalSize = const Size(360, 900)
+      ..physicalSize = const Size(390, 900)
       ..devicePixelRatio = 1;
     addTearDown(tester.view.reset);
-    await tester.pumpApp(harness(Formation.f442));
-    final lb = find.byKey(
-      ValueKey('pitchFullBack${slotOf(Formation.f442, PlayerPosition.lb)}'),
-    );
-    final rb = find.byKey(
-      ValueKey('pitchFullBack${slotOf(Formation.f442, PlayerPosition.rb)}'),
-    );
-    expect(lb, findsOneWidget);
-    expect(rb, findsOneWidget);
-    // Neutral reads as the dim two-way mark.
-    expect(
-      find.descendant(of: lb, matching: find.byIcon(Icons.unfold_more_rounded)),
-      findsOneWidget,
-    );
+  }
 
-    await tester.tap(lb);
-    await tester.pump();
+  testWidgets("a full-back's sheet offers push on and hold back; the mark "
+      'follows', (tester) async {
+    phone(tester);
+    final h = pitch(Formation.f442);
+    await tester.pumpApp(h.build());
+    final lb = slotOf(Formation.f442, PlayerPosition.lb);
+    final rb = slotOf(Formation.f442, PlayerPosition.rb);
+    expect(mark(lb), findsNothing, reason: 'untouched: no mark');
+
+    await openSlotSheet(tester, lb);
+    // Only his two runs on the compass, and the role's in the middle.
+    for (final a in MoveArrow.values) {
+      expect(
+        find.byKey(SlotSheetKeys.run(a)),
+        a == MoveArrow.none || a == MoveArrow.forward || a == MoveArrow.back
+            ? findsOneWidget
+            : findsNothing,
+        reason: '$a',
+      );
+    }
+    await tapInSheet(tester, SlotSheetKeys.run(MoveArrow.forward));
+    expect(h.tactic.fullBacks.left, FullBackPush.up);
     expect(
       find.descendant(
-        of: lb,
+        of: mark(lb),
         matching: find.byIcon(Icons.arrow_upward_rounded),
       ),
       findsOneWidget,
     );
-    expect(find.textContaining('Left-back: push on'), findsOneWidget);
-
-    await tester.tap(lb);
-    await tester.pump();
+    await tapInSheet(tester, SlotSheetKeys.run(MoveArrow.back));
+    expect(h.tactic.fullBacks.left, FullBackPush.down);
     expect(
       find.descendant(
-        of: lb,
+        of: mark(lb),
         matching: find.byIcon(Icons.arrow_downward_rounded),
       ),
       findsOneWidget,
     );
-
-    await tester.tap(lb);
-    await tester.pump();
-    expect(
-      find.descendant(of: lb, matching: find.byIcon(Icons.unfold_more_rounded)),
-      findsOneWidget,
-    );
+    // The centre: no push, the role's own run.
+    await tapInSheet(tester, SlotSheetKeys.run(MoveArrow.none));
+    expect(h.tactic.fullBacks.left, FullBackPush.neutral);
+    expect(mark(lb), findsNothing);
     // The other flank never moved.
-    expect(
-      find.descendant(of: rb, matching: find.byIcon(Icons.unfold_more_rounded)),
-      findsOneWidget,
-    );
-    expect(
-      tester.getSemantics(lb.first),
-      matchesSemantics(
-        label: 'Left-back arrow: No instruction',
-        isButton: true,
-        hasTapAction: true,
-      ),
-    );
+    expect(h.tactic.fullBacks.right, FullBackPush.neutral);
+    expect(mark(rb), findsNothing);
+    await closeSlotSheet(tester);
   });
 
-  testWidgets('a back three has no full-backs and no arrows', (tester) async {
-    await tester.pumpApp(harness(Formation.f352));
+  testWidgets('the mark is read-only and says what it is', (tester) async {
+    phone(tester);
+    final h = pitch(
+      Formation.f442,
+      pushes: const FullBackPushes(left: FullBackPush.up),
+    );
+    await tester.pumpApp(h.build());
+    final lb = slotOf(Formation.f442, PlayerPosition.lb);
+    expect(
+      tester.getSemantics(mark(lb).first),
+      matchesSemantics(label: 'Left-back arrow: Push on'),
+    );
+    // A tap on it is a tap on the man: his sheet opens, the push stays.
+    await tester.tap(mark(lb), warnIfMissed: false);
+    await tester.pumpAndSettle();
+    expect(find.byKey(SlotSheetKeys.sheet), findsOneWidget);
+    expect(h.tactic.fullBacks.left, FullBackPush.up);
+    await closeSlotSheet(tester);
+  });
+
+  testWidgets('a back three has no full-backs and no marks', (tester) async {
+    await tester.pumpApp(
+      pitch(
+        Formation.f352,
+        pushes: const FullBackPushes(
+          left: FullBackPush.up,
+          right: FullBackPush.up,
+        ),
+      ).build(),
+    );
     expect(
       find.byWidgetPredicate(
         (w) =>
@@ -138,68 +135,17 @@ void main() {
     );
   });
 
-  testWidgets('a back five has both arrows', (tester) async {
-    await tester.pumpApp(harness(Formation.f532));
-    expect(
-      find.byKey(
-        ValueKey('pitchFullBack${slotOf(Formation.f532, PlayerPosition.lb)}'),
-      ),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(
-        ValueKey('pitchFullBack${slotOf(Formation.f532, PlayerPosition.rb)}'),
-      ),
-      findsOneWidget,
-    );
-  });
-
-  testWidgets('read-only, only a set arrow is drawn', (tester) async {
+  testWidgets('a back five, both pushed, has both marks', (tester) async {
     await tester.pumpApp(
-      harness(
-        Formation.f442,
-        initial: const FullBackPushes(right: FullBackPush.up),
-        editable: false,
-      ),
+      pitch(
+        Formation.f532,
+        pushes: const FullBackPushes(
+          left: FullBackPush.up,
+          right: FullBackPush.down,
+        ),
+      ).build(),
     );
-    expect(
-      find.byKey(
-        ValueKey('pitchFullBack${slotOf(Formation.f442, PlayerPosition.lb)}'),
-      ),
-      findsNothing,
-    );
-    expect(
-      find.byKey(
-        ValueKey('pitchFullBack${slotOf(Formation.f442, PlayerPosition.rb)}'),
-      ),
-      findsOneWidget,
-    );
-  });
-
-  testWidgets('a tap on the ball beside the arrow opens the picker', (
-    tester,
-  ) async {
-    tester.view
-      ..physicalSize = const Size(390, 900)
-      ..devicePixelRatio = 1;
-    addTearDown(tester.view.reset);
-    final taps = <int>[];
-    await tester.pumpApp(harness(Formation.f442, onTapSlot: taps.add));
-    final lbSlot = slotOf(Formation.f442, PlayerPosition.lb);
-    final disc = find.byKey(ValueKey('pitchDisc$lbSlot'));
-    final size = tester.getSize(disc).width;
-    await tester.tapAt(
-      tester.getCenter(disc) + Offset(-size * 0.2, -size * 0.2),
-    );
-    await tester.pump();
-    expect(taps, [lbSlot], reason: 'the picker, not the arrow');
-    expect(
-      find.descendant(
-        of: find.byKey(ValueKey('pitchFullBack$lbSlot')),
-        matching: find.byIcon(Icons.unfold_more_rounded),
-      ),
-      findsOneWidget,
-      reason: 'the arrow did not move',
-    );
+    expect(mark(slotOf(Formation.f532, PlayerPosition.lb)), findsOneWidget);
+    expect(mark(slotOf(Formation.f532, PlayerPosition.rb)), findsOneWidget);
   });
 }

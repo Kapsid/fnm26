@@ -12,6 +12,7 @@ import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/match/card_status.dart';
 import 'package:fnm/features/tactics/pitch_plan.dart';
+import 'package:fnm/features/tactics/player_slot_sheet.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 
 import '../helpers/fixtures.dart';
@@ -40,25 +41,6 @@ Future<void> _shot(WidgetTester tester, String name) async {
 /// Every mark a disc wears stays clear of the others on it: the role badge's
 /// touch area, the arrow mark (or the full-back's push mark) and the
 /// position badge on top.
-void _expectClearMarks(WidgetTester tester) {
-  for (var s = 0; s < 11; s++) {
-    final badge = find.byKey(PitchPlanKeys.badge(s));
-    if (badge.evaluate().isEmpty) continue;
-    final b = tester.getRect(badge);
-    for (final key in [
-      PitchPlanKeys.runMark(s),
-      ValueKey('pitchFullBack$s'),
-    ]) {
-      final m = find.byKey(key);
-      if (m.evaluate().isEmpty) continue;
-      expect(b.overlaps(tester.getRect(m)), isFalse, reason: '$key, $s');
-    }
-  }
-}
-
-/// The one tactics pitch on a 390 x 844 phone, at 2x: the career screen and
-/// the in-match editor, in a 4-3-3 and a 4-4-2, with roles set on several
-/// men, runs set by tapping their arrow marks and a full-back pushed on.
 void main() {
   // For the pictures, the real icon font, so a role's glyph and a run's
   // arrow read as they do on the phone rather than as test boxes.
@@ -80,8 +62,7 @@ void main() {
       final save = await seedSave(tester);
       final id = save.careerId;
       final repo = save.container.read(tacticsRepositoryProvider);
-      // Roles on a few men, runs as so many taps on their arrow marks
-      // would leave them, and the left-back pushed on. Written straight to
+      // Roles on a few men, a run or two, and the left-back pushed on. Written straight to
       // the store: the service's writes also ask the hub's next event
       // again, which this save never opened, and that answer outlives the
       // test (the taps themselves are the pitch and Classic tests').
@@ -100,19 +81,16 @@ void main() {
               9: PlayerRole.targetMan,
               10: PlayerRole.poacher,
             };
-      final taps = f == Formation.f433 ? {8: 2, 6: 1, 3: 1} : {5: 2, 8: 3};
+      final runs = f == Formation.f433
+          ? {8: MoveArrow.back, 6: MoveArrow.forward, 3: MoveArrow.forward}
+          : {5: MoveArrow.back, 8: MoveArrow.forwardInside};
       await tester.runAsync(() async {
         var t = (await repo.tacticForCareer(id))!.copyWith(formation: f);
         for (final e in picks.entries) {
           t = t.withRole(e.key, e.value);
         }
-        for (final e in taps.entries) {
-          for (var i = 0; i < e.value; i++) {
-            t = t.withArrow(
-              e.key,
-              nextPitchArrow(t.positions[e.key], t.arrowAt(e.key)),
-            );
-          }
+        for (final e in runs.entries) {
+          t = t.withArrow(e.key, e.value);
         }
         t = t.withArrow(1, MoveArrow.forward);
         await repo.saveTactic(id, t);
@@ -124,17 +102,16 @@ void main() {
         expect(find.byKey(PitchPlanKeys.tag(s)), findsOneWidget);
       }
       expect(find.byKey(PitchPlanKeys.arrows), findsOneWidget);
-      // A badge opens the role sheet on the career screen too.
-      final badge = find.byKey(PitchPlanKeys.badge(7));
-      await tester.ensureVisible(badge);
+      // A tap on the man opens his sheet on the career screen too.
+      final disc = find.byKey(const ValueKey('pitchDisc7'));
+      await tester.ensureVisible(disc);
       await tester.pumpAndSettle();
-      await tester.tap(badge);
+      await tester.tap(disc);
       await settle(tester);
-      expect(find.byKey(PitchPlanKeys.sheet), findsOneWidget);
-      await tester.tap(find.byKey(PitchPlanKeys.close));
+      expect(find.byKey(SlotSheetKeys.sheet), findsOneWidget);
+      Navigator.of(tester.element(find.byKey(SlotSheetKeys.sheet))).pop();
       await settle(tester);
-      _expectClearMarks(tester);
-      // The pitch from its top, the legend under it.
+      // The pitch from its top, the hint under it.
       await tester.ensureVisible(find.byType(TacticsPitch));
       await tester.pumpAndSettle();
       await _shot(tester, 'career_${f.name}');
@@ -189,27 +166,31 @@ void main() {
         },
       );
       expect(find.byType(SegmentedButton<bool>), findsNothing);
-      // One more role through its badge, then runs by tapping arrow marks
-      // and the right-back pushed on.
-      final extra = f == Formation.f433 ? 10 : 5;
-      await tester.tap(find.byKey(PitchPlanKeys.badge(extra)));
-      await tester.pumpAndSettle();
-      await tester.tap(
-        find.byKey(PitchPlanKeys.role(PlayerRole.invertedWinger)),
-      );
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(PitchPlanKeys.close));
-      await tester.pumpAndSettle();
-      final taps = f == Formation.f433 ? {10: 2, 6: 1} : {8: 2, 7: 1};
-      for (final e in taps.entries) {
-        for (var i = 0; i < e.value; i++) {
-          await tester.tap(find.byKey(PitchPlanKeys.runMark(e.key)));
+      // One more role and some runs through the men's sheets, and the
+      // right-back pushed on.
+      Future<void> inSheet(int slot, List<Key> keys) async {
+        await tester.tap(find.byKey(ValueKey('pitchDisc$slot')));
+        await tester.pumpAndSettle();
+        for (final k in keys) {
+          await tester.ensureVisible(find.byKey(k));
+          await tester.pumpAndSettle();
+          await tester.tap(find.byKey(k));
           await tester.pumpAndSettle();
         }
+        Navigator.of(tester.element(find.byKey(SlotSheetKeys.sheet))).pop();
+        await tester.pumpAndSettle();
       }
-      await tester.tap(find.byKey(const ValueKey('pitchFullBack4')));
-      await tester.pumpAndSettle();
-      _expectClearMarks(tester);
+
+      final extra = f == Formation.f433 ? 10 : 5;
+      await inSheet(extra, [
+        SlotSheetKeys.role(PlayerRole.invertedWinger),
+        SlotSheetKeys.run(MoveArrow.forwardInside),
+      ]);
+      await inSheet(f == Formation.f433 ? 6 : 7, [
+        SlotSheetKeys.run(MoveArrow.forward),
+      ]);
+      await inSheet(4, [SlotSheetKeys.run(MoveArrow.forward)]);
+      expect(find.byKey(const ValueKey('pitchFullBack4')), findsOneWidget);
       expect(find.byKey(PitchPlanKeys.arrows), findsOneWidget);
       await tester.pump(const Duration(seconds: 5));
       await tester.pumpAndSettle();

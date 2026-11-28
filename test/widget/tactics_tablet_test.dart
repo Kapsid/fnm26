@@ -10,6 +10,7 @@ import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/features/shell/tablet_sidebar.dart';
 import 'package:fnm/features/tactics/formation_picker.dart';
+import 'package:fnm/features/tactics/player_slot_sheet.dart';
 import 'package:fnm/features/tactics/squad_tablet_layout.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
@@ -123,23 +124,28 @@ void main() {
       expect(tester.takeException(), isNull);
       expect(find.byKey(TacticsScreen.tabletLayoutKey), findsOneWidget);
 
-      // The role picker: a sheet over the page, closed by its own context.
-      await tester.tap(find.text(enL.tacticsTabRolesSetPieces).first);
+      // A man's sheet: a panel beside the pitch, closed by its own context.
+      await tester.tap(find.byKey(const ValueKey('pitchDisc9')));
       await settle(tester);
-      await tester.tap(find.text(enL.tacticsTapToAssign).first);
+      final panel = find.byKey(SlotSheetKeys.sheet);
+      expect(panel, findsOneWidget, reason: 'the slot panel is open');
+      expect(tester.takeException(), isNull);
+      // The pitch stays in view beside it.
+      expect(
+        tester.getRect(panel).left,
+        greaterThanOrEqualTo(tester.getRect(find.byType(TacticsPitch)).right),
+      );
+      await tester.tapAt(Offset(size.width / 3, size.height / 2));
       await settle(tester);
-      expect(find.text(enL.tacticsTabRolesSetPieces), findsWidgets);
-      final close = find.byIcon(Icons.close);
-      expect(close, findsOneWidget, reason: 'the role sheet is open');
-      await tester.tap(close);
-      await settle(tester);
-      expect(close, findsNothing);
+      expect(panel, findsNothing);
       expect(
         find.byKey(TacticsScreen.tabletLayoutKey),
         findsOneWidget,
-        reason: 'closing the sheet must not pop the Tactics page',
+        reason: 'closing the panel must not pop the Tactics page',
       );
 
+      await tester.tap(find.text(enL.tacticsTabSetPieces).first);
+      await settle(tester);
       // The captain picker.
       await tester.tap(find.text(enL.captainNone));
       await settle(tester);
@@ -179,7 +185,7 @@ void main() {
 
   for (final tab in [1, 2]) {
     testWidgets('?tab=$tab on a tablet opens '
-        '${tab == 2 ? 'Roles and set pieces' : 'the Formation tab'}', (
+        '${tab == 2 ? 'Set pieces' : 'the Formation tab'}', (
       tester,
     ) async {
       final save = await seedSave(tester, formFactor: FormFactor.tablet);
@@ -190,7 +196,7 @@ void main() {
         size: kTabletSize,
       );
       expect(
-        find.text(enL.tacticsRolesSetPiecesBlurb),
+        find.text(enL.tacticsSetPieceBlurb),
         tab == 2 ? findsOneWidget : findsNothing,
       );
       expect(

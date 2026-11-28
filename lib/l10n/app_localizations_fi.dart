@@ -1071,21 +1071,6 @@ class AppLocalizationsFi extends AppLocalizations {
   String get tacticsFullBackOff => 'Ei ohjetta';
 
   @override
-  String tacticsFullBackUpHint(String side) {
-    return '$side: nousee hyökkäykseen. Hieman enemmän hyökkäystä, hieman enemmän riskiä.';
-  }
-
-  @override
-  String tacticsFullBackDownHint(String side) {
-    return '$side: pysyy takana. Hieman turvallisempaa, hieman vähemmän hyökkäystä.';
-  }
-
-  @override
-  String tacticsFullBackOffHint(String side) {
-    return '$side: ei ohjetta, pelaa joukkueen suunnitelman mukaan.';
-  }
-
-  @override
   String tacticsFullBackSemantics(String side, String state) {
     return '$side, nuoli: $state';
   }
@@ -1094,10 +1079,6 @@ class AppLocalizationsFi extends AppLocalizations {
   String tacticsSubsUsed(int used, int max) {
     return 'VAIHDOT · $used/$max';
   }
-
-  @override
-  String get tacticsDragSubOn =>
-      'Napauta kentällä olevaa pelaajaa vaihtaaksesi hänet pois tai pidä pohjassa ja vedä varamies hänen päälleen.';
 
   @override
   String get tacticsNoSubs => 'Ei varapelaajia.';
@@ -1253,13 +1234,6 @@ class AppLocalizationsFi extends AppLocalizations {
   String get tacticsTabSetPieces => 'VAKIOTILANTEET';
 
   @override
-  String get tacticsTabRolesSetPieces => 'ROOLIT JA VAKIOT';
-
-  @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Anna jokaiselle aloittajalle rooli. Napauta rangaistuspotkun (⚽) tai vapaapotkun (▲) merkkiä valitaksesi potkijan.';
-
-  @override
   String get tacticsTooltipCallUps => 'Kutsut';
 
   @override
@@ -1293,10 +1267,6 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get tacticsTapSpotReplace =>
       'Napauta hänen paikkaansa kentällä valitaksesi korvaajan.';
-
-  @override
-  String get tacticsTapOrDrag =>
-      'Napauta pelaajaa vaihtaaksesi hänet pois tai pidä pohjassa ja vedä siirtääksesi hänet.';
 
   @override
   String get tacticsPlayerRoles => 'PELAAJIEN ROOLIT';
@@ -1361,11 +1331,6 @@ class AppLocalizationsFi extends AppLocalizations {
   String get tacticsSkillPas => 'SYÖTTÖ';
 
   @override
-  String tacticsRolePlayer(String name) {
-    return 'ROOLI · $name';
-  }
-
-  @override
   String get roleFitGood => 'Sopii';
 
   @override
@@ -1402,34 +1367,77 @@ class AppLocalizationsFi extends AppLocalizations {
   String get tacticsRunLegendManual => 'Oma ohjeesi';
 
   @override
-  String get tacticsPitchPlanHint =>
-      'Napauta pelaajan merkkiä valitaksesi roolin ja nuolta valitaksesi juoksun.';
+  String get tacticsSheetPost => 'Pelipaikka';
 
   @override
-  String tacticsRoleBadgeSemantics(String role) {
-    return 'Rooli: $role. Vaihda napauttamalla.';
+  String get tacticsSheetAdvanced => 'Lisäasetukset';
+
+  @override
+  String get tacticsSheetAutoPick => 'Hoitaa ne nyt automaattisesti';
+
+  @override
+  String get tacticsSheetFresh => 'Virkeä';
+
+  @override
+  String get tacticsSheetFitHere => 'Tällä pelipaikalla';
+
+  @override
+  String tacticsSheetFitSemantics(int dots) {
+    return 'Sopivuus pelipaikalle: $dots/5';
   }
 
   @override
-  String tacticsRunMarkSemantics(String run) {
-    return 'Juoksu: $run. Vaihda napauttamalla.';
-  }
+  String get tacticsSheetSwap => 'Vaihda';
+
+  @override
+  String get tacticsSheetProfile => 'Profiili';
+
+  @override
+  String get tacticsSheetRecommended => 'Suositeltu';
+
+  @override
+  String get tacticsSheetRunHint =>
+      'Napauta suuntaa saadaksesi oman nuolen. Keskikohta palauttaa roolin juoksun.';
+
+  @override
+  String get tacticsPostDm => 'Pelaa puolustuksen edessä ja suojaa sitä.';
+
+  @override
+  String get tacticsPostCm =>
+      'Yhdistää puolustuksen ja hyökkäyksen, tekee töitä molempiin suuntiin.';
+
+  @override
+  String get tacticsPostAm => 'Pelaa linjojen välissä, hyökkääjien takana.';
+
+  @override
+  String get tacticsPostWideMid =>
+      'Syvemmällä ja leveämmällä, auttaa laitapuolustajaansa.';
+
+  @override
+  String get tacticsPostWinger => 'Ylempänä, haastaa laitapuolustajan.';
+
+  @override
+  String get tacticsPostSt => 'Johtaa hyökkäystä ja viimeistelee paikat.';
+
+  @override
+  String get tacticsPitchHint =>
+      'Napauta pelaajaa asettaaksesi pelipaikan, roolin ja juoksun. Pidä pohjassa ja vedä siirtääksesi.';
+
+  @override
+  String get tacticsSubHint =>
+      'Napauta pelaajaa asettaaksesi tai vaihtaaksesi hänet. Pidä pohjassa ja vedä vaihtopelaaja hänen päälleen.';
+
+  @override
+  String get tacticsLegendTooltip => 'Näin luet kenttää';
+
+  @override
+  String get tacticsLegendRoleTag => 'Pelaajan pieni merkki on hänen roolinsa.';
 
   @override
   String get tacticsPlanRoleHeading => 'ROOLI';
 
   @override
   String get tacticsPlanMovementHeading => 'LIIKKUMINEN';
-
-  @override
-  String tacticsPlanTitle(String position, String name) {
-    return '$position · $name';
-  }
-
-  @override
-  String tacticsArrowSet(String name, String movement) {
-    return '$name: $movement';
-  }
 
   @override
   String get tacticsKeeperNoRun => 'Maalivahdille ei valita juoksua.';
@@ -1496,9 +1504,6 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get tacticsSave => 'Tallenna';
-
-  @override
-  String get tacticsTapToAssign => 'Napauta määrittääksesi';
 
   @override
   String get tacticsHoldDragSub =>
@@ -14379,14 +14384,6 @@ class AppLocalizationsFi extends AppLocalizations {
   String yPunditPick5(String competition, String favourite, String darkHorse) {
     return '$competition: voittaja on $favourite, ja se on tylsää. Jos haluatte tarinan, katsokaa joukkuetta $darkHorse.';
   }
-
-  @override
-  String tacticsSlotSwitchHeading(String formation) {
-    return 'Pelipaikka muodostelmassa $formation';
-  }
-
-  @override
-  String get tacticsSlotSwitchReset => 'Palauta';
 
   @override
   String get tacticsSlotSwitchLimit =>

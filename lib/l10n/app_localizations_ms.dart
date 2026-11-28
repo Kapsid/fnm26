@@ -1024,21 +1024,6 @@ class AppLocalizationsMs extends AppLocalizations {
   String get tacticsFullBackOff => 'Tiada arahan';
 
   @override
-  String tacticsFullBackUpHint(String side) {
-    return '$side: bantu serangan. Serangan bertambah sedikit, risiko juga bertambah sedikit.';
-  }
-
-  @override
-  String tacticsFullBackDownHint(String side) {
-    return '$side: kekal di belakang. Lebih selamat sedikit, serangan berkurang sedikit.';
-  }
-
-  @override
-  String tacticsFullBackOffHint(String side) {
-    return '$side: tiada arahan, bermain mengikut rancangan pasukan.';
-  }
-
-  @override
   String tacticsFullBackSemantics(String side, String state) {
     return '$side, anak panah: $state';
   }
@@ -1047,10 +1032,6 @@ class AppLocalizationsMs extends AppLocalizations {
   String tacticsSubsUsed(int used, int max) {
     return 'GANTIAN · $used/$max';
   }
-
-  @override
-  String get tacticsDragSubOn =>
-      'Ketik pemain di padang untuk mengeluarkannya, atau tekan lama dan seret pemain gantian ke atasnya.';
 
   @override
   String get tacticsNoSubs => 'Tiada pemain gantian tersedia.';
@@ -1206,13 +1187,6 @@ class AppLocalizationsMs extends AppLocalizations {
   String get tacticsTabSetPieces => 'BOLA MATI';
 
   @override
-  String get tacticsTabRolesSetPieces => 'PERANAN & BOLA MATI';
-
-  @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Beri setiap pemain utama satu peranan. Ketik lencana penalti (⚽) atau sepakan percuma (▲) untuk menetapkan penyepak anda.';
-
-  @override
   String get tacticsTooltipCallUps => 'Panggilan skuad';
 
   @override
@@ -1245,10 +1219,6 @@ class AppLocalizationsMs extends AppLocalizations {
   @override
   String get tacticsTapSpotReplace =>
       'Ketik posisinya di padang untuk memilih pengganti.';
-
-  @override
-  String get tacticsTapOrDrag =>
-      'Ketik pemain untuk menukarnya, atau tekan lama dan seret untuk mengalihkannya.';
 
   @override
   String get tacticsPlayerRoles => 'PERANAN PEMAIN';
@@ -1313,11 +1283,6 @@ class AppLocalizationsMs extends AppLocalizations {
   String get tacticsSkillPas => 'HNT';
 
   @override
-  String tacticsRolePlayer(String name) {
-    return 'PERANAN · $name';
-  }
-
-  @override
   String get roleFitGood => 'Sesuai';
 
   @override
@@ -1354,34 +1319,80 @@ class AppLocalizationsMs extends AppLocalizations {
   String get tacticsRunLegendManual => 'Arahan anda';
 
   @override
-  String get tacticsPitchPlanHint =>
-      'Ketik lencana pemain untuk memilih peranan, dan anak panahnya untuk larian.';
+  String get tacticsSheetPost => 'Posisi';
 
   @override
-  String tacticsRoleBadgeSemantics(String role) {
-    return 'Peranan: $role. Ketik untuk menukar.';
+  String get tacticsSheetAdvanced => 'Lanjutan';
+
+  @override
+  String get tacticsSheetAutoPick => 'Mengambilnya sekarang, automatik';
+
+  @override
+  String get tacticsSheetFresh => 'Segar';
+
+  @override
+  String get tacticsSheetFitHere => 'Di posisi ini';
+
+  @override
+  String tacticsSheetFitSemantics(int dots) {
+    return 'Kesesuaian posisi: $dots daripada 5';
   }
 
   @override
-  String tacticsRunMarkSemantics(String run) {
-    return 'Larian: $run. Ketik untuk menukar.';
-  }
+  String get tacticsSheetSwap => 'Tukar';
+
+  @override
+  String get tacticsSheetProfile => 'Profil';
+
+  @override
+  String get tacticsSheetRecommended => 'Disyorkan';
+
+  @override
+  String get tacticsSheetRunHint =>
+      'Ketik satu arah untuk anak panah anda sendiri. Bahagian tengah memulihkan larian peranan.';
+
+  @override
+  String get tacticsPostDm =>
+      'Berada di depan barisan belakang dan melindunginya.';
+
+  @override
+  String get tacticsPostCm =>
+      'Menghubungkan pertahanan dan serangan, bekerja dua hala.';
+
+  @override
+  String get tacticsPostAm =>
+      'Bermain di antara barisan, di belakang penyerang.';
+
+  @override
+  String get tacticsPostWideMid =>
+      'Lebih dalam dan lebih lebar, membantu pertahanan sisinya.';
+
+  @override
+  String get tacticsPostWinger => 'Lebih tinggi, mencabar pertahanan sisi.';
+
+  @override
+  String get tacticsPostSt => 'Mengetuai serangan dan menyudahkan peluang.';
+
+  @override
+  String get tacticsPitchHint =>
+      'Ketik pemain untuk menetapkan posisi, peranan dan lariannya. Tekan lama dan seret untuk mengalihkannya.';
+
+  @override
+  String get tacticsSubHint =>
+      'Ketik pemain untuk menetapkan atau menukarnya. Tekan lama dan seret pemain simpanan ke atasnya.';
+
+  @override
+  String get tacticsLegendTooltip => 'Cara membaca padang';
+
+  @override
+  String get tacticsLegendRoleTag =>
+      'Lencana kecil pada pemain ialah peranannya.';
 
   @override
   String get tacticsPlanRoleHeading => 'PERANAN';
 
   @override
   String get tacticsPlanMovementHeading => 'PERGERAKAN';
-
-  @override
-  String tacticsPlanTitle(String position, String name) {
-    return '$position · $name';
-  }
-
-  @override
-  String tacticsArrowSet(String name, String movement) {
-    return '$name: $movement';
-  }
 
   @override
   String get tacticsKeeperNoRun => 'Penjaga gol tiada larian untuk ditetapkan.';
@@ -1449,9 +1460,6 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get tacticsSave => 'Simpan';
-
-  @override
-  String get tacticsTapToAssign => 'Ketik untuk menetapkan';
 
   @override
   String get tacticsHoldDragSub =>
@@ -14256,14 +14264,6 @@ class AppLocalizationsMs extends AppLocalizations {
   String yPunditPick5(String competition, String favourite, String darkHorse) {
     return '$favourite akan menjuarai $competition dan ia membosankan. Jika mahu cerita, tonton $darkHorse.';
   }
-
-  @override
-  String tacticsSlotSwitchHeading(String formation) {
-    return 'Posisi dalam formasi $formation';
-  }
-
-  @override
-  String get tacticsSlotSwitchReset => 'Set semula';
 
   @override
   String get tacticsSlotSwitchLimit =>

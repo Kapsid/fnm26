@@ -1019,21 +1019,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get tacticsFullBackOff => 'Talimat yok';
 
   @override
-  String tacticsFullBackUpHint(String side) {
-    return '$side: hücuma çık. Biraz daha fazla hücum, biraz daha fazla risk.';
-  }
-
-  @override
-  String tacticsFullBackDownHint(String side) {
-    return '$side: geride kal. Biraz daha güvenli, biraz daha az hücum.';
-  }
-
-  @override
-  String tacticsFullBackOffHint(String side) {
-    return '$side: talimat yok, takım planına göre oynar.';
-  }
-
-  @override
   String tacticsFullBackSemantics(String side, String state) {
     return '$side, ok: $state';
   }
@@ -1042,10 +1027,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String tacticsSubsUsed(int used, int max) {
     return 'DEĞİŞİKLİK · $used/$max';
   }
-
-  @override
-  String get tacticsDragSubOn =>
-      'Çıkarmak için sahadaki bir oyuncuya dokun ya da basılı tutup bir yedeği üstüne sürükle.';
 
   @override
   String get tacticsNoSubs => 'Yedek oyuncu yok.';
@@ -1201,13 +1182,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get tacticsTabSetPieces => 'DURAN TOPLAR';
 
   @override
-  String get tacticsTabRolesSetPieces => 'ROLLER VE DURAN TOPLAR';
-
-  @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Her ilk 11 oyuncusuna bir rol ver. Atıcını belirlemek için penaltı (⚽) ya da serbest vuruş (▲) rozetine dokun.';
-
-  @override
   String get tacticsTooltipCallUps => 'Milli takım daveti';
 
   @override
@@ -1241,10 +1215,6 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get tacticsTapSpotReplace =>
       'Yerine birini seçmek için sahadaki mevkisine dokun.';
-
-  @override
-  String get tacticsTapOrDrag =>
-      'Bir oyuncuyu değiştirmek için dokun ya da taşımak için basılı tutup sürükle.';
 
   @override
   String get tacticsPlayerRoles => 'OYUNCU ROLLERİ';
@@ -1309,11 +1279,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get tacticsSkillPas => 'PAS';
 
   @override
-  String tacticsRolePlayer(String name) {
-    return 'ROL · $name';
-  }
-
-  @override
   String get roleFitGood => 'Uygun';
 
   @override
@@ -1350,34 +1315,77 @@ class AppLocalizationsTr extends AppLocalizations {
   String get tacticsRunLegendManual => 'Senin talimatın';
 
   @override
-  String get tacticsPitchPlanHint =>
-      'Rol için oyuncunun rozetine, koşu için okuna dokun.';
+  String get tacticsSheetPost => 'Mevki';
 
   @override
-  String tacticsRoleBadgeSemantics(String role) {
-    return 'Rol: $role. Değiştirmek için dokun.';
+  String get tacticsSheetAdvanced => 'Gelişmiş';
+
+  @override
+  String get tacticsSheetAutoPick => 'Şu an otomatik olarak o kullanıyor';
+
+  @override
+  String get tacticsSheetFresh => 'Dinç';
+
+  @override
+  String get tacticsSheetFitHere => 'Bu mevkide';
+
+  @override
+  String tacticsSheetFitSemantics(int dots) {
+    return 'Mevkiye uyum: 5 üzerinden $dots';
   }
 
   @override
-  String tacticsRunMarkSemantics(String run) {
-    return 'Koşu: $run. Değiştirmek için dokun.';
-  }
+  String get tacticsSheetSwap => 'Değiştir';
+
+  @override
+  String get tacticsSheetProfile => 'Profil';
+
+  @override
+  String get tacticsSheetRecommended => 'Önerilen';
+
+  @override
+  String get tacticsSheetRunHint =>
+      'Kendi okun için bir yöne dokun. Orta, rolün koşusunu geri getirir.';
+
+  @override
+  String get tacticsPostDm => 'Savunmanın önünde durur ve onu korur.';
+
+  @override
+  String get tacticsPostCm =>
+      'Savunmayla hücumu birleştirir, iki yönde de çalışır.';
+
+  @override
+  String get tacticsPostAm => 'Hatlar arasında, forvetlerin arkasında oynar.';
+
+  @override
+  String get tacticsPostWideMid => 'Daha geride ve geniş, bekine yardım eder.';
+
+  @override
+  String get tacticsPostWinger => 'Daha önde, beke karşı oynar.';
+
+  @override
+  String get tacticsPostSt => 'Hücumu sürükler ve fırsatları bitirir.';
+
+  @override
+  String get tacticsPitchHint =>
+      'Mevki, rol ve koşusunu ayarlamak için bir oyuncuya dokun. Taşımak için basılı tutup sürükle.';
+
+  @override
+  String get tacticsSubHint =>
+      'Ayarlamak ya da değiştirmek için bir oyuncuya dokun. Bir yedeği basılı tutup üzerine sürükle.';
+
+  @override
+  String get tacticsLegendTooltip => 'Saha nasıl okunur';
+
+  @override
+  String get tacticsLegendRoleTag =>
+      'Oyuncunun üzerindeki küçük rozet onun rolüdür.';
 
   @override
   String get tacticsPlanRoleHeading => 'ROL';
 
   @override
   String get tacticsPlanMovementHeading => 'HAREKET';
-
-  @override
-  String tacticsPlanTitle(String position, String name) {
-    return '$position · $name';
-  }
-
-  @override
-  String tacticsArrowSet(String name, String movement) {
-    return '$name: $movement';
-  }
 
   @override
   String get tacticsKeeperNoRun => 'Kaleci için koşu ayarlanmaz.';
@@ -1444,9 +1452,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get tacticsSave => 'Kaydet';
-
-  @override
-  String get tacticsTapToAssign => 'Atamak için dokun';
 
   @override
   String get tacticsHoldDragSub =>
@@ -14217,14 +14222,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String yPunditPick5(String competition, String favourite, String darkHorse) {
     return '$competition şampiyonu $favourite olacak ve sıkıcı olacak. Hikâye istiyorsanız $darkHorse takımını izleyin.';
   }
-
-  @override
-  String tacticsSlotSwitchHeading(String formation) {
-    return '$formation içindeki mevki';
-  }
-
-  @override
-  String get tacticsSlotSwitchReset => 'Sıfırla';
 
   @override
   String get tacticsSlotSwitchLimit =>

@@ -8,6 +8,7 @@ import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
+import 'package:fnm/features/tactics/player_slot_sheet.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
 import '../helpers/fixtures.dart';
@@ -29,6 +30,9 @@ Future<bool> _offered(
   String benchName,
 ) async {
   await tester.tap(_onPitchName(starterName.toUpperCase()).last);
+  await tester.pumpAndSettle();
+  // His sheet, then its Swap: the men who could play there.
+  await tester.tap(find.byKey(SlotSheetKeys.swap));
   await tester.pumpAndSettle();
   if (find.text(benchName).evaluate().isEmpty) {
     for (final tab in [enL.tacticsTabOnPitch, enL.tacticsTabOtherPositions]) {
@@ -59,6 +63,12 @@ Future<void> _substitute(
   await tester.pumpAndSettle();
   await tester.tap(target);
   await tester.pumpAndSettle();
+  // And back out of his sheet, onto the editor.
+  final sheet = find.byKey(SlotSheetKeys.sheet);
+  if (sheet.evaluate().isNotEmpty) {
+    Navigator.of(tester.element(sheet)).pop();
+    await tester.pumpAndSettle();
+  }
 }
 
 /// The editor after five changes (7-11 replaced by 12-16), with 17 and 18 still
