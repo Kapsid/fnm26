@@ -19755,4 +19755,74 @@ class AppLocalizationsUk extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'Складу потрібні щонайменше $count воротарі.';
   }
+
+  @override
+  String get traitTwelfthMan => '12-й гравець';
+
+  @override
+  String get traitTwelfthManBlurb =>
+      'Збадьорює команду, коли виходить з лави запасних.';
+
+  @override
+  String get traitConsistent => 'Стабільний';
+
+  @override
+  String get traitConsistentBlurb => 'Рідко грає погано, але й рідко блищить.';
+
+  @override
+  String get traitInconsistent => 'Нестабільний';
+
+  @override
+  String get traitInconsistentBlurb =>
+      'Від матчу до матчу то блищить, то зникає.';
+
+  @override
+  String get traitInjuryProne => 'Схильний до травм';
+
+  @override
+  String get traitInjuryProneBlurb =>
+      'Травмується набагато частіше за більшість.';
+
+  @override
+  String get traitEasilyTired => 'Швидко втомлюється';
+
+  @override
+  String get traitEasilyTiredBlurb => 'Видихається раніше за партнерів.';
+
+  @override
+  String get traitPoorUnderPressure => 'Не витримує тиску';
+
+  @override
+  String get traitPoorUnderPressureBlurb => 'Грає гірше в матчах на вибування.';
+
+  @override
+  String get traitIndividualistic => 'Індивідуаліст';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'Б’є, коли треба віддати пас, і рідше асистує.';
+
+  @override
+  String get matchScoutTraitTwelfthMan =>
+      'У них на лаві запасних небезпечний гравець для заміни.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'Один з їхніх гравців основи рано втомлюється, тож останні пів години можуть стати відкритими.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'Один з їхніх нападників воліє бити, а не віддавати пас.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'Один з їхніх гравців основи часто губиться у великих матчах.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'Один з їхніх гравців основи дуже нестабільний.';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'Один з їхніх гравців основи часто травмується.';
 }

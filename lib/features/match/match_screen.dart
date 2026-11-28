@@ -2049,6 +2049,11 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       homeNationId: homeId,
       minute: _minute,
       added: _added,
+      // As the engine marked them: a consistent man's mark strays less.
+      traitsByPlayer: {
+        ...preview.awayTeam.traitsByPlayer,
+        ...preview.homeTeam.traitsByPlayer,
+      },
     );
   }
 

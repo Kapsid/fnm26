@@ -75,17 +75,21 @@ void main() {
       // The point of a trait is that it distinguishes; if most players carry
       // one it distinguishes nobody.
       var withTrait = 0;
+      var withEarned = 0;
       const squad = 200;
       for (var id = 1; id <= squad; id++) {
         // A believable mid-tier pool: nothing here earns an automatic trait.
-        final traits = PlayerTraits.of(
-          _p(id: id * 7, physical: 72, technical: 74, stamina: 74),
-          saveSeed: 11,
-        );
-        if (traits.isNotEmpty) withTrait++;
+        final p = _p(id: id * 7, physical: 72, technical: 74, stamina: 74);
+        if (PlayerTraits.of(p, saveSeed: 11).isNotEmpty) withTrait++;
+        if (PlayerTraits.earnedOf(p, saveSeed: 11).isNotEmpty) withEarned++;
       }
       expect(withTrait, greaterThan(0));
-      expect(withTrait / squad, lessThan(0.5));
+      expect(withEarned / squad, lessThan(0.5));
+      // The community traits (1.1.5) roll on about a quarter of players on
+      // top. This pool is eligible for two of the rolled older traits, so it
+      // runs above the world's figure (under half carry any trait over the
+      // seed pool: `community_traits_test.dart`).
+      expect(withTrait / squad, lessThan(0.65));
     });
 
     test('a goalkeeper is never a hothead', () {
@@ -124,7 +128,15 @@ void main() {
       for (var id = 1; id < 600; id++) {
         final k = _p(id: id, position: PlayerPosition.gk, technical: 85);
         final traits = PlayerTraits.of(k);
-        final older = traits.where((t) => !keeperOnly.contains(t)).toList();
+        // The community traits (1.1.5) come after both, see
+        // `community_traits_test.dart`.
+        final older = traits
+            .where(
+              (t) =>
+                  !keeperOnly.contains(t) &&
+                  t.index < PlayerTrait.twelfthMan.index,
+            )
+            .toList();
         // The older traits come first and in their old order.
         expect(traits.take(older.length).toList(), older);
       }

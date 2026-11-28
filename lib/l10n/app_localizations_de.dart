@@ -19575,4 +19575,75 @@ class AppLocalizationsDe extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'Der Kader braucht mindestens $count Torhüter.';
   }
+
+  @override
+  String get traitTwelfthMan => '12. Mann';
+
+  @override
+  String get traitTwelfthManBlurb =>
+      'Belebt das Team, wenn er von der Bank kommt.';
+
+  @override
+  String get traitConsistent => 'Konstant';
+
+  @override
+  String get traitConsistentBlurb =>
+      'Hat selten ein schlechtes Spiel, aber auch selten ein überragendes.';
+
+  @override
+  String get traitInconsistent => 'Unbeständig';
+
+  @override
+  String get traitInconsistentBlurb => 'Schwankt von Spiel zu Spiel stark.';
+
+  @override
+  String get traitInjuryProne => 'Verletzungsanfällig';
+
+  @override
+  String get traitInjuryProneBlurb =>
+      'Verletzt sich deutlich häufiger als die meisten.';
+
+  @override
+  String get traitEasilyTired => 'Schnell müde';
+
+  @override
+  String get traitEasilyTiredBlurb =>
+      'Gehen die Kräfte früher aus als seinen Mitspielern.';
+
+  @override
+  String get traitPoorUnderPressure => 'Nicht nervenstark';
+
+  @override
+  String get traitPoorUnderPressureBlurb => 'Baut in K.-o.-Spielen ab.';
+
+  @override
+  String get traitIndividualistic => 'Einzelgänger';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'Schießt, wo er passen sollte, und bereitet weniger Tore vor.';
+
+  @override
+  String get matchScoutTraitTwelfthMan =>
+      'Sie haben einen gefährlichen Joker auf der Bank.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'Einer ihrer Stammspieler wird früh müde, die letzte halbe Stunde könnte offen werden.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'Einer ihrer Angreifer schießt lieber selbst, als zu passen.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'Einer ihrer Stammspieler taucht in großen Spielen gern ab.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'Einer ihrer Stammspieler ist sehr unbeständig.';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'Einer ihrer Stammspieler ist oft verletzt.';
 }

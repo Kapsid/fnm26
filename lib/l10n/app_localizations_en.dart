@@ -19456,4 +19456,74 @@ class AppLocalizationsEn extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'The squad needs at least $count goalkeepers.';
   }
+
+  @override
+  String get traitTwelfthMan => '12th man';
+
+  @override
+  String get traitTwelfthManBlurb =>
+      'Lifts the side when he comes off the bench.';
+
+  @override
+  String get traitConsistent => 'Consistent';
+
+  @override
+  String get traitConsistentBlurb => 'Rarely has a bad game, or a great one.';
+
+  @override
+  String get traitInconsistent => 'Inconsistent';
+
+  @override
+  String get traitInconsistentBlurb =>
+      'Blows hot and cold from one match to the next.';
+
+  @override
+  String get traitInjuryProne => 'Injury-prone';
+
+  @override
+  String get traitInjuryProneBlurb => 'Picks up far more knocks than most.';
+
+  @override
+  String get traitEasilyTired => 'Tires easily';
+
+  @override
+  String get traitEasilyTiredBlurb =>
+      'Runs out of legs sooner than his team-mates.';
+
+  @override
+  String get traitPoorUnderPressure => 'Wilts under pressure';
+
+  @override
+  String get traitPoorUnderPressureBlurb => 'His game drops in knockout ties.';
+
+  @override
+  String get traitIndividualistic => 'Individualist';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'Shoots when he should pass, and sets up fewer goals.';
+
+  @override
+  String get matchScoutTraitTwelfthMan =>
+      'They have a dangerous impact player on the bench.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'One of their starters tires early, so the last half-hour may open up.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'One of their attackers would rather shoot than pass.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'One of their starters tends to go missing on the big occasion.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'One of their starters blows hot and cold.';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'One of their starters has a history of knocks.';
 }

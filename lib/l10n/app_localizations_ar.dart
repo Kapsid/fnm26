@@ -19740,4 +19740,74 @@ class AppLocalizationsAr extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'تحتاج القائمة إلى $count حراس مرمى على الأقل.';
   }
+
+  @override
+  String get traitTwelfthMan => 'اللاعب الثاني عشر';
+
+  @override
+  String get traitTwelfthManBlurb =>
+      'يمنح الفريق دفعة حين يدخل من دكة البدلاء.';
+
+  @override
+  String get traitConsistent => 'ثابت المستوى';
+
+  @override
+  String get traitConsistentBlurb =>
+      'نادرًا ما يقدّم مباراة سيئة، ونادرًا ما يتألق.';
+
+  @override
+  String get traitInconsistent => 'متذبذب المستوى';
+
+  @override
+  String get traitInconsistentBlurb => 'يتألق في مباراة ويغيب في التي تليها.';
+
+  @override
+  String get traitInjuryProne => 'كثير الإصابات';
+
+  @override
+  String get traitInjuryProneBlurb =>
+      'يتعرض للإصابات أكثر بكثير من معظم اللاعبين.';
+
+  @override
+  String get traitEasilyTired => 'سريع الإرهاق';
+
+  @override
+  String get traitEasilyTiredBlurb => 'تنفد طاقته قبل زملائه.';
+
+  @override
+  String get traitPoorUnderPressure => 'ينهار تحت الضغط';
+
+  @override
+  String get traitPoorUnderPressureBlurb =>
+      'يتراجع مستواه في مباريات خروج المغلوب.';
+
+  @override
+  String get traitIndividualistic => 'أناني';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'يسدد حين يجب أن يمرر، ويصنع أهدافًا أقل.';
+
+  @override
+  String get matchScoutTraitTwelfthMan => 'لديهم بديل خطير على دكة البدلاء.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'أحد لاعبيهم الأساسيين يتعب مبكرًا، لذا قد تنفتح المباراة في نصف الساعة الأخير.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'أحد مهاجميهم يفضّل التسديد على التمرير.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'أحد لاعبيهم الأساسيين يختفي غالبًا في المباريات الكبرى.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'أحد لاعبيهم الأساسيين متذبذب المستوى كثيرًا.';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'أحد لاعبيهم الأساسيين يتعرض للإصابة كثيرًا.';
 }

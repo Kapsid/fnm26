@@ -8,6 +8,7 @@ import 'package:fnm/domain/services/club/club_form.dart';
 import 'package:fnm/domain/services/competition/tournament_calendar.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
+import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/press/statement.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -163,6 +164,12 @@ squadConditionProvider = FutureProvider.autoDispose
               statementDelta: said[entry.key] ?? 0,
               clubStanding: standing,
               weighted: weighted,
+              // A consistent man's form strays less far from steady.
+              formSwing: p == null
+                  ? 1.0
+                  : PlayerTraits.swingOf(
+                      PlayerTraits.of(p, saveSeed: career.rngSeed),
+                    ),
             );
           }(),
       };

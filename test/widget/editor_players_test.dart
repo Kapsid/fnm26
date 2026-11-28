@@ -511,6 +511,35 @@ void main() {
     await tester.pump(const Duration(milliseconds: 450));
   });
 
+  testWidgets('a community trait is picked like any other, and replaces the '
+      'one it contradicts', (tester) async {
+    final c = await editorContainer(tester);
+    final id = await insertPack(
+      tester,
+      c,
+      testPack('Community traits', squads: {cze: testSquad()}),
+    );
+    await pumpEditorRoute(tester, c, _player(id, cze, mid));
+    List<PlayerTrait>? traits() => _find(c, id, cze, mid).traits;
+    Future<void> tap(Key key) async {
+      await tester.ensureVisible(find.byKey(key));
+      await tester.pump();
+      await tester.tap(find.byKey(key));
+      await tester.pump();
+    }
+
+    await tap(PlayerEditForm.traitKey(PlayerTrait.ironMan));
+    await tap(PlayerEditForm.traitKey(PlayerTrait.twelfthMan));
+    expect(traits(), [PlayerTrait.ironMan, PlayerTrait.twelfthMan]);
+    // Its effect is spelled out under the chips, as the player screen says.
+    expect(find.text(enL.traitTwelfthManBlurb), findsOneWidget);
+    // Injury-prone contradicts the iron man: it takes his place, so the
+    // pick is not refused at the cap.
+    await tap(PlayerEditForm.traitKey(PlayerTrait.injuryProne));
+    expect(traits(), [PlayerTrait.twelfthMan, PlayerTrait.injuryProne]);
+    await tester.pump(const Duration(milliseconds: 450));
+  });
+
   testWidgets('a trait this game does not know is shown and can be removed', (
     tester,
   ) async {

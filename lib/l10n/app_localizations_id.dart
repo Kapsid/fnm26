@@ -19326,4 +19326,77 @@ class AppLocalizationsId extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'Skuad butuh minimal $count kiper.';
   }
+
+  @override
+  String get traitTwelfthMan => 'Pemain ke-12';
+
+  @override
+  String get traitTwelfthManBlurb =>
+      'Mengangkat tim saat masuk dari bangku cadangan.';
+
+  @override
+  String get traitConsistent => 'Konsisten';
+
+  @override
+  String get traitConsistentBlurb =>
+      'Jarang bermain buruk, tapi jarang juga bersinar.';
+
+  @override
+  String get traitInconsistent => 'Tidak konsisten';
+
+  @override
+  String get traitInconsistentBlurb =>
+      'Kadang bersinar, kadang menghilang dari laga ke laga.';
+
+  @override
+  String get traitInjuryProne => 'Rentan cedera';
+
+  @override
+  String get traitInjuryProneBlurb =>
+      'Jauh lebih sering cedera daripada kebanyakan pemain.';
+
+  @override
+  String get traitEasilyTired => 'Cepat lelah';
+
+  @override
+  String get traitEasilyTiredBlurb =>
+      'Kehabisan tenaga lebih cepat daripada rekan setimnya.';
+
+  @override
+  String get traitPoorUnderPressure => 'Goyah di bawah tekanan';
+
+  @override
+  String get traitPoorUnderPressureBlurb =>
+      'Permainannya menurun di laga gugur.';
+
+  @override
+  String get traitIndividualistic => 'Egois';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'Menembak saat seharusnya mengoper, dan lebih sedikit memberi assist.';
+
+  @override
+  String get matchScoutTraitTwelfthMan =>
+      'Mereka punya pemain pengganti berbahaya di bangku cadangan.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'Salah satu pemain inti mereka cepat lelah, jadi setengah jam terakhir bisa terbuka.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'Salah satu penyerang mereka lebih suka menembak daripada mengoper.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'Salah satu pemain inti mereka sering menghilang di laga besar.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'Salah satu pemain inti mereka sangat tidak konsisten.';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'Salah satu pemain inti mereka sering cedera.';
 }

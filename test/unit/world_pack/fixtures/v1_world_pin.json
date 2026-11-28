@@ -6,7 +6,9 @@
     75,
     "Rio Ave Green-White",
     "por",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10000003": [
     "Pandeli Guri",
@@ -20,7 +22,9 @@
     74,
     "Tayside Tangerines",
     "sco",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "106": [
     "Enea Haxhiu",
@@ -28,7 +32,8 @@
     "Liège Red",
     "bel",
     [
-     "hothead"
+     "hothead",
+     "inconsistent"
     ]
    ],
    "107": [
@@ -36,14 +41,18 @@
     73,
     "Stockholm Black-Gold",
     "swe",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10000001": [
     "Edmond Hajdari",
     73,
     "Gangwon Orange",
     "kor",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10000004": [
     "Myrto Mehmeti",
@@ -87,7 +96,9 @@
     71,
     "Seville Red",
     "esp",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10000029": [
     "Gerald Rruka",
@@ -111,14 +122,18 @@
     70,
     "Vienna Green-White",
     "aut",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10000024": [
     "Kristjan Çami",
     70,
     "Charleroi Zebras",
     "bel",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000025": [
     "Pandeli Jashari",
@@ -139,7 +154,9 @@
     69,
     "Edinburgh Maroon",
     "sco",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000014": [
     "Eltion Mici",
@@ -201,14 +218,18 @@
     68,
     "Porto Chequers",
     "por",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10000008": [
     "Ansi Pashaj",
     68,
     "Ticino Black-White",
     "sui",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10000009": [
     "Amir Tahiri",
@@ -285,7 +306,9 @@
     66,
     "Brno City",
     "cze",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10000032": [
     "Elvis Prifti",
@@ -327,7 +350,9 @@
     65,
     "Tayside Tangerines",
     "sco",
-    []
+    [
+     "consistent"
+    ]
    ],
    "121": [
     "Klajdi Dibra",
@@ -350,7 +375,9 @@
     64,
     "Glasgow Blue",
     "sco",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "105": [
     "Agim Cara",
@@ -378,7 +405,9 @@
     63,
     "Ticino Black-White",
     "sui",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000047": [
     "Defrim Basha",
@@ -406,7 +435,9 @@
     62,
     "Eindhoven Bulbs",
     "ned",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "116": [
     "Rei Çami",
@@ -455,7 +486,9 @@
     61,
     "Stockholm Blue-Stripes",
     "swe",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "117": [
     "Petrit Lami",
@@ -469,7 +502,9 @@
     61,
     "Gothenburg Angels",
     "swe",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10000043": [
     "Myrto Peqini",
@@ -504,14 +539,18 @@
     61,
     "Ayrshire Blue-White",
     "sco",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "123": [
     "Blerim Bardhi",
     61,
     "Groningen Green-White",
     "ned",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10000051": [
     "Orges Gega",
@@ -546,7 +585,9 @@
     60,
     "Thessaloniki Black-White",
     "gre",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10000034": [
     "Dashmir Mici",
@@ -569,7 +610,9 @@
     59,
     "Lillestrøm Yellow",
     "nor",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000074": [
     "Fatjon Gjergji",
@@ -604,14 +647,18 @@
     58,
     "Limburg Smurfs",
     "bel",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "120": [
     "Gezim Vata",
     57,
     "Gothenburg Angels",
     "swe",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000053": [
     "Taulant Çaushi",
@@ -639,7 +686,9 @@
     56,
     "Geneva Purple",
     "sui",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10000075": [
     "Odise Sula",
@@ -681,35 +730,45 @@
     55,
     "Liberec Lynxes",
     "cze",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "112": [
     "Orges Prifti",
     55,
     "Alpha Olomouc",
     "cze",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10000059": [
     "Rei Kastrati",
     54,
     "Lisbon Eagles",
     "por",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10000071": [
     "Kreshnik Zani",
     54,
     "Thessaloniki Yellow",
     "gre",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10000073": [
     "Julian Sadiku",
     54,
     "Thessaloniki Yellow",
     "gre",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10000079": [
     "Renato Maloku",
@@ -723,28 +782,36 @@
     53,
     "Glasgow Green",
     "sco",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1001002006": [
     "Berat Hysi",
     53,
     "Crete Black-White",
     "gre",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000068": [
     "Rei Rrapaj",
     53,
     "Granite City FC",
     "sco",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "1001002003": [
     "Arben Shtjefni",
     53,
     "Glasgow Green",
     "sco",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10000061": [
     "Adrian Haxhiu",
@@ -772,7 +839,9 @@
     40,
     "Farum Tigers",
     "den",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "1001003003": [
     "Dritan Dema",
@@ -794,7 +863,8 @@
     "Rabat Sky Blue",
     "mar",
     [
-     "wasteful"
+     "wasteful",
+     "twelfthMan"
     ]
    ],
    "1001004000": [
@@ -802,7 +872,9 @@
     35,
     "Brno Shooters",
     "cze",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "1001004004": [
     "Orges Basha",
@@ -831,7 +903,8 @@
     "Glasgow Blue",
     "sco",
     [
-     "wasteful"
+     "wasteful",
+     "twelfthMan"
     ]
    ],
    "1001003004": [
@@ -853,7 +926,9 @@
     25,
     "Ticino Black-White",
     "sui",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "1001003005": [
     "Valon Ibrahimi",
@@ -867,7 +942,9 @@
     21,
     "Piraeus Red-White",
     "gre",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ]
   },
   "1/6": {
@@ -892,14 +969,18 @@
     76,
     "Limburg Smurfs",
     "bel",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10000000": [
     "Muhamet Gashi",
     76,
     "Rio Ave Green-White",
     "por",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10000002": [
     "Bekim Krasniqi",
@@ -927,14 +1008,18 @@
     74,
     "Tayside Tangerines",
     "sco",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10000024": [
     "Kristjan Çami",
     74,
     "Charleroi Zebras",
     "bel",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000033": [
     "Bledar Çami",
@@ -950,14 +1035,18 @@
     72,
     "Stockholm Black-Gold",
     "swe",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "115": [
     "Defrim Xhafa",
     72,
     "Limburg Smurfs",
     "bel",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10000015": [
     "Alket Cara",
@@ -971,7 +1060,9 @@
     72,
     "Pretoria Brazilians",
     "rsa",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10000019": [
     "Florian Kola",
@@ -1006,7 +1097,9 @@
     70,
     "Jutland Black-Red",
     "den",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10000014": [
     "Eltion Mici",
@@ -1036,7 +1129,9 @@
     69,
     "Thessaloniki Yellow",
     "gre",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "106": [
     "Enea Haxhiu",
@@ -1044,7 +1139,8 @@
     "Ghent Buffalos",
     "bel",
     [
-     "setPiece"
+     "setPiece",
+     "inconsistent"
     ]
    ],
    "117": [
@@ -1066,7 +1162,9 @@
     69,
     "Crete Black-White",
     "gre",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000027": [
     "Kastriot Zeneli",
@@ -1108,7 +1206,9 @@
     67,
     "Lisbon Eagles",
     "por",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10000012": [
     "Orges Dushku",
@@ -1122,7 +1222,9 @@
     67,
     "Gothenburg Angels",
     "swe",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10000035": [
     "Sokol Zeneli",
@@ -1166,7 +1268,9 @@
     65,
     "Brno City",
     "cze",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10000016": [
     "Arben Bylyku",
@@ -1187,7 +1291,9 @@
     64,
     "Stockholm Blue-Stripes",
     "swe",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000054": [
     "Albert Peqini",
@@ -1215,14 +1321,18 @@
     63,
     "Seville Red",
     "esp",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10000041": [
     "Mark Nako",
     63,
     "Glasgow Blue",
     "sco",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10000032": [
     "Elvis Prifti",
@@ -1250,7 +1360,9 @@
     62,
     "Ayrshire Blue-White",
     "sco",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000028": [
     "Besart Shala",
@@ -1285,7 +1397,9 @@
     61,
     "Plzeň Brewers",
     "cze",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "1001002005": [
     "Enis Kristo",
@@ -1299,7 +1413,9 @@
     61,
     "Alpha Olomouc",
     "cze",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10000061": [
     "Adrian Haxhiu",
@@ -1341,14 +1457,18 @@
     60,
     "Graz Storm",
     "aut",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10000071": [
     "Kreshnik Zani",
     60,
     "Athens Eagles",
     "gre",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10000004": [
     "Myrto Mehmeti",
@@ -1362,14 +1482,18 @@
     59,
     "Salzburg Bulls",
     "aut",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10000057": [
     "Emiljano Rruka",
     59,
     "Thessaloniki Black-White",
     "gre",
-    []
+    [
+     "consistent"
+    ]
    ],
    "1001006001": [
     "Julian Berisha",
@@ -1390,7 +1514,9 @@
     58,
     "Silkeborg Green",
     "den",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1001008004": [
     "Dashmir Tahiri",
@@ -1448,7 +1574,9 @@
     55,
     "Söder Green",
     "swe",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "1001006000": [
     "Ergys Ajazi",
@@ -1471,14 +1599,18 @@
     55,
     "Agrinio Green",
     "gre",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10000072": [
     "Kreshnik Papa",
     55,
     "Jablonec Glassmakers",
     "cze",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1001004002": [
     "Rexhep Aliji",
@@ -1486,7 +1618,8 @@
     "Rabat Sky Blue",
     "mar",
     [
-     "wasteful"
+     "wasteful",
+     "twelfthMan"
     ]
    ],
    "10000075": [
@@ -1501,14 +1634,18 @@
     55,
     "Groningen Green-White",
     "ned",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1001004000": [
     "Marash Gashi",
     54,
     "Brno Shooters",
     "cze",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "1001003000": [
     "Gezim Jashari",
@@ -1543,14 +1680,18 @@
     53,
     "Brussels Purple",
     "bel",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10000040": [
     "Fatjon Meta",
     53,
     "Brno City",
     "cze",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000034": [
     "Dashmir Mici",
@@ -1587,7 +1728,9 @@
     52,
     "Vienna Violets",
     "aut",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1001007005": [
     "Ylber Lami",
@@ -1629,7 +1772,9 @@
     51,
     "Ayrshire Blue-White",
     "sco",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1001003006": [
     "Nedim Tahiri",
@@ -1643,7 +1788,9 @@
     50,
     "Porto Dragons",
     "por",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10000049": [
     "Ylber Abrashi",
@@ -1678,7 +1825,9 @@
     49,
     "Athens Shamrock",
     "gre",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "113": [
     "Enis Bajrami",
@@ -1693,7 +1842,8 @@
     "Edinburgh Maroon",
     "sco",
     [
-     "wasteful"
+     "wasteful",
+     "inconsistent"
     ]
    ],
    "10000058": [
@@ -1730,7 +1880,8 @@
     "Glasgow Blue",
     "sco",
     [
-     "wasteful"
+     "wasteful",
+     "twelfthMan"
     ]
    ],
    "10000073": [
@@ -1738,7 +1889,9 @@
     45,
     "Thessaloniki Yellow",
     "gre",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "1001009004": [
     "Elvis Gjoka",
@@ -1766,7 +1919,9 @@
     44,
     "Bern Young Lads",
     "sui",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10000076": [
     "Albert Gashi",
@@ -1794,7 +1949,9 @@
     43,
     "Ostrava Miners",
     "cze",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "1001003005": [
     "Valon Ibrahimi",
@@ -1808,7 +1965,9 @@
     42,
     "Asunción Red-Blue",
     "par",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000077": [
     "Muhamet Hysi",
@@ -1822,7 +1981,9 @@
     41,
     "Borås Yellow-Black",
     "swe",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "1001007002": [
     "Renato Lleshi",
@@ -1889,7 +2050,9 @@
     30,
     "Hradec Lions",
     "cze",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1001010003": [
     "Elseid Beqiri",
@@ -1922,7 +2085,8 @@
     "Marseille White",
     "fra",
     [
-     "oldHead"
+     "oldHead",
+     "individualistic"
     ]
    ],
    "10001696": [
@@ -1930,7 +2094,9 @@
     78,
     "Athens Eagles",
     "gre",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "2306": [
     "Henrik Mezei",
@@ -1980,7 +2146,8 @@
     "Edinburgh Maroon",
     "sco",
     [
-     "bigGame"
+     "bigGame",
+     "easilyTired"
     ]
    ],
    "10001699": [
@@ -2014,7 +2181,8 @@
     "Frisian Hearts",
     "ned",
     [
-     "hothead"
+     "hothead",
+     "individualistic"
     ]
    ],
    "10001686": [
@@ -2023,7 +2191,8 @@
     "Utrecht Domtower FC",
     "ned",
     [
-     "setPiece"
+     "setPiece",
+     "individualistic"
     ]
    ],
    "10001702": [
@@ -2057,7 +2226,9 @@
     74,
     "Balearic Red",
     "esp",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10001694": [
     "Mátyás Orosz",
@@ -2089,7 +2260,9 @@
     73,
     "Brno City",
     "cze",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10001691": [
     "Bence Kis",
@@ -2112,7 +2285,9 @@
     71,
     "Stockholm Blue-Stripes",
     "swe",
-    []
+    [
+     "consistent"
+    ]
    ],
    "2310": [
     "Gergő Lang",
@@ -2145,7 +2320,9 @@
     70,
     "Crete Black-White",
     "gre",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10001700": [
     "Zétény Pintér",
@@ -2159,21 +2336,27 @@
     70,
     "Sivas Red-White",
     "tur",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10001705": [
     "Ferenc Botka",
     70,
     "Bosphorus Eagles",
     "tur",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10001714": [
     "Zsombor Halász",
     69,
     "Crete Black-White",
     "gre",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "2318": [
     "Simon Major",
@@ -2221,7 +2404,9 @@
     68,
     "Brøndby Yellow",
     "den",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10001709": [
     "Nándor Fehér",
@@ -2280,7 +2465,8 @@
     "Glasgow Blue",
     "sco",
     [
-     "penaltyStopper"
+     "penaltyStopper",
+     "inconsistent"
     ]
    ],
    "2322": [
@@ -2288,7 +2474,9 @@
     67,
     "Lucerne Blue-White",
     "sui",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "2316": [
     "Máté Gulyás",
@@ -2323,7 +2511,9 @@
     66,
     "Athens Eagles",
     "gre",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10001701": [
     "Krisztián Pap",
@@ -2344,7 +2534,9 @@
     66,
     "Piraeus Red-White",
     "gre",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10001713": [
     "Bálint Veres",
@@ -2366,7 +2558,8 @@
     "Tyrol Green",
     "aut",
     [
-     "penaltyStopper"
+     "penaltyStopper",
+     "consistent"
     ]
    ],
    "10001727": [
@@ -2375,7 +2568,8 @@
     "Lillestrøm Yellow",
     "nor",
     [
-     "wasteful"
+     "wasteful",
+     "inconsistent"
     ]
    ],
    "10001731": [
@@ -2397,7 +2591,9 @@
     65,
     "Thessaloniki Black-White",
     "gre",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10001725": [
     "Bulcsú Bese",
@@ -2444,7 +2640,8 @@
     "FC Club Zlín",
     "cze",
     [
-     "wasteful"
+     "wasteful",
+     "injuryProne"
     ]
    ],
    "10001732": [
@@ -2452,7 +2649,9 @@
     63,
     "Glasgow Green",
     "sco",
-    []
+    [
+     "consistent"
+    ]
    ],
    "2309": [
     "Pál Botka",
@@ -2460,7 +2659,8 @@
     "Sardinia Red-Blue",
     "ita",
     [
-     "wasteful"
+     "wasteful",
+     "poorUnderPressure"
     ]
    ],
    "10001741": [
@@ -2482,7 +2682,9 @@
     62,
     "Famalicão Blue-White",
     "por",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10001737": [
     "Endre Pap",
@@ -2559,7 +2761,9 @@
     61,
     "Plzeň Brewers",
     "cze",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10001743": [
     "Gergely Győri",
@@ -2602,7 +2806,8 @@
     "Wolfsberg White-Black",
     "aut",
     [
-     "wasteful"
+     "wasteful",
+     "individualistic"
     ]
    ],
    "10001746": [
@@ -2610,7 +2815,9 @@
     59,
     "Geneva Purple",
     "sui",
-    []
+    [
+     "consistent"
+    ]
    ],
    "1023002002": [
     "Tibor Hegedűs",
@@ -2624,7 +2831,9 @@
     58,
     "Famalicão Blue-White",
     "por",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10001750": [
     "Callum Fodor",
@@ -2652,21 +2861,27 @@
     57,
     "Bruges Green",
     "bel",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10001759": [
     "Nándor Mészáros",
     57,
     "Edinburgh Greens",
     "sco",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10001753": [
     "Szilárd Balogh",
     56,
     "Tyrol Green",
     "aut",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10001754": [
     "György Balázs",
@@ -2736,7 +2951,9 @@
     46,
     "Malmö Sky Blue",
     "swe",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "1023003002": [
     "Kevin Bakos",
@@ -2750,7 +2967,9 @@
     42,
     "Borås Yellow-Black",
     "swe",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "1023004001": [
     "Dorián Fazekas",
@@ -2791,14 +3010,18 @@
     31,
     "Tyrol Green",
     "aut",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "1023003000": [
     "Áron Réti",
     30,
     "Liberec Lynxes",
     "cze",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1023004003": [
     "Martin Mezei",
@@ -2861,7 +3084,8 @@
     "Thessaloniki Black-White",
     "gre",
     [
-     "hothead"
+     "hothead",
+     "consistent"
     ]
    ],
    "2306": [
@@ -2884,7 +3108,8 @@
     "Sardinia Red-Blue",
     "ita",
     [
-     "setPiece"
+     "setPiece",
+     "poorUnderPressure"
     ]
    ],
    "2310": [
@@ -2893,7 +3118,8 @@
     "Volos Argonauts",
     "gre",
     [
-     "setPiece"
+     "setPiece",
+     "inconsistent"
     ]
    ],
    "1023002005": [
@@ -2975,7 +3201,8 @@
     "Stockholm Blue-Stripes",
     "swe",
     [
-     "hothead"
+     "hothead",
+     "injuryProne"
     ]
    ],
    "2314": [
@@ -2992,7 +3219,9 @@
     74,
     "Sivas Red-White",
     "tur",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10001722": [
     "Henrik Kovács",
@@ -3007,7 +3236,8 @@
     "Stockholm Blue-Stripes",
     "swe",
     [
-     "bigGame"
+     "bigGame",
+     "consistent"
     ]
    ],
    "10001696": [
@@ -3016,7 +3246,8 @@
     "Athens Eagles",
     "gre",
     [
-     "oldHead"
+     "oldHead",
+     "individualistic"
     ]
    ],
    "10001716": [
@@ -3034,7 +3265,8 @@
     "Brøndby Yellow",
     "den",
     [
-     "hothead"
+     "hothead",
+     "individualistic"
     ]
    ],
    "2321": [
@@ -3073,7 +3305,8 @@
     "Vigo Sky Blue",
     "esp",
     [
-     "setPiece"
+     "setPiece",
+     "individualistic"
     ]
    ],
    "2301": [
@@ -3122,7 +3355,9 @@
     69,
     "Glasgow Green",
     "sco",
-    []
+    [
+     "consistent"
+    ]
    ],
    "1023005005": [
     "Gyula Boda",
@@ -3139,7 +3374,8 @@
     "Thessaloniki Black-White",
     "gre",
     [
-     "penaltyStopper"
+     "penaltyStopper",
+     "consistent"
     ]
    ],
    "10001717": [
@@ -3154,7 +3390,9 @@
     68,
     "FC Blšany",
     "cze",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10001728": [
     "Ferenc Kovács",
@@ -3168,7 +3406,9 @@
     68,
     "Rio Ave Green-White",
     "por",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10001743": [
     "Gergely Győri",
@@ -3190,7 +3430,8 @@
     "Trondheim White",
     "nor",
     [
-     "wasteful"
+     "wasteful",
+     "individualistic"
     ]
    ],
    "10001726": [
@@ -3205,7 +3446,9 @@
     66,
     "FC Blšany",
     "cze",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10001720": [
     "László Dobos",
@@ -3213,7 +3456,8 @@
     "Brno Shooters",
     "cze",
     [
-     "penaltyStopper"
+     "penaltyStopper",
+     "consistent"
     ]
    ],
    "10001729": [
@@ -3235,7 +3479,9 @@
     65,
     "Graz Storm",
     "aut",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "1023002001": [
     "Barna Kiss",
@@ -3270,7 +3516,9 @@
     64,
     "Charleroi Zebras",
     "bel",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10001723": [
     "Miklós Botka",
@@ -3327,7 +3575,8 @@
     "Linz Black-White",
     "aut",
     [
-     "wasteful"
+     "wasteful",
+     "consistent"
     ]
    ],
    "2320": [
@@ -3342,7 +3591,9 @@
     63,
     "Glasgow Blue",
     "sco",
-    []
+    [
+     "consistent"
+    ]
    ],
    "1023003002": [
     "Kevin Bakos",
@@ -3363,7 +3614,9 @@
     62,
     "St. Gallen Green-White",
     "sui",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10001731": [
     "Lénárd Berki",
@@ -3377,7 +3630,9 @@
     62,
     "Copenhagen White-Blue",
     "den",
-    []
+    [
+     "consistent"
+    ]
    ],
    "1023005000": [
     "Dávid Gyurcsó",
@@ -3398,7 +3653,9 @@
     61,
     "Antalya Coast",
     "tur",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10001718": [
     "Gyula Hegyi",
@@ -3461,7 +3718,9 @@
     60,
     "Athens Eagles",
     "gre",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "1023007004": [
     "Barna Gyurcsó",
@@ -3469,7 +3728,8 @@
     "Wolfsberg White-Black",
     "aut",
     [
-     "wasteful"
+     "wasteful",
+     "injuryProne"
     ]
    ],
    "10001705": [
@@ -3477,7 +3737,9 @@
     60,
     "Bosphorus Eagles",
     "tur",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10001749": [
     "Máté Halász",
@@ -3528,7 +3790,9 @@
     57,
     "Edinburgh Greens",
     "sco",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1023007001": [
     "Botond Bese",
@@ -3570,7 +3834,9 @@
     56,
     "Tyrol Green",
     "aut",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10001750": [
     "Callum Fodor",
@@ -3584,14 +3850,18 @@
     55,
     "Klokani Praha",
     "cze",
-    []
+    [
+     "consistent"
+    ]
    ],
    "1023006003": [
     "Krisztián Bencze",
     54,
     "Athens Eagles",
     "gre",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10001756": [
     "Endre Kocsis",
@@ -3605,7 +3875,9 @@
     54,
     "Ayrshire Blue-White",
     "sco",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1023008005": [
     "Olivér Lengyel",
@@ -3633,7 +3905,9 @@
     52,
     "Molde Blue",
     "nor",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "1023003004": [
     "Kende Szabados",
@@ -3649,21 +3923,27 @@
     50,
     "Trondheim White",
     "nor",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1023004000": [
     "Zsolt Szabados",
     50,
     "Arctic Gold",
     "nor",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "1023003000": [
     "Áron Réti",
     49,
     "Tyrol Green",
     "aut",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1023010006": [
     "Lóránt Kárpáti",
@@ -3685,7 +3965,8 @@
     "Jutland Black-Red",
     "den",
     [
-     "wasteful"
+     "wasteful",
+     "easilyTired"
     ]
    ],
    "1023008006": [
@@ -3693,7 +3974,9 @@
     48,
     "Plzeň Brewers",
     "cze",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "1023005001": [
     "Viktor Németh",
@@ -3730,14 +4013,18 @@
     47,
     "Soweto Pirates",
     "rsa",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "1023010005": [
     "Barna Hegyi",
     46,
     "Stockholm Blue-Stripes",
     "swe",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1023008003": [
     "Lénárd Nyári",
@@ -3774,7 +4061,9 @@
     40,
     "Prague Red-White",
     "cze",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "1023009003": [
     "Attila Bartha",
@@ -3788,7 +4077,9 @@
     38,
     "Zürich Blue-White",
     "sui",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1023010004": [
     "Lénárd Mészáros",
@@ -3809,7 +4100,9 @@
     37,
     "Zürich Hoppers",
     "sui",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "1023008001": [
     "Domonkos Kardos",
@@ -3830,7 +4123,9 @@
     32,
     "Aarhus White-Blue",
     "den",
-    []
+    [
+     "twelfthMan"
+    ]
    ]
   },
   "140/0": {
@@ -3849,7 +4144,9 @@
     59,
     "Adelaide Red",
     "aus",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "14005": [
     "Claude Maniraguha",
@@ -3870,7 +4167,9 @@
     57,
     "Ismailia Yellow",
     "egy",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10010976": [
     "Évariste Nkusi",
@@ -3898,14 +4197,18 @@
     56,
     "Malmö Sky Blue",
     "swe",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10010970": [
     "Eric Bizimana",
     56,
     "Soweto Pirates",
     "rsa",
-    []
+    [
+     "consistent"
+    ]
    ],
    "14002": [
     "Honoré Irakoze",
@@ -3933,7 +4236,9 @@
     55,
     "Pretoria Brazilians",
     "rsa",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10010986": [
     "Protais Rugamba",
@@ -3941,7 +4246,8 @@
     "Chengdu Phoenix",
     "chn",
     [
-     "wasteful"
+     "wasteful",
+     "easilyTired"
     ]
    ],
    "14011": [
@@ -3979,14 +4285,18 @@
     53,
     "Manizales White",
     "col",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10010961": [
     "Danny Nyirinkwaya",
     53,
     "Lucerne Blue-White",
     "sui",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10010967": [
     "Isaac Tuyizere",
@@ -4007,7 +4317,9 @@
     53,
     "Rabat Army FC",
     "mar",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10010984": [
     "Bertrand Ndayisaba",
@@ -4021,7 +4333,9 @@
     52,
     "Port Said Green",
     "egy",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10011007": [
     "Jackson Hakizimana",
@@ -4050,7 +4364,8 @@
     "Casablanca Green",
     "mar",
     [
-     "wasteful"
+     "wasteful",
+     "twelfthMan"
     ]
    ],
    "10010981": [
@@ -4058,7 +4373,9 @@
     52,
     "Enugu Antelopes",
     "nga",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10010985": [
     "Fiacre Zigirinshuti",
@@ -4073,7 +4390,8 @@
     "Osaka Cherry",
     "jpn",
     [
-     "wasteful"
+     "wasteful",
+     "poorUnderPressure"
     ]
    ],
    "10010989": [
@@ -4095,14 +4413,18 @@
     52,
     "Soweto Pirates",
     "rsa",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10010994": [
     "Hervé Nsabimana",
     52,
     "Pretoria Brazilians",
     "rsa",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10010995": [
     "Thierry Tuyizere",
@@ -4123,7 +4445,9 @@
     51,
     "Giza Pyramids FC",
     "egy",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10010998": [
     "Yannick Safari",
@@ -4160,7 +4484,9 @@
     50,
     "Aba Elephants",
     "nga",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10011017": [
     "Alphonse Rugira",
@@ -4188,21 +4514,27 @@
     50,
     "Berkane Orange",
     "mar",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "14017": [
     "Antoine Kabera",
     50,
     "Limpopo United",
     "rsa",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10011012": [
     "Protais Munyaneza",
     50,
     "Rabat Army FC",
     "mar",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10011006": [
     "Ismael Manzi",
@@ -4283,7 +4615,9 @@
     48,
     "Enugu Antelopes",
     "nga",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "14008": [
     "Gustave Mazimpaka",
@@ -4297,7 +4631,9 @@
     48,
     "Cairo Red",
     "egy",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10011031": [
     "Norbert Mugabo",
@@ -4318,7 +4654,9 @@
     47,
     "Port Said Green",
     "egy",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10010978": [
     "Eugène Ishimwe",
@@ -4346,7 +4684,9 @@
     46,
     "Stellenbosch Wine",
     "rsa",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10011038": [
     "Dominique Tuyizere",
@@ -4381,14 +4721,18 @@
     45,
     "Casablanca Green",
     "mar",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10011008": [
     "Honoré Ntambara",
     45,
     "Karviná City",
     "cze",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10011026": [
     "Léon Rwabukamba",
@@ -4404,7 +4748,9 @@
     44,
     "Ismailia Yellow",
     "egy",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10011028": [
     "Emmanuel Nyirinkwaya",
@@ -4425,14 +4771,18 @@
     43,
     "Tshwane United",
     "rsa",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10011019": [
     "Yves Turatsinze",
     43,
     "Cairo White Knights",
     "egy",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10011025": [
     "Damascène Havugimana",
@@ -4446,7 +4796,9 @@
     43,
     "Rabat Army FC",
     "mar",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10011034": [
     "Ildephonse Ngoga",
@@ -4460,7 +4812,9 @@
     42,
     "Casablanca Red",
     "mar",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10010980": [
     "Émile Kayitare",
@@ -4488,7 +4842,9 @@
     41,
     "Cairo White Knights",
     "egy",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10011039": [
     "Kennedy Mugisha",
@@ -4539,7 +4895,9 @@
     38,
     "Casablanca Green",
     "mar",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1140002002": [
     "Yves Muhizi",
@@ -4574,7 +4932,9 @@
     34,
     "Cairo Ceramic",
     "egy",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10011037": [
     "Obed Semivumbi",
@@ -4588,7 +4948,9 @@
     30,
     "New Taipei Ships FC",
     "tpe",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1140004003": [
     "Innocent Kalisa",
@@ -4609,14 +4971,18 @@
     24,
     "Sagamu Stars",
     "nga",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1140002005": [
     "Gaspard Mucyo",
     24,
     "Cairo Ceramic",
     "egy",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1140004000": [
     "Paul Bizimana",
@@ -4653,14 +5019,18 @@
     22,
     "Fès Maroon",
     "mar",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1140004004": [
     "Sylvain Ngoga",
     21,
     "Rabat Army FC",
     "mar",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "1140003000": [
     "Alexis Turatsinze",
@@ -4674,21 +5044,27 @@
     20,
     "Berkane Orange",
     "mar",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "1140003006": [
     "Hassan Rurangwa",
     20,
     "Pretoria Brazilians",
     "rsa",
-    []
+    [
+     "consistent"
+    ]
    ],
    "1140004002": [
     "Martin Mukama",
     20,
     "Stockholm Blue-Stripes",
     "swe",
-    []
+    [
+     "injuryProne"
+    ]
    ]
   },
   "140/6": {
@@ -4760,7 +5136,9 @@
     56,
     "Graz Storm",
     "aut",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10010977": [
     "Ildephonse Gashumba",
@@ -4781,14 +5159,18 @@
     56,
     "Gangwon Orange",
     "kor",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "14014": [
     "Michel Niyigena",
     55,
     "Giza Pyramids FC",
     "egy",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10010986": [
     "Protais Rugamba",
@@ -4796,7 +5178,8 @@
     "Shandong Orange",
     "chn",
     [
-     "wasteful"
+     "wasteful",
+     "easilyTired"
     ]
    ],
    "10010974": [
@@ -4832,7 +5215,9 @@
     54,
     "Limpopo United",
     "rsa",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10010969": [
     "Laurent Niyitegeka",
@@ -4846,7 +5231,9 @@
     53,
     "Rabat Army FC",
     "mar",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1140002002": [
     "Yves Muhizi",
@@ -4869,7 +5256,9 @@
     51,
     "Jos Plateau FC",
     "nga",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10010987": [
     "Noël Twagirimana",
@@ -4877,7 +5266,8 @@
     "Casablanca Green",
     "mar",
     [
-     "wasteful"
+     "wasteful",
+     "easilyTired"
     ]
    ],
    "10010999": [
@@ -4892,7 +5282,9 @@
     50,
     "Stellenbosch Wine",
     "rsa",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "14003": [
     "Léon Hakizimana",
@@ -4934,14 +5326,18 @@
     50,
     "Pretoria Brazilians",
     "rsa",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10010983": [
     "Vincent Nsengimana",
     50,
     "Pretoria Brazilians",
     "rsa",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "14012": [
     "Callixte Ngabo",
@@ -4985,14 +5381,18 @@
     49,
     "Cairo Red",
     "egy",
-    []
+    [
+     "consistent"
+    ]
    ],
    "1140005005": [
     "Kamali Irakoze",
     49,
     "Cairo Red",
     "egy",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1140006006": [
     "Bertrand Umutoni",
@@ -5027,7 +5427,9 @@
     48,
     "Casablanca Red",
     "mar",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "14001": [
     "Pascal Hitimana",
@@ -5062,7 +5464,9 @@
     47,
     "Cairo White Knights",
     "egy",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1140004003": [
     "Innocent Kalisa",
@@ -5076,28 +5480,36 @@
     47,
     "Adelaide Red",
     "aus",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10010992": [
     "Justin Nzeyimana",
     47,
     "Soweto Pirates",
     "rsa",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10011000": [
     "Lambert Rutayisire",
     47,
     "Chengdu Phoenix",
     "chn",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "14016": [
     "Patrick Nzeyimana",
     47,
     "Port Said Green",
     "egy",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10011038": [
     "Dominique Tuyizere",
@@ -5125,7 +5537,9 @@
     46,
     "Fès Maroon",
     "mar",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10010967": [
     "Isaac Tuyizere",
@@ -5140,7 +5554,8 @@
     "Sagamu Stars",
     "nga",
     [
-     "wasteful"
+     "wasteful",
+     "twelfthMan"
     ]
    ],
    "10011008": [
@@ -5148,7 +5563,9 @@
     46,
     "Karviná City",
     "cze",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "14023": [
     "Pierre Ntambara",
@@ -5204,7 +5621,9 @@
     44,
     "Tshwane United",
     "rsa",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10010984": [
     "Bertrand Ndayisaba",
@@ -5248,7 +5667,9 @@
     42,
     "Rabat Sky Blue",
     "mar",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "14004": [
     "Fiacre Mugabo",
@@ -5276,7 +5697,9 @@
     42,
     "Cairo Ceramic",
     "egy",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "1140002006": [
     "Abdoul Uwizeye",
@@ -5304,21 +5727,27 @@
     41,
     "Jutland Black-Red",
     "den",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1140004005": [
     "Ildephonse Safari",
     41,
     "Kano Pillars",
     "nga",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10010960": [
     "Alexis Tuyisenge",
     41,
     "Ismailia Yellow",
     "egy",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "1140008005": [
     "Salomon Mutsinzi",
@@ -5339,14 +5768,18 @@
     40,
     "Cairo Ceramic",
     "egy",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1140006002": [
     "Oscar Uwimana",
     40,
     "Cairo White Knights",
     "egy",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1140003005": [
     "Bonheur Ngoga",
@@ -5360,7 +5793,9 @@
     39,
     "Casablanca Green",
     "mar",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10011009": [
     "Ulrich Sugira",
@@ -5381,7 +5816,9 @@
     39,
     "Rabat Army FC",
     "mar",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "1140008001": [
     "Fabrice Nibishaka",
@@ -5395,7 +5832,9 @@
     38,
     "Aba Elephants",
     "nga",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "1140003000": [
     "Alexis Turatsinze",
@@ -5416,14 +5855,18 @@
     38,
     "Sagamu Stars",
     "nga",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1140004002": [
     "Martin Mukama",
     38,
     "Stellenbosch Wine",
     "rsa",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "1140002004": [
     "Protais Bagabo",
@@ -5444,7 +5887,9 @@
     37,
     "Cairo Red",
     "egy",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10011023": [
     "Théoneste Mutabazi",
@@ -5472,7 +5917,9 @@
     36,
     "Jos Plateau FC",
     "nga",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "1140007004": [
     "Honoré Mugabo",
@@ -5493,14 +5940,18 @@
     35,
     "Soweto Chiefs",
     "rsa",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10010993": [
     "Protais Ndayisaba",
     35,
     "Casablanca Green",
     "mar",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10011032": [
     "Salomon Hitimana",
@@ -5514,21 +5965,27 @@
     35,
     "Borås Yellow-Black",
     "swe",
-    []
+    [
+     "consistent"
+    ]
    ],
    "1140003001": [
     "Wilson Cyubahiro",
     34,
     "Berkane Orange",
     "mar",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10011010": [
     "Ismael Sibomana",
     34,
     "Casablanca Red",
     "mar",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1140007001": [
     "Fiacre Mudahinyuka",
@@ -5558,7 +6015,9 @@
     32,
     "Tshwane United",
     "rsa",
-    []
+    [
+     "consistent"
+    ]
    ],
    "1140008004": [
     "Laurent Bizimana",
@@ -5602,7 +6061,9 @@
     29,
     "Rabat Army FC",
     "mar",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10011024": [
     "Djihad Muhizi",
@@ -5658,7 +6119,9 @@
     20,
     "Soweto Pirates",
     "rsa",
-    []
+    [
+     "inconsistent"
+    ]
    ]
   }
  },
@@ -5669,7 +6132,9 @@
     75,
     "Rio Ave Green-White",
     "por",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10000003": [
     "Pandeli Guri",
@@ -5683,7 +6148,9 @@
     74,
     "Tayside Tangerines",
     "sco",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "106": [
     "Gentian Leka",
@@ -5691,7 +6158,8 @@
     "Brussels Purple",
     "bel",
     [
-     "hothead"
+     "hothead",
+     "inconsistent"
     ]
    ],
    "107": [
@@ -5699,14 +6167,18 @@
     73,
     "Florence Purple",
     "ita",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10000001": [
     "Edmond Hajdari",
     73,
     "Gangwon Orange",
     "kor",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10000004": [
     "Myrto Mehmeti",
@@ -5750,7 +6222,9 @@
     71,
     "Seville Red",
     "esp",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10000029": [
     "Gerald Rruka",
@@ -5774,14 +6248,18 @@
     70,
     "Jeddah Green",
     "ksa",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10000024": [
     "Kristjan Çami",
     70,
     "Charleroi Zebras",
     "bel",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000025": [
     "Pandeli Jashari",
@@ -5802,7 +6280,9 @@
     69,
     "Edinburgh Maroon",
     "sco",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000014": [
     "Eltion Mici",
@@ -5864,14 +6344,18 @@
     68,
     "Porto Chequers",
     "por",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10000008": [
     "Ansi Pashaj",
     68,
     "Ticino Black-White",
     "sui",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10000009": [
     "Amir Tahiri",
@@ -5948,7 +6432,9 @@
     66,
     "Pretoria Brazilians",
     "rsa",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10000032": [
     "Elvis Prifti",
@@ -5990,7 +6476,9 @@
     65,
     "Tayside Tangerines",
     "sco",
-    []
+    [
+     "consistent"
+    ]
    ],
    "121": [
     "Besnik Zeneli",
@@ -6013,7 +6501,9 @@
     64,
     "Glasgow Blue",
     "sco",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "105": [
     "Rei Zani",
@@ -6041,7 +6531,9 @@
     63,
     "Ticino Black-White",
     "sui",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000047": [
     "Defrim Basha",
@@ -6069,7 +6561,9 @@
     62,
     "Cali Red",
     "col",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "116": [
     "Xhevahir Kodra",
@@ -6118,7 +6612,9 @@
     61,
     "Stockholm Blue-Stripes",
     "swe",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "117": [
     "Ansi Ajazi",
@@ -6132,7 +6628,9 @@
     61,
     "Gothenburg Angels",
     "swe",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10000043": [
     "Myrto Peqini",
@@ -6167,14 +6665,18 @@
     61,
     "Ayrshire Blue-White",
     "sco",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "123": [
     "Ergys Elezi",
     61,
     "Casablanca Green",
     "mar",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10000051": [
     "Orges Gega",
@@ -6209,7 +6711,9 @@
     60,
     "Thessaloniki Black-White",
     "gre",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10000034": [
     "Dashmir Mici",
@@ -6232,7 +6736,9 @@
     59,
     "Lillestrøm Yellow",
     "nor",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000074": [
     "Fatjon Gjergji",
@@ -6267,14 +6773,18 @@
     58,
     "Tshwane United",
     "rsa",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "120": [
     "Frederik Elezi",
     57,
     "Malmö Sky Blue",
     "swe",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000053": [
     "Taulant Çaushi",
@@ -6302,7 +6812,9 @@
     56,
     "Geneva Purple",
     "sui",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10000075": [
     "Odise Sula",
@@ -6344,35 +6856,45 @@
     55,
     "Liberec Lynxes",
     "cze",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "112": [
     "Kastriot Gjoni",
     55,
     "Cairo Red",
     "egy",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10000059": [
     "Rei Kastrati",
     54,
     "Lisbon Eagles",
     "por",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10000071": [
     "Kreshnik Zani",
     54,
     "Thessaloniki Yellow",
     "gre",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10000073": [
     "Julian Sadiku",
     54,
     "Thessaloniki Yellow",
     "gre",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10000079": [
     "Renato Maloku",
@@ -6386,28 +6908,36 @@
     53,
     "Glasgow Green",
     "sco",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1001002006": [
     "Berat Hysi",
     53,
     "Crete Black-White",
     "gre",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000068": [
     "Rei Rrapaj",
     53,
     "Granite City FC",
     "sco",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "1001002003": [
     "Arben Shtjefni",
     53,
     "Glasgow Green",
     "sco",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10000061": [
     "Adrian Haxhiu",
@@ -6435,7 +6965,9 @@
     40,
     "Farum Tigers",
     "den",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "1001003003": [
     "Dritan Dema",
@@ -6457,7 +6989,8 @@
     "Rabat Sky Blue",
     "mar",
     [
-     "wasteful"
+     "wasteful",
+     "twelfthMan"
     ]
    ],
    "1001004000": [
@@ -6465,7 +6998,9 @@
     35,
     "Brno Shooters",
     "cze",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "1001004004": [
     "Orges Basha",
@@ -6494,7 +7029,8 @@
     "Glasgow Blue",
     "sco",
     [
-     "wasteful"
+     "wasteful",
+     "twelfthMan"
     ]
    ],
    "1001003004": [
@@ -6516,7 +7052,9 @@
     25,
     "Ticino Black-White",
     "sui",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "1001003005": [
     "Valon Ibrahimi",
@@ -6530,7 +7068,9 @@
     21,
     "Piraeus Red-White",
     "gre",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ]
   },
   "1/6": {
@@ -6546,14 +7086,18 @@
     76,
     "Rio Ave Green-White",
     "por",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "108": [
     "Florian Bajrami",
     75,
     "Limburg Smurfs",
     "bel",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10000002": [
     "Bekim Krasniqi",
@@ -6590,14 +7134,18 @@
     74,
     "Tayside Tangerines",
     "sco",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10000024": [
     "Kristjan Çami",
     74,
     "Charleroi Zebras",
     "bel",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000033": [
     "Bledar Çami",
@@ -6613,7 +7161,9 @@
     72,
     "Florence Purple",
     "ita",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10000015": [
     "Alket Cara",
@@ -6627,7 +7177,9 @@
     72,
     "Pretoria Brazilians",
     "rsa",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10000019": [
     "Florian Kola",
@@ -6662,7 +7214,9 @@
     70,
     "Tshwane United",
     "rsa",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10000014": [
     "Eltion Mici",
@@ -6692,7 +7246,9 @@
     69,
     "Thessaloniki Yellow",
     "gre",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "106": [
     "Gentian Leka",
@@ -6700,7 +7256,8 @@
     "Brussels Purple",
     "bel",
     [
-     "setPiece"
+     "setPiece",
+     "inconsistent"
     ]
    ],
    "110": [
@@ -6708,7 +7265,9 @@
     69,
     "Jutland Black-Red",
     "den",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10000018": [
     "Orges Ndoja",
@@ -6722,7 +7281,9 @@
     69,
     "Crete Black-White",
     "gre",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000027": [
     "Kastriot Zeneli",
@@ -6757,7 +7318,9 @@
     67,
     "Lisbon Eagles",
     "por",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10000012": [
     "Orges Dushku",
@@ -6794,7 +7357,9 @@
     66,
     "Malmö Sky Blue",
     "swe",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "111": [
     "Labinot Shala",
@@ -6843,21 +7408,27 @@
     64,
     "Pretoria Brazilians",
     "rsa",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10000064": [
     "Klevis Shtjefni",
     64,
     "Stockholm Blue-Stripes",
     "swe",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000005": [
     "Qazim Çela",
     63,
     "Seville Red",
     "esp",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "116": [
     "Xhevahir Kodra",
@@ -6871,7 +7442,9 @@
     63,
     "Glasgow Blue",
     "sco",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "119": [
     "Petrit Hajdari",
@@ -6920,14 +7493,18 @@
     62,
     "Ayrshire Blue-White",
     "sco",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000068": [
     "Rei Rrapaj",
     61,
     "Plzeň Brewers",
     "cze",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "104": [
     "Amir Cani",
@@ -6941,7 +7518,9 @@
     61,
     "Alpha Olomouc",
     "cze",
-    []
+    [
+     "consistent"
+    ]
    ],
    "122": [
     "Jetmir Peqini",
@@ -7004,14 +7583,18 @@
     60,
     "Athens Eagles",
     "gre",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10000047": [
     "Defrim Basha",
     60,
     "Graz Storm",
     "aut",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10000004": [
     "Myrto Mehmeti",
@@ -7025,7 +7608,9 @@
     59,
     "Salzburg Bulls",
     "aut",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "1001006001": [
     "Julian Berisha",
@@ -7046,14 +7631,18 @@
     59,
     "Thessaloniki Black-White",
     "gre",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10000007": [
     "Julian Marku",
     58,
     "Silkeborg Green",
     "den",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1001008004": [
     "Dashmir Tahiri",
@@ -7111,7 +7700,9 @@
     55,
     "Agrinio Green",
     "gre",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10000056": [
     "Taulant Ajazi",
@@ -7134,14 +7725,18 @@
     55,
     "Söder Green",
     "swe",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10000072": [
     "Kreshnik Papa",
     55,
     "Jablonec Glassmakers",
     "cze",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1001004002": [
     "Rexhep Aliji",
@@ -7149,7 +7744,8 @@
     "Rabat Sky Blue",
     "mar",
     [
-     "wasteful"
+     "wasteful",
+     "twelfthMan"
     ]
    ],
    "10000075": [
@@ -7164,7 +7760,9 @@
     55,
     "Casablanca Green",
     "mar",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000062": [
     "Muhamet Basha",
@@ -7178,7 +7776,9 @@
     54,
     "Brno Shooters",
     "cze",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "1001003000": [
     "Gezim Jashari",
@@ -7206,7 +7806,9 @@
     53,
     "Brno City",
     "cze",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000034": [
     "Dashmir Mici",
@@ -7222,7 +7824,9 @@
     53,
     "Brussels Purple",
     "bel",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10000051": [
     "Orges Gega",
@@ -7250,7 +7854,9 @@
     52,
     "Vienna Violets",
     "aut",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1001007005": [
     "Ylber Lami",
@@ -7292,7 +7898,9 @@
     51,
     "Ayrshire Blue-White",
     "sco",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1001003006": [
     "Nedim Tahiri",
@@ -7306,7 +7914,9 @@
     50,
     "Porto Dragons",
     "por",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10000049": [
     "Ylber Abrashi",
@@ -7341,7 +7951,9 @@
     49,
     "Athens Shamrock",
     "gre",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "113": [
     "Kristjan Basha",
@@ -7356,7 +7968,8 @@
     "Edinburgh Maroon",
     "sco",
     [
-     "wasteful"
+     "wasteful",
+     "inconsistent"
     ]
    ],
    "10000058": [
@@ -7393,7 +8006,8 @@
     "Glasgow Blue",
     "sco",
     [
-     "wasteful"
+     "wasteful",
+     "twelfthMan"
     ]
    ],
    "10000073": [
@@ -7401,7 +8015,9 @@
     45,
     "Thessaloniki Yellow",
     "gre",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "1001009004": [
     "Elvis Gjoka",
@@ -7429,7 +8045,9 @@
     44,
     "Bern Young Lads",
     "sui",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10000076": [
     "Albert Gashi",
@@ -7457,7 +8075,9 @@
     43,
     "Ostrava Miners",
     "cze",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "1001003005": [
     "Valon Ibrahimi",
@@ -7471,7 +8091,9 @@
     42,
     "Asunción Red-Blue",
     "par",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10000077": [
     "Muhamet Hysi",
@@ -7485,7 +8107,9 @@
     41,
     "Borås Yellow-Black",
     "swe",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "1001007002": [
     "Renato Lleshi",
@@ -7552,7 +8176,9 @@
     30,
     "Hradec Lions",
     "cze",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1001010003": [
     "Elseid Beqiri",
@@ -7585,7 +8211,8 @@
     "Marseille White",
     "fra",
     [
-     "oldHead"
+     "oldHead",
+     "individualistic"
     ]
    ],
    "2306": [
@@ -7619,7 +8246,9 @@
     78,
     "Athens Eagles",
     "gre",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10001692": [
     "Ádám Nagy",
@@ -7652,7 +8281,8 @@
     "Utrecht Domtower FC",
     "ned",
     [
-     "setPiece"
+     "setPiece",
+     "individualistic"
     ]
    ],
    "10001697": [
@@ -7661,7 +8291,8 @@
     "Frisian Hearts",
     "ned",
     [
-     "hothead"
+     "hothead",
+     "individualistic"
     ]
    ],
    "10001698": [
@@ -7686,7 +8317,8 @@
     "Edinburgh Maroon",
     "sco",
     [
-     "bigGame"
+     "bigGame",
+     "easilyTired"
     ]
    ],
    "10001680": [
@@ -7711,7 +8343,9 @@
     74,
     "Balearic Red",
     "esp",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10001694": [
     "Mátyás Orosz",
@@ -7752,7 +8386,9 @@
     73,
     "Brno City",
     "cze",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10001707": [
     "Alex Gyurcsó",
@@ -7785,7 +8421,9 @@
     71,
     "Prague Iron",
     "cze",
-    []
+    [
+     "consistent"
+    ]
    ],
    "800000001": [
     "Pinned Added",
@@ -7801,7 +8439,9 @@
     70,
     "Crete Black-White",
     "gre",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10001700": [
     "Zétény Pintér",
@@ -7815,7 +8455,9 @@
     70,
     "Rabat Army FC",
     "mar",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10001695": [
     "Bendegúz Dobos",
@@ -7838,7 +8480,9 @@
     70,
     "Bosphorus Eagles",
     "tur",
-    []
+    [
+     "consistent"
+    ]
    ],
    "2318": [
     "Bálint Dudás",
@@ -7879,7 +8523,9 @@
     69,
     "Crete Black-White",
     "gre",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "2320": [
     "Milos Daróczi",
@@ -7919,7 +8565,9 @@
     68,
     "Vienna Violets",
     "aut",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10001709": [
     "Nándor Fehér",
@@ -7958,7 +8606,9 @@
     67,
     "Vienna Violets",
     "aut",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10001730": [
     "Richárd Gyurcsó",
@@ -7966,7 +8616,8 @@
     "Glasgow Blue",
     "sco",
     [
-     "penaltyStopper"
+     "penaltyStopper",
+     "inconsistent"
     ]
    ],
    "10001722": [
@@ -7995,14 +8646,18 @@
     66,
     "Athens Eagles",
     "gre",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10001710": [
     "Norbert Vincze",
     66,
     "Piraeus Red-White",
     "gre",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10001720": [
     "László Dobos",
@@ -8010,7 +8665,8 @@
     "Tyrol Green",
     "aut",
     [
-     "penaltyStopper"
+     "penaltyStopper",
+     "consistent"
     ]
    ],
    "10001701": [
@@ -8086,7 +8742,8 @@
     "Lillestrøm Yellow",
     "nor",
     [
-     "wasteful"
+     "wasteful",
+     "inconsistent"
     ]
    ],
    "10001681": [
@@ -8094,7 +8751,9 @@
     65,
     "Thessaloniki Black-White",
     "gre",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10001731": [
     "Lénárd Berki",
@@ -8109,7 +8768,8 @@
     "FC Club Zlín",
     "cze",
     [
-     "wasteful"
+     "wasteful",
+     "injuryProne"
     ]
    ],
    "10001752": [
@@ -8125,7 +8785,8 @@
     "Munich Red",
     "ger",
     [
-     "wasteful"
+     "wasteful",
+     "poorUnderPressure"
     ]
    ],
    "10001732": [
@@ -8133,7 +8794,9 @@
     63,
     "Glasgow Green",
     "sco",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10001751": [
     "Bulcsú Boda",
@@ -8182,7 +8845,9 @@
     62,
     "Famalicão Blue-White",
     "por",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10001737": [
     "Endre Pap",
@@ -8231,7 +8896,9 @@
     61,
     "Plzeň Brewers",
     "cze",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10001743": [
     "Gergely Győri",
@@ -8246,7 +8913,8 @@
     "Wolfsberg White-Black",
     "aut",
     [
-     "wasteful"
+     "wasteful",
+     "individualistic"
     ]
    ],
    "1023002005": [
@@ -8282,7 +8950,9 @@
     59,
     "Geneva Purple",
     "sui",
-    []
+    [
+     "consistent"
+    ]
    ],
    "1023002002": [
     "Zsombor Vida",
@@ -8303,14 +8973,18 @@
     58,
     "Trondheim White",
     "nor",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10001759": [
     "Nándor Mészáros",
     57,
     "Edinburgh Greens",
     "sco",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "2313": [
     "Zente Lukács",
@@ -8324,7 +8998,9 @@
     57,
     "Bruges Green",
     "bel",
-    []
+    [
+     "consistent"
+    ]
    ],
    "2321": [
     "Ákos Lukács",
@@ -8345,7 +9021,9 @@
     56,
     "Tyrol Green",
     "aut",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10001756": [
     "Endre Kocsis",
@@ -8408,7 +9086,9 @@
     46,
     "Malmö Sky Blue",
     "swe",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "1023003002": [
     "István Mezei",
@@ -8422,7 +9102,9 @@
     42,
     "Borås Yellow-Black",
     "swe",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "1023004001": [
     "Gyula Orbán",
@@ -8463,14 +9145,18 @@
     31,
     "Tyrol Green",
     "aut",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "1023003000": [
     "László Bencze",
     30,
     "Liberec Lynxes",
     "cze",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1023004003": [
     "Willi Kiss",
@@ -8524,7 +9210,8 @@
     "Thessaloniki Black-White",
     "gre",
     [
-     "hothead"
+     "hothead",
+     "consistent"
     ]
    ],
    "2304": [
@@ -8599,7 +9286,8 @@
     "Munich Red",
     "ger",
     [
-     "setPiece"
+     "setPiece",
+     "poorUnderPressure"
     ]
    ],
    "2310": [
@@ -8608,7 +9296,8 @@
     "Volos Argonauts",
     "gre",
     [
-     "setPiece"
+     "setPiece",
+     "inconsistent"
     ]
    ],
    "10001709": [
@@ -8640,7 +9329,8 @@
     "Stockholm Blue-Stripes",
     "swe",
     [
-     "bigGame"
+     "bigGame",
+     "consistent"
     ]
    ],
    "2305": [
@@ -8658,7 +9348,8 @@
     "Stockholm Blue-Stripes",
     "swe",
     [
-     "hothead"
+     "hothead",
+     "injuryProne"
     ]
    ],
    "10001722": [
@@ -8690,7 +9381,8 @@
     "Athens Eagles",
     "gre",
     [
-     "oldHead"
+     "oldHead",
+     "individualistic"
     ]
    ],
    "10001716": [
@@ -8707,7 +9399,9 @@
     72,
     "Rabat Army FC",
     "mar",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10001692": [
     "Ádám Nagy",
@@ -8731,7 +9425,8 @@
     "Vigo Sky Blue",
     "esp",
     [
-     "setPiece"
+     "setPiece",
+     "individualistic"
     ]
    ],
    "10001707": [
@@ -8764,14 +9459,18 @@
     69,
     "Vienna Violets",
     "aut",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "2317": [
     "Ármin Réti",
     69,
     "Glasgow Green",
     "sco",
-    []
+    [
+     "consistent"
+    ]
    ],
    "2301": [
     "Pinned Renamed",
@@ -8817,7 +9516,9 @@
     68,
     "FC Blšany",
     "cze",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10001717": [
     "Vince Magyar",
@@ -8839,7 +9540,8 @@
     "Thessaloniki Black-White",
     "gre",
     [
-     "penaltyStopper"
+     "penaltyStopper",
+     "consistent"
     ]
    ],
    "10001736": [
@@ -8847,7 +9549,9 @@
     68,
     "Rio Ave Green-White",
     "por",
-    []
+    [
+     "consistent"
+    ]
    ],
    "1023003006": [
     "Zsolt Szabados",
@@ -8862,7 +9566,8 @@
     "Trondheim White",
     "nor",
     [
-     "wasteful"
+     "wasteful",
+     "individualistic"
     ]
    ],
    "10001726": [
@@ -8884,7 +9589,9 @@
     66,
     "FC Blšany",
     "cze",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10001720": [
     "László Dobos",
@@ -8892,7 +9599,8 @@
     "Brno Shooters",
     "cze",
     [
-     "penaltyStopper"
+     "penaltyStopper",
+     "consistent"
     ]
    ],
    "10001729": [
@@ -8907,7 +9615,9 @@
     65,
     "Graz Storm",
     "aut",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10001698": [
     "Zsolt Lengyel",
@@ -8956,7 +9666,9 @@
     64,
     "Charleroi Zebras",
     "bel",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10001740": [
     "Álmos Lengyel",
@@ -8992,7 +9704,8 @@
     "Linz Black-White",
     "aut",
     [
-     "wasteful"
+     "wasteful",
+     "consistent"
     ]
    ],
    "10001702": [
@@ -9007,7 +9720,9 @@
     63,
     "Glasgow Blue",
     "sco",
-    []
+    [
+     "consistent"
+    ]
    ],
    "1023007005": [
     "Csaba Fodor",
@@ -9042,7 +9757,9 @@
     62,
     "St. Gallen Green-White",
     "sui",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10001731": [
     "Lénárd Berki",
@@ -9063,7 +9780,9 @@
     61,
     "Antalya Coast",
     "tur",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "1023006004": [
     "Gábor Fodor",
@@ -9099,7 +9818,8 @@
     "Wolfsberg White-Black",
     "aut",
     [
-     "wasteful"
+     "wasteful",
+     "injuryProne"
     ]
    ],
    "1023004001": [
@@ -9121,7 +9841,9 @@
     60,
     "Bosphorus Eagles",
     "tur",
-    []
+    [
+     "consistent"
+    ]
    ],
    "1023006000": [
     "Nándor Rácz",
@@ -9149,14 +9871,18 @@
     60,
     "Copenhagen White-Blue",
     "den",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10001734": [
     "Viktor Soós",
     60,
     "Athens Eagles",
     "gre",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10001700": [
     "Zétény Pintér",
@@ -9235,7 +9961,9 @@
     57,
     "Edinburgh Greens",
     "sco",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1023006005": [
     "Ákos Bencze",
@@ -9249,7 +9977,9 @@
     56,
     "Tyrol Green",
     "aut",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10001750": [
     "Callum Fodor",
@@ -9263,14 +9993,18 @@
     55,
     "Klokani Praha",
     "cze",
-    []
+    [
+     "consistent"
+    ]
    ],
    "1023006003": [
     "Noel Jakab",
     54,
     "Athens Eagles",
     "gre",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10001756": [
     "Endre Kocsis",
@@ -9284,7 +10018,9 @@
     54,
     "Ayrshire Blue-White",
     "sco",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1023008005": [
     "Gergely Balázs",
@@ -9312,7 +10048,9 @@
     52,
     "Molde Blue",
     "nor",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "1023003004": [
     "Mátyus Takács",
@@ -9328,21 +10066,27 @@
     50,
     "Trondheim White",
     "nor",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1023004000": [
     "Dorián Fazekas",
     50,
     "Arctic Gold",
     "nor",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "1023003000": [
     "László Bencze",
     49,
     "Tyrol Green",
     "aut",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1023010006": [
     "Barna Réti",
@@ -9364,7 +10108,8 @@
     "Jutland Black-Red",
     "den",
     [
-     "wasteful"
+     "wasteful",
+     "easilyTired"
     ]
    ],
    "1023008006": [
@@ -9372,7 +10117,9 @@
     48,
     "Plzeň Brewers",
     "cze",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "1023005001": [
     "Balázs Jakab",
@@ -9409,14 +10156,18 @@
     47,
     "Soweto Pirates",
     "rsa",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "1023010005": [
     "Lóránt Kárpáti",
     46,
     "Stockholm Blue-Stripes",
     "swe",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1023008003": [
     "Bence Vörös",
@@ -9453,7 +10204,9 @@
     40,
     "Prague Red-White",
     "cze",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "1023009003": [
     "Zsombor Barta",
@@ -9467,7 +10220,9 @@
     38,
     "Zürich Blue-White",
     "sui",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1023010004": [
     "Barna Hegyi",
@@ -9488,7 +10243,9 @@
     37,
     "Zürich Hoppers",
     "sui",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "1023008001": [
     "Richárd Sárközi",
@@ -9509,7 +10266,9 @@
     32,
     "Aarhus White-Blue",
     "den",
-    []
+    [
+     "twelfthMan"
+    ]
    ]
   },
   "140/0": {
@@ -9518,7 +10277,9 @@
     59,
     "Adelaide Red",
     "aus",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "14005": [
     "Bonaventure Munyemana",
@@ -9539,7 +10300,9 @@
     57,
     "Ismailia Yellow",
     "egy",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10010976": [
     "Pinfirst10 Pinsur0",
@@ -9567,7 +10330,9 @@
     56,
     "Malmö Sky Blue",
     "swe",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10010965": [
     "Pinfirst3 Pinsur3",
@@ -9583,7 +10348,9 @@
     56,
     "Soweto Pirates",
     "rsa",
-    []
+    [
+     "consistent"
+    ]
    ],
    "14002": [
     "Patrick Habineza",
@@ -9611,7 +10378,9 @@
     55,
     "Pretoria Brazilians",
     "rsa",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10010986": [
     "Pinfirst5 Pinsur7",
@@ -9619,7 +10388,8 @@
     "Chengdu Phoenix",
     "chn",
     [
-     "wasteful"
+     "wasteful",
+     "easilyTired"
     ]
    ],
    "14011": [
@@ -9657,14 +10427,18 @@
     53,
     "Aba Elephants",
     "nga",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10010961": [
     "Pinfirst10 Pinsur3",
     53,
     "Lucerne Blue-White",
     "sui",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10010967": [
     "Pinfirst6 Pinsur19",
@@ -9685,7 +10459,9 @@
     53,
     "Rabat Army FC",
     "mar",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10010984": [
     "Pinfirst12 Pinsur5",
@@ -9699,7 +10475,9 @@
     52,
     "Port Said Green",
     "egy",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10011007": [
     "Pinfirst7 Pinsur13",
@@ -9728,7 +10506,8 @@
     "Casablanca Green",
     "mar",
     [
-     "wasteful"
+     "wasteful",
+     "twelfthMan"
     ]
    ],
    "10010981": [
@@ -9736,7 +10515,9 @@
     52,
     "Enugu Antelopes",
     "nga",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10010985": [
     "Pinfirst8 Pinsur0",
@@ -9751,7 +10532,8 @@
     "Osaka Cherry",
     "jpn",
     [
-     "wasteful"
+     "wasteful",
+     "poorUnderPressure"
     ]
    ],
    "10010989": [
@@ -9773,14 +10555,18 @@
     52,
     "Soweto Pirates",
     "rsa",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10010994": [
     "Pinfirst3 Pinsur16",
     52,
     "Pretoria Brazilians",
     "rsa",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10010995": [
     "Pinfirst7 Pinsur0",
@@ -9801,7 +10587,9 @@
     51,
     "Beijing Green",
     "chn",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10010998": [
     "Pinfirst14 Pinsur12",
@@ -9838,7 +10626,9 @@
     50,
     "Aba Elephants",
     "nga",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10011017": [
     "Pinfirst16 Pinsur16",
@@ -9866,21 +10656,27 @@
     50,
     "Berkane Orange",
     "mar",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "14017": [
     "Moses Tuyisenge",
     50,
     "Asunción White",
     "par",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10011012": [
     "Pinfirst3 Pinsur1",
     50,
     "Rabat Army FC",
     "mar",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10011006": [
     "Pinfirst16 Pinsur2",
@@ -9961,7 +10757,9 @@
     48,
     "Enugu Antelopes",
     "nga",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "14008": [
     "Jacques Umutoni",
@@ -9975,7 +10773,9 @@
     48,
     "Cairo Red",
     "egy",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10011031": [
     "Pinfirst0 Pinsur0",
@@ -9996,7 +10796,9 @@
     47,
     "Brøndby Yellow",
     "den",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10010978": [
     "Pinfirst2 Pinsur18",
@@ -10024,7 +10826,9 @@
     46,
     "Stellenbosch Wine",
     "rsa",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10011038": [
     "Pinfirst15 Pinsur17",
@@ -10059,14 +10863,18 @@
     45,
     "Casablanca Green",
     "mar",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10011008": [
     "Pinfirst8 Pinsur9",
     45,
     "Karviná City",
     "cze",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10011026": [
     "Pinfirst8 Pinsur18",
@@ -10082,7 +10890,9 @@
     44,
     "Ismailia Yellow",
     "egy",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10011028": [
     "Pinfirst9 Pinsur17",
@@ -10103,14 +10913,18 @@
     43,
     "Tshwane United",
     "rsa",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10011019": [
     "Pinfirst4 Pinsur19",
     43,
     "Cairo White Knights",
     "egy",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10011025": [
     "Pinfirst12 Pinsur0",
@@ -10124,7 +10938,9 @@
     43,
     "Rabat Army FC",
     "mar",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10011034": [
     "Pinfirst16 Pinsur8",
@@ -10138,7 +10954,9 @@
     42,
     "Casablanca Red",
     "mar",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10010980": [
     "Pinfirst11 Pinsur6",
@@ -10166,7 +10984,9 @@
     41,
     "Cairo White Knights",
     "egy",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10011039": [
     "Pinfirst18 Pinsur15",
@@ -10217,7 +11037,9 @@
     38,
     "Casablanca Green",
     "mar",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1140002002": [
     "Pinfirst8 Pinsur1",
@@ -10252,7 +11074,9 @@
     34,
     "Cairo Ceramic",
     "egy",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10011037": [
     "Pinfirst10 Pinsur8",
@@ -10266,7 +11090,9 @@
     30,
     "New Taipei Ships FC",
     "tpe",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1140004003": [
     "Pinfirst18 Pinsur8",
@@ -10287,14 +11113,18 @@
     24,
     "Sagamu Stars",
     "nga",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1140002005": [
     "Pinfirst15 Pinsur11",
     24,
     "Cairo Ceramic",
     "egy",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1140004000": [
     "Pinfirst0 Pinsur10",
@@ -10331,14 +11161,18 @@
     22,
     "Fès Maroon",
     "mar",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1140004004": [
     "Pinfirst2 Pinsur16",
     21,
     "Rabat Army FC",
     "mar",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "1140003000": [
     "Pinfirst7 Pinsur15",
@@ -10352,21 +11186,27 @@
     20,
     "Berkane Orange",
     "mar",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "1140003006": [
     "Pinfirst5 Pinsur0",
     20,
     "Pretoria Brazilians",
     "rsa",
-    []
+    [
+     "consistent"
+    ]
    ],
    "1140004002": [
     "Pinfirst8 Pinsur19",
     20,
     "Stockholm Blue-Stripes",
     "swe",
-    []
+    [
+     "injuryProne"
+    ]
    ]
   },
   "140/6": {
@@ -10421,7 +11261,9 @@
     56,
     "Graz Storm",
     "aut",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10010977": [
     "Pinfirst3 Pinsur13",
@@ -10442,7 +11284,9 @@
     56,
     "Gangwon Orange",
     "kor",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "14009": [
     "Fiacre Gakwerere",
@@ -10459,7 +11303,8 @@
     "Shandong Orange",
     "chn",
     [
-     "wasteful"
+     "wasteful",
+     "easilyTired"
     ]
    ],
    "10010974": [
@@ -10509,21 +11354,27 @@
     53,
     "Beijing Green",
     "chn",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "14018": [
     "Hervé Cyubahiro",
     53,
     "Stellenbosch Wine",
     "rsa",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10010971": [
     "Pinfirst19 Pinsur5",
     53,
     "Rabat Army FC",
     "mar",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1140002002": [
     "Pinfirst8 Pinsur1",
@@ -10546,7 +11397,9 @@
     51,
     "Jos Plateau FC",
     "nga",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10010987": [
     "Pinfirst11 Pinsur9",
@@ -10554,7 +11407,8 @@
     "Casablanca Green",
     "mar",
     [
-     "wasteful"
+     "wasteful",
+     "easilyTired"
     ]
    ],
    "10010999": [
@@ -10569,7 +11423,9 @@
     50,
     "Stellenbosch Wine",
     "rsa",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "10010995": [
     "Pinfirst7 Pinsur0",
@@ -10611,14 +11467,18 @@
     50,
     "Pretoria Brazilians",
     "rsa",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10010983": [
     "Pinfirst12 Pinsur3",
     50,
     "Pretoria Brazilians",
     "rsa",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "10010997": [
     "Pinfirst11 Pinsur1",
@@ -10655,14 +11515,18 @@
     49,
     "Cairo Red",
     "egy",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10010961": [
     "Pinfirst10 Pinsur3",
     49,
     "Cairo Red",
     "egy",
-    []
+    [
+     "consistent"
+    ]
    ],
    "14007": [
     "Augustin Sibomana",
@@ -10676,7 +11540,9 @@
     48,
     "Casablanca Red",
     "mar",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "14012": [
     "Emmanuel Karekezi",
@@ -10732,28 +11598,36 @@
     47,
     "Adelaide Red",
     "aus",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10010992": [
     "Pinfirst16 Pinsur0",
     47,
     "Soweto Pirates",
     "rsa",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10011000": [
     "Pinfirst19 Pinsur1",
     47,
     "Chengdu Phoenix",
     "chn",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10011022": [
     "Pinfirst6 Pinsur17",
     47,
     "Cairo White Knights",
     "egy",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10011038": [
     "Pinfirst15 Pinsur17",
@@ -10788,7 +11662,9 @@
     46,
     "Fès Maroon",
     "mar",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10010975": [
     "Pinfirst5 Pinsur18",
@@ -10796,7 +11672,8 @@
     "Sagamu Stars",
     "nga",
     [
-     "wasteful"
+     "wasteful",
+     "twelfthMan"
     ]
    ],
    "14019": [
@@ -10811,7 +11688,9 @@
     46,
     "Karviná City",
     "cze",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10011021": [
     "Pinfirst2 Pinsur3",
@@ -10825,7 +11704,9 @@
     46,
     "Brøndby Yellow",
     "den",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10011030": [
     "Pinfirst14 Pinsur6",
@@ -10874,7 +11755,9 @@
     44,
     "Tshwane United",
     "rsa",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10010984": [
     "Pinfirst12 Pinsur5",
@@ -10916,7 +11799,9 @@
     42,
     "Rabat Sky Blue",
     "mar",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10011002": [
     "Pinfirst19 Pinsur4",
@@ -10930,7 +11815,9 @@
     42,
     "Cairo Ceramic",
     "egy",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "14004": [
     "Michel Uwimana",
@@ -10974,7 +11861,9 @@
     41,
     "Jutland Black-Red",
     "den",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "10011034": [
     "Pinfirst16 Pinsur8",
@@ -10995,21 +11884,27 @@
     41,
     "Ismailia Yellow",
     "egy",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "1140004005": [
     "Pinfirst19 Pinsur8",
     41,
     "Kano Pillars",
     "nga",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1140006002": [
     "Pinfirst4 Pinsur9",
     40,
     "Cairo White Knights",
     "egy",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "10011039": [
     "Pinfirst18 Pinsur15",
@@ -11023,7 +11918,9 @@
     40,
     "Cairo Ceramic",
     "egy",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1140003005": [
     "Pinfirst16 Pinsur18",
@@ -11051,14 +11948,18 @@
     39,
     "Casablanca Green",
     "mar",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1140004004": [
     "Pinfirst2 Pinsur16",
     39,
     "Rabat Army FC",
     "mar",
-    []
+    [
+     "individualistic"
+    ]
    ],
    "1140005000": [
     "Pinfirst8 Pinsur6",
@@ -11079,7 +11980,9 @@
     38,
     "Aba Elephants",
     "nga",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10010968": [
     "Pinfirst0 Pinsur11",
@@ -11093,14 +11996,18 @@
     38,
     "Sagamu Stars",
     "nga",
-    []
+    [
+     "inconsistent"
+    ]
    ],
    "1140004002": [
     "Pinfirst8 Pinsur19",
     38,
     "Stellenbosch Wine",
     "rsa",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10011016": [
     "Pinfirst12 Pinsur14",
@@ -11121,7 +12028,9 @@
     37,
     "Cairo Red",
     "egy",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "1140002004": [
     "Pinfirst8 Pinsur17",
@@ -11142,7 +12051,9 @@
     36,
     "Jos Plateau FC",
     "nga",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "1140007004": [
     "Pinfirst17 Pinsur1",
@@ -11170,14 +12081,18 @@
     35,
     "Borås Yellow-Black",
     "swe",
-    []
+    [
+     "consistent"
+    ]
    ],
    "10010993": [
     "Pinfirst5 Pinsur14",
     35,
     "Casablanca Green",
     "mar",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "10011032": [
     "Pinfirst14 Pinsur17",
@@ -11191,14 +12106,18 @@
     35,
     "Soweto Chiefs",
     "rsa",
-    []
+    [
+     "twelfthMan"
+    ]
    ],
    "1140003001": [
     "Pinfirst1 Pinsur6",
     34,
     "Berkane Orange",
     "mar",
-    []
+    [
+     "poorUnderPressure"
+    ]
    ],
    "1140007001": [
     "Pinfirst17 Pinsur17",
@@ -11212,7 +12131,9 @@
     34,
     "Casablanca Red",
     "mar",
-    []
+    [
+     "easilyTired"
+    ]
    ],
    "1140006003": [
     "Pinfirst3 Pinsur5",
@@ -11228,7 +12149,9 @@
     32,
     "Tshwane United",
     "rsa",
-    []
+    [
+     "consistent"
+    ]
    ],
    "1140007005": [
     "Pinfirst4 Pinsur15",
@@ -11270,7 +12193,9 @@
     29,
     "Rabat Army FC",
     "mar",
-    []
+    [
+     "injuryProne"
+    ]
    ],
    "10011026": [
     "Pinfirst8 Pinsur18",
@@ -11335,7 +12260,9 @@
     20,
     "Soweto Pirates",
     "rsa",
-    []
+    [
+     "inconsistent"
+    ]
    ]
   }
  },

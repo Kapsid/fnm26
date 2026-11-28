@@ -151,6 +151,9 @@ abstract final class BackgroundMatch {
       saveSeed: saveSeed,
     );
 
+    final benchIds = {
+      for (final p in [...homeSubs, ...awaySubs]) p.id,
+    };
     final booked = <int>{
       for (final e in events)
         if (e.type == MatchEventType.yellowCard) e.playerId,
@@ -178,6 +181,13 @@ abstract final class BackgroundMatch {
               sentOff: sentOff.contains(p.id),
               teamScore: mine,
               oppScore: theirs,
+              swing: PlayerTraits.swingOf(
+                PlayerTraits.of(p, saveSeed: saveSeed),
+              ),
+              bonus: PlayerTraits.markBonusOf(
+                PlayerTraits.of(p, saveSeed: saveSeed),
+                cameOn: benchIds.contains(p.id),
+              ),
             ),
             goals: goalsByPlayer[p.id] ?? 0,
             assists: assists[p.id] ?? 0,
@@ -251,7 +261,16 @@ abstract final class BackgroundMatch {
         final pick = _weighted(
           candidates,
           rng,
-          (c) => _creatorWeight(c) * minutes(c),
+          (c) =>
+              _creatorWeight(c) *
+              minutes(c) *
+              // An individualist lays fewer on.
+              (PlayerTraits.of(
+                    c,
+                    saveSeed: saveSeed,
+                  ).contains(PlayerTrait.individualistic)
+                  ? PlayerTraits.individualisticAssistFactor
+                  : 1.0),
         );
         assists.update(pick.id, (v) => v + 1, ifAbsent: () => 1);
       }
@@ -301,7 +320,11 @@ abstract final class BackgroundMatch {
     for (final p in played) {
       final traits = PlayerTraits.of(p, saveSeed: saveSeed);
       // An iron man shrugs off what puts others out; nobody is immune.
-      final frailty = traits.contains(PlayerTrait.ironMan) ? 0.45 : 1.0;
+      final frailty = traits.contains(PlayerTrait.ironMan)
+          ? 0.45
+          : traits.contains(PlayerTrait.injuryProne)
+          ? PlayerTraits.injuryProneFactor
+          : 1.0;
       if (rng.chance(_injuryChance * frailty * minutes(p))) {
         events.add(
           _event(MatchEventType.injury, p, nationId, 15 + rng.nextInt(70)),

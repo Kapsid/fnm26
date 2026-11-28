@@ -19497,4 +19497,76 @@ class AppLocalizationsFi extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'Joukkueeseen tarvitaan vähintään $count maalivahtia.';
   }
+
+  @override
+  String get traitTwelfthMan => '12. pelaaja';
+
+  @override
+  String get traitTwelfthManBlurb =>
+      'Piristää joukkuetta tullessaan vaihtopenkiltä.';
+
+  @override
+  String get traitConsistent => 'Tasainen';
+
+  @override
+  String get traitConsistentBlurb =>
+      'Pelaa harvoin huonosti, mutta harvoin loistavastikaan.';
+
+  @override
+  String get traitInconsistent => 'Epätasainen';
+
+  @override
+  String get traitInconsistentBlurb =>
+      'Loistaa yhdessä ottelussa ja katoaa seuraavassa.';
+
+  @override
+  String get traitInjuryProne => 'Loukkaantumisaltis';
+
+  @override
+  String get traitInjuryProneBlurb =>
+      'Loukkaantuu paljon useammin kuin useimmat.';
+
+  @override
+  String get traitEasilyTired => 'Väsyy helposti';
+
+  @override
+  String get traitEasilyTiredBlurb => 'Hapottuu aiemmin kuin joukkuetoverinsa.';
+
+  @override
+  String get traitPoorUnderPressure => 'Ei kestä painetta';
+
+  @override
+  String get traitPoorUnderPressureBlurb =>
+      'Hänen tasonsa laskee pudotuspeleissä.';
+
+  @override
+  String get traitIndividualistic => 'Yksilöpelaaja';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'Laukoo, kun pitäisi syöttää, ja syöttää vähemmän maaleja.';
+
+  @override
+  String get matchScoutTraitTwelfthMan =>
+      'Heillä on vaarallinen vaihtopelaaja penkillä.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'Yksi heidän avauskokoonpanonsa pelaajista väsyy aikaisin, joten viimeinen puolituntinen voi aueta.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'Yksi heidän hyökkääjistään laukoo mieluummin kuin syöttää.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'Yksi heidän avauskokoonpanonsa pelaajista katoaa usein isoissa otteluissa.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'Yksi heidän avauskokoonpanonsa pelaajista on hyvin epätasainen.';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'Yksi heidän avauskokoonpanonsa pelaajista on usein loukkaantunut.';
 }

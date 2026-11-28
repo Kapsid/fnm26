@@ -19803,4 +19803,72 @@ class AppLocalizationsCs extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'Soupiska potřebuje alespoň $count brankáře.';
   }
+
+  @override
+  String get traitTwelfthMan => '12. hráč';
+
+  @override
+  String get traitTwelfthManBlurb => 'Pozvedne tým, když přijde z lavičky.';
+
+  @override
+  String get traitConsistent => 'Spolehlivý';
+
+  @override
+  String get traitConsistentBlurb => 'Málokdy zahraje špatně, ale ani skvěle.';
+
+  @override
+  String get traitInconsistent => 'Nevyrovnaný';
+
+  @override
+  String get traitInconsistentBlurb => 'Jeden zápas exceluje, další propadne.';
+
+  @override
+  String get traitInjuryProne => 'Náchylný ke zraněním';
+
+  @override
+  String get traitInjuryProneBlurb => 'Zraňuje se mnohem častěji než ostatní.';
+
+  @override
+  String get traitEasilyTired => 'Rychle se unaví';
+
+  @override
+  String get traitEasilyTiredBlurb => 'Dojdou mu síly dřív než spoluhráčům.';
+
+  @override
+  String get traitPoorUnderPressure => 'Pod tlakem selhává';
+
+  @override
+  String get traitPoorUnderPressureBlurb =>
+      'Ve vyřazovacích zápasech jeho hra upadá.';
+
+  @override
+  String get traitIndividualistic => 'Individualista';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'Střílí, když by měl přihrát, a připraví méně gólů.';
+
+  @override
+  String get matchScoutTraitTwelfthMan =>
+      'Na lavičce mají nebezpečného žolíka.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'Jeden z jejich hráčů v základu se brzy unaví, poslední půlhodina se může otevřít.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'Jeden z jejich útočníků raději vystřelí, než by přihrál.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'Jeden z jejich hráčů v základu se ve velkých zápasech ztrácí.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'Jeden z jejich hráčů v základu je hodně nevyrovnaný.';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'Jeden z jejich hráčů v základu bývá často zraněný.';
 }

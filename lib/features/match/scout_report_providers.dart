@@ -125,6 +125,15 @@ scoutReportProvider = FutureProvider.autoDispose
         xiFor: xiFor,
         opponentStrength: strength,
         playerStrength: myStrength,
+        // The next dozen men by rating are the bench a "12th man" sits on.
+        bench: () {
+          final xi = {for (final p in xiFor(Formation.f433)) p.id};
+          return ([
+            for (final p in pool)
+              if (!xi.contains(p.id)) p,
+          ]..sort((a, b) => b.overall.compareTo(a.overall))).take(12).toList();
+        }(),
+        traitsOf: (p) => PlayerTraits.of(p, saveSeed: career.rngSeed),
         hasSetPieceSpecialist: (xi) => xi.any(
           (p) => PlayerTraits.of(
             p,

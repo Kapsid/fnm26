@@ -19519,4 +19519,76 @@ class AppLocalizationsNl extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'De selectie heeft minstens $count keepers nodig.';
   }
+
+  @override
+  String get traitTwelfthMan => 'Twaalfde man';
+
+  @override
+  String get traitTwelfthManBlurb =>
+      'Tilt het team op als hij van de bank komt.';
+
+  @override
+  String get traitConsistent => 'Constant';
+
+  @override
+  String get traitConsistentBlurb =>
+      'Speelt zelden slecht, maar ook zelden geweldig.';
+
+  @override
+  String get traitInconsistent => 'Wisselvallig';
+
+  @override
+  String get traitInconsistentBlurb =>
+      'Wisselt van wedstrijd tot wedstrijd sterk en zwak af.';
+
+  @override
+  String get traitInjuryProne => 'Blessuregevoelig';
+
+  @override
+  String get traitInjuryProneBlurb =>
+      'Raakt veel vaker geblesseerd dan de meesten.';
+
+  @override
+  String get traitEasilyTired => 'Snel moe';
+
+  @override
+  String get traitEasilyTiredBlurb =>
+      'Raakt eerder door zijn krachten heen dan zijn teamgenoten.';
+
+  @override
+  String get traitPoorUnderPressure => 'Bezwijkt onder druk';
+
+  @override
+  String get traitPoorUnderPressureBlurb => 'Zakt weg in knock-outwedstrijden.';
+
+  @override
+  String get traitIndividualistic => 'Individualist';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'Schiet waar hij moet passen, en geeft minder assists.';
+
+  @override
+  String get matchScoutTraitTwelfthMan =>
+      'Ze hebben een gevaarlijke invaller op de bank.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'Een van hun basisspelers is snel moe, dus het laatste halfuur kan opengaan.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'Een van hun aanvallers schiet liever dan dat hij passt.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'Een van hun basisspelers verdwijnt vaak in de grote wedstrijden.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'Een van hun basisspelers is erg wisselvallig.';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'Een van hun basisspelers is vaak geblesseerd.';
 }

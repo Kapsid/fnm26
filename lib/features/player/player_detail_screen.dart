@@ -1342,6 +1342,48 @@ class _TraitRow extends StatelessWidget {
     l.traitPenaltyStopperBlurb,
     true,
   ),
+  PlayerTrait.twelfthMan => (
+    Icons.event_seat_rounded,
+    l.traitTwelfthMan,
+    l.traitTwelfthManBlurb,
+    true,
+  ),
+  PlayerTrait.consistent => (
+    Icons.horizontal_rule_rounded,
+    l.traitConsistent,
+    l.traitConsistentBlurb,
+    true,
+  ),
+  PlayerTrait.inconsistent => (
+    Icons.ssid_chart_rounded,
+    l.traitInconsistent,
+    l.traitInconsistentBlurb,
+    false,
+  ),
+  PlayerTrait.injuryProne => (
+    Icons.medical_services_rounded,
+    l.traitInjuryProne,
+    l.traitInjuryProneBlurb,
+    false,
+  ),
+  PlayerTrait.easilyTired => (
+    Icons.hourglass_bottom_rounded,
+    l.traitEasilyTired,
+    l.traitEasilyTiredBlurb,
+    false,
+  ),
+  PlayerTrait.poorUnderPressure => (
+    Icons.trending_down_rounded,
+    l.traitPoorUnderPressure,
+    l.traitPoorUnderPressureBlurb,
+    false,
+  ),
+  PlayerTrait.individualistic => (
+    Icons.person_rounded,
+    l.traitIndividualistic,
+    l.traitIndividualisticBlurb,
+    false,
+  ),
 };
 
 /// The compact glyph strip used in squad lists, where there is no room for

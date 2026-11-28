@@ -19618,4 +19618,75 @@ class AppLocalizationsPl extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'Kadra potrzebuje co najmniej $count bramkarzy.';
   }
+
+  @override
+  String get traitTwelfthMan => 'Dwunasty zawodnik';
+
+  @override
+  String get traitTwelfthManBlurb => 'Ożywia drużynę, gdy wchodzi z ławki.';
+
+  @override
+  String get traitConsistent => 'Solidny';
+
+  @override
+  String get traitConsistentBlurb =>
+      'Rzadko gra słabo, ale rzadko też błyszczy.';
+
+  @override
+  String get traitInconsistent => 'Nierówny';
+
+  @override
+  String get traitInconsistentBlurb =>
+      'Od meczu do meczu raz błyszczy, raz znika.';
+
+  @override
+  String get traitInjuryProne => 'Podatny na kontuzje';
+
+  @override
+  String get traitInjuryProneBlurb =>
+      'Łapie urazy znacznie częściej niż większość.';
+
+  @override
+  String get traitEasilyTired => 'Szybko się męczy';
+
+  @override
+  String get traitEasilyTiredBlurb =>
+      'Brakuje mu sił wcześniej niż kolegom z drużyny.';
+
+  @override
+  String get traitPoorUnderPressure => 'Pęka pod presją';
+
+  @override
+  String get traitPoorUnderPressureBlurb =>
+      'W meczach pucharowych jego forma spada.';
+
+  @override
+  String get traitIndividualistic => 'Indywidualista';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'Strzela, gdy powinien podać, i ma mniej asyst.';
+
+  @override
+  String get matchScoutTraitTwelfthMan => 'Na ławce mają groźnego jokera.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'Jeden z ich podstawowych zawodników szybko się męczy, więc ostatnie pół godziny może się otworzyć.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'Jeden z ich napastników woli strzelać, niż podawać.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'Jeden z ich podstawowych zawodników często znika w wielkich meczach.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'Jeden z ich podstawowych zawodników gra bardzo nierówno.';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'Jeden z ich podstawowych zawodników często łapie kontuzje.';
 }

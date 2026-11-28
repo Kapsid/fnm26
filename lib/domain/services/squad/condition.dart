@@ -46,22 +46,28 @@ abstract final class Condition {
 
   /// A player's form from their [recentRatings] (newest first). Fewer than two
   /// games reads as [PlayerForm.steady] — not enough to judge.
+  ///
+  /// [swing] scales how far his form strays from steady: a consistent
+  /// player's below 1, an inconsistent one's above (`PlayerTraits.swingOf`).
+  /// The average itself is reported as it is.
   static ({PlayerForm state, double avg, int delta}) form(
-    List<double> recentRatings,
-  ) {
+    List<double> recentRatings, {
+    double swing = 1.0,
+  }) {
     final window = recentRatings.take(formWindow).toList();
     if (window.length < 2) {
       return (state: PlayerForm.steady, avg: 0, delta: 0);
     }
     final avg = window.reduce((a, b) => a + b) / window.length;
-    final delta = ((avg - _baseline) * 1.8).clamp(-4.0, 4.0).round();
-    final state = avg >= 7.6
+    final read = swing == 1.0 ? avg : _baseline + (avg - _baseline) * swing;
+    final delta = ((read - _baseline) * 1.8).clamp(-4.0, 4.0).round();
+    final state = read >= 7.6
         ? PlayerForm.onFire
-        : avg >= 7.05
+        : read >= 7.05
         ? PlayerForm.good
-        : avg >= 6.4
+        : read >= 6.4
         ? PlayerForm.steady
-        : avg >= 5.9
+        : read >= 5.9
         ? PlayerForm.poor
         : PlayerForm.cold;
     return (state: state, avg: avg, delta: delta);
@@ -162,6 +168,7 @@ abstract final class Condition {
   /// to sharpness. Both default to no effect, which is every match outside a
   /// tournament. [weighted] reads fatigue through [weightedFatigue] (a cycle
   /// whose finals are spaced, see `TournamentCalendar.markerKind`).
+  /// [formSwing] is his traits' spread on form (see [form]).
   static PlayerCondition of(
     List<double> recentRatings,
     List<DateTime> appearanceDates,
@@ -173,8 +180,9 @@ abstract final class Condition {
     int statementDelta = 0,
     ClubStanding? clubStanding,
     bool weighted = false,
+    double formSwing = 1.0,
   }) {
-    final f = form(recentRatings);
+    final f = form(recentRatings, swing: formSwing);
     final t = fatigue(
       appearanceDates,
       asOf,

@@ -19606,4 +19606,76 @@ class AppLocalizationsFr extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'L\'effectif doit compter au moins $count gardiens.';
   }
+
+  @override
+  String get traitTwelfthMan => 'Joker de luxe';
+
+  @override
+  String get traitTwelfthManBlurb => 'Dynamise l’équipe quand il sort du banc.';
+
+  @override
+  String get traitConsistent => 'Régulier';
+
+  @override
+  String get traitConsistentBlurb =>
+      'Fait rarement un mauvais match, ni un grand.';
+
+  @override
+  String get traitInconsistent => 'Irrégulier';
+
+  @override
+  String get traitInconsistentBlurb =>
+      'Alterne le très bon et le très moyen d’un match à l’autre.';
+
+  @override
+  String get traitInjuryProne => 'Fragile';
+
+  @override
+  String get traitInjuryProneBlurb =>
+      'Se blesse bien plus souvent que la moyenne.';
+
+  @override
+  String get traitEasilyTired => 'Vite fatigué';
+
+  @override
+  String get traitEasilyTiredBlurb =>
+      'Manque de jambes plus tôt que ses coéquipiers.';
+
+  @override
+  String get traitPoorUnderPressure => 'Craque sous la pression';
+
+  @override
+  String get traitPoorUnderPressureBlurb =>
+      'Son niveau baisse dans les matchs à élimination directe.';
+
+  @override
+  String get traitIndividualistic => 'Individualiste';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'Tire quand il devrait passer, et délivre moins de passes décisives.';
+
+  @override
+  String get matchScoutTraitTwelfthMan =>
+      'Ils ont un joker dangereux sur le banc.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'L’un de leurs titulaires fatigue tôt, la dernière demi-heure pourrait s’ouvrir.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'L’un de leurs attaquants préfère tirer plutôt que passer.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'L’un de leurs titulaires a tendance à disparaître dans les grands matchs.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'L’un de leurs titulaires est très irrégulier.';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'L’un de leurs titulaires est souvent blessé.';
 }

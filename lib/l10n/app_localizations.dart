@@ -29466,6 +29466,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The squad needs at least {count} goalkeepers.'**
   String editorClassicKeepersNeeded(int count);
+
+  /// Player trait name ("12th man"): an impact substitute, better when he comes off the bench.
+  ///
+  /// In en, this message translates to:
+  /// **'12th man'**
+  String get traitTwelfthMan;
+
+  /// Trait effect: lifts the side when he comes on as a substitute.
+  ///
+  /// In en, this message translates to:
+  /// **'Lifts the side when he comes off the bench.'**
+  String get traitTwelfthManBlurb;
+
+  /// Player trait name: his match ratings and form vary less than most.
+  ///
+  /// In en, this message translates to:
+  /// **'Consistent'**
+  String get traitConsistent;
+
+  /// Trait effect.
+  ///
+  /// In en, this message translates to:
+  /// **'Rarely has a bad game, or a great one.'**
+  String get traitConsistentBlurb;
+
+  /// Player trait name (negative): his match ratings and form vary more than most.
+  ///
+  /// In en, this message translates to:
+  /// **'Inconsistent'**
+  String get traitInconsistent;
+
+  /// Trait effect.
+  ///
+  /// In en, this message translates to:
+  /// **'Blows hot and cold from one match to the next.'**
+  String get traitInconsistentBlurb;
+
+  /// Player trait name (negative): gets injured more often.
+  ///
+  /// In en, this message translates to:
+  /// **'Injury-prone'**
+  String get traitInjuryProne;
+
+  /// Trait effect.
+  ///
+  /// In en, this message translates to:
+  /// **'Picks up far more knocks than most.'**
+  String get traitInjuryProneBlurb;
+
+  /// Player trait name (negative): his energy drains faster in a match.
+  ///
+  /// In en, this message translates to:
+  /// **'Tires easily'**
+  String get traitEasilyTired;
+
+  /// Trait effect.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs out of legs sooner than his team-mates.'**
+  String get traitEasilyTiredBlurb;
+
+  /// Player trait name (negative): worse in knockout and finals matches; the opposite of a big-game player.
+  ///
+  /// In en, this message translates to:
+  /// **'Wilts under pressure'**
+  String get traitPoorUnderPressure;
+
+  /// Trait effect.
+  ///
+  /// In en, this message translates to:
+  /// **'His game drops in knockout ties.'**
+  String get traitPoorUnderPressureBlurb;
+
+  /// Player trait name (negative): shoots more himself and passes less.
+  ///
+  /// In en, this message translates to:
+  /// **'Individualist'**
+  String get traitIndividualistic;
+
+  /// Trait effect.
+  ///
+  /// In en, this message translates to:
+  /// **'Shoots when he should pass, and sets up fewer goals.'**
+  String get traitIndividualisticBlurb;
+
+  /// Scout report line on the next opponent, subject "they": an impact substitute on their bench.
+  ///
+  /// In en, this message translates to:
+  /// **'They have a dangerous impact player on the bench.'**
+  String get matchScoutTraitTwelfthMan;
+
+  /// Scout report line: one of their starting players tires early.
+  ///
+  /// In en, this message translates to:
+  /// **'One of their starters tires early, so the last half-hour may open up.'**
+  String get matchScoutTraitEasilyTired;
+
+  /// Scout report line: one of their attacking players shoots rather than passes.
+  ///
+  /// In en, this message translates to:
+  /// **'One of their attackers would rather shoot than pass.'**
+  String get matchScoutTraitIndividualistic;
+
+  /// Scout report line: one of their starting players plays worse in big matches.
+  ///
+  /// In en, this message translates to:
+  /// **'One of their starters tends to go missing on the big occasion.'**
+  String get matchScoutTraitPoorUnderPressure;
+
+  /// Scout report line: one of their starting players is inconsistent.
+  ///
+  /// In en, this message translates to:
+  /// **'One of their starters blows hot and cold.'**
+  String get matchScoutTraitInconsistent;
+
+  /// Scout report line: one of their starting players is often injured.
+  ///
+  /// In en, this message translates to:
+  /// **'One of their starters has a history of knocks.'**
+  String get matchScoutTraitInjuryProne;
 }
 
 class _AppLocalizationsDelegate

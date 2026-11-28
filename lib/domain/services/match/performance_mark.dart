@@ -23,6 +23,11 @@ abstract final class PerformanceMark {
   /// [ownGoals] are goals he put into his own net: they count against him,
   /// and never as goals of his.
   ///
+  /// [swing] scales how far the mark strays from an ordinary 6.5 (a
+  /// consistent player's below 1, an inconsistent one's above), and [bonus]
+  /// is added after it; both come from his traits (`PlayerTraits.swingOf`,
+  /// `PlayerTraits.markBonusOf`) and leave everyone else's mark unchanged.
+  ///
   /// [cleanSheetShare] (0–1) is how much of a defender's clean-sheet bonus
   /// has been earned: the whole of it for a finished match, the default. Only
   /// the live line-ups pass less, for a match still being played (see
@@ -39,8 +44,10 @@ abstract final class PerformanceMark {
     int penaltiesSaved = 0,
     int ownGoals = 0,
     double cleanSheetShare = 1.0,
+    double swing = 1.0,
+    double bonus = 0.0,
   }) {
-    var r = 6.5;
+    var r = _ordinary;
     r += goals * 1.0 + assists * 0.6;
     if (teamScore > oppScore) {
       r += 0.4;
@@ -57,8 +64,16 @@ abstract final class PerformanceMark {
     if (sentOff) r -= 1.2;
     r += penaltiesSaved * 0.5 - penaltiesMissed * 0.4;
     r -= ownGoals * ownGoalCost;
+    // A player's traits: how far his mark strays from the ordinary (1.0 for
+    // almost everyone, so their mark is exactly what it always was) and a
+    // flat lift (a "12th man" off the bench).
+    if (swing != 1.0) r = _ordinary + (r - _ordinary) * swing;
+    r += bonus;
     return (r.clamp(3.0, 10.0) * 10).roundToDouble() / 10;
   }
+
+  /// The mark of a match in which a player did nothing either way.
+  static const double _ordinary = 6.5;
 
   /// What an own goal takes off the mark of the man who scored it.
   static const double ownGoalCost = 0.5;

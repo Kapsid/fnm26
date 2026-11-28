@@ -19445,4 +19445,77 @@ class AppLocalizationsFil extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'Kailangan ng squad ang hindi bababa sa $count na goalkeeper.';
   }
+
+  @override
+  String get traitTwelfthMan => 'Ika-12 na manlalaro';
+
+  @override
+  String get traitTwelfthManBlurb =>
+      'Nagpapasigla sa koponan kapag pumasok mula sa bench.';
+
+  @override
+  String get traitConsistent => 'Konsistent';
+
+  @override
+  String get traitConsistentBlurb =>
+      'Bihirang pumangit ang laro, pero bihira ring kuminang.';
+
+  @override
+  String get traitInconsistent => 'Pabago-bago';
+
+  @override
+  String get traitInconsistentBlurb =>
+      'Minsan kumikinang, minsan nawawala, sa bawat laban.';
+
+  @override
+  String get traitInjuryProne => 'Madalas mapinsala';
+
+  @override
+  String get traitInjuryProneBlurb =>
+      'Mas madalas mapinsala kaysa sa karamihan.';
+
+  @override
+  String get traitEasilyTired => 'Madaling mapagod';
+
+  @override
+  String get traitEasilyTiredBlurb =>
+      'Mas maagang nauubusan ng lakas kaysa sa mga kakampi.';
+
+  @override
+  String get traitPoorUnderPressure => 'Bumibigay sa pressure';
+
+  @override
+  String get traitPoorUnderPressureBlurb =>
+      'Bumababa ang laro niya sa mga knockout na laban.';
+
+  @override
+  String get traitIndividualistic => 'Makasarili';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'Tumitira kahit dapat pumasa, at kaunti ang assist.';
+
+  @override
+  String get matchScoutTraitTwelfthMan =>
+      'May mapanganib silang pamalit sa bench.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'Isa sa mga starter nila ang maagang napapagod, kaya baka bumukas ang huling kalahating oras.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'Isa sa mga forward nila ang mas gustong tumira kaysa pumasa.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'Isa sa mga starter nila ang madalas mawala sa malalaking laban.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'Isa sa mga starter nila ang pabago-bago ang laro.';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'Isa sa mga starter nila ang madalas mapinsala.';
 }

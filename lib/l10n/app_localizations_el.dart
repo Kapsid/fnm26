@@ -19525,4 +19525,77 @@ class AppLocalizationsEl extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'Το ρόστερ χρειάζεται τουλάχιστον $count τερματοφύλακες.';
   }
+
+  @override
+  String get traitTwelfthMan => 'Ο 12ος παίκτης';
+
+  @override
+  String get traitTwelfthManBlurb =>
+      'Ανεβάζει την ομάδα όταν μπαίνει από τον πάγκο.';
+
+  @override
+  String get traitConsistent => 'Σταθερός';
+
+  @override
+  String get traitConsistentBlurb =>
+      'Σπάνια έχει κακό ματς, αλλά και σπάνια λάμπει.';
+
+  @override
+  String get traitInconsistent => 'Ασταθής';
+
+  @override
+  String get traitInconsistentBlurb =>
+      'Από ματς σε ματς άλλοτε λάμπει κι άλλοτε χάνεται.';
+
+  @override
+  String get traitInjuryProne => 'Επιρρεπής στους τραυματισμούς';
+
+  @override
+  String get traitInjuryProneBlurb =>
+      'Τραυματίζεται πολύ πιο συχνά από τους περισσότερους.';
+
+  @override
+  String get traitEasilyTired => 'Κουράζεται εύκολα';
+
+  @override
+  String get traitEasilyTiredBlurb =>
+      'Μένει χωρίς δυνάμεις νωρίτερα από τους συμπαίκτες του.';
+
+  @override
+  String get traitPoorUnderPressure => 'Λυγίζει υπό πίεση';
+
+  @override
+  String get traitPoorUnderPressureBlurb =>
+      'Πέφτει το επίπεδό του στα νοκ άουτ.';
+
+  @override
+  String get traitIndividualistic => 'Ατομιστής';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'Σουτάρει όταν πρέπει να πασάρει και δίνει λιγότερες ασίστ.';
+
+  @override
+  String get matchScoutTraitTwelfthMan =>
+      'Έχουν μια επικίνδυνη λύση στον πάγκο.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'Ένας από τους βασικούς τους κουράζεται νωρίς, οπότε το τελευταίο μισάωρο μπορεί να ανοίξει.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'Ένας από τους επιθετικούς τους προτιμά να σουτάρει παρά να πασάρει.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'Ένας από τους βασικούς τους συχνά χάνεται στα μεγάλα παιχνίδια.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'Ένας από τους βασικούς τους είναι πολύ ασταθής.';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'Ένας από τους βασικούς τους τραυματίζεται συχνά.';
 }

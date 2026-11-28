@@ -19267,4 +19267,76 @@ class AppLocalizationsVi extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'Đội hình cần ít nhất $count thủ môn.';
   }
+
+  @override
+  String get traitTwelfthMan => 'Người thứ 12';
+
+  @override
+  String get traitTwelfthManBlurb =>
+      'Tiếp lửa cho đội khi vào sân từ ghế dự bị.';
+
+  @override
+  String get traitConsistent => 'Ổn định';
+
+  @override
+  String get traitConsistentBlurb =>
+      'Hiếm khi chơi tệ, nhưng cũng hiếm khi bùng nổ.';
+
+  @override
+  String get traitInconsistent => 'Thất thường';
+
+  @override
+  String get traitInconsistentBlurb =>
+      'Trận này tỏa sáng, trận sau lại mờ nhạt.';
+
+  @override
+  String get traitInjuryProne => 'Dễ chấn thương';
+
+  @override
+  String get traitInjuryProneBlurb =>
+      'Dính chấn thương thường xuyên hơn hẳn phần lớn cầu thủ.';
+
+  @override
+  String get traitEasilyTired => 'Nhanh xuống sức';
+
+  @override
+  String get traitEasilyTiredBlurb => 'Hết hơi sớm hơn các đồng đội.';
+
+  @override
+  String get traitPoorUnderPressure => 'Kém bản lĩnh';
+
+  @override
+  String get traitPoorUnderPressureBlurb =>
+      'Phong độ đi xuống ở các trận đấu loại trực tiếp.';
+
+  @override
+  String get traitIndividualistic => 'Chơi cá nhân';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'Sút khi lẽ ra phải chuyền, và ít kiến tạo hơn.';
+
+  @override
+  String get matchScoutTraitTwelfthMan =>
+      'Họ có một quân bài dự bị nguy hiểm trên ghế.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'Một cầu thủ đá chính của họ xuống sức sớm, nên nửa giờ cuối có thể trở nên cởi mở.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'Một tiền đạo của họ thích tự dứt điểm hơn là chuyền bóng.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'Một cầu thủ đá chính của họ hay mờ nhạt ở các trận lớn.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'Một cầu thủ đá chính của họ rất thất thường.';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'Một cầu thủ đá chính của họ hay dính chấn thương.';
 }

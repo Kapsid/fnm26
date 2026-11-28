@@ -18733,4 +18733,64 @@ class AppLocalizationsJa extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'スカッドにはGKが$count人以上必要です。';
   }
+
+  @override
+  String get traitTwelfthMan => '12人目の男';
+
+  @override
+  String get traitTwelfthManBlurb => '途中出場でチームを勢いづける。';
+
+  @override
+  String get traitConsistent => '安定感';
+
+  @override
+  String get traitConsistentBlurb => '大崩れも少ないが、大活躍も少ない。';
+
+  @override
+  String get traitInconsistent => 'ムラがある';
+
+  @override
+  String get traitInconsistentBlurb => '試合ごとに出来の差が大きい。';
+
+  @override
+  String get traitInjuryProne => 'ケガが多い';
+
+  @override
+  String get traitInjuryProneBlurb => 'ほとんどの選手よりはるかにケガをしやすい。';
+
+  @override
+  String get traitEasilyTired => 'スタミナ不足';
+
+  @override
+  String get traitEasilyTiredBlurb => 'チームメイトより早く足が止まる。';
+
+  @override
+  String get traitPoorUnderPressure => '重圧に弱い';
+
+  @override
+  String get traitPoorUnderPressureBlurb => 'ノックアウトの試合でパフォーマンスが落ちる。';
+
+  @override
+  String get traitIndividualistic => '独りよがり';
+
+  @override
+  String get traitIndividualisticBlurb => 'パスすべき場面でシュートを打ち、アシストが少ない。';
+
+  @override
+  String get matchScoutTraitTwelfthMan => 'ベンチに危険なスーパーサブがいます。';
+
+  @override
+  String get matchScoutTraitEasilyTired => '先発の一人が早く疲れるので、終盤30分は試合が開くかもしれません。';
+
+  @override
+  String get matchScoutTraitIndividualistic => 'アタッカーの一人はパスよりシュートを選びたがります。';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure => '先発の一人は大一番で消えがちです。';
+
+  @override
+  String get matchScoutTraitInconsistent => '先発の一人はプレーにムラがあります。';
+
+  @override
+  String get matchScoutTraitInjuryProne => '先発の一人はケガがちです。';
 }

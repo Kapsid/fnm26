@@ -350,21 +350,20 @@ class _PlayerEditFormState extends ConsumerState<PlayerEditForm> {
   }
 
   /// Picks or drops trait [t] of [p]; a pick past [PlayerTraits.maxTraits]
-  /// (the unknown ones counted) is refused, and says so.
+  /// (the unknown ones counted) is refused, and says so. A pick replaces a
+  /// trait it contradicts ([PlayerTraits.excludes]: an iron man is never
+  /// injury-prone), so no player carries both.
   void _toggleTrait(PackPlayer p, PlayerTrait t, {required bool on}) {
-    final now = p.traits ?? const <PlayerTrait>[];
-    if (on && now.length + p.unknownTraits.length >= PlayerTraits.maxTraits) {
+    final kept = [
+      for (final x in p.traits ?? const <PlayerTrait>[])
+        if (x != t && !(on && PlayerTraits.excludes(x, t))) x,
+    ];
+    if (on && kept.length + p.unknownTraits.length >= PlayerTraits.maxTraits) {
       setState(() => _traitRefused = true);
       return;
     }
     setState(() => _traitRefused = false);
-    _edit(
-      (p) => SquadEdits.withTraits(p, [
-        for (final x in p.traits ?? const <PlayerTrait>[])
-          if (x != t) x,
-        if (on) t,
-      ]),
-    );
+    _edit((p) => SquadEdits.withTraits(p, [...kept, if (on) t]));
   }
 
   /// The three qualities as Advanced's sliders set them: the type chips

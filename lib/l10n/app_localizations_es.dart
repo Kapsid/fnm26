@@ -19526,4 +19526,76 @@ class AppLocalizationsEs extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'La plantilla necesita al menos $count porteros.';
   }
+
+  @override
+  String get traitTwelfthMan => 'Revulsivo';
+
+  @override
+  String get traitTwelfthManBlurb =>
+      'Levanta al equipo cuando sale desde el banquillo.';
+
+  @override
+  String get traitConsistent => 'Regular';
+
+  @override
+  String get traitConsistentBlurb =>
+      'Rara vez tiene un mal partido, o uno brillante.';
+
+  @override
+  String get traitInconsistent => 'Irregular';
+
+  @override
+  String get traitInconsistentBlurb =>
+      'Alterna partidos brillantes con otros para olvidar.';
+
+  @override
+  String get traitInjuryProne => 'Propenso a lesiones';
+
+  @override
+  String get traitInjuryProneBlurb => 'Se lesiona mucho más que la mayoría.';
+
+  @override
+  String get traitEasilyTired => 'Se cansa pronto';
+
+  @override
+  String get traitEasilyTiredBlurb =>
+      'Se queda sin piernas antes que sus compañeros.';
+
+  @override
+  String get traitPoorUnderPressure => 'Se encoge bajo presión';
+
+  @override
+  String get traitPoorUnderPressureBlurb =>
+      'Baja su nivel en las eliminatorias.';
+
+  @override
+  String get traitIndividualistic => 'Individualista';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'Tira cuando debería pasar y da menos asistencias.';
+
+  @override
+  String get matchScoutTraitTwelfthMan =>
+      'Tienen un revulsivo peligroso en el banquillo.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'Uno de sus titulares se cansa pronto, así que la última media hora puede abrirse.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'Uno de sus atacantes prefiere tirar antes que pasar.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'Uno de sus titulares suele desaparecer en los partidos grandes.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'Uno de sus titulares es muy irregular.';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'Uno de sus titulares se lesiona a menudo.';
 }

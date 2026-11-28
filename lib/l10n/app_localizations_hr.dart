@@ -19755,4 +19755,73 @@ class AppLocalizationsHr extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'Momčadi trebaju najmanje $count vratara.';
   }
+
+  @override
+  String get traitTwelfthMan => '12. igrač';
+
+  @override
+  String get traitTwelfthManBlurb => 'Podigne momčad kad uđe s klupe.';
+
+  @override
+  String get traitConsistent => 'Postojan';
+
+  @override
+  String get traitConsistentBlurb =>
+      'Rijetko odigra loše, ali rijetko i sjajno.';
+
+  @override
+  String get traitInconsistent => 'Nestalan';
+
+  @override
+  String get traitInconsistentBlurb =>
+      'Od utakmice do utakmice čas blista, čas nestane.';
+
+  @override
+  String get traitInjuryProne => 'Sklon ozljedama';
+
+  @override
+  String get traitInjuryProneBlurb => 'Ozljeđuje se znatno češće od većine.';
+
+  @override
+  String get traitEasilyTired => 'Brzo se umara';
+
+  @override
+  String get traitEasilyTiredBlurb => 'Ostaje bez snage prije suigrača.';
+
+  @override
+  String get traitPoorUnderPressure => 'Puca pod pritiskom';
+
+  @override
+  String get traitPoorUnderPressureBlurb =>
+      'U nokaut-dvobojima pada mu razina.';
+
+  @override
+  String get traitIndividualistic => 'Individualac';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'Puca kad bi trebao dodati i namjesti manje golova.';
+
+  @override
+  String get matchScoutTraitTwelfthMan => 'Na klupi imaju opasnog jokera.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'Jedan od njihovih prvotimaca rano se umara, pa bi se posljednjih pola sata moglo otvoriti.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'Jedan od njihovih napadača radije puca nego doda.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'Jedan od njihovih prvotimaca često nestane u velikim utakmicama.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'Jedan od njihovih prvotimaca vrlo je nestalan.';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'Jedan od njihovih prvotimaca često je ozlijeđen.';
 }

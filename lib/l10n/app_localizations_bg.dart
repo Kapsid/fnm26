@@ -19499,4 +19499,73 @@ class AppLocalizationsBg extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'Съставът се нуждае от поне $count вратари.';
   }
+
+  @override
+  String get traitTwelfthMan => '12-ият играч';
+
+  @override
+  String get traitTwelfthManBlurb => 'Вдига отбора, когато влезе от пейката.';
+
+  @override
+  String get traitConsistent => 'Постоянен';
+
+  @override
+  String get traitConsistentBlurb => 'Рядко има слаб мач, но и рядко блести.';
+
+  @override
+  String get traitInconsistent => 'Непостоянен';
+
+  @override
+  String get traitInconsistentBlurb => 'Ту блести, ту се губи от мач на мач.';
+
+  @override
+  String get traitInjuryProne => 'Склонен към контузии';
+
+  @override
+  String get traitInjuryProneBlurb => 'Контузва се много по-често от повечето.';
+
+  @override
+  String get traitEasilyTired => 'Бързо се изморява';
+
+  @override
+  String get traitEasilyTiredBlurb =>
+      'Остава без сили по-рано от съотборниците си.';
+
+  @override
+  String get traitPoorUnderPressure => 'Не издържа на напрежение';
+
+  @override
+  String get traitPoorUnderPressureBlurb =>
+      'Играта му спада в мачовете с директна елиминация.';
+
+  @override
+  String get traitIndividualistic => 'Индивидуалист';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'Стреля, когато трябва да подаде, и прави по-малко асистенции.';
+
+  @override
+  String get matchScoutTraitTwelfthMan =>
+      'Имат опасен резервен играч на пейката.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'Един от титулярите им се изморява рано, така че последният половин час може да се отвори.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'Един от нападателите им предпочита да стреля, вместо да подаде.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'Един от титулярите им често се губи в големите мачове.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'Един от титулярите им е много непостоянен.';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'Един от титулярите им често получава контузии.';
 }

@@ -19334,4 +19334,74 @@ class AppLocalizationsTr extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'Kadroda en az $count kaleci olmalı.';
   }
+
+  @override
+  String get traitTwelfthMan => '12. adam';
+
+  @override
+  String get traitTwelfthManBlurb =>
+      'Yedek kulübesinden girince takımı canlandırır.';
+
+  @override
+  String get traitConsistent => 'İstikrarlı';
+
+  @override
+  String get traitConsistentBlurb => 'Nadiren kötü oynar, nadiren de parlar.';
+
+  @override
+  String get traitInconsistent => 'İstikrarsız';
+
+  @override
+  String get traitInconsistentBlurb => 'Maçtan maça bir parlar, bir kaybolur.';
+
+  @override
+  String get traitInjuryProne => 'Sakatlığa yatkın';
+
+  @override
+  String get traitInjuryProneBlurb => 'Çoğu oyuncudan çok daha sık sakatlanır.';
+
+  @override
+  String get traitEasilyTired => 'Çabuk yorulur';
+
+  @override
+  String get traitEasilyTiredBlurb =>
+      'Takım arkadaşlarından önce nefesi kesilir.';
+
+  @override
+  String get traitPoorUnderPressure => 'Baskı altında çöker';
+
+  @override
+  String get traitPoorUnderPressureBlurb =>
+      'Eleme turlarındaki maçlarda seviyesi düşer.';
+
+  @override
+  String get traitIndividualistic => 'Bireysel';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'Pas vermesi gerekirken şut çeker ve daha az asist yapar.';
+
+  @override
+  String get matchScoutTraitTwelfthMan =>
+      'Yedek kulübelerinde tehlikeli bir joker var.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'İlk on birlerinden biri erken yoruluyor, bu yüzden son yarım saat açılabilir.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'Hücumcularından biri pas vermek yerine şut çekmeyi seçiyor.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'İlk on birlerinden biri büyük maçlarda sık sık kayboluyor.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'İlk on birlerinden biri çok istikrarsız.';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'İlk on birlerinden biri sık sık sakatlanıyor.';
 }

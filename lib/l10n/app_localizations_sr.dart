@@ -19780,4 +19780,71 @@ class AppLocalizationsSr extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'Саставу су потребна најмање $count голмана.';
   }
+
+  @override
+  String get traitTwelfthMan => '12. играч';
+
+  @override
+  String get traitTwelfthManBlurb => 'Подигне екипу кад уђе са клупе.';
+
+  @override
+  String get traitConsistent => 'Постојан';
+
+  @override
+  String get traitConsistentBlurb => 'Ретко одигра лоше, али ретко и сјајно.';
+
+  @override
+  String get traitInconsistent => 'Нестабилан';
+
+  @override
+  String get traitInconsistentBlurb =>
+      'Од утакмице до утакмице час блиста, час нестане.';
+
+  @override
+  String get traitInjuryProne => 'Склон повредама';
+
+  @override
+  String get traitInjuryProneBlurb => 'Повређује се знатно чешће од већине.';
+
+  @override
+  String get traitEasilyTired => 'Брзо се умара';
+
+  @override
+  String get traitEasilyTiredBlurb => 'Остаје без снаге пре саиграча.';
+
+  @override
+  String get traitPoorUnderPressure => 'Пуца под притиском';
+
+  @override
+  String get traitPoorUnderPressureBlurb => 'У нокаут дуелима пада му ниво.';
+
+  @override
+  String get traitIndividualistic => 'Индивидуалац';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'Шутира кад би требало да дода и намести мање голова.';
+
+  @override
+  String get matchScoutTraitTwelfthMan => 'На клупи имају опасног џокера.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'Један од њихових првотимаца се рано умара, па би последњих пола сата могло да се отвори.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'Један од њихових нападача радије шутира него што дода.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'Један од њихових првотимаца често нестане на великим утакмицама.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'Један од њихових првотимаца је веома нестабилан.';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'Један од њихових првотимаца је често повређен.';
 }

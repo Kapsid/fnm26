@@ -4,6 +4,7 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:meta/meta.dart';
 
 /// A distinguishing quirk a player is known for.
 ///
@@ -48,6 +49,30 @@ enum PlayerTrait {
 
   /// A goalkeeper who saves penalties, in a match and in a shootout.
   penaltyStopper,
+
+  // The community traits (1.1.5). Rolled by chance rather than earned, and
+  // only into room the traits above leave (see [PlayerTraits.of]).
+
+  /// The "12th man": lifts a match when he comes off the bench.
+  twelfthMan,
+
+  /// Seldom has a bad day, or a great one.
+  consistent,
+
+  /// Blows hot and cold.
+  inconsistent,
+
+  /// Picks up more than his share of knocks. Never an [ironMan].
+  injuryProne,
+
+  /// Runs out of legs sooner than most. Never an [ironMan].
+  easilyTired,
+
+  /// Goes missing on the big occasions. Never a [bigGame] player.
+  poorUnderPressure,
+
+  /// Shoots when he should pass.
+  individualistic,
 }
 
 /// A trait's presentation and its effect, so screens and the engine agree.
@@ -70,6 +95,19 @@ abstract final class PlayerTraits {
     if (p.fixedTraits case final fixed?) {
       return List.unmodifiable(fixed.take(maxTraits));
     }
+    final out = earnedOf(p, saveSeed: saveSeed);
+    if (out.length < maxTraits) {
+      final extra = rolledOf(p, held: out, saveSeed: saveSeed);
+      if (extra != null) out.add(extra);
+    }
+    return out;
+  }
+
+  /// The traits [p] carried before the community traits (1.1.5): every one
+  /// of them derived exactly as it always was, so adding traits never changed
+  /// which of these a player has. [of] only adds to the room they leave.
+  @visibleForTesting
+  static List<PlayerTrait> earnedOf(Player p, {int saveSeed = 0}) {
     final h = _hash(p.id ^ (saveSeed * 0x9E3779B1));
     final a = p.attributes;
     final out = <PlayerTrait>[];
@@ -119,6 +157,123 @@ abstract final class PlayerTraits {
 
     return out.take(maxTraits).toList();
   }
+
+  /// The community trait [p] rolls, if any, beside the traits he already
+  /// [held] (see [earnedOf]); null when the roll lands on nothing.
+  ///
+  /// "Sometimes random": one seeded roll per player, on a hash of his id
+  /// and the save seed that is independent of the one [earnedOf] rolls on,
+  /// so it is stable across sessions and an existing save picks the traits
+  /// up on load with nothing to migrate. Each trait owns a slice of the
+  /// roll ([_rollWeights]) that his attributes may widen or narrow a little;
+  /// a slice a trait cannot take (an iron man is never injury-prone, a
+  /// big-game player never wilts under pressure, a keeper is never an
+  /// individualist) is left empty rather than handed to its neighbour, so
+  /// every other trait keeps its odds. At most one per player, and only into
+  /// a free slot.
+  static PlayerTrait? rolledOf(
+    Player p, {
+    required List<PlayerTrait> held,
+    int saveSeed = 0,
+  }) {
+    if (held.length >= maxTraits) return null;
+    final roll =
+        _hash(
+          (p.id * 0x2C1B3C6D) ^ (saveSeed * 0x9E3779B1) ^ 0x5EED7A17,
+        ) %
+        _rollScale;
+    var edge = 0;
+    for (final (trait, weight) in _rollWeights(p)) {
+      edge += weight;
+      if (roll < edge) {
+        return held.any((h) => excludes(h, trait)) ? null : trait;
+      }
+    }
+    return null;
+  }
+
+  /// The roll's resolution: weights are in parts of this.
+  static const int _rollScale = 10000;
+
+  /// Each community trait's slice of the roll for [p], in parts of
+  /// [_rollScale], in a fixed order. Mostly chance: the base slices put each
+  /// trait on about 4–5% of the world's players (the positives a little
+  /// commoner than the negatives), and the attributes only nudge them.
+  static List<(PlayerTrait, int)> _rollWeights(Player p) {
+    final a = p.attributes;
+    final keeper = p.category == PositionCategory.goalkeeper;
+    final defender = p.category == PositionCategory.defender;
+    final forward = p.category == PositionCategory.forward;
+    int w(double base) => base.round();
+    return [
+      // An impact sub is an attacking player more often than a full-back.
+      (
+        PlayerTrait.twelfthMan,
+        keeper ? 0 : w(560 * (defender ? 0.55 : (forward ? 1.3 : 1.0))),
+      ),
+      // Steadiness comes with years; youth blows hot and cold.
+      (
+        PlayerTrait.consistent,
+        w(480 * (p.age >= 29 ? 1.3 : (p.age <= 22 ? 0.65 : 1.0))),
+      ),
+      (
+        PlayerTrait.inconsistent,
+        w(400 * (p.age <= 23 ? 1.35 : (p.age >= 30 ? 0.7 : 1.0))),
+      ),
+      // Older bodies break more often.
+      (PlayerTrait.injuryProne, w(360 * (p.age >= 31 ? 1.3 : 1.0))),
+      // Low stamina makes it likelier, high stamina rarer.
+      (
+        PlayerTrait.easilyTired,
+        keeper
+            ? 0
+            : w(
+                360 *
+                    (a.stamina < 62
+                        ? 1.6
+                        : a.stamina < 70
+                        ? 1.15
+                        : a.stamina >= 80
+                        ? 0.45
+                        : 0.85),
+              ),
+      ),
+      (
+        PlayerTrait.poorUnderPressure,
+        w(410 * (p.age <= 22 ? 1.25 : (p.age >= 31 ? 0.75 : 1.0))),
+      ),
+      // A gifted dribbler who would rather shoot than pass. The game keeps
+      // no passing attribute apart from technique, so it reads skill on the
+      // ball and an attacking position: a skilful forward the likeliest.
+      (
+        PlayerTrait.individualistic,
+        keeper
+            ? 0
+            : w(
+                640 *
+                    (defender ? 0.35 : (forward ? 1.35 : 1.0)) *
+                    (a.technical >= 76
+                        ? 1.4
+                        : a.technical < 62
+                        ? 0.7
+                        : 1.0),
+              ),
+      ),
+    ];
+  }
+
+  /// Pairs of traits no player carries together.
+  static const Map<PlayerTrait, Set<PlayerTrait>> _exclusive = {
+    PlayerTrait.ironMan: {PlayerTrait.injuryProne, PlayerTrait.easilyTired},
+    PlayerTrait.bigGame: {PlayerTrait.poorUnderPressure},
+    PlayerTrait.consistent: {PlayerTrait.inconsistent},
+  };
+
+  /// Whether [a] and [b] contradict each other (in either order), so no
+  /// player, rolled or picked in the editor, carries both.
+  static bool excludes(PlayerTrait a, PlayerTrait b) =>
+      (_exclusive[a]?.contains(b) ?? false) ||
+      (_exclusive[b]?.contains(a) ?? false);
 
   /// The rating a keeper needs to be known as a shot stopper: about the
   /// world's best twenty or so.
@@ -171,4 +326,65 @@ abstract final class PlayerTraits {
   /// How much harder a penalty stopper makes every penalty and shootout
   /// kick against him (the taker's chance is divided by it).
   static const double penaltyStopperFactor = 1.12;
+
+  // --- The community traits' effects (1.1.5) ---------------------------------
+  // Every one is small: felt over a tournament, never deciding a match.
+
+  /// The rating a "12th man" plays at above himself once he has come off the
+  /// bench, for the rest of the match: about 4–5% on a typical rating.
+  static const int twelfthManBonus = 3;
+
+  /// How much more a "12th man" off the bench weighs as a scorer and a
+  /// creator: his share of the side's chances.
+  static const double twelfthManInvolvement = 1.05;
+
+  /// The lift to a "12th man"'s match mark when he came on.
+  static const double twelfthManMarkBonus = 0.3;
+
+  /// How far from an ordinary 6.5 a consistent player's mark strays, and his
+  /// form from steady: a narrower spread.
+  static const double consistentSwing = 0.8;
+
+  /// The same for an inconsistent player: a wider spread.
+  static const double inconsistentSwing = 1.25;
+
+  /// The widest an inconsistent player's day swings his rating in the
+  /// engine, either way: a good day or a bad one, never on average.
+  static const int inconsistentDayRange = 3;
+
+  /// How much an injury-prone player's injury risk is multiplied.
+  static const double injuryProneFactor = 2.0;
+
+  /// How much faster an easily tired player's energy drains.
+  static const double easilyTiredStaminaFactor = 1.2;
+
+  /// The rating a player who wilts under pressure loses in a KNOCKOUT or
+  /// finals match: [bigGameBonus] turned round.
+  static const int poorUnderPressurePenalty = 4;
+
+  /// An individualist's scorer weight: he takes more of the side's shots.
+  static const double individualisticScorerFactor = 1.3;
+
+  /// An individualist's assist weight: he lays fewer on.
+  static const double individualisticAssistFactor = 0.7;
+
+  /// How much of a chance an individualist still converts when he takes it on
+  /// himself rather than finding the better-placed man.
+  static const double individualisticFinishFactor = 0.95;
+
+  /// The spread multiplier [traits] put on a player's mark and form: below 1
+  /// steadier, above 1 more erratic, 1 for everyone else.
+  static double swingOf(List<PlayerTrait> traits) =>
+      traits.contains(PlayerTrait.consistent)
+      ? consistentSwing
+      : traits.contains(PlayerTrait.inconsistent)
+      ? inconsistentSwing
+      : 1.0;
+
+  /// The flat lift [traits] put on a match mark: a "12th man" who [cameOn]
+  /// off the bench earns [twelfthManMarkBonus]; 0 for everyone else.
+  static double markBonusOf(List<PlayerTrait> traits, {required bool cameOn}) =>
+      cameOn && traits.contains(PlayerTrait.twelfthMan)
+      ? twelfthManMarkBonus
+      : 0.0;
 }

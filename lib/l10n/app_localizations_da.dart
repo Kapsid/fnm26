@@ -19420,4 +19420,75 @@ class AppLocalizationsDa extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'Truppen skal have mindst $count målmænd.';
   }
+
+  @override
+  String get traitTwelfthMan => '12. mand';
+
+  @override
+  String get traitTwelfthManBlurb =>
+      'Løfter holdet, når han kommer ind fra bænken.';
+
+  @override
+  String get traitConsistent => 'Stabil';
+
+  @override
+  String get traitConsistentBlurb =>
+      'Har sjældent en dårlig kamp, men heller ikke en fremragende.';
+
+  @override
+  String get traitInconsistent => 'Ustabil';
+
+  @override
+  String get traitInconsistentBlurb => 'Svinger fra kamp til kamp.';
+
+  @override
+  String get traitInjuryProne => 'Skadesplaget';
+
+  @override
+  String get traitInjuryProneBlurb =>
+      'Bliver skadet langt oftere end de fleste.';
+
+  @override
+  String get traitEasilyTired => 'Bliver hurtigt træt';
+
+  @override
+  String get traitEasilyTiredBlurb =>
+      'Løber tør for kræfter før sine holdkammerater.';
+
+  @override
+  String get traitPoorUnderPressure => 'Knækker under pres';
+
+  @override
+  String get traitPoorUnderPressureBlurb =>
+      'Hans niveau falder i knockoutkampe.';
+
+  @override
+  String get traitIndividualistic => 'Individualist';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'Skyder, når han burde aflevere, og laver færre oplæg.';
+
+  @override
+  String get matchScoutTraitTwelfthMan => 'De har en farlig joker på bænken.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'En af deres startspillere bliver tidligt træt, så den sidste halve time kan åbne sig.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'En af deres angribere skyder hellere end at aflevere.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'En af deres startspillere forsvinder ofte i de store kampe.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'En af deres startspillere er meget svingende.';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'En af deres startspillere er ofte skadet.';
 }

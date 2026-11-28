@@ -99,8 +99,11 @@ void main() {
       // Re-pinned in 1.1.2: the match engine's own changes (keeper errors
       // among them) and the wonderkids no academy releases any more move the
       // scores; the schedule, day for day, is the same. Re-pinned again in
-      // 1.1.4 for the goal lull and the openness blend (scores only).
-      expect(fnv(dump), '-7cc3dc0cdd70d9de');
+      // 1.1.4 for the goal lull and the openness blend (scores only), and
+      // in 1.1.5 for the community traits (the knocks, marks and form they
+      // move; every round's date checked unchanged, scores and the ties they
+      // decide moved).
+      expect(fnv(dump), '361c0ac86563cc27');
     },
     timeout: const Timeout(Duration(minutes: 20)),
   );

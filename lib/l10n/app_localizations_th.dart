@@ -19088,4 +19088,70 @@ class AppLocalizationsTh extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'ทีมต้องมีผู้รักษาประตูอย่างน้อย $count คน';
   }
+
+  @override
+  String get traitTwelfthMan => 'ผู้เล่นคนที่ 12';
+
+  @override
+  String get traitTwelfthManBlurb => 'ปลุกทีมได้เมื่อลงจากม้านั่งสำรอง';
+
+  @override
+  String get traitConsistent => 'คงเส้นคงวา';
+
+  @override
+  String get traitConsistentBlurb => 'ไม่ค่อยเล่นแย่ แต่ก็ไม่ค่อยโดดเด่น';
+
+  @override
+  String get traitInconsistent => 'ฟอร์มไม่นิ่ง';
+
+  @override
+  String get traitInconsistentBlurb => 'บางนัดเปรี้ยง บางนัดหายไปทั้งเกม';
+
+  @override
+  String get traitInjuryProne => 'เจ็บบ่อย';
+
+  @override
+  String get traitInjuryProneBlurb => 'บาดเจ็บบ่อยกว่าผู้เล่นส่วนใหญ่มาก';
+
+  @override
+  String get traitEasilyTired => 'เหนื่อยง่าย';
+
+  @override
+  String get traitEasilyTiredBlurb => 'หมดแรงเร็วกว่าเพื่อนร่วมทีม';
+
+  @override
+  String get traitPoorUnderPressure => 'ไม่ทนแรงกดดัน';
+
+  @override
+  String get traitPoorUnderPressureBlurb => 'ฟอร์มตกในเกมน็อกเอาต์';
+
+  @override
+  String get traitIndividualistic => 'เล่นเดี่ยว';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'ยิงเองทั้งที่ควรจ่าย และแอสซิสต์น้อยลง';
+
+  @override
+  String get matchScoutTraitTwelfthMan =>
+      'พวกเขามีตัวสำรองที่อันตรายอยู่บนม้านั่ง';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'ตัวจริงคนหนึ่งของพวกเขาเหนื่อยเร็ว ครึ่งชั่วโมงสุดท้ายเกมอาจเปิด';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'กองหน้าคนหนึ่งของพวกเขาชอบยิงเองมากกว่าจ่ายบอล';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'ตัวจริงคนหนึ่งของพวกเขามักหายไปในเกมใหญ่';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'ตัวจริงคนหนึ่งของพวกเขาฟอร์มไม่นิ่งเลย';
+
+  @override
+  String get matchScoutTraitInjuryProne => 'ตัวจริงคนหนึ่งของพวกเขาเจ็บบ่อย';
 }

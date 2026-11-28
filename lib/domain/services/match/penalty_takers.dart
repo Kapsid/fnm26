@@ -48,12 +48,15 @@ abstract final class PenaltyTakers {
   /// A taker's per-kick conversion MULTIPLIER on the side's base rate (1.0 is
   /// an ordinary penalty taker). Composure carries it; a dead-ball specialist
   /// is surer, a wasteful forward less so, and the biggest occasion is exactly
-  /// where a big-game player shows up.
+  /// where a big-game player shows up (and one who wilts under pressure
+  /// does not).
   static double skillOf(Player p, List<PlayerTrait> traits) {
     var factor = 0.86 + (p.attributes.technical.clamp(20, 99) - 60) / 220;
     if (traits.contains(PlayerTrait.setPiece)) factor *= 1.06;
     if (traits.contains(PlayerTrait.bigGame)) factor *= 1.04;
     if (traits.contains(PlayerTrait.wasteful)) factor *= 0.92;
+    // A shootout is the biggest pressure there is.
+    if (traits.contains(PlayerTrait.poorUnderPressure)) factor *= 0.95;
     if (p.position.category == PositionCategory.goalkeeper) factor *= 0.88;
     return factor.clamp(0.72, 1.16);
   }

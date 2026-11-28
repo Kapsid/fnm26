@@ -19513,4 +19513,76 @@ class AppLocalizationsIt extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'La rosa ha bisogno di almeno $count portieri.';
   }
+
+  @override
+  String get traitTwelfthMan => 'Dodicesimo uomo';
+
+  @override
+  String get traitTwelfthManBlurb =>
+      'Dà la scossa alla squadra quando entra dalla panchina.';
+
+  @override
+  String get traitConsistent => 'Costante';
+
+  @override
+  String get traitConsistentBlurb =>
+      'Raramente gioca male, ma raramente brilla.';
+
+  @override
+  String get traitInconsistent => 'Discontinuo';
+
+  @override
+  String get traitInconsistentBlurb =>
+      'Alterna partite da protagonista ad altre da dimenticare.';
+
+  @override
+  String get traitInjuryProne => 'Soggetto a infortuni';
+
+  @override
+  String get traitInjuryProneBlurb =>
+      'Si infortuna molto più spesso della media.';
+
+  @override
+  String get traitEasilyTired => 'Si stanca presto';
+
+  @override
+  String get traitEasilyTiredBlurb => 'Finisce la benzina prima dei compagni.';
+
+  @override
+  String get traitPoorUnderPressure => 'Soffre la pressione';
+
+  @override
+  String get traitPoorUnderPressureBlurb =>
+      'Cala nelle partite a eliminazione diretta.';
+
+  @override
+  String get traitIndividualistic => 'Individualista';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'Tira quando dovrebbe passare e fornisce meno assist.';
+
+  @override
+  String get matchScoutTraitTwelfthMan =>
+      'Hanno un pericoloso jolly in panchina.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'Uno dei loro titolari si stanca presto, quindi l\'ultima mezz\'ora potrebbe aprirsi.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'Uno dei loro attaccanti preferisce tirare piuttosto che passare.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'Uno dei loro titolari tende a sparire nelle partite importanti.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'Uno dei loro titolari è molto discontinuo.';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'Uno dei loro titolari si infortuna spesso.';
 }

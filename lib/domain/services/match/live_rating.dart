@@ -8,6 +8,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';
 import 'package:fnm/domain/services/match/performance_mark.dart';
+import 'package:fnm/domain/services/player/player_traits.dart';
 
 /// What each player did in a match, counted from its events and recorded
 /// shots: the inputs [PerformanceMark] turns into a mark.
@@ -74,12 +75,18 @@ final class MatchTally {
 
   /// [playerId]'s mark with the score at [teamScore]–[oppScore]. See
   /// [PerformanceMark.forPlayer] for [cleanSheetShare].
+  ///
+  /// [traits] are his (a consistent man's mark strays less far from the
+  /// ordinary, an inconsistent man's further), and [cameOn] whether he came
+  /// off the bench, where a "12th man" earns a little more.
   double markFor(
     int playerId, {
     required PositionCategory category,
     required int teamScore,
     required int oppScore,
     double cleanSheetShare = 1.0,
+    List<PlayerTrait> traits = const [],
+    bool cameOn = false,
   }) => PerformanceMark.forPlayer(
     category: category,
     goals: goals[playerId] ?? 0,
@@ -92,6 +99,8 @@ final class MatchTally {
     penaltiesSaved: penaltiesSaved[playerId] ?? 0,
     ownGoals: ownGoals[playerId] ?? 0,
     cleanSheetShare: cleanSheetShare,
+    swing: PlayerTraits.swingOf(traits),
+    bonus: PlayerTraits.markBonusOf(traits, cameOn: cameOn),
   );
 }
 
@@ -143,6 +152,9 @@ abstract final class LiveRatings {
   ///
   /// [events] and [moments] may be the whole match: anything the clock has
   /// not reached is ignored here, whatever the caller passes.
+  ///
+  /// [traitsByPlayer] are the two sides' traits, as the engine had them, so
+  /// the mark at the whistle is the engine's own.
   static Map<int, double> asOf({
     required Iterable<RatedPlayer> players,
     required Set<int> starterIds,
@@ -152,6 +164,7 @@ abstract final class LiveRatings {
     required int minute,
     int added = 0,
     bool fullTime = false,
+    Map<int, List<PlayerTrait>> traitsByPlayer = const {},
   }) {
     final seen = fullTime
         ? events
@@ -194,6 +207,8 @@ abstract final class LiveRatings {
             teamScore: p.nationId == homeNationId ? home : away,
             oppScore: p.nationId == homeNationId ? away : home,
             cleanSheetShare: share,
+            traits: traitsByPlayer[p.id] ?? const [],
+            cameOn: !starterIds.contains(p.id),
           ),
     };
   }

@@ -18782,4 +18782,65 @@ class AppLocalizationsKo extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return '스쿼드에는 골키퍼가 $count명 이상 필요합니다.';
   }
+
+  @override
+  String get traitTwelfthMan => '12번째 선수';
+
+  @override
+  String get traitTwelfthManBlurb => '벤치에서 들어오면 팀에 활력을 불어넣습니다.';
+
+  @override
+  String get traitConsistent => '꾸준함';
+
+  @override
+  String get traitConsistentBlurb => '부진한 경기도 적지만 빛나는 경기도 적습니다.';
+
+  @override
+  String get traitInconsistent => '기복이 심함';
+
+  @override
+  String get traitInconsistentBlurb => '경기마다 활약의 편차가 큽니다.';
+
+  @override
+  String get traitInjuryProne => '부상이 잦음';
+
+  @override
+  String get traitInjuryProneBlurb => '대부분의 선수보다 훨씬 자주 다칩니다.';
+
+  @override
+  String get traitEasilyTired => '쉽게 지침';
+
+  @override
+  String get traitEasilyTiredBlurb => '동료들보다 먼저 체력이 떨어집니다.';
+
+  @override
+  String get traitPoorUnderPressure => '압박에 약함';
+
+  @override
+  String get traitPoorUnderPressureBlurb => '토너먼트 경기에서 경기력이 떨어집니다.';
+
+  @override
+  String get traitIndividualistic => '개인주의자';
+
+  @override
+  String get traitIndividualisticBlurb => '패스해야 할 때 슈팅하고, 도움이 적습니다.';
+
+  @override
+  String get matchScoutTraitTwelfthMan => '벤치에 위협적인 조커가 있습니다.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      '선발 중 한 명이 일찍 지치므로 마지막 30분은 경기가 열릴 수 있습니다.';
+
+  @override
+  String get matchScoutTraitIndividualistic => '공격수 중 한 명은 패스보다 슈팅을 선호합니다.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure => '선발 중 한 명은 큰 경기에서 자주 사라집니다.';
+
+  @override
+  String get matchScoutTraitInconsistent => '선발 중 한 명은 기복이 심합니다.';
+
+  @override
+  String get matchScoutTraitInjuryProne => '선발 중 한 명은 부상이 잦습니다.';
 }

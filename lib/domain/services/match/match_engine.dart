@@ -568,6 +568,7 @@ class MatchResult {
 class _Live {
   _Live(this.team)
     : xi = [...team.xi],
+      starters = {for (final p in team.xi) p.id},
       slots = [...team.positions],
       formation = team.formation,
       shape = ShapeProfile.of(team.positions),
@@ -617,6 +618,20 @@ class _Live {
   }
 
   final MatchTeam team;
+
+  /// The men who kicked off. Anyone else on the pitch came off the bench,
+  /// which is when a "12th man" ([PlayerTrait.twelfthMan]) lifts.
+  final Set<int> starters;
+
+  /// Whether [id] is on as a substitute and carries [PlayerTrait.twelfthMan].
+  bool isTwelfthManOn(int id) =>
+      !starters.contains(id) && team.hasTrait(id, PlayerTrait.twelfthMan);
+
+  /// An inconsistent player's day ([PlayerTrait.inconsistent]): a rating
+  /// shift for the whole match, good or bad, drawn once per match on a
+  /// stream of its own (see [MatchEngine.play]). Empty for a side without
+  /// one, so its match plays exactly as before.
+  Map<int, int> dayShift = const {};
 
   /// Who takes the side's penalties and dead balls RIGHT NOW. Seeded from the
   /// team sheet and reassignable mid-match, so a manager whose taker has gone
@@ -915,6 +930,12 @@ class MatchEngine {
       ..chemistry = chemistryByNation[away.nationId] ?? 1.0
       ..bigMatch = bigMatch
       ..conditionsDrain = conditions.awayDrain;
+    // An inconsistent player's day, on a TWELFTH stream: forked like the
+    // others, never advancing [rng], and read only for a man who carries the
+    // trait, so a side without one plays exactly as before.
+    final daySeed = rng.fork(0xDA75).state;
+    liveHome.dayShift = _daysOf(home, daySeed);
+    liveAway.dayShift = _daysOf(away, daySeed);
     // Who, if anyone, plays in front of a home crowd this match.
     final homeAdvantage = !neutralVenue || home.nationId == venueHostId;
     final awayAdvantage = neutralVenue && away.nationId == venueHostId;
@@ -2337,6 +2358,8 @@ class MatchEngine {
         appeared.values,
         events,
         moments,
+        traitsByPlayer: {...away.traitsByPlayer, ...home.traitsByPlayer},
+        starterIds: {...liveHome.starters, ...liveAway.starters},
         homeNationId: home.nationId,
         homeScore: homeScore,
         awayScore: awayScore,
@@ -2392,6 +2415,8 @@ class MatchEngine {
     required int homeNationId,
     required int homeScore,
     required int awayScore,
+    Map<int, List<PlayerTrait>> traitsByPlayer = const {},
+    Set<int> starterIds = const {},
   }) {
     // The same tally the live line-ups count the match so far with, so a live
     // mark at the whistle is this mark (see LiveRatings).
@@ -2406,6 +2431,8 @@ class MatchEngine {
           rating: tally.markFor(
             p.id,
             category: p.category,
+            traits: traitsByPlayer[p.id] ?? const [],
+            cameOn: !starterIds.contains(p.id),
             teamScore: p.nationId == homeNationId ? homeScore : awayScore,
             oppScore: p.nationId == homeNationId ? awayScore : homeScore,
           ),
@@ -2688,6 +2715,9 @@ class MatchEngine {
       }
       if (injury && live.team.hasTrait(p.id, PlayerTrait.ironMan)) {
         trait *= PlayerTraits.ironManInjuryFactor;
+      }
+      if (injury && live.team.hasTrait(p.id, PlayerTrait.injuryProne)) {
+        trait *= PlayerTraits.injuryProneFactor;
       }
       final onAYellow = booked.contains(p.id) ? 3.0 : 1.0;
       return positional * composure * fatigue * trait * onAYellow;
@@ -3046,7 +3076,8 @@ class MatchEngine {
       };
       final w =
           (p.attributes.technical + positional) *
-          team.roleOf(p.id).assistWeight;
+          team.roleOf(p.id).assistWeight *
+          _involvement(team, p.id, assist: true);
       return team.hasPlan
           ? w * RoleTilt.arrowAssistWeight(team.arrowOf(p.id))
           : w;
@@ -3523,7 +3554,8 @@ class MatchEngine {
       final w =
           (p.attributes.technical + 20) *
           positional *
-          team.roleOf(p.id).scorerWeight;
+          team.roleOf(p.id).scorerWeight *
+          _involvement(team, p.id, assist: false);
       return team.hasPlan
           ? w * RoleTilt.arrowScorerWeight(team.arrowOf(p.id))
           : w;
@@ -4440,6 +4472,13 @@ class MatchEngine {
       if (t.bigMatch && t.team.hasTrait(p.id, PlayerTrait.bigGame)) {
         shift += PlayerTraits.bigGameBonus;
       }
+      // The community traits (1.1.5): one who wilts on the big night, an
+      // erratic man's day, and a "12th man" once he is on.
+      if (t.bigMatch && t.team.hasTrait(p.id, PlayerTrait.poorUnderPressure)) {
+        shift -= PlayerTraits.poorUnderPressurePenalty;
+      }
+      shift += t.dayShift[p.id] ?? 0;
+      if (t.isTwelfthManOn(p.id)) shift += PlayerTraits.twelfthManBonus;
       if (t.hasLeaderOtherThan(p.id)) shift += PlayerTraits.leaderTeamBonus;
       final rated = (p.overall + shift).clamp(1, 99);
       values.add(
@@ -4455,9 +4494,43 @@ class MatchEngine {
   /// A shooter's trait multiplier on an open-play finish: a wasteful forward
   /// puts good chances wide. Neutral (1.0) for everyone else.
   double _finishTrait(_Live t, int playerId) =>
-      t.team.hasTrait(playerId, PlayerTrait.wasteful)
-      ? PlayerTraits.wastefulFinishFactor
-      : 1.0;
+      (t.team.hasTrait(playerId, PlayerTrait.wasteful)
+          ? PlayerTraits.wastefulFinishFactor
+          : 1.0) *
+      // An individualist who takes it on himself shoots from where a pass
+      // would have found a better chance.
+      (t.team.hasTrait(playerId, PlayerTrait.individualistic)
+          ? PlayerTraits.individualisticFinishFactor
+          : 1.0);
+
+  /// A man's trait weight on his share of the side's goals ([assist] false)
+  /// or of its assists: an individualist shoots more and lays on less, and
+  /// a "12th man" off the bench is in everything. 1.0 for everyone else.
+  static double _involvement(_Live t, int playerId, {required bool assist}) {
+    var f = 1.0;
+    if (t.team.hasTrait(playerId, PlayerTrait.individualistic)) {
+      f *= assist
+          ? PlayerTraits.individualisticAssistFactor
+          : PlayerTraits.individualisticScorerFactor;
+    }
+    if (t.isTwelfthManOn(playerId)) f *= PlayerTraits.twelfthManInvolvement;
+    return f;
+  }
+
+  /// Each inconsistent man's day in [team]'s squad, from [daySeed]: a whole
+  /// rating shift in ±[PlayerTraits.inconsistentDayRange], even odds either
+  /// way. Keyed by id and seeded per man, so who else is in the squad never
+  /// changes his day.
+  static Map<int, int> _daysOf(MatchTeam team, int daySeed) {
+    const range = PlayerTraits.inconsistentDayRange;
+    return {
+      for (final e in team.traitsByPlayer.entries)
+        if (e.value.contains(PlayerTrait.inconsistent))
+          e.key: SeededRng(
+            daySeed ^ ((e.key + 1) * 0x9E3779B1),
+          ).rangeInt(-range, range),
+    };
+  }
 
   /// How energy scales a player's effective rating.
   ///
@@ -4510,6 +4583,8 @@ class MatchEngine {
       final ageFactor = (1 + (p.age - 28) * 0.04).clamp(0.9, 1.35);
       final ironMan = t.team.hasTrait(p.id, PlayerTrait.ironMan)
           ? PlayerTraits.ironManStaminaFactor
+          : t.team.hasTrait(p.id, PlayerTrait.easilyTired)
+          ? PlayerTraits.easilyTiredStaminaFactor
           : 1.0;
       final drain =
           base *

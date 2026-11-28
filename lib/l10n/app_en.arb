@@ -29959,5 +29959,85 @@
         "type": "int"
       }
     }
+  },
+  "traitTwelfthMan": "12th man",
+  "@traitTwelfthMan": {
+    "description": "Player trait name (\"12th man\"): an impact substitute, better when he comes off the bench."
+  },
+  "traitTwelfthManBlurb": "Lifts the side when he comes off the bench.",
+  "@traitTwelfthManBlurb": {
+    "description": "Trait effect: lifts the side when he comes on as a substitute."
+  },
+  "traitConsistent": "Consistent",
+  "@traitConsistent": {
+    "description": "Player trait name: his match ratings and form vary less than most."
+  },
+  "traitConsistentBlurb": "Rarely has a bad game, or a great one.",
+  "@traitConsistentBlurb": {
+    "description": "Trait effect."
+  },
+  "traitInconsistent": "Inconsistent",
+  "@traitInconsistent": {
+    "description": "Player trait name (negative): his match ratings and form vary more than most."
+  },
+  "traitInconsistentBlurb": "Blows hot and cold from one match to the next.",
+  "@traitInconsistentBlurb": {
+    "description": "Trait effect."
+  },
+  "traitInjuryProne": "Injury-prone",
+  "@traitInjuryProne": {
+    "description": "Player trait name (negative): gets injured more often."
+  },
+  "traitInjuryProneBlurb": "Picks up far more knocks than most.",
+  "@traitInjuryProneBlurb": {
+    "description": "Trait effect."
+  },
+  "traitEasilyTired": "Tires easily",
+  "@traitEasilyTired": {
+    "description": "Player trait name (negative): his energy drains faster in a match."
+  },
+  "traitEasilyTiredBlurb": "Runs out of legs sooner than his team-mates.",
+  "@traitEasilyTiredBlurb": {
+    "description": "Trait effect."
+  },
+  "traitPoorUnderPressure": "Wilts under pressure",
+  "@traitPoorUnderPressure": {
+    "description": "Player trait name (negative): worse in knockout and finals matches; the opposite of a big-game player."
+  },
+  "traitPoorUnderPressureBlurb": "His game drops in knockout ties.",
+  "@traitPoorUnderPressureBlurb": {
+    "description": "Trait effect."
+  },
+  "traitIndividualistic": "Individualist",
+  "@traitIndividualistic": {
+    "description": "Player trait name (negative): shoots more himself and passes less."
+  },
+  "traitIndividualisticBlurb": "Shoots when he should pass, and sets up fewer goals.",
+  "@traitIndividualisticBlurb": {
+    "description": "Trait effect."
+  },
+  "matchScoutTraitTwelfthMan": "They have a dangerous impact player on the bench.",
+  "@matchScoutTraitTwelfthMan": {
+    "description": "Scout report line on the next opponent, subject \"they\": an impact substitute on their bench."
+  },
+  "matchScoutTraitEasilyTired": "One of their starters tires early, so the last half-hour may open up.",
+  "@matchScoutTraitEasilyTired": {
+    "description": "Scout report line: one of their starting players tires early."
+  },
+  "matchScoutTraitIndividualistic": "One of their attackers would rather shoot than pass.",
+  "@matchScoutTraitIndividualistic": {
+    "description": "Scout report line: one of their attacking players shoots rather than passes."
+  },
+  "matchScoutTraitPoorUnderPressure": "One of their starters tends to go missing on the big occasion.",
+  "@matchScoutTraitPoorUnderPressure": {
+    "description": "Scout report line: one of their starting players plays worse in big matches."
+  },
+  "matchScoutTraitInconsistent": "One of their starters blows hot and cold.",
+  "@matchScoutTraitInconsistent": {
+    "description": "Scout report line: one of their starting players is inconsistent."
+  },
+  "matchScoutTraitInjuryProne": "One of their starters has a history of knocks.",
+  "@matchScoutTraitInjuryProne": {
+    "description": "Scout report line: one of their starting players is often injured."
   }
 }

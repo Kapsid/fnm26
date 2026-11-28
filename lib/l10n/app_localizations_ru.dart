@@ -19686,4 +19686,74 @@ class AppLocalizationsRu extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'В составе нужно не менее $count вратарей.';
   }
+
+  @override
+  String get traitTwelfthMan => '12-й игрок';
+
+  @override
+  String get traitTwelfthManBlurb =>
+      'Встряхивает команду, когда выходит со скамейки.';
+
+  @override
+  String get traitConsistent => 'Стабильный';
+
+  @override
+  String get traitConsistentBlurb => 'Редко играет плохо, но и редко блистает.';
+
+  @override
+  String get traitInconsistent => 'Нестабильный';
+
+  @override
+  String get traitInconsistentBlurb =>
+      'От матча к матчу то блистает, то пропадает.';
+
+  @override
+  String get traitInjuryProne => 'Подвержен травмам';
+
+  @override
+  String get traitInjuryProneBlurb => 'Травмируется гораздо чаще большинства.';
+
+  @override
+  String get traitEasilyTired => 'Быстро устаёт';
+
+  @override
+  String get traitEasilyTiredBlurb => 'Выдыхается раньше партнёров.';
+
+  @override
+  String get traitPoorUnderPressure => 'Не выдерживает давления';
+
+  @override
+  String get traitPoorUnderPressureBlurb =>
+      'Играет хуже в матчах на выбывание.';
+
+  @override
+  String get traitIndividualistic => 'Индивидуалист';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'Бьёт, когда нужно отдать пас, и реже ассистирует.';
+
+  @override
+  String get matchScoutTraitTwelfthMan =>
+      'У них на скамейке опасный игрок для замены.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'Один из их игроков основы рано устаёт, так что последние полчаса могут стать открытыми.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'Один из их нападающих предпочитает бить, а не отдавать пас.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'Один из их игроков основы часто теряется в больших матчах.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'Один из их игроков основы очень нестабилен.';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'Один из их игроков основы часто травмируется.';
 }

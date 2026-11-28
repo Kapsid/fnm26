@@ -19366,4 +19366,76 @@ class AppLocalizationsHu extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'A keretbe legalább $count kapus kell.';
   }
+
+  @override
+  String get traitTwelfthMan => 'A 12. játékos';
+
+  @override
+  String get traitTwelfthManBlurb =>
+      'Felrázza a csapatot, amikor a kispadról érkezik.';
+
+  @override
+  String get traitConsistent => 'Kiegyensúlyozott';
+
+  @override
+  String get traitConsistentBlurb =>
+      'Ritkán játszik rosszul, de ritkán kiemelkedően is.';
+
+  @override
+  String get traitInconsistent => 'Hullámzó';
+
+  @override
+  String get traitInconsistentBlurb =>
+      'Egyik meccsen ragyog, a következőn eltűnik.';
+
+  @override
+  String get traitInjuryProne => 'Sérülékeny';
+
+  @override
+  String get traitInjuryProneBlurb =>
+      'Sokkal gyakrabban sérül meg, mint a legtöbben.';
+
+  @override
+  String get traitEasilyTired => 'Hamar elfárad';
+
+  @override
+  String get traitEasilyTiredBlurb =>
+      'Előbb fogy ki az erőből, mint a csapattársai.';
+
+  @override
+  String get traitPoorUnderPressure => 'Nyomás alatt összeroppan';
+
+  @override
+  String get traitPoorUnderPressureBlurb =>
+      'A kieséses párharcokban visszaesik a játéka.';
+
+  @override
+  String get traitIndividualistic => 'Önző játékos';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'Lő, amikor passzolnia kellene, és kevesebb gólpasszt ad.';
+
+  @override
+  String get matchScoutTraitTwelfthMan =>
+      'Veszélyes csereember ül a kispadjukon.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'Az egyik kezdőjük hamar elfárad, így az utolsó fél óra kinyílhat.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'Az egyik támadójuk inkább lő, mint passzol.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'Az egyik kezdőjük a nagy meccseken gyakran eltűnik.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'Az egyik kezdőjük nagyon hullámzó.';
+
+  @override
+  String get matchScoutTraitInjuryProne => 'Az egyik kezdőjük gyakran sérült.';
 }

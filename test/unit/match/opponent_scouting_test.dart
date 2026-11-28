@@ -8,6 +8,7 @@ import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/match/ai_tactics.dart';
 import 'package:fnm/domain/services/match/opponent_scouting.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
+import 'package:fnm/domain/services/player/player_traits.dart';
 
 import '../../helpers/fixtures.dart';
 
@@ -241,6 +242,77 @@ void main() {
         OpponentScouting.leaningOf(const TacticalInstructions()),
         ScoutLeaning.unclear,
       );
+    });
+  });
+
+  group('trait note (1.1.5)', () {
+    final xi = _quickForwardsXi(Formation.f433);
+    final bench = [
+      player(id: 50, nationId: 2, position: PlayerPosition.st),
+    ];
+    List<PlayerTrait> Function(Player) carrying(
+      Map<int, List<PlayerTrait>> by,
+    ) =>
+        (p) => by[p.id] ?? const [];
+
+    test('names the first trait someone carries, a 12th man on the bench', () {
+      expect(
+        OpponentScouting.traitNoteOf(xi, bench, carrying(const {})),
+        isNull,
+      );
+      expect(
+        OpponentScouting.traitNoteOf(
+          xi,
+          bench,
+          carrying({
+            3: [PlayerTrait.injuryProne],
+            10: [PlayerTrait.individualistic],
+          }),
+        ),
+        ScoutTraitNote.individualistic,
+      );
+      // A 12th man in the eleven is no impact sub.
+      expect(
+        OpponentScouting.traitNoteOf(
+          xi,
+          bench,
+          carrying({
+            10: [PlayerTrait.twelfthMan],
+          }),
+        ),
+        isNull,
+      );
+      expect(
+        OpponentScouting.traitNoteOf(
+          xi,
+          bench,
+          carrying({
+            50: [PlayerTrait.twelfthMan],
+            3: [PlayerTrait.easilyTired],
+          }),
+        ),
+        ScoutTraitNote.twelfthMan,
+      );
+    });
+
+    test('a good scout and up says it', () {
+      ScoutReport at(StaffTier tier) => OpponentScouting.build(
+        scout: tier,
+        worldRank: 7,
+        recentSetups: [_pressing(Formation.f433)],
+        fallbackSetups: const [],
+        xiFor: _quickForwardsXi,
+        opponentStrength: 75,
+        playerStrength: 75,
+        bench: bench,
+        traitsOf: carrying({
+          4: [PlayerTrait.poorUnderPressure],
+        }),
+      );
+      expect(at(StaffTier.none).traitNote, isNull);
+      expect(at(StaffTier.basic).traitNote, isNull);
+      expect(at(StaffTier.good).traitNote, ScoutTraitNote.poorUnderPressure);
+      expect(at(StaffTier.elite).traitNote, ScoutTraitNote.poorUnderPressure);
     });
   });
 }

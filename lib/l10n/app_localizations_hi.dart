@@ -19325,4 +19325,76 @@ class AppLocalizationsHi extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'स्क्वॉड में कम से कम $count गोलकीपर चाहिए।';
   }
+
+  @override
+  String get traitTwelfthMan => '12वाँ खिलाड़ी';
+
+  @override
+  String get traitTwelfthManBlurb => 'बेंच से आने पर टीम में जान डाल देता है।';
+
+  @override
+  String get traitConsistent => 'स्थिर';
+
+  @override
+  String get traitConsistentBlurb =>
+      'शायद ही कभी बुरा खेलता है, और शायद ही कभी शानदार।';
+
+  @override
+  String get traitInconsistent => 'अस्थिर';
+
+  @override
+  String get traitInconsistentBlurb =>
+      'एक मैच में चमकता है, अगले में ग़ायब हो जाता है।';
+
+  @override
+  String get traitInjuryProne => 'चोट का शिकार';
+
+  @override
+  String get traitInjuryProneBlurb =>
+      'ज़्यादातर खिलाड़ियों से कहीं ज़्यादा चोटिल होता है।';
+
+  @override
+  String get traitEasilyTired => 'जल्दी थकता है';
+
+  @override
+  String get traitEasilyTiredBlurb =>
+      'साथी खिलाड़ियों से पहले उसका दम निकल जाता है।';
+
+  @override
+  String get traitPoorUnderPressure => 'दबाव में बिखरता है';
+
+  @override
+  String get traitPoorUnderPressureBlurb =>
+      'नॉकआउट मुकाबलों में उसका खेल गिर जाता है।';
+
+  @override
+  String get traitIndividualistic => 'व्यक्तिवादी';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'जहाँ पास देना चाहिए वहाँ शॉट मारता है, और कम गोल बनवाता है।';
+
+  @override
+  String get matchScoutTraitTwelfthMan =>
+      'उनकी बेंच पर एक ख़तरनाक इम्पैक्ट खिलाड़ी है।';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'उनका एक शुरुआती खिलाड़ी जल्दी थक जाता है, इसलिए आख़िरी आधा घंटा खुल सकता है।';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'उनका एक फ़ॉरवर्ड पास देने के बजाय शॉट मारना पसंद करता है।';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'उनका एक शुरुआती खिलाड़ी बड़े मुकाबलों में अक्सर ग़ायब रहता है।';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'उनका एक शुरुआती खिलाड़ी बहुत अस्थिर है।';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'उनका एक शुरुआती खिलाड़ी अक्सर चोटिल रहता है।';
 }

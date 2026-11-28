@@ -65,4 +65,11 @@ const _$PlayerTraitEnumMap = {
   PlayerTrait.wasteful: 'wasteful',
   PlayerTrait.shotStopper: 'shotStopper',
   PlayerTrait.penaltyStopper: 'penaltyStopper',
+  PlayerTrait.twelfthMan: 'twelfthMan',
+  PlayerTrait.consistent: 'consistent',
+  PlayerTrait.inconsistent: 'inconsistent',
+  PlayerTrait.injuryProne: 'injuryProne',
+  PlayerTrait.easilyTired: 'easilyTired',
+  PlayerTrait.poorUnderPressure: 'poorUnderPressure',
+  PlayerTrait.individualistic: 'individualistic',
 };

@@ -19850,4 +19850,75 @@ class AppLocalizationsRo extends AppLocalizations {
   String editorClassicKeepersNeeded(int count) {
     return 'Lotul are nevoie de cel puțin $count portari.';
   }
+
+  @override
+  String get traitTwelfthMan => 'Al 12-lea jucător';
+
+  @override
+  String get traitTwelfthManBlurb => 'Ridică echipa când intră de pe bancă.';
+
+  @override
+  String get traitConsistent => 'Constant';
+
+  @override
+  String get traitConsistentBlurb =>
+      'Rareori joacă slab, dar rareori strălucește.';
+
+  @override
+  String get traitInconsistent => 'Inconstant';
+
+  @override
+  String get traitInconsistentBlurb =>
+      'De la un meci la altul, ba strălucește, ba dispare.';
+
+  @override
+  String get traitInjuryProne => 'Predispus la accidentări';
+
+  @override
+  String get traitInjuryProneBlurb =>
+      'Se accidentează mult mai des decât majoritatea.';
+
+  @override
+  String get traitEasilyTired => 'Obosește repede';
+
+  @override
+  String get traitEasilyTiredBlurb =>
+      'Rămâne fără energie înaintea coechipierilor.';
+
+  @override
+  String get traitPoorUnderPressure => 'Cedează sub presiune';
+
+  @override
+  String get traitPoorUnderPressureBlurb =>
+      'Nivelul lui scade în meciurile eliminatorii.';
+
+  @override
+  String get traitIndividualistic => 'Individualist';
+
+  @override
+  String get traitIndividualisticBlurb =>
+      'Șutează când ar trebui să paseze și dă mai puține pase decisive.';
+
+  @override
+  String get matchScoutTraitTwelfthMan => 'Au o rezervă periculoasă pe bancă.';
+
+  @override
+  String get matchScoutTraitEasilyTired =>
+      'Unul dintre titularii lor obosește devreme, așa că ultima jumătate de oră s-ar putea deschide.';
+
+  @override
+  String get matchScoutTraitIndividualistic =>
+      'Unul dintre atacanții lor preferă să șuteze decât să paseze.';
+
+  @override
+  String get matchScoutTraitPoorUnderPressure =>
+      'Unul dintre titularii lor dispare adesea în meciurile mari.';
+
+  @override
+  String get matchScoutTraitInconsistent =>
+      'Unul dintre titularii lor este foarte inconstant.';
+
+  @override
+  String get matchScoutTraitInjuryProne =>
+      'Unul dintre titularii lor se accidentează des.';
 }

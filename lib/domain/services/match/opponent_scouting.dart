@@ -9,6 +9,7 @@ import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/match/ai_tactics.dart';
+import 'package:fnm/domain/services/player/player_traits.dart';
 
 /// How much the scout's report on the next opponent says, by the man in the
 /// job. Nobody in the job still leaves the world ranking and a look from a
@@ -73,6 +74,29 @@ typedef LineReadings = ({
   double aerialDefence,
 });
 
+/// One man in a side the scout thinks worth a word, by the trait he is known
+/// for (`PlayerTraits`): what a manager can plan around. The community traits
+/// (1.1.5) alone; the older ones show in the squad strengths already.
+enum ScoutTraitNote {
+  /// An impact substitute on their bench.
+  twelfthMan,
+
+  /// A starter who runs out of legs early.
+  easilyTired,
+
+  /// An attacker who would rather shoot than pass.
+  individualistic,
+
+  /// A starter who goes missing on the big occasion.
+  poorUnderPressure,
+
+  /// A starter who blows hot and cold.
+  inconsistent,
+
+  /// A starter with a history of knocks.
+  injuryProne,
+}
+
 /// What a side looks like from a distance, for a report without a scout.
 enum ScoutLeaning { attacking, cautious, unclear }
 
@@ -87,6 +111,7 @@ class ScoutReport {
     this.strengths = const [],
     this.weakness,
     this.approach,
+    this.traitNote,
   });
 
   final ScoutDepth depth;
@@ -109,6 +134,10 @@ class ScoutReport {
 
   /// [ScoutDepth.full] only.
   final ScoutApproach? approach;
+
+  /// [ScoutDepth.detailed] and up: the one man worth a word, when there is
+  /// one (see [OpponentScouting.traitNoteOf]).
+  final ScoutTraitNote? traitNote;
 }
 
 /// Builds the scout's report from what really drives the opponent's play.
@@ -360,6 +389,33 @@ abstract final class OpponentScouting {
     return lines.isEmpty ? null : lines.first.$1;
   }
 
+  /// The trait note on a side fielding [xi] with [bench] to call on, read
+  /// through [traitsOf]: the first of [ScoutTraitNote]'s order that someone
+  /// carries (a "12th man" counts on the bench, the rest in the eleven).
+  static ScoutTraitNote? traitNoteOf(
+    List<Player> xi,
+    List<Player> bench,
+    List<PlayerTrait> Function(Player) traitsOf,
+  ) {
+    bool any(List<Player> who, PlayerTrait t) =>
+        who.any((p) => traitsOf(p).contains(t));
+    for (final note in ScoutTraitNote.values) {
+      final carried = switch (note) {
+        ScoutTraitNote.twelfthMan => any(bench, PlayerTrait.twelfthMan),
+        ScoutTraitNote.easilyTired => any(xi, PlayerTrait.easilyTired),
+        ScoutTraitNote.individualistic => any(xi, PlayerTrait.individualistic),
+        ScoutTraitNote.poorUnderPressure => any(
+          xi,
+          PlayerTrait.poorUnderPressure,
+        ),
+        ScoutTraitNote.inconsistent => any(xi, PlayerTrait.inconsistent),
+        ScoutTraitNote.injuryProne => any(xi, PlayerTrait.injuryProne),
+      };
+      if (carried) return note;
+    }
+    return null;
+  }
+
   /// The band `AiTactics` picks a posture from, as an approach.
   static ScoutApproach approachFor({
     required double opponentStrength,
@@ -394,6 +450,8 @@ abstract final class OpponentScouting {
     required double opponentStrength,
     required double playerStrength,
     bool Function(List<Player> xi)? hasSetPieceSpecialist,
+    List<Player> bench = const [],
+    List<PlayerTrait> Function(Player)? traitsOf,
   }) {
     final depth = depthFor(scout);
     final setups = recentSetups.isNotEmpty ? recentSetups : fallbackSetups;
@@ -450,6 +508,9 @@ abstract final class OpponentScouting {
               opponentStrength: opponentStrength,
               playerStrength: playerStrength,
             )
+          : null,
+      traitNote: depth.index >= ScoutDepth.detailed.index && traitsOf != null
+          ? traitNoteOf(xi, bench, traitsOf)
           : null,
     );
   }

@@ -40,6 +40,7 @@ List<String> scoutReportLines(AppLocalizations l, ScoutReport r, int seed) {
     if (r.strengths.isEmpty) l.matchScoutStrengthNone,
     for (final s in r.strengths) _strength(l, s),
     if (r.weakness case final w?) _weakness(l, w),
+    if (r.traitNote case final n?) _traitNote(l, n),
     if (r.approach case final a?)
       switch (a) {
         ScoutApproach.takeTheGame => l.matchScoutApproachTakeTheGame,
@@ -48,6 +49,15 @@ List<String> scoutReportLines(AppLocalizations l, ScoutReport r, int seed) {
       },
   ];
 }
+
+String _traitNote(AppLocalizations l, ScoutTraitNote n) => switch (n) {
+  ScoutTraitNote.twelfthMan => l.matchScoutTraitTwelfthMan,
+  ScoutTraitNote.easilyTired => l.matchScoutTraitEasilyTired,
+  ScoutTraitNote.individualistic => l.matchScoutTraitIndividualistic,
+  ScoutTraitNote.poorUnderPressure => l.matchScoutTraitPoorUnderPressure,
+  ScoutTraitNote.inconsistent => l.matchScoutTraitInconsistent,
+  ScoutTraitNote.injuryProne => l.matchScoutTraitInjuryProne,
+};
 
 String _strength(AppLocalizations l, ScoutStrength s) => switch (s) {
   ScoutStrength.pressing => l.matchScoutStrengthPressing,
