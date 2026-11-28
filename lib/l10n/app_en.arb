@@ -24174,6 +24174,84 @@
       }
     }
   },
+  "playerAlsoPlays": "also {positions}",
+  "@playerAlsoPlays": {
+    "description": "After his own position on the player page: the positions he also plays almost as well, e.g. \"Left wing · also LB, AM\". {positions} is a list of position codes.",
+    "placeholders": {
+      "positions": {
+        "type": "String",
+        "example": "LB, AM"
+      }
+    }
+  },
+  "playerSecondaryAbout": "Plays {position} almost as well as his own position",
+  "@playerSecondaryAbout": {
+    "description": "Tooltip on a secondary position's fit dots on the player page.",
+    "placeholders": {
+      "position": {
+        "type": "String",
+        "example": "Left-back"
+      }
+    }
+  },
+  "playerLearningPosition": "Learning {position}:",
+  "@playerLearningPosition": {
+    "description": "Player page: a position he is getting used to by being played there, followed by dots and the matches, e.g. \"Learning LB: ●●○○○ (7 matches)\". {position} is a position code.",
+    "placeholders": {
+      "position": {
+        "type": "String",
+        "example": "LB"
+      }
+    }
+  },
+  "playerLearnedPosition": "Learned {position}",
+  "@playerLearnedPosition": {
+    "description": "Player page: a position he has learned by being played there. {position} is a position code.",
+    "placeholders": {
+      "position": {
+        "type": "String",
+        "example": "LB"
+      }
+    }
+  },
+  "tacticsSecondBadge": "2nd",
+  "@tacticsSecondBadge": {
+    "description": "Tiny badge in the slot picker: this slot is one of the player's secondary positions. Keep it very short (about 3 characters)."
+  },
+  "editorPlayerSecondaries": "Also plays",
+  "@editorPlayerSecondaries": {
+    "description": "Editor: heading of the secondary positions picker."
+  },
+  "editorPlayerSecondariesDerived": "Derived",
+  "@editorPlayerSecondariesDerived": {
+    "description": "Editor: chip that lets the game work out the secondary positions (as Random does for traits)."
+  },
+  "editorPlayerSecondariesDerivedAbout": "The game works out the positions he also plays from his qualities.",
+  "@editorPlayerSecondariesDerivedAbout": {
+    "description": "Line under the secondary positions picker while Derived is picked."
+  },
+  "editorPlayerSecondariesNone": "Only his own position, in every career.",
+  "@editorPlayerSecondariesNone": {
+    "description": "Line under the secondary positions picker when none is picked."
+  },
+  "editorPlayerSecondariesPicked": "These positions in every career. Pick up to {max}.",
+  "@editorPlayerSecondariesPicked": {
+    "description": "Line under the secondary positions picker when some are picked.",
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "editorPlayerSecondariesMax": "A player has at most {max} secondary positions. Deselect one first.",
+  "@editorPlayerSecondariesMax": {
+    "description": "Hint when a third secondary position is tapped in the editor.",
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "editorPlayerTraitUnknown": "{trait} (unknown to this version)",
   "@editorPlayerTraitUnknown": {
     "description": "Chip for a picked trait this version of the game does not know (from a newer or older file); it can be removed.",

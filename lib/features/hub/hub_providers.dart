@@ -659,6 +659,30 @@ class SeasonService implements LiveMatchSeason {
   /// naturalisations applied (see [_pool]).
   final Map<(int, int, int, int), List<Player>> _poolCache = {};
 
+  /// The position each man [_fieldedXi] last fielded starts in, by id: what
+  /// [_recordStarts] counts once the match is recorded, so a player learns
+  /// a position by starting there (`LearnedPositions`).
+  final Map<int, PlayerPosition> _fieldedSlots = {};
+
+  /// Counts the starts of [xi] in fixture [f] at the positions they were
+  /// fielded in ([_fieldedSlots]); a man in his own position counts nothing.
+  Future<void> _recordStarts(Fixture f, List<Player> xi) async {
+    final starts = [
+      for (final p in xi)
+        if (_fieldedSlots[p.id] case final pos? when pos != p.position)
+          (player: p, position: pos),
+    ];
+    if (starts.isEmpty) return;
+    await _ref
+        .read(playerRepositoryProvider)
+        .recordPositionStarts(
+          f.careerId,
+          starts,
+          aging: _simYears,
+          friendly: f.round == Rounds.friendly,
+        );
+  }
+
   /// The career currently being simulated (keys [_poolCache]); set beside
   /// [_simSeed].
   int _simCareer = 0;
@@ -1429,6 +1453,8 @@ class SeasonService implements LiveMatchSeason {
     required Career career,
     MatchGroundMemo? groundMemo,
   }) async {
+    // Only this fixture's elevens count as its starts.
+    _fieldedSlots.clear();
     final play = await _playBackground(
       f,
       nations,
@@ -1437,6 +1463,7 @@ class SeasonService implements LiveMatchSeason {
       groundMemo: groundMemo,
     );
     if (play == null) return;
+    await _recordStarts(f, [...play.homeXi, ...play.awayXi]);
     await _comp.recordAppearances(
       f.careerId,
       f.homeNationId,
@@ -2312,6 +2339,14 @@ class SeasonService implements LiveMatchSeason {
         if (p != null && used.add(p.id)) slots[i] = p;
       }
     }
+    final places = setup.tactic?.positions ?? shape.positions;
+    for (var i = 0; i < slots.length; i++) {
+      if (slots[i] case final p?) {
+        _fieldedSlots[p.id] = i < places.length
+            ? places[i]
+            : shape.positions[i];
+      }
+    }
     final xi = slots.whereType<Player>().toList();
     return xi.isEmpty ? null : xi;
   }
@@ -2362,7 +2397,13 @@ class SeasonService implements LiveMatchSeason {
     // available eleven, and a pool somehow entirely absent falls back to itself
     // rather than forfeiting.
     final fit = available.isEmpty ? pool : available;
-    final xiIds = bestEleven(Formation.f433, fit).whereType<int>().toSet();
+    final picks = bestEleven(Formation.f433, fit);
+    for (var i = 0; i < picks.length; i++) {
+      if (picks[i] case final id?) {
+        _fieldedSlots[id] = Formation.f433.positions[i];
+      }
+    }
+    final xiIds = picks.whereType<int>().toSet();
     final xi = fit.where((p) => xiIds.contains(p.id)).toList();
     return xi.isEmpty ? fit : xi;
   }
@@ -3527,6 +3568,28 @@ class SeasonService implements LiveMatchSeason {
       for (final e in result.events)
         if (e.type == MatchEventType.substitution) e.playerId,
     };
+    // The manager's starters, each at the place his team sheet gave him: a
+    // man started out of position learns it (`LearnedPositions`).
+    final sheet = await _ref
+        .read(tacticsRepositoryProvider)
+        .tacticForCareer(careerId);
+    if (sheet != null) {
+      _fieldedSlots.clear();
+      final started = {
+        for (final r in result.ratings)
+          if (r.teamNationId == career.nationId && !subsOn.contains(r.playerId))
+            r.playerId,
+      };
+      final places = sheet.positions;
+      for (var i = 0; i < sheet.lineup.length && i < places.length; i++) {
+        final id = sheet.lineup[i];
+        if (id != null && started.contains(id)) _fieldedSlots[id] = places[i];
+      }
+      await _recordStarts(fixture, [
+        for (final p in await _pool(career.nationId))
+          if (started.contains(p.id)) p,
+      ]);
+    }
     await _comp.recordTournamentAppearances(
       careerId,
       fixture.competitionId,

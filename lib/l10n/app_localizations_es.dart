@@ -15844,6 +15844,53 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String playerAlsoPlays(String positions) {
+    return 'también $positions';
+  }
+
+  @override
+  String playerSecondaryAbout(String position) {
+    return 'Juega de $position casi tan bien como en su puesto';
+  }
+
+  @override
+  String playerLearningPosition(String position) {
+    return 'Aprendiendo $position:';
+  }
+
+  @override
+  String playerLearnedPosition(String position) {
+    return 'Aprendió $position';
+  }
+
+  @override
+  String get tacticsSecondBadge => '2.ª';
+
+  @override
+  String get editorPlayerSecondaries => 'También juega';
+
+  @override
+  String get editorPlayerSecondariesDerived => 'Calculadas';
+
+  @override
+  String get editorPlayerSecondariesDerivedAbout =>
+      'El juego deduce sus otras posiciones de sus cualidades.';
+
+  @override
+  String get editorPlayerSecondariesNone =>
+      'Solo su propia posición, en cada carrera.';
+
+  @override
+  String editorPlayerSecondariesPicked(int max) {
+    return 'Estas posiciones en cada carrera. Elige hasta $max.';
+  }
+
+  @override
+  String editorPlayerSecondariesMax(int max) {
+    return 'Un jugador tiene como mucho $max posiciones secundarias. Quita una primero.';
+  }
+
+  @override
   String editorPlayerTraitUnknown(String trait) {
     return '$trait (desconocido en esta versión)';
   }

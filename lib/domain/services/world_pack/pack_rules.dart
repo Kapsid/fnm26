@@ -11,6 +11,7 @@ import '../club/clubs.dart';
 import '../manager/manager_age.dart';
 import '../player/golden_generation.dart';
 import '../player/player_traits.dart';
+import '../player/secondary_positions.dart';
 import '../press/y_feed.dart';
 import '../profanity/profanity_filter.dart';
 import '../rating/overall_rating.dart';
@@ -410,6 +411,17 @@ abstract final class PackRules {
         out.add(BadField('$base.traits', FieldReason.outOfRange));
       } else if (names.toSet().length != names.length) {
         out.add(BadField('$base.traits', FieldReason.duplicate));
+      }
+    }
+    // Picked secondary positions: at most as many as a derived player has,
+    // each once, never his own position nor a keeper's place either way.
+    final second = pl.secondaries;
+    if (second != null) {
+      if (second.length > SecondaryPositions.max ||
+          second.any((p) => !SecondaryPositions.isAllowed(pl.position, p))) {
+        out.add(BadField('$base.secondaries', FieldReason.outOfRange));
+      } else if (second.toSet().length != second.length) {
+        out.add(BadField('$base.secondaries', FieldReason.duplicate));
       }
     }
   }

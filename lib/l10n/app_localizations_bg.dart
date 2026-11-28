@@ -15831,6 +15831,53 @@ class AppLocalizationsBg extends AppLocalizations {
   }
 
   @override
+  String playerAlsoPlays(String positions) {
+    return 'също $positions';
+  }
+
+  @override
+  String playerSecondaryAbout(String position) {
+    return 'Играе $position почти толкова добре, колкото на своя пост';
+  }
+
+  @override
+  String playerLearningPosition(String position) {
+    return 'Усвоява $position:';
+  }
+
+  @override
+  String playerLearnedPosition(String position) {
+    return 'Усвоил $position';
+  }
+
+  @override
+  String get tacticsSecondBadge => '2-ри';
+
+  @override
+  String get editorPlayerSecondaries => 'Играе и';
+
+  @override
+  String get editorPlayerSecondariesDerived => 'Изчислени';
+
+  @override
+  String get editorPlayerSecondariesDerivedAbout =>
+      'Играта изчислява другите му постове по качествата му.';
+
+  @override
+  String get editorPlayerSecondariesNone =>
+      'Само собственият му пост, във всяка кариера.';
+
+  @override
+  String editorPlayerSecondariesPicked(int max) {
+    return 'Тези постове във всяка кариера. Избери до $max.';
+  }
+
+  @override
+  String editorPlayerSecondariesMax(int max) {
+    return 'Играчът има най-много $max допълнителни поста. Първо махни един.';
+  }
+
+  @override
   String editorPlayerTraitUnknown(String trait) {
     return '$trait (непозната за тази версия)';
   }

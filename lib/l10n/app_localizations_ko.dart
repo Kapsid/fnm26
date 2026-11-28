@@ -15196,6 +15196,52 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String playerAlsoPlays(String positions) {
+    return '또한 $positions';
+  }
+
+  @override
+  String playerSecondaryAbout(String position) {
+    return '$position도 본 포지션만큼 거의 잘 소화한다';
+  }
+
+  @override
+  String playerLearningPosition(String position) {
+    return '$position 적응 중:';
+  }
+
+  @override
+  String playerLearnedPosition(String position) {
+    return '$position 적응 완료';
+  }
+
+  @override
+  String get tacticsSecondBadge => '2nd';
+
+  @override
+  String get editorPlayerSecondaries => '추가 포지션';
+
+  @override
+  String get editorPlayerSecondariesDerived => '자동';
+
+  @override
+  String get editorPlayerSecondariesDerivedAbout =>
+      '능력치로 소화할 수 있는 다른 포지션을 정합니다.';
+
+  @override
+  String get editorPlayerSecondariesNone => '모든 커리어에서 본 포지션만.';
+
+  @override
+  String editorPlayerSecondariesPicked(int max) {
+    return '모든 커리어에서 이 포지션. 최대 $max개.';
+  }
+
+  @override
+  String editorPlayerSecondariesMax(int max) {
+    return '추가 포지션은 최대 $max개입니다. 먼저 하나를 해제하세요.';
+  }
+
+  @override
   String editorPlayerTraitUnknown(String trait) {
     return '$trait (이 버전에서 알 수 없음)';
   }

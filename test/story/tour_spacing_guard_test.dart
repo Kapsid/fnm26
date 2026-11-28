@@ -102,8 +102,11 @@ void main() {
       // 1.1.4 for the goal lull and the openness blend (scores only), and
       // in 1.1.5 for the community traits (the knocks, marks and form they
       // move; every round's date checked unchanged, scores and the ties they
-      // decide moved).
-      expect(fnv(dump), '361c0ac86563cc27');
+      // decide moved), and in 1.1.3 for the secondary and learned positions
+      // (some background elevens field a man where he also plays: 29 of the
+      // 329 lines move, every round's date unchanged, 25 of them knockout
+      // ties with another side through).
+      expect(fnv(dump), '-5adcc6648157a5b');
     },
     timeout: const Timeout(Duration(minutes: 20)),
   );

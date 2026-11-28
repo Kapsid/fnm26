@@ -428,8 +428,10 @@ void main() {
   group('the EURO 2028 shape', () {
     test(
       'a side through a four-team path takes its slot',
-      // Three hosts, one of them out on a held place: three paths.
-      () => entrantStory(27, 20, euro28: true, ties: false),
+      // Three hosts, one of them out on a held place: three paths. (The
+      // 20th European before the 1.1.3 secondary positions moved
+      // background elevens; the 18th since.)
+      () => entrantStory(27, 18, euro28: true, ties: false),
       timeout: const Timeout(Duration(minutes: 30)),
     );
     test(

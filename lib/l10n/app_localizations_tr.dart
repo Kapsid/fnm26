@@ -15658,6 +15658,53 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String playerAlsoPlays(String positions) {
+    return 'ayrıca $positions';
+  }
+
+  @override
+  String playerSecondaryAbout(String position) {
+    return '$position mevkiinde neredeyse kendi mevkii kadar iyi oynar';
+  }
+
+  @override
+  String playerLearningPosition(String position) {
+    return '$position öğreniyor:';
+  }
+
+  @override
+  String playerLearnedPosition(String position) {
+    return '$position öğrendi';
+  }
+
+  @override
+  String get tacticsSecondBadge => '2.';
+
+  @override
+  String get editorPlayerSecondaries => 'Ayrıca oynar';
+
+  @override
+  String get editorPlayerSecondariesDerived => 'Hesaplanan';
+
+  @override
+  String get editorPlayerSecondariesDerivedAbout =>
+      'Oyun diğer mevkilerini özelliklerinden çıkarır.';
+
+  @override
+  String get editorPlayerSecondariesNone =>
+      'Her kariyerde yalnızca kendi mevkii.';
+
+  @override
+  String editorPlayerSecondariesPicked(int max) {
+    return 'Her kariyerde bu mevkiler. En fazla $max seç.';
+  }
+
+  @override
+  String editorPlayerSecondariesMax(int max) {
+    return 'Bir oyuncunun en fazla $max ikinci mevkii olur. Önce birini kaldır.';
+  }
+
+  @override
   String editorPlayerTraitUnknown(String trait) {
     return '$trait (bu sürüm tanımıyor)';
   }

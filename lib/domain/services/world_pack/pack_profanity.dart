@@ -49,6 +49,7 @@ WorldPack _mask(WorldPack p) {
           clubCountry: pl.clubCountry,
           traits: pl.traits,
           unknownTraits: pl.unknownTraits,
+          secondaries: pl.secondaries,
         ),
   ];
   List<String> names(List<String> list) {

@@ -76,9 +76,10 @@ class SlotSheetToggle {
 }
 
 /// How well [p] suits [slot], out of five: the rating multiplier the engine
-/// applies there ([PositionFit.factor]), as dots.
+/// applies there ([PositionFit.factorFor]: his secondary positions and
+/// what he has learned by playing a position counted), as dots.
 int slotFitDots(Player p, PlayerPosition slot) {
-  final f = PositionFit.factor(p.position, slot);
+  final f = PositionFit.factorFor(p, slot);
   if (f >= 1) return 5;
   if (f >= 0.95) return 4;
   if (f >= 0.8) return 3;

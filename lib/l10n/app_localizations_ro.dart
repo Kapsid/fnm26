@@ -16163,6 +16163,53 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
+  String playerAlsoPlays(String positions) {
+    return 'și $positions';
+  }
+
+  @override
+  String playerSecondaryAbout(String position) {
+    return 'Joacă $position aproape la fel de bine ca pe postul lui';
+  }
+
+  @override
+  String playerLearningPosition(String position) {
+    return 'Învață $position:';
+  }
+
+  @override
+  String playerLearnedPosition(String position) {
+    return 'A învățat $position';
+  }
+
+  @override
+  String get tacticsSecondBadge => 'al 2-lea';
+
+  @override
+  String get editorPlayerSecondaries => 'Mai joacă';
+
+  @override
+  String get editorPlayerSecondariesDerived => 'Deduse';
+
+  @override
+  String get editorPlayerSecondariesDerivedAbout =>
+      'Jocul deduce celelalte posturi ale lui din calitățile lui.';
+
+  @override
+  String get editorPlayerSecondariesNone =>
+      'Doar postul lui, în fiecare carieră.';
+
+  @override
+  String editorPlayerSecondariesPicked(int max) {
+    return 'Aceste posturi în fiecare carieră. Alege până la $max.';
+  }
+
+  @override
+  String editorPlayerSecondariesMax(int max) {
+    return 'Un jucător are cel mult $max posturi secundare. Deselectează întâi unul.';
+  }
+
+  @override
   String editorPlayerTraitUnknown(String trait) {
     return '$trait (necunoscută acestei versiuni)';
   }

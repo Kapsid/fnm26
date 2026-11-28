@@ -632,6 +632,13 @@ class _PlayerRow extends StatelessWidget {
                   const SizedBox(height: 1),
                   Row(
                     children: [
+                      // The positions he also plays: "LW" on the chip,
+                      // "(LB)" here.
+                      if (SecondaryTag.textOf(p) != null)
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(end: 6),
+                          child: SecondaryTag(p),
+                        ),
                       Flexible(
                         child: Text(
                           l.squadAgeClub(p.age, clubName(l, p.club)),

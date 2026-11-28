@@ -915,6 +915,15 @@ class TacticsScreen extends ConsumerWidget {
                         ),
                       ),
                     ),
+                    // This slot is one of his secondary positions: he
+                    // plays it almost as well, and the rating says so.
+                    if (PositionFit.secondaryAt(p, position) != null) ...[
+                      const SizedBox(width: AppSpacing.sm),
+                      TacticalChip(
+                        l.tacticsSecondBadge,
+                        key: SecondaryTag.secondBadgeKey(p.id),
+                      ),
+                    ],
                     if (inXi) ...[
                       const SizedBox(width: AppSpacing.sm),
                       TacticalChip(l.tacticsInXi),

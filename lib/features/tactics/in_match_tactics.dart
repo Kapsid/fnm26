@@ -1825,6 +1825,14 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
               ),
             ),
           ),
+          // This place is one of his secondary positions.
+          if (PositionFit.secondaryAt(p, position) != null) ...[
+            const SizedBox(width: AppSpacing.sm),
+            TacticalChip(
+              l.tacticsSecondBadge,
+              key: SecondaryTag.secondBadgeKey(p.id),
+            ),
+          ],
           if (onPitch.contains(p.id)) ...[
             const SizedBox(width: AppSpacing.sm),
             TacticalChip(l.tacticsOn),

@@ -15652,6 +15652,53 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
+  String playerAlsoPlays(String positions) {
+    return 'juga $positions';
+  }
+
+  @override
+  String playerSecondaryAbout(String position) {
+    return 'Bermain di $position hampir sebaik di posisinya sendiri';
+  }
+
+  @override
+  String playerLearningPosition(String position) {
+    return 'Belajar $position:';
+  }
+
+  @override
+  String playerLearnedPosition(String position) {
+    return 'Sudah menguasai $position';
+  }
+
+  @override
+  String get tacticsSecondBadge => 'ke-2';
+
+  @override
+  String get editorPlayerSecondaries => 'Juga bermain';
+
+  @override
+  String get editorPlayerSecondariesDerived => 'Dihitung';
+
+  @override
+  String get editorPlayerSecondariesDerivedAbout =>
+      'Game menghitung posisi lainnya dari kualitasnya.';
+
+  @override
+  String get editorPlayerSecondariesNone =>
+      'Hanya posisinya sendiri, di setiap karier.';
+
+  @override
+  String editorPlayerSecondariesPicked(int max) {
+    return 'Posisi ini di setiap karier. Pilih hingga $max.';
+  }
+
+  @override
+  String editorPlayerSecondariesMax(int max) {
+    return 'Seorang pemain punya paling banyak $max posisi kedua. Batalkan satu dulu.';
+  }
+
+  @override
   String editorPlayerTraitUnknown(String trait) {
     return '$trait (tidak dikenal versi ini)';
   }

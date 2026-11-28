@@ -274,11 +274,11 @@ void main() {
     }
   });
 
-  test('migrate refuses format 10', () {
+  test('migrate refuses format 11', () {
     final json = _pack().toJson();
-    expect(kPackFormatVersion, 9);
+    expect(kPackFormatVersion, 10);
     expect(
-      () => WorldPack.migrate({...json, 'formatVersion': 10}),
+      () => WorldPack.migrate({...json, 'formatVersion': 11}),
       throwsFormatException,
     );
   });

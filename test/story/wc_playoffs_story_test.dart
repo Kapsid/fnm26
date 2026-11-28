@@ -28,12 +28,12 @@ import 'driver.dart';
 /// change to the world moves the sides below, re-find them: the first
 /// expectation of each story says which half broke).
 ///
-/// * Türkiye (seed 40) finishes second in its qualifying group, is drawn into a
+/// * Türkiye (seed 41) finishes second in its qualifying group, is drawn into a
 ///   European path, plays its semi-final and final in late March and lands
 ///   in the exact December slot its placeholder was drawn into. (Poland,
 ///   then Belgium, did until Africa's, Asia's and Oceania's own steps and
 ///   the balanced home and away draw moved the world.)
-/// * Northern Ireland (seed 45) wins its League C group in the second
+/// * Northern Ireland (seed 59) wins its League C group in the second
 ///   Nations Cup, misses qualifying and comes in through pot 4.
 /// * Curacao (seed 57), one of CONCACAF's two best runners-up, plays the
 ///   intercontinental play-off in the finals' host nation.
@@ -52,14 +52,16 @@ void main() {
   // lines, 57 since the 1.1.4 goal lull).
   const curacaoSeed = 57;
   // Northern Ireland's: since the regional cups it misses pot 4 on seed 35
-  // (seed 45 since the wonderkids no academy releases moved the world).
-  const northernIrelandSeed = 45;
+  // (seed 45 since the wonderkids no academy releases moved the world, 59
+  // since the 1.1.3 secondary positions moved background elevens).
+  const northernIrelandSeed = 59;
   // England's: on seed 35 it misses direct qualification since the 1.1.2
   // engine tuning.
   const englandSeed = 31;
   // Türkiye's: on seed 35 it no longer finishes runner-up since the
-  // manager's default XI keeps to its lines.
-  const turkiyeSeed = 40;
+  // manager's default XI keeps to its lines (seed 41 since the 1.1.3
+  // secondary positions moved background elevens).
+  const turkiyeSeed = 41;
   final wcYear = CareerService.worldCupYear(0);
   final dates = Calendar2.wcPlayoffs(wcYear);
 

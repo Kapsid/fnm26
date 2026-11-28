@@ -15153,6 +15153,51 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String playerAlsoPlays(String positions) {
+    return 'ほかに$positions';
+  }
+
+  @override
+  String playerSecondaryAbout(String position) {
+    return '$positionも本職とほぼ同じようにこなせる';
+  }
+
+  @override
+  String playerLearningPosition(String position) {
+    return '$position習得中:';
+  }
+
+  @override
+  String playerLearnedPosition(String position) {
+    return '$position習得済み';
+  }
+
+  @override
+  String get tacticsSecondBadge => '第2';
+
+  @override
+  String get editorPlayerSecondaries => 'ほかのポジション';
+
+  @override
+  String get editorPlayerSecondariesDerived => '自動';
+
+  @override
+  String get editorPlayerSecondariesDerivedAbout => '能力からほかにこなせるポジションを決めます。';
+
+  @override
+  String get editorPlayerSecondariesNone => 'どのキャリアでも本職のみ。';
+
+  @override
+  String editorPlayerSecondariesPicked(int max) {
+    return 'どのキャリアでもこのポジション。$maxつまで選べます。';
+  }
+
+  @override
+  String editorPlayerSecondariesMax(int max) {
+    return '選べるサブポジションは$maxつまでです。先に1つ外してください。';
+  }
+
+  @override
   String editorPlayerTraitUnknown(String trait) {
     return '$trait（このバージョンでは不明）';
   }

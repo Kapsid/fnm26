@@ -15830,6 +15830,53 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String playerAlsoPlays(String positions) {
+    return 'anche $positions';
+  }
+
+  @override
+  String playerSecondaryAbout(String position) {
+    return 'Gioca da $position quasi come nel suo ruolo';
+  }
+
+  @override
+  String playerLearningPosition(String position) {
+    return 'Sta imparando $position:';
+  }
+
+  @override
+  String playerLearnedPosition(String position) {
+    return 'Ha imparato $position';
+  }
+
+  @override
+  String get tacticsSecondBadge => '2°';
+
+  @override
+  String get editorPlayerSecondaries => 'Gioca anche';
+
+  @override
+  String get editorPlayerSecondariesDerived => 'Derivati';
+
+  @override
+  String get editorPlayerSecondariesDerivedAbout =>
+      'Il gioco ricava gli altri ruoli dalle sue qualità.';
+
+  @override
+  String get editorPlayerSecondariesNone =>
+      'Solo il suo ruolo, in ogni carriera.';
+
+  @override
+  String editorPlayerSecondariesPicked(int max) {
+    return 'Questi ruoli in ogni carriera. Scegline fino a $max.';
+  }
+
+  @override
+  String editorPlayerSecondariesMax(int max) {
+    return 'Un giocatore ha al massimo $max ruoli secondari. Togline prima uno.';
+  }
+
+  @override
   String editorPlayerTraitUnknown(String trait) {
     return '$trait (sconosciuta a questa versione)';
   }

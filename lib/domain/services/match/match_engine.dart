@@ -4483,7 +4483,7 @@ class MatchEngine {
       final rated = (p.overall + shift).clamp(1, 99);
       values.add(
         rated *
-            PositionFit.factor(p.position, slot) *
+            PositionFit.factorFor(p, slot) *
             _energyFactor(t.energyOf(p.id)),
       );
     }

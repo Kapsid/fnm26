@@ -5,6 +5,7 @@
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/services/tactics/position_fit.dart';
 
 /// Picks the strongest starting XI for [formation] from a [pool] of players.
 ///
@@ -40,7 +41,7 @@ List<int?> bestEleven(
     var best = double.negativeInfinity;
     for (final p in available) {
       if (used.contains(p.id)) continue;
-      final score = p.overall - _misfit(wanted, p.position);
+      final score = p.overall - _misfit(wanted, p);
       // Sorted by overall, so a tie keeps the stronger man.
       if (score > best) {
         best = score;
@@ -60,7 +61,26 @@ const double sameLinePenalty = 4;
 const double otherLinePenalty = 15;
 const double keeperPenalty = 60;
 
-double _misfit(PlayerPosition slot, PlayerPosition own) {
+/// What [p] costs at [slot], in rating points, by those penalties. One of his secondary positions (`SecondaryPositions`) costs what it docks
+/// his rating there (a point or a few), never more than the slot would cost
+/// him without it.
+double _misfit(PlayerPosition slot, Player p) {
+  final own = p.position;
+  if (slot == own) return 0;
+  final base = _distanceMisfit(slot, own);
+  final second = _secondaryMisfit(slot, p);
+  return second != null && second < base ? second : base;
+}
+
+/// What [p] loses playing [slot] as one of his secondary positions (or one
+/// he has learned), in rating points, or null when it is neither.
+double? _secondaryMisfit(PlayerPosition slot, Player p) {
+  final f = PositionFit.boostAt(p, slot);
+  if (f == null) return null;
+  return p.overall * (1 - f);
+}
+
+double _distanceMisfit(PlayerPosition slot, PlayerPosition own) {
   if (slot == own) return 0;
   final keeperInvolved = slot == PlayerPosition.gk || own == PlayerPosition.gk;
   if (keeperInvolved) return keeperPenalty;
@@ -99,7 +119,7 @@ List<int?> defaultEleven(
   ];
   final score = [
     for (final slot in wanted)
-      [for (final p in players) p.overall - _lineMisfit(slot, p.position)],
+      [for (final p in players) p.overall - _lineMisfit(slot, p)],
   ];
   final columns = _bestAssignment(score, players.length);
   return [
@@ -146,7 +166,7 @@ List<int?> refillEleven(
           p.overall -
               _lineMisfit(
                 i < places.length ? places[i] : formation.positions[i],
-                p.position,
+                p,
               ),
       ],
   ];
@@ -159,9 +179,17 @@ List<int?> refillEleven(
 }
 
 /// [defaultEleven]'s costs: more than any rating gap once a man leaves his
-/// line, so he only does when it is empty.
-double _lineMisfit(PlayerPosition slot, PlayerPosition own) {
+/// line, so he only does when it is empty. One of his secondary positions
+/// counts as his own line: it costs what it docks his rating there.
+double _lineMisfit(PlayerPosition slot, Player p) {
+  final own = p.position;
   if (slot == own) return 0;
+  final base = _lineDistance(slot, own);
+  final second = _secondaryMisfit(slot, p);
+  return second != null && second < base ? second : base;
+}
+
+double _lineDistance(PlayerPosition slot, PlayerPosition own) {
   final keeperInvolved = slot == PlayerPosition.gk || own == PlayerPosition.gk;
   if (keeperInvolved) return 400;
   final apart = (_line(slot.category) - _line(own.category)).abs();

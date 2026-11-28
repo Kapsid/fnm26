@@ -79,6 +79,7 @@ const int _newgenIdBase = 1000000000;
     PackVersions,
     PackVersionImages,
     DrawSlots,
+    PositionStarts,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -99,7 +100,7 @@ class AppDatabase extends _$AppDatabase {
   /// full set of upgrade paths from it — see `schema_migration_test.dart`.
   /// A hand-written list of paths is a step somebody forgets on the bump that
   /// matters.
-  static const int currentSchemaVersion = 58;
+  static const int currentSchemaVersion = 59;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -388,6 +389,13 @@ class AppDatabase extends _$AppDatabase {
           ]) {
             await m.addColumn(t, c);
           }
+        },
+        // 58 -> 59 adds the starts away from a player's own position, which
+        // he learns a new position from. Additive: an existing save starts
+        // with none, so every player plays as he did until he starts
+        // somewhere new.
+        from58To59: (m, schema) async {
+          await m.createTable(schema.positionStarts);
         },
       )(m, from, to);
     },

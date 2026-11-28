@@ -1111,3 +1111,27 @@ class ManagerTies extends Table {
   @override
   Set<Column> get primaryKey => {careerId, tieNo};
 }
+
+/// How often a player has started away from his own position, per position
+/// (schema 59): what he learns a new position from (`LearnedPositions`).
+/// One row per career, player and position he started in other than his
+/// own; a friendly counts half. Written for every side in the world, so
+/// the rest of the world learns the same way the manager's men do. A save
+/// from before 59 starts with none, and every player plays as he did.
+@DataClassName('PositionStartRow')
+class PositionStarts extends Table {
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get playerId => integer()();
+  TextColumn get position => textEnum<PlayerPosition>()();
+
+  /// Starts there, a friendly counting half.
+  RealColumn get matches => real().withDefault(const Constant(0))();
+
+  /// The career's aging year of his latest start there (see
+  /// `CareerService.agingYears`), for how much he has forgotten since.
+  IntColumn get lastAging => integer().withDefault(const Constant(0))();
+
+  @override
+  Set<Column> get primaryKey => {careerId, playerId, position};
+}

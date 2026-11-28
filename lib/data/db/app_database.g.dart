@@ -20963,6 +20963,384 @@ class DrawSlotsCompanion extends UpdateCompanion<DrawSlotRow> {
   }
 }
 
+class $PositionStartsTable extends PositionStarts
+    with TableInfo<$PositionStartsTable, PositionStartRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PositionStartsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _careerIdMeta = const VerificationMeta(
+    'careerId',
+  );
+  @override
+  late final GeneratedColumn<int> careerId = GeneratedColumn<int>(
+    'career_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES careers (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _playerIdMeta = const VerificationMeta(
+    'playerId',
+  );
+  @override
+  late final GeneratedColumn<int> playerId = GeneratedColumn<int>(
+    'player_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<PlayerPosition, String> position =
+      GeneratedColumn<String>(
+        'position',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<PlayerPosition>($PositionStartsTable.$converterposition);
+  static const VerificationMeta _matchesMeta = const VerificationMeta(
+    'matches',
+  );
+  @override
+  late final GeneratedColumn<double> matches = GeneratedColumn<double>(
+    'matches',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _lastAgingMeta = const VerificationMeta(
+    'lastAging',
+  );
+  @override
+  late final GeneratedColumn<int> lastAging = GeneratedColumn<int>(
+    'last_aging',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    careerId,
+    playerId,
+    position,
+    matches,
+    lastAging,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'position_starts';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PositionStartRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('career_id')) {
+      context.handle(
+        _careerIdMeta,
+        careerId.isAcceptableOrUnknown(data['career_id']!, _careerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_careerIdMeta);
+    }
+    if (data.containsKey('player_id')) {
+      context.handle(
+        _playerIdMeta,
+        playerId.isAcceptableOrUnknown(data['player_id']!, _playerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_playerIdMeta);
+    }
+    if (data.containsKey('matches')) {
+      context.handle(
+        _matchesMeta,
+        matches.isAcceptableOrUnknown(data['matches']!, _matchesMeta),
+      );
+    }
+    if (data.containsKey('last_aging')) {
+      context.handle(
+        _lastAgingMeta,
+        lastAging.isAcceptableOrUnknown(data['last_aging']!, _lastAgingMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {careerId, playerId, position};
+  @override
+  PositionStartRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PositionStartRow(
+      careerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}career_id'],
+      )!,
+      playerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}player_id'],
+      )!,
+      position: $PositionStartsTable.$converterposition.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}position'],
+        )!,
+      ),
+      matches: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}matches'],
+      )!,
+      lastAging: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}last_aging'],
+      )!,
+    );
+  }
+
+  @override
+  $PositionStartsTable createAlias(String alias) {
+    return $PositionStartsTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<PlayerPosition, String, String> $converterposition =
+      const EnumNameConverter<PlayerPosition>(PlayerPosition.values);
+}
+
+class PositionStartRow extends DataClass
+    implements Insertable<PositionStartRow> {
+  final int careerId;
+  final int playerId;
+  final PlayerPosition position;
+
+  /// Starts there, a friendly counting half.
+  final double matches;
+
+  /// The career's aging year of his latest start there (see
+  /// `CareerService.agingYears`), for how much he has forgotten since.
+  final int lastAging;
+  const PositionStartRow({
+    required this.careerId,
+    required this.playerId,
+    required this.position,
+    required this.matches,
+    required this.lastAging,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['career_id'] = Variable<int>(careerId);
+    map['player_id'] = Variable<int>(playerId);
+    {
+      map['position'] = Variable<String>(
+        $PositionStartsTable.$converterposition.toSql(position),
+      );
+    }
+    map['matches'] = Variable<double>(matches);
+    map['last_aging'] = Variable<int>(lastAging);
+    return map;
+  }
+
+  PositionStartsCompanion toCompanion(bool nullToAbsent) {
+    return PositionStartsCompanion(
+      careerId: Value(careerId),
+      playerId: Value(playerId),
+      position: Value(position),
+      matches: Value(matches),
+      lastAging: Value(lastAging),
+    );
+  }
+
+  factory PositionStartRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PositionStartRow(
+      careerId: serializer.fromJson<int>(json['careerId']),
+      playerId: serializer.fromJson<int>(json['playerId']),
+      position: $PositionStartsTable.$converterposition.fromJson(
+        serializer.fromJson<String>(json['position']),
+      ),
+      matches: serializer.fromJson<double>(json['matches']),
+      lastAging: serializer.fromJson<int>(json['lastAging']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'careerId': serializer.toJson<int>(careerId),
+      'playerId': serializer.toJson<int>(playerId),
+      'position': serializer.toJson<String>(
+        $PositionStartsTable.$converterposition.toJson(position),
+      ),
+      'matches': serializer.toJson<double>(matches),
+      'lastAging': serializer.toJson<int>(lastAging),
+    };
+  }
+
+  PositionStartRow copyWith({
+    int? careerId,
+    int? playerId,
+    PlayerPosition? position,
+    double? matches,
+    int? lastAging,
+  }) => PositionStartRow(
+    careerId: careerId ?? this.careerId,
+    playerId: playerId ?? this.playerId,
+    position: position ?? this.position,
+    matches: matches ?? this.matches,
+    lastAging: lastAging ?? this.lastAging,
+  );
+  PositionStartRow copyWithCompanion(PositionStartsCompanion data) {
+    return PositionStartRow(
+      careerId: data.careerId.present ? data.careerId.value : this.careerId,
+      playerId: data.playerId.present ? data.playerId.value : this.playerId,
+      position: data.position.present ? data.position.value : this.position,
+      matches: data.matches.present ? data.matches.value : this.matches,
+      lastAging: data.lastAging.present ? data.lastAging.value : this.lastAging,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PositionStartRow(')
+          ..write('careerId: $careerId, ')
+          ..write('playerId: $playerId, ')
+          ..write('position: $position, ')
+          ..write('matches: $matches, ')
+          ..write('lastAging: $lastAging')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(careerId, playerId, position, matches, lastAging);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PositionStartRow &&
+          other.careerId == this.careerId &&
+          other.playerId == this.playerId &&
+          other.position == this.position &&
+          other.matches == this.matches &&
+          other.lastAging == this.lastAging);
+}
+
+class PositionStartsCompanion extends UpdateCompanion<PositionStartRow> {
+  final Value<int> careerId;
+  final Value<int> playerId;
+  final Value<PlayerPosition> position;
+  final Value<double> matches;
+  final Value<int> lastAging;
+  final Value<int> rowid;
+  const PositionStartsCompanion({
+    this.careerId = const Value.absent(),
+    this.playerId = const Value.absent(),
+    this.position = const Value.absent(),
+    this.matches = const Value.absent(),
+    this.lastAging = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PositionStartsCompanion.insert({
+    required int careerId,
+    required int playerId,
+    required PlayerPosition position,
+    this.matches = const Value.absent(),
+    this.lastAging = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : careerId = Value(careerId),
+       playerId = Value(playerId),
+       position = Value(position);
+  static Insertable<PositionStartRow> custom({
+    Expression<int>? careerId,
+    Expression<int>? playerId,
+    Expression<String>? position,
+    Expression<double>? matches,
+    Expression<int>? lastAging,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (careerId != null) 'career_id': careerId,
+      if (playerId != null) 'player_id': playerId,
+      if (position != null) 'position': position,
+      if (matches != null) 'matches': matches,
+      if (lastAging != null) 'last_aging': lastAging,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PositionStartsCompanion copyWith({
+    Value<int>? careerId,
+    Value<int>? playerId,
+    Value<PlayerPosition>? position,
+    Value<double>? matches,
+    Value<int>? lastAging,
+    Value<int>? rowid,
+  }) {
+    return PositionStartsCompanion(
+      careerId: careerId ?? this.careerId,
+      playerId: playerId ?? this.playerId,
+      position: position ?? this.position,
+      matches: matches ?? this.matches,
+      lastAging: lastAging ?? this.lastAging,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (careerId.present) {
+      map['career_id'] = Variable<int>(careerId.value);
+    }
+    if (playerId.present) {
+      map['player_id'] = Variable<int>(playerId.value);
+    }
+    if (position.present) {
+      map['position'] = Variable<String>(
+        $PositionStartsTable.$converterposition.toSql(position.value),
+      );
+    }
+    if (matches.present) {
+      map['matches'] = Variable<double>(matches.value);
+    }
+    if (lastAging.present) {
+      map['last_aging'] = Variable<int>(lastAging.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PositionStartsCompanion(')
+          ..write('careerId: $careerId, ')
+          ..write('playerId: $playerId, ')
+          ..write('position: $position, ')
+          ..write('matches: $matches, ')
+          ..write('lastAging: $lastAging, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -21030,6 +21408,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $PackVersionImagesTable packVersionImages =
       $PackVersionImagesTable(this);
   late final $DrawSlotsTable drawSlots = $DrawSlotsTable(this);
+  late final $PositionStartsTable positionStarts = $PositionStartsTable(this);
   late final Index managerSpellsNation = Index(
     'manager_spells_nation',
     'CREATE INDEX manager_spells_nation ON manager_spells (career_id, nation_id)',
@@ -21085,6 +21464,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     packVersions,
     packVersionImages,
     drawSlots,
+    positionStarts,
     managerSpellsNation,
   ];
   @override
@@ -21382,6 +21762,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('draw_slots', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'careers',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('position_starts', kind: UpdateKind.delete)],
     ),
   ]);
 }
@@ -22993,6 +23380,24 @@ final class $$CareersTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$PositionStartsTable, List<PositionStartRow>>
+  _positionStartsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.positionStarts,
+    aliasName: 'careers__id__position_starts__career_id',
+  );
+
+  $$PositionStartsTableProcessedTableManager get positionStartsRefs {
+    final manager = $$PositionStartsTableTableManager(
+      $_db,
+      $_db.positionStarts,
+    ).filter((f) => f.careerId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_positionStartsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$CareersTableFilterComposer
@@ -24045,6 +24450,31 @@ class $$CareersTableFilterComposer
           }) => $$DrawSlotsTableFilterComposer(
             $db: $db,
             $table: $db.drawSlots,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> positionStartsRefs(
+    Expression<bool> Function($$PositionStartsTableFilterComposer f) f,
+  ) {
+    final $$PositionStartsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.positionStarts,
+      getReferencedColumn: (t) => t.careerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PositionStartsTableFilterComposer(
+            $db: $db,
+            $table: $db.positionStarts,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -25265,6 +25695,31 @@ class $$CareersTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> positionStartsRefs<T extends Object>(
+    Expression<T> Function($$PositionStartsTableAnnotationComposer a) f,
+  ) {
+    final $$PositionStartsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.positionStarts,
+      getReferencedColumn: (t) => t.careerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PositionStartsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.positionStarts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$CareersTableTableManager
@@ -25318,6 +25773,7 @@ class $$CareersTableTableManager
             bool managerSpellsRefs,
             bool managerTiesRefs,
             bool drawSlotsRefs,
+            bool positionStartsRefs,
           })
         > {
   $$CareersTableTableManager(_$AppDatabase db, $CareersTable table)
@@ -25490,6 +25946,7 @@ class $$CareersTableTableManager
                 managerSpellsRefs = false,
                 managerTiesRefs = false,
                 drawSlotsRefs = false,
+                positionStartsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -25530,6 +25987,7 @@ class $$CareersTableTableManager
                     if (managerSpellsRefs) db.managerSpells,
                     if (managerTiesRefs) db.managerTies,
                     if (drawSlotsRefs) db.drawSlots,
+                    if (positionStartsRefs) db.positionStarts,
                   ],
                   addJoins:
                       <
@@ -26321,6 +26779,27 @@ class $$CareersTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (positionStartsRefs)
+                        await $_getPrefetchedData<
+                          CareerRow,
+                          $CareersTable,
+                          PositionStartRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CareersTableReferences
+                              ._positionStartsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CareersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).positionStartsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.careerId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -26379,6 +26858,7 @@ typedef $$CareersTableProcessedTableManager =
         bool managerSpellsRefs,
         bool managerTiesRefs,
         bool drawSlotsRefs,
+        bool positionStartsRefs,
       })
     >;
 typedef $$CompetitionsTableCreateCompanionBuilder =
@@ -42778,6 +43258,332 @@ typedef $$DrawSlotsTableProcessedTableManager =
       DrawSlotRow,
       PrefetchHooks Function({bool careerId})
     >;
+typedef $$PositionStartsTableCreateCompanionBuilder =
+    PositionStartsCompanion Function({
+      required int careerId,
+      required int playerId,
+      required PlayerPosition position,
+      Value<double> matches,
+      Value<int> lastAging,
+      Value<int> rowid,
+    });
+typedef $$PositionStartsTableUpdateCompanionBuilder =
+    PositionStartsCompanion Function({
+      Value<int> careerId,
+      Value<int> playerId,
+      Value<PlayerPosition> position,
+      Value<double> matches,
+      Value<int> lastAging,
+      Value<int> rowid,
+    });
+
+final class $$PositionStartsTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $PositionStartsTable, PositionStartRow> {
+  $$PositionStartsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $CareersTable _careerIdTable(_$AppDatabase db) =>
+      db.careers.createAlias('position_starts__career_id__careers__id');
+
+  $$CareersTableProcessedTableManager get careerId {
+    final $_column = $_itemColumn<int>('career_id')!;
+
+    final manager = $$CareersTableTableManager(
+      $_db,
+      $_db.careers,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_careerIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$PositionStartsTableFilterComposer
+    extends Composer<_$AppDatabase, $PositionStartsTable> {
+  $$PositionStartsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get playerId => $composableBuilder(
+    column: $table.playerId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<PlayerPosition, PlayerPosition, String>
+  get position => $composableBuilder(
+    column: $table.position,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<double> get matches => $composableBuilder(
+    column: $table.matches,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get lastAging => $composableBuilder(
+    column: $table.lastAging,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$CareersTableFilterComposer get careerId {
+    final $$CareersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableFilterComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PositionStartsTableOrderingComposer
+    extends Composer<_$AppDatabase, $PositionStartsTable> {
+  $$PositionStartsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get playerId => $composableBuilder(
+    column: $table.playerId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get position => $composableBuilder(
+    column: $table.position,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get matches => $composableBuilder(
+    column: $table.matches,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get lastAging => $composableBuilder(
+    column: $table.lastAging,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$CareersTableOrderingComposer get careerId {
+    final $$CareersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableOrderingComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PositionStartsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PositionStartsTable> {
+  $$PositionStartsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get playerId =>
+      $composableBuilder(column: $table.playerId, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<PlayerPosition, String> get position =>
+      $composableBuilder(column: $table.position, builder: (column) => column);
+
+  GeneratedColumn<double> get matches =>
+      $composableBuilder(column: $table.matches, builder: (column) => column);
+
+  GeneratedColumn<int> get lastAging =>
+      $composableBuilder(column: $table.lastAging, builder: (column) => column);
+
+  $$CareersTableAnnotationComposer get careerId {
+    final $$CareersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PositionStartsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PositionStartsTable,
+          PositionStartRow,
+          $$PositionStartsTableFilterComposer,
+          $$PositionStartsTableOrderingComposer,
+          $$PositionStartsTableAnnotationComposer,
+          $$PositionStartsTableCreateCompanionBuilder,
+          $$PositionStartsTableUpdateCompanionBuilder,
+          (PositionStartRow, $$PositionStartsTableReferences),
+          PositionStartRow,
+          PrefetchHooks Function({bool careerId})
+        > {
+  $$PositionStartsTableTableManager(
+    _$AppDatabase db,
+    $PositionStartsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PositionStartsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PositionStartsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PositionStartsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> careerId = const Value.absent(),
+                Value<int> playerId = const Value.absent(),
+                Value<PlayerPosition> position = const Value.absent(),
+                Value<double> matches = const Value.absent(),
+                Value<int> lastAging = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PositionStartsCompanion(
+                careerId: careerId,
+                playerId: playerId,
+                position: position,
+                matches: matches,
+                lastAging: lastAging,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int careerId,
+                required int playerId,
+                required PlayerPosition position,
+                Value<double> matches = const Value.absent(),
+                Value<int> lastAging = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PositionStartsCompanion.insert(
+                careerId: careerId,
+                playerId: playerId,
+                position: position,
+                matches: matches,
+                lastAging: lastAging,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$PositionStartsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({careerId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (careerId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.careerId,
+                                referencedTable: $$PositionStartsTableReferences
+                                    ._careerIdTable(db),
+                                referencedColumn:
+                                    $$PositionStartsTableReferences
+                                        ._careerIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$PositionStartsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PositionStartsTable,
+      PositionStartRow,
+      $$PositionStartsTableFilterComposer,
+      $$PositionStartsTableOrderingComposer,
+      $$PositionStartsTableAnnotationComposer,
+      $$PositionStartsTableCreateCompanionBuilder,
+      $$PositionStartsTableUpdateCompanionBuilder,
+      (PositionStartRow, $$PositionStartsTableReferences),
+      PositionStartRow,
+      PrefetchHooks Function({bool careerId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -42874,4 +43680,6 @@ class $AppDatabaseManager {
       $$PackVersionImagesTableTableManager(_db, _db.packVersionImages);
   $$DrawSlotsTableTableManager get drawSlots =>
       $$DrawSlotsTableTableManager(_db, _db.drawSlots);
+  $$PositionStartsTableTableManager get positionStarts =>
+      $$PositionStartsTableTableManager(_db, _db.positionStarts);
 }

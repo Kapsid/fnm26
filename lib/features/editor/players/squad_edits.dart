@@ -8,6 +8,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
+import 'package:fnm/domain/services/player/secondary_positions.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/player_build.dart';
@@ -364,6 +365,7 @@ abstract final class SquadEdits {
     clubCountry: p.clubCountry,
     traits: p.traits,
     unknownTraits: p.unknownTraits,
+    secondaries: p.secondaries,
   );
 
   static WorldPack _withSquad(
@@ -425,7 +427,57 @@ abstract final class SquadEdits {
         clubCountry: p.clubCountry,
         traits: traits == null ? null : List.unmodifiable(traits),
         unknownTraits: traits == null ? const [] : p.unknownTraits,
+        secondaries: p.secondaries,
       );
+
+  /// [p] with his secondary positions picked: null is Derived (the game
+  /// works them out, `SecondaryPositions`), an empty list "none". At most
+  /// [SecondaryPositions.max], each once, never his own position nor a
+  /// keeper's place.
+  static PackPlayer withSecondaries(
+    PackPlayer p,
+    List<PlayerPosition>? secondaries,
+  ) => PackPlayer(
+    id: p.id,
+    name: p.name,
+    age: p.age,
+    position: p.position,
+    attributes: p.attributes,
+    potential: p.potential,
+    club: p.club,
+    clubCountry: p.clubCountry,
+    traits: p.traits,
+    unknownTraits: p.unknownTraits,
+    secondaries: secondaries == null
+        ? null
+        : List.unmodifiable(_keptSecondaries(secondaries, p.position)),
+  );
+
+  /// [picked] kept to what a player of [position] may have: no repeats,
+  /// not his own position nor a keeper's place, at most
+  /// [SecondaryPositions.max].
+  static List<PlayerPosition> _keptSecondaries(
+    List<PlayerPosition> picked,
+    PlayerPosition position,
+  ) {
+    final out = <PlayerPosition>[];
+    for (final s in picked) {
+      if (!SecondaryPositions.isAllowed(position, s) || out.contains(s)) {
+        continue;
+      }
+      out.add(s);
+      if (out.length >= SecondaryPositions.max) break;
+    }
+    return out;
+  }
+
+  /// [p]'s secondary positions as the game plays them: his pick when the
+  /// pack makes one ([PackPlayer.secondaries]), else derived from his id,
+  /// position and qualities, as for every player.
+  static List<SecondaryPosition> secondariesOf(PackPlayer p) =>
+      p.secondaries == null
+      ? SecondaryPositions.derive(p.id, p.position, p.attributes)
+      : SecondaryPositions.picked(p.secondaries!, p.position, p.attributes);
 
   /// [p] with potential [value], never below his overall nor above 99.
   static PackPlayer withPotential(PackPlayer p, int value) =>
@@ -448,6 +500,7 @@ abstract final class SquadEdits {
             : country,
         traits: p.traits,
         unknownTraits: p.unknownTraits,
+        secondaries: p.secondaries,
       );
 
   /// [p] with some fields changed (his club stays: see [withClub]).
@@ -469,6 +522,13 @@ abstract final class SquadEdits {
     clubCountry: p.clubCountry,
     traits: p.traits,
     unknownTraits: p.unknownTraits,
+    // A pick follows him to a new position, less what it no longer allows
+    // (the new position itself, or any place once he is a keeper).
+    secondaries: p.secondaries == null
+        ? null
+        : List.unmodifiable(
+            _keptSecondaries(p.secondaries!, position ?? p.position),
+          ),
   );
 
   /// [squad] as the editor lists it: by position (keepers first), then the

@@ -15758,6 +15758,53 @@ class AppLocalizationsFil extends AppLocalizations {
   }
 
   @override
+  String playerAlsoPlays(String positions) {
+    return 'pati $positions';
+  }
+
+  @override
+  String playerSecondaryAbout(String position) {
+    return 'Halos kasinghusay maglaro sa $position gaya ng sariling puwesto';
+  }
+
+  @override
+  String playerLearningPosition(String position) {
+    return 'Natututo ng $position:';
+  }
+
+  @override
+  String playerLearnedPosition(String position) {
+    return 'Natutunan ang $position';
+  }
+
+  @override
+  String get tacticsSecondBadge => '2nd';
+
+  @override
+  String get editorPlayerSecondaries => 'Naglalaro rin';
+
+  @override
+  String get editorPlayerSecondariesDerived => 'Kinalkula';
+
+  @override
+  String get editorPlayerSecondariesDerivedAbout =>
+      'Kinakalkula ng laro ang iba pa niyang puwesto mula sa kanyang mga katangian.';
+
+  @override
+  String get editorPlayerSecondariesNone =>
+      'Sariling puwesto lang, sa bawat career.';
+
+  @override
+  String editorPlayerSecondariesPicked(int max) {
+    return 'Ang mga puwestong ito sa bawat career. Pumili ng hanggang $max.';
+  }
+
+  @override
+  String editorPlayerSecondariesMax(int max) {
+    return 'Hanggang $max ikalawang puwesto lang ang isang player. Mag-alis muna ng isa.';
+  }
+
+  @override
   String editorPlayerTraitUnknown(String trait) {
     return '$trait (hindi kilala ng bersyong ito)';
   }

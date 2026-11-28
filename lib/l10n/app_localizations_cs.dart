@@ -16123,6 +16123,53 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String playerAlsoPlays(String positions) {
+    return 'také $positions';
+  }
+
+  @override
+  String playerSecondaryAbout(String position) {
+    return 'Hraje $position skoro stejně dobře jako svůj post';
+  }
+
+  @override
+  String playerLearningPosition(String position) {
+    return 'Učí se $position:';
+  }
+
+  @override
+  String playerLearnedPosition(String position) {
+    return 'Naučil se $position';
+  }
+
+  @override
+  String get tacticsSecondBadge => '2.';
+
+  @override
+  String get editorPlayerSecondaries => 'Hraje také';
+
+  @override
+  String get editorPlayerSecondariesDerived => 'Odvozené';
+
+  @override
+  String get editorPlayerSecondariesDerivedAbout =>
+      'Hra odvodí další posty z jeho vlastností.';
+
+  @override
+  String get editorPlayerSecondariesNone =>
+      'Jen jeho vlastní post, v každé kariéře.';
+
+  @override
+  String editorPlayerSecondariesPicked(int max) {
+    return 'Tyto posty v každé kariéře. Vyber až $max.';
+  }
+
+  @override
+  String editorPlayerSecondariesMax(int max) {
+    return 'Hráč má nejvýš $max vedlejší posty. Nejdřív jeden zruš.';
+  }
+
+  @override
   String editorPlayerTraitUnknown(String trait) {
     return '$trait (tato verze ji nezná)';
   }

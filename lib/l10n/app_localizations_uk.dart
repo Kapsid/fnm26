@@ -16060,6 +16060,53 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String playerAlsoPlays(String positions) {
+    return 'також $positions';
+  }
+
+  @override
+  String playerSecondaryAbout(String position) {
+    return 'Грає $position майже так само добре, як на своїй позиції';
+  }
+
+  @override
+  String playerLearningPosition(String position) {
+    return 'Опановує $position:';
+  }
+
+  @override
+  String playerLearnedPosition(String position) {
+    return 'Опанував $position';
+  }
+
+  @override
+  String get tacticsSecondBadge => '2-га';
+
+  @override
+  String get editorPlayerSecondaries => 'Грає також';
+
+  @override
+  String get editorPlayerSecondariesDerived => 'Розрахункові';
+
+  @override
+  String get editorPlayerSecondariesDerivedAbout =>
+      'Гра виводить інші його позиції з його якостей.';
+
+  @override
+  String get editorPlayerSecondariesNone =>
+      'Лише своя позиція, у кожній кар\'єрі.';
+
+  @override
+  String editorPlayerSecondariesPicked(int max) {
+    return 'Ці позиції в кожній кар\'єрі. Вибери до $max.';
+  }
+
+  @override
+  String editorPlayerSecondariesMax(int max) {
+    return 'Гравець має щонайбільше $max додаткові позиції. Спершу зніми одну.';
+  }
+
+  @override
   String editorPlayerTraitUnknown(String trait) {
     return '$trait (невідома цій версії)';
   }

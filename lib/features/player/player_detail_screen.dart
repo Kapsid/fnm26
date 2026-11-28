@@ -23,8 +23,10 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/club/club_form.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/player/international_retirement.dart';
+import 'package:fnm/domain/services/player/learned_positions.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/player/prospects.dart';
+import 'package:fnm/domain/services/player/secondary_positions.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
@@ -222,6 +224,16 @@ class PlayerDetailScreen extends ConsumerWidget {
 
   /// The block of his rating in every position.
   static const Key positionsKey = Key('player.positions');
+
+  /// The position fact ("Left wing · also LB, AM").
+  static const Key positionFactKey = Key('player.positionFact');
+
+  /// The fit row of secondary position [p] ("LB ●●●●○").
+  static Key secondaryKey(PlayerPosition p) =>
+      Key('player.secondary.${p.name}');
+
+  /// The row of a position he is learning by playing it, [p].
+  static Key learningKey(PlayerPosition p) => Key('player.learning.${p.name}');
 
   static const Key clubKey = Key('player.club');
   static const Key headerKey = Key('player.header');
@@ -483,7 +495,13 @@ _playerSections(
           children: [
             _clubFact(p, l.playerClub, clubName(l, p.club)),
             clubStanding,
-            _fact(l.playerPosition, positionName(l, p.position)),
+            KeyedSubtree(
+              key: PlayerDetailScreen.positionFactKey,
+              child: _fact(l.playerPosition, _positionValue(l, p)),
+            ),
+            // How well he plays each of his secondary positions, and what he
+            // is learning by being played somewhere new.
+            _PositionFits(player: p),
             _fact(l.playerAge, '${p.age}'),
             // The scouted ceiling for prospects: the same read the youth
             // screens give, so developing youth stays a gamble and a better
@@ -591,6 +609,102 @@ Widget _clubFact(Player p, String clubLabel, String club) => Padding(
     ],
   ),
 );
+
+/// [p]'s position as the page states it: his own, then the positions he
+/// also plays ("Left wing · also LB, AM").
+String _positionValue(AppLocalizations l, Player p) {
+  final own = positionName(l, p.position);
+  final also = PositionFit.secondaryOf(p);
+  if (also.isEmpty) return own;
+  final codes = also.map((s) => s.position.label).join(', ');
+  return '$own · ${l.playerAlsoPlays(codes)}';
+}
+
+/// "●●●●○": [filled] of five.
+String _dots(int filled) =>
+    '${'●' * filled.clamp(0, 5)}${'○' * (5 - filled.clamp(0, 5))}';
+
+/// Under the position fact: each secondary position with how close to his
+/// own he plays it ("LB ●●●●○"), and each position he is learning by
+/// playing it ("Learning LB: ●●○○○ (7 matches)", "Learned LB").
+class _PositionFits extends StatelessWidget {
+  const _PositionFits({required this.player});
+
+  final Player player;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final p = player;
+    final second = PositionFit.secondaryOf(p);
+    final learning = [
+      for (final pos in PlayerPosition.values)
+        if (LearnedPositions.standing(p, pos) case final s?) (pos: pos, s: s),
+    ];
+    if (second.isEmpty && learning.isEmpty) return const SizedBox.shrink();
+    final muted = AppTypography.labelSmall.copyWith(
+      color: AppColors.onSurfaceVariant,
+    );
+    final dotsStyle = AppTypography.labelSmall.copyWith(
+      color: AppColors.primary,
+      letterSpacing: 1,
+    );
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 3),
+      child: Align(
+        alignment: AlignmentDirectional.centerEnd,
+        child: Wrap(
+          alignment: WrapAlignment.end,
+          spacing: AppSpacing.md,
+          runSpacing: 2,
+          children: [
+            for (final s in second)
+              Tooltip(
+                key: PlayerDetailScreen.secondaryKey(s.position),
+                message: l.playerSecondaryAbout(positionName(l, s.position)),
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(text: '${s.position.label} ', style: muted),
+                      TextSpan(
+                        text: _dots(SecondaryPositions.dots(s.factor)),
+                        style: dotsStyle,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            for (final x in learning)
+              Text.rich(
+                key: PlayerDetailScreen.learningKey(x.pos),
+                x.s.learned
+                    ? TextSpan(
+                        text: l.playerLearnedPosition(x.pos.label),
+                        style: muted,
+                      )
+                    : TextSpan(
+                        children: [
+                          TextSpan(
+                            text: '${l.playerLearningPosition(x.pos.label)} ',
+                            style: muted,
+                          ),
+                          TextSpan(text: _dots(x.s.dots), style: dotsStyle),
+                          TextSpan(
+                            text:
+                                ' (${l.recordsMatchesCount(
+                                  x.s.starts.floor(),
+                                )})',
+                            style: muted,
+                          ),
+                        ],
+                      ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 Widget _fact(String label, String value) => Padding(
   padding: const EdgeInsets.symmetric(vertical: 3),

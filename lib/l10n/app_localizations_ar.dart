@@ -16033,6 +16033,52 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String playerAlsoPlays(String positions) {
+    return 'أيضًا ⁨$positions⁩';
+  }
+
+  @override
+  String playerSecondaryAbout(String position) {
+    return 'يلعب في مركز ⁨$position⁩ بمستوى قريب من مركزه الأصلي';
+  }
+
+  @override
+  String playerLearningPosition(String position) {
+    return 'يتعلّم ⁨$position⁩:';
+  }
+
+  @override
+  String playerLearnedPosition(String position) {
+    return 'أتقن ⁨$position⁩';
+  }
+
+  @override
+  String get tacticsSecondBadge => 'ثانٍ';
+
+  @override
+  String get editorPlayerSecondaries => 'يلعب أيضًا';
+
+  @override
+  String get editorPlayerSecondariesDerived => 'تلقائي';
+
+  @override
+  String get editorPlayerSecondariesDerivedAbout =>
+      'تستنتج اللعبة المراكز الأخرى التي يلعبها من صفاته.';
+
+  @override
+  String get editorPlayerSecondariesNone => 'مركزه الأصلي فقط، في كل مسيرة.';
+
+  @override
+  String editorPlayerSecondariesPicked(int max) {
+    return 'هذه المراكز في كل مسيرة. اختر حتى $max.';
+  }
+
+  @override
+  String editorPlayerSecondariesMax(int max) {
+    return 'للاعب $max مراكز ثانوية على الأكثر. ألغِ تحديد واحد أولًا.';
+  }
+
+  @override
   String editorPlayerTraitUnknown(String trait) {
     return '$trait (غير معروفة لهذا الإصدار)';
   }

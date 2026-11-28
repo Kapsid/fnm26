@@ -1202,7 +1202,9 @@ class _PlayerToggle extends StatelessWidget {
         runSpacing: 2,
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
-          // Position is already shown by the leading chip — no role text.
+          // Position is already shown by the leading chip — no role text;
+          // the positions he also plays follow it, "(LB)".
+          if (SecondaryTag.textOf(player) != null) SecondaryTag(player),
           Text(
             l.tacticsAgeValue(player.age, _money(player.value)),
             style: AppTypography.labelSmall.copyWith(

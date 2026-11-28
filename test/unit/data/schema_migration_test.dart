@@ -16,6 +16,7 @@ import '../../generated_migrations/schema_v54.dart' as v54;
 import '../../generated_migrations/schema_v55.dart' as v55;
 import '../../generated_migrations/schema_v56.dart' as v56;
 import '../../generated_migrations/schema_v57.dart' as v57;
+import '../../generated_migrations/schema_v58.dart' as v58;
 
 /// Guards the promise that a save survives a schema bump.
 ///
@@ -609,6 +610,30 @@ void main() {
         ],
         [0, 0, 0, 0, 0, 0],
       );
+    },
+  );
+
+  test(
+    '58 -> 59 keeps every rating and starts with no position learned',
+    () async {
+      // 59 adds the starts away from a player's own position: a save from
+      // before has none, so every player plays as he did.
+      expect(AppDatabase.currentSchemaVersion, greaterThanOrEqualTo(59));
+      final schema = await verifier.schemaAt(58);
+      final old = v58.DatabaseAtV58(schema.newConnection());
+      await old.customStatement('PRAGMA foreign_keys = OFF');
+      await old.customStatement(
+        'INSERT INTO player_ratings (career_id, fixture_id, player_id, '
+        'nation_id, rating, goals) VALUES (1, 9, 77, 3, 7.5, 2)',
+      );
+      await old.close();
+
+      final db = AppDatabase.forTesting(schema.newConnection());
+      addTearDown(db.close);
+      await verifier.migrateAndValidate(db, 59);
+      final r = await db.select(db.playerRatings).getSingle();
+      expect((r.playerId, r.rating, r.goals), (77, 7.5, 2));
+      expect(await db.select(db.positionStarts).get(), isEmpty);
     },
   );
 

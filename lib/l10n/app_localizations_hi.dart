@@ -15659,6 +15659,53 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
+  String playerAlsoPlays(String positions) {
+    return 'साथ में $positions';
+  }
+
+  @override
+  String playerSecondaryAbout(String position) {
+    return '$position पर लगभग अपनी पोज़िशन जितना अच्छा खेलता है';
+  }
+
+  @override
+  String playerLearningPosition(String position) {
+    return '$position सीख रहा है:';
+  }
+
+  @override
+  String playerLearnedPosition(String position) {
+    return '$position सीख ली';
+  }
+
+  @override
+  String get tacticsSecondBadge => '2रा';
+
+  @override
+  String get editorPlayerSecondaries => 'यह भी खेलता है';
+
+  @override
+  String get editorPlayerSecondariesDerived => 'गणना से';
+
+  @override
+  String get editorPlayerSecondariesDerivedAbout =>
+      'गेम उसकी खूबियों से उसकी दूसरी पोज़िशन तय करता है।';
+
+  @override
+  String get editorPlayerSecondariesNone =>
+      'हर करियर में सिर्फ़ उसकी अपनी पोज़िशन।';
+
+  @override
+  String editorPlayerSecondariesPicked(int max) {
+    return 'हर करियर में यही पोज़िशन। $max तक चुनें।';
+  }
+
+  @override
+  String editorPlayerSecondariesMax(int max) {
+    return 'एक खिलाड़ी की ज़्यादा से ज़्यादा $max दूसरी पोज़िशन हो सकती हैं। पहले एक हटाएँ।';
+  }
+
+  @override
   String editorPlayerTraitUnknown(String trait) {
     return '$trait (इस वर्ज़न के लिए अनजान)';
   }

@@ -15,6 +15,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
+import 'package:fnm/domain/services/player/secondary_positions.dart';
 import 'package:fnm/domain/services/profanity/profanity_filter.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/player_build.dart';
@@ -196,6 +197,13 @@ class PlayerEditForm extends ConsumerStatefulWidget {
   static Key typeKey(PlayerType t) => Key('editorPlayer.type.${t.name}');
   static Key traitKey(PlayerTrait t) => Key('editorPlayer.trait.${t.name}');
 
+  /// The secondary positions picker's Derived chip.
+  static const Key derivedSecondariesKey = Key('editorPlayer.second.derived');
+
+  /// The secondary positions picker's chip for [p].
+  static Key secondaryKey(PlayerPosition p) =>
+      Key('editorPlayer.second.${p.name}');
+
   /// The chip of a picked trait this game does not know.
   static Key unknownTraitKey(String name) =>
       Key('editorPlayer.trait.unknown.$name');
@@ -252,6 +260,9 @@ class _PlayerEditFormState extends ConsumerState<PlayerEditForm> {
 
   /// Whether the last trait tapped was one too many.
   bool _traitRefused = false;
+
+  /// A secondary position past [SecondaryPositions.max] was refused.
+  bool _secondaryRefused = false;
 
   PackEditor get _editor =>
       ref.read(packEditorProvider(widget.packId).notifier);
@@ -462,6 +473,10 @@ class _PlayerEditFormState extends ConsumerState<PlayerEditForm> {
       _potential(l, p, overall),
       const SizedBox(height: AppSpacing.lg),
       _traits(l, p),
+      if (p.position != PlayerPosition.gk) ...[
+        const SizedBox(height: AppSpacing.lg),
+        _secondaries(l, p),
+      ],
     ];
     final remove = Align(
       alignment: AlignmentDirectional.centerStart,
@@ -861,6 +876,78 @@ class _PlayerEditFormState extends ConsumerState<PlayerEditForm> {
   /// A good trait reads in the primary colour, a flaw in the warning one.
   Color _traitColor(AppLocalizations l, PlayerTrait t) =>
       describeTrait(l, t).$4 ? AppColors.primary : AppColors.warning;
+
+  /// The positions [p] also plays: Derived (the game works them out from
+  /// his qualities, the ones it gives shown picked) or a pick of up to
+  /// [SecondaryPositions.max], or none.
+  Widget _secondaries(AppLocalizations l, PackPlayer p) {
+    final picked = p.secondaries;
+    final shown = [
+      for (final s in SquadEdits.secondariesOf(p)) s.position,
+    ];
+    final caption = _secondaryRefused
+        ? l.editorPlayerSecondariesMax(SecondaryPositions.max)
+        : picked == null
+        ? l.editorPlayerSecondariesDerivedAbout
+        : picked.isEmpty
+        ? l.editorPlayerSecondariesNone
+        : l.editorPlayerSecondariesPicked(SecondaryPositions.max);
+    void toggle(PlayerPosition pos, {required bool on}) {
+      if (on && shown.length >= SecondaryPositions.max) {
+        setState(() => _secondaryRefused = true);
+        return;
+      }
+      setState(() => _secondaryRefused = false);
+      _edit(
+        (p) => SquadEdits.withSecondaries(p, [
+          for (final x in shown)
+            if (x != pos) x,
+          if (on) pos,
+        ]),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _label(l.editorPlayerSecondaries),
+        Wrap(
+          spacing: AppSpacing.xs,
+          runSpacing: AppSpacing.xs,
+          children: [
+            ChoiceChip(
+              key: PlayerEditForm.derivedSecondariesKey,
+              avatar: const Icon(Icons.auto_awesome_outlined, size: 18),
+              label: Text(l.editorPlayerSecondariesDerived),
+              selected: picked == null,
+              onSelected: (_) {
+                setState(() => _secondaryRefused = false);
+                _edit((p) => SquadEdits.withSecondaries(p, null));
+              },
+            ),
+            for (final pos in PlayerPosition.values)
+              if (SecondaryPositions.isAllowed(p.position, pos))
+                FilterChip(
+                  key: PlayerEditForm.secondaryKey(pos),
+                  label: Text(pos.label),
+                  tooltip: positionName(l, pos),
+                  selected: shown.contains(pos),
+                  onSelected: (on) => toggle(pos, on: on),
+                ),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        Text(
+          caption,
+          style: _secondaryRefused
+              ? AppTypography.bodySmall.copyWith(color: AppColors.error)
+              : AppTypography.bodySmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+        ),
+      ],
+    );
+  }
 
   Widget _traitChip(
     AppLocalizations l,

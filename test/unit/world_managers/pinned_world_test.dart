@@ -48,7 +48,11 @@ void main() {
     );
     // 121 steps reach the rollover into the second cycle (a wonderkid no
     // academy releases since 1.1.2 is one more event on the way, and the
-    // scores from fixture 1013 on are re-pinned for him).
+    // scores from fixture 1013 on are re-pinned for him). Re-pinned for the
+    // 1.1.3 secondary and learned positions on top of the community traits:
+    // sides now field a man in a position he also plays (or has learned),
+    // which moves some background elevens, so 64 scores of the first cycle
+    // move and the second cycle's draws follow.
     for (var i = 0; i < 121; i++) {
       await d.step();
     }

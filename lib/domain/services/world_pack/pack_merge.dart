@@ -1178,6 +1178,7 @@ abstract final class PackMerge {
         clubCountry: p.clubCountry,
         traits: p.traits,
         unknownTraits: p.unknownTraits,
+        secondaries: p.secondaries,
       );
     }
 

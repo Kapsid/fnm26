@@ -15743,6 +15743,53 @@ class AppLocalizationsSv extends AppLocalizations {
   }
 
   @override
+  String playerAlsoPlays(String positions) {
+    return 'även $positions';
+  }
+
+  @override
+  String playerSecondaryAbout(String position) {
+    return 'Spelar $position nästan lika bra som sin egen position';
+  }
+
+  @override
+  String playerLearningPosition(String position) {
+    return 'Lär sig $position:';
+  }
+
+  @override
+  String playerLearnedPosition(String position) {
+    return 'Har lärt sig $position';
+  }
+
+  @override
+  String get tacticsSecondBadge => '2:a';
+
+  @override
+  String get editorPlayerSecondaries => 'Spelar även';
+
+  @override
+  String get editorPlayerSecondariesDerived => 'Härledda';
+
+  @override
+  String get editorPlayerSecondariesDerivedAbout =>
+      'Spelet härleder hans andra positioner ur hans egenskaper.';
+
+  @override
+  String get editorPlayerSecondariesNone =>
+      'Bara hans egen position, i varje karriär.';
+
+  @override
+  String editorPlayerSecondariesPicked(int max) {
+    return 'Dessa positioner i varje karriär. Välj upp till $max.';
+  }
+
+  @override
+  String editorPlayerSecondariesMax(int max) {
+    return 'En spelare har högst $max sekundära positioner. Avmarkera en först.';
+  }
+
+  @override
   String editorPlayerTraitUnknown(String trait) {
     return '$trait (okänd för den här versionen)';
   }

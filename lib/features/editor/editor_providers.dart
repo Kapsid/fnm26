@@ -984,6 +984,7 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
                   for (final t in pl.unknownTraits)
                     if (t != name) t,
                 ],
+                secondaries: pl.secondaries,
               );
         Map<int, List<PackPlayer>> each(Map<int, List<PackPlayer>> m) => {
           for (final e in m.entries)

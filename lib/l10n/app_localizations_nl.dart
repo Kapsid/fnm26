@@ -15827,6 +15827,53 @@ class AppLocalizationsNl extends AppLocalizations {
   }
 
   @override
+  String playerAlsoPlays(String positions) {
+    return 'ook $positions';
+  }
+
+  @override
+  String playerSecondaryAbout(String position) {
+    return 'Speelt $position bijna even goed als zijn eigen positie';
+  }
+
+  @override
+  String playerLearningPosition(String position) {
+    return 'Leert $position:';
+  }
+
+  @override
+  String playerLearnedPosition(String position) {
+    return '$position geleerd';
+  }
+
+  @override
+  String get tacticsSecondBadge => '2e';
+
+  @override
+  String get editorPlayerSecondaries => 'Speelt ook';
+
+  @override
+  String get editorPlayerSecondariesDerived => 'Afgeleid';
+
+  @override
+  String get editorPlayerSecondariesDerivedAbout =>
+      'Het spel leidt zijn andere posities af uit zijn kwaliteiten.';
+
+  @override
+  String get editorPlayerSecondariesNone =>
+      'Alleen zijn eigen positie, in elke carrière.';
+
+  @override
+  String editorPlayerSecondariesPicked(int max) {
+    return 'Deze posities in elke carrière. Kies er tot $max.';
+  }
+
+  @override
+  String editorPlayerSecondariesMax(int max) {
+    return 'Een speler heeft hoogstens $max tweede posities. Haal er eerst een weg.';
+  }
+
+  @override
   String editorPlayerTraitUnknown(String trait) {
     return '$trait (onbekend in deze versie)';
   }

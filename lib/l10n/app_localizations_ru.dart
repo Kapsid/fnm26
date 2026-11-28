@@ -15978,6 +15978,53 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String playerAlsoPlays(String positions) {
+    return 'также $positions';
+  }
+
+  @override
+  String playerSecondaryAbout(String position) {
+    return 'Играет $position почти так же хорошо, как на своей позиции';
+  }
+
+  @override
+  String playerLearningPosition(String position) {
+    return 'Осваивает $position:';
+  }
+
+  @override
+  String playerLearnedPosition(String position) {
+    return 'Освоил $position';
+  }
+
+  @override
+  String get tacticsSecondBadge => '2-я';
+
+  @override
+  String get editorPlayerSecondaries => 'Играет также';
+
+  @override
+  String get editorPlayerSecondariesDerived => 'Расчётные';
+
+  @override
+  String get editorPlayerSecondariesDerivedAbout =>
+      'Игра выводит его другие позиции из его качеств.';
+
+  @override
+  String get editorPlayerSecondariesNone =>
+      'Только своя позиция, в каждой карьере.';
+
+  @override
+  String editorPlayerSecondariesPicked(int max) {
+    return 'Эти позиции в каждой карьере. Выбери до $max.';
+  }
+
+  @override
+  String editorPlayerSecondariesMax(int max) {
+    return 'У игрока не больше $max дополнительных позиций. Сначала сними одну.';
+  }
+
+  @override
   String editorPlayerTraitUnknown(String trait) {
     return '$trait (неизвестна этой версии)';
   }

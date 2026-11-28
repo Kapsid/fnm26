@@ -31,6 +31,7 @@ export 'player_match_marks.dart';
 export 'primary_button.dart';
 export 'profile_page.dart';
 export 'rating_badge.dart';
+export 'secondary_tag.dart';
 export 'set_piece_badge.dart';
 export 'set_piece_taker_summary.dart';
 export 'silver_dock.dart';

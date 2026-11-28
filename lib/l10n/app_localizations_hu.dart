@@ -15694,6 +15694,53 @@ class AppLocalizationsHu extends AppLocalizations {
   }
 
   @override
+  String playerAlsoPlays(String positions) {
+    return 'még $positions';
+  }
+
+  @override
+  String playerSecondaryAbout(String position) {
+    return 'Majdnem olyan jól játszik $position poszton, mint a sajátján';
+  }
+
+  @override
+  String playerLearningPosition(String position) {
+    return 'Tanulja: $position';
+  }
+
+  @override
+  String playerLearnedPosition(String position) {
+    return 'Megtanulta: $position';
+  }
+
+  @override
+  String get tacticsSecondBadge => '2.';
+
+  @override
+  String get editorPlayerSecondaries => 'Még játszik';
+
+  @override
+  String get editorPlayerSecondariesDerived => 'Számított';
+
+  @override
+  String get editorPlayerSecondariesDerivedAbout =>
+      'A játék a képességeiből vezeti le a többi posztját.';
+
+  @override
+  String get editorPlayerSecondariesNone =>
+      'Csak a saját posztja, minden karrierben.';
+
+  @override
+  String editorPlayerSecondariesPicked(int max) {
+    return 'Ezek a posztok minden karrierben. Legfeljebb $max választható.';
+  }
+
+  @override
+  String editorPlayerSecondariesMax(int max) {
+    return 'Egy játékosnak legfeljebb $max másodlagos posztja lehet. Előbb vegyél ki egyet.';
+  }
+
+  @override
   String editorPlayerTraitUnknown(String trait) {
     return '$trait (ez a verzió nem ismeri)';
   }

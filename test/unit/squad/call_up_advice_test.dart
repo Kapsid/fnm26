@@ -171,9 +171,14 @@ void main() {
       greaterThan(runs ~/ 40),
       reason: 'the basic man is clearly off on some days',
     );
+    // Under three in ten (it was a quarter): since 1.1.3 a man also plays
+    // his secondary positions almost as well, which the elite assistant
+    // reads exactly and the basic one's rough eye does not, so the gap
+    // between them crosses five points a little more often (46 to 50 of
+    // these 200 days).
     expect(
       basicClearlyOff,
-      lessThan(runs ~/ 4),
+      lessThan(runs * 3 ~/ 10),
       reason: 'but not most of them',
     );
   });

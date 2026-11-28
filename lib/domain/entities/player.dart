@@ -39,6 +39,20 @@ abstract class Player with _$Player {
     /// ([PlayerTraits.of]). Null rolls them as always; an empty list is "no
     /// traits". The career read sets it from his pack entry.
     @JsonKey(includeIfNull: false) List<PlayerTrait>? fixedTraits,
+
+    /// His secondary positions as a world pack picks them, in place of the
+    /// derived ones (`SecondaryPositions.of`). Null derives them as always;
+    /// an empty list is "none". The career read sets it from his pack entry.
+    @JsonKey(includeIfNull: false) List<PlayerPosition>? fixedSecondaries,
+
+    /// How many times he has started in each position other than his own
+    /// in this career (a friendly half), less what he has forgotten since:
+    /// what he learns a position from (`LearnedPositions`). Read from the
+    /// career's history at every save-bound read, never stored with him;
+    /// empty outside a career and for a save from before 1.1.3.
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    @Default(<PlayerPosition, double>{})
+    Map<PlayerPosition, double> learned,
   }) = _Player;
 
   const Player._();

@@ -23917,6 +23917,72 @@ abstract class AppLocalizations {
   /// **'A player has at most {max} traits. Deselect one first.'**
   String editorPlayerTraitsMax(int max);
 
+  /// After his own position on the player page: the positions he also plays almost as well, e.g. "Left wing · also LB, AM". {positions} is a list of position codes.
+  ///
+  /// In en, this message translates to:
+  /// **'also {positions}'**
+  String playerAlsoPlays(String positions);
+
+  /// Tooltip on a secondary position's fit dots on the player page.
+  ///
+  /// In en, this message translates to:
+  /// **'Plays {position} almost as well as his own position'**
+  String playerSecondaryAbout(String position);
+
+  /// Player page: a position he is getting used to by being played there, followed by dots and the matches, e.g. "Learning LB: ●●○○○ (7 matches)". {position} is a position code.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning {position}:'**
+  String playerLearningPosition(String position);
+
+  /// Player page: a position he has learned by being played there. {position} is a position code.
+  ///
+  /// In en, this message translates to:
+  /// **'Learned {position}'**
+  String playerLearnedPosition(String position);
+
+  /// Tiny badge in the slot picker: this slot is one of the player's secondary positions. Keep it very short (about 3 characters).
+  ///
+  /// In en, this message translates to:
+  /// **'2nd'**
+  String get tacticsSecondBadge;
+
+  /// Editor: heading of the secondary positions picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Also plays'**
+  String get editorPlayerSecondaries;
+
+  /// Editor: chip that lets the game work out the secondary positions (as Random does for traits).
+  ///
+  /// In en, this message translates to:
+  /// **'Derived'**
+  String get editorPlayerSecondariesDerived;
+
+  /// Line under the secondary positions picker while Derived is picked.
+  ///
+  /// In en, this message translates to:
+  /// **'The game works out the positions he also plays from his qualities.'**
+  String get editorPlayerSecondariesDerivedAbout;
+
+  /// Line under the secondary positions picker when none is picked.
+  ///
+  /// In en, this message translates to:
+  /// **'Only his own position, in every career.'**
+  String get editorPlayerSecondariesNone;
+
+  /// Line under the secondary positions picker when some are picked.
+  ///
+  /// In en, this message translates to:
+  /// **'These positions in every career. Pick up to {max}.'**
+  String editorPlayerSecondariesPicked(int max);
+
+  /// Hint when a third secondary position is tapped in the editor.
+  ///
+  /// In en, this message translates to:
+  /// **'A player has at most {max} secondary positions. Deselect one first.'**
+  String editorPlayerSecondariesMax(int max);
+
   /// Chip for a picked trait this version of the game does not know (from a newer or older file); it can be removed.
   ///
   /// In en, this message translates to:

@@ -15837,6 +15837,53 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
+  String playerAlsoPlays(String positions) {
+    return 'επίσης $positions';
+  }
+
+  @override
+  String playerSecondaryAbout(String position) {
+    return 'Παίζει $position σχεδόν όσο καλά και στη θέση του';
+  }
+
+  @override
+  String playerLearningPosition(String position) {
+    return 'Μαθαίνει $position:';
+  }
+
+  @override
+  String playerLearnedPosition(String position) {
+    return 'Έμαθε $position';
+  }
+
+  @override
+  String get tacticsSecondBadge => '2η';
+
+  @override
+  String get editorPlayerSecondaries => 'Παίζει και';
+
+  @override
+  String get editorPlayerSecondariesDerived => 'Υπολογισμένες';
+
+  @override
+  String get editorPlayerSecondariesDerivedAbout =>
+      'Το παιχνίδι βγάζει τις άλλες θέσεις του από τα προσόντα του.';
+
+  @override
+  String get editorPlayerSecondariesNone =>
+      'Μόνο η δική του θέση, σε κάθε καριέρα.';
+
+  @override
+  String editorPlayerSecondariesPicked(int max) {
+    return 'Αυτές οι θέσεις σε κάθε καριέρα. Διάλεξε έως $max.';
+  }
+
+  @override
+  String editorPlayerSecondariesMax(int max) {
+    return 'Ένας παίκτης έχει το πολύ $max δεύτερες θέσεις. Αφαίρεσε πρώτα μία.';
+  }
+
+  @override
   String editorPlayerTraitUnknown(String trait) {
     return '$trait (άγνωστο σε αυτή την έκδοση)';
   }

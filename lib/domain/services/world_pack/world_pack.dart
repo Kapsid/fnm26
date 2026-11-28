@@ -24,8 +24,10 @@ import '../press/y_feed.dart';
 /// adds each nation's starting world ranking ([WorldPack.rankings]); format 8
 /// (1.1.2) adds a day-one manager's optional age ([WorldPack.managers]);
 /// format 9 (1.1.3) holds more than [kLegacySponsorsMax] added sponsors,
-/// or a picture for every trophy past the first nine (see `PackCodec.encode`).
-/// [WorldPack.migrate] lifts a format-1 to 8 pack to it, step by step.
+/// or a picture for every trophy past the first nine (see `PackCodec.encode`);
+/// format 10 (1.1.3) adds a player's picked secondary positions
+/// ([PackPlayer.secondaries]).
+/// [WorldPack.migrate] lifts a format-1 to 9 pack to it, step by step.
 ///
 /// A pack is written in the oldest format that holds it ([WorldPack.asWritten]):
 /// format 3 when it names no managers, so a 1.1.x build without managers still
@@ -33,10 +35,11 @@ import '../press/y_feed.dart';
 /// handle, format 6 when it adds a reporter or a stadium, format 7 when it
 /// sets a nation's starting world ranking, and format 8 only when it gives a
 /// day-one manager an age, format 9 only when it adds more than
-/// [kLegacySponsorsMax] sponsors. A build
+/// [kLegacySponsorsMax] sponsors, format 10 only when it picks a player's
+/// secondary positions. A build
 /// that reads only an older format says the file is from a newer version
 /// rather than calling it broken.
-const int kPackFormatVersion = 9;
+const int kPackFormatVersion = 10;
 
 /// The added-sponsor cap before format 9 (1.1.2 and older refuse more).
 const int kLegacySponsorsMax = 50;
@@ -75,6 +78,7 @@ class PackPlayer {
     this.clubCountry,
     this.traits,
     this.unknownTraits = const [],
+    this.secondaries,
   });
 
   final int id;
@@ -98,6 +102,11 @@ class PackPlayer {
   /// is non-null.
   final List<String> unknownTraits;
 
+  /// His secondary positions as picked in the pack (format 10). Null is
+  /// Derived: the game works them out from his qualities as it does for
+  /// every player (`SecondaryPositions`). An empty list is "none".
+  final List<PlayerPosition>? secondaries;
+
   /// This player with [unknownTraits] dropped.
   PackPlayer withoutUnknown() => PackPlayer(
     id: id,
@@ -109,6 +118,7 @@ class PackPlayer {
     club: club,
     clubCountry: clubCountry,
     traits: traits,
+    secondaries: secondaries,
   );
 
   Map<String, Object?> toJson() => {
@@ -126,6 +136,7 @@ class PackPlayer {
     'clubCountry': clubCountry,
     if (traits case final t?)
       'traits': [for (final x in t) x.name, ...unknownTraits],
+    if (secondaries case final s?) 'secondaries': [for (final x in s) x.name],
   };
 
   static PackPlayer fromJson(Object? raw) {
@@ -140,6 +151,7 @@ class PackPlayer {
       'club',
       'clubCountry',
       'traits',
+      'secondaries',
     }, 'player');
     final a = _map(m['attributes'], 'attributes');
     _only(a, const {'physical', 'technical', 'stamina'}, 'attributes');
@@ -152,6 +164,13 @@ class PackPlayer {
         ? null
         : [for (final t in _strList(m['traits'], 'traits')) _token(t, 'trait')];
     final known = PlayerTrait.values.asNameMap();
+    final positions = PlayerPosition.values.asNameMap();
+    final secondaries = m['secondaries'] == null
+        ? null
+        : [
+            for (final t in _strList(m['secondaries'], 'secondaries'))
+              positions[t] ?? (throw FormatException('Unknown position "$t"')),
+          ];
     return PackPlayer(
       id: _int(m['id'], 'id'),
       name: _str(m['name'], 'name'),
@@ -172,6 +191,7 @@ class PackPlayer {
         for (final t in traitNames ?? const <String>[])
           if (!known.containsKey(t)) t,
       ],
+      secondaries: secondaries,
     );
   }
 
@@ -187,7 +207,8 @@ class PackPlayer {
       other.club == club &&
       other.clubCountry == clubCountry &&
       _eq.equals(other.traits, traits) &&
-      _eq.equals(other.unknownTraits, unknownTraits);
+      _eq.equals(other.unknownTraits, unknownTraits) &&
+      _eq.equals(other.secondaries, secondaries);
 
   @override
   int get hashCode => Object.hash(
@@ -201,6 +222,7 @@ class PackPlayer {
     clubCountry,
     traits == null ? null : _eq.hash(traits),
     _eq.hash(unknownTraits),
+    secondaries == null ? null : _eq.hash(secondaries),
   );
 }
 
@@ -702,7 +724,13 @@ class WorldPack {
   /// squads give it (`PackRanking.startingRanks`).
   final Map<int, int> rankings;
 
-  /// Whether the pack uses what only format 8 holds.
+  /// Whether the pack uses what only format 10 holds: a player's picked
+  /// secondary positions.
+  bool get _needsFormat10 => [
+    ...squads.values,
+    ...pools.values,
+  ].any((list) => list.any((p) => p.secondaries != null));
+
   /// Whether the pack uses what only format 9 holds.
   bool get _needsFormat9 => addedSponsors.length > kLegacySponsorsMax;
 
@@ -727,11 +755,14 @@ class WorldPack {
   /// when it names no managers, 4 when it does, 5 when it sets a sponsor's
   /// industry or a Y handle, 6 when it adds a reporter or a stadium, 7 when
   /// it sets a starting ranking, 8 when it gives a day-one manager an age,
-  /// and [kPackFormatVersion] (9) only when it adds more than
-  /// [kLegacySponsorsMax] sponsors.
+  /// 9 only when it adds more than [kLegacySponsorsMax] sponsors, and
+  /// [kPackFormatVersion] (10) only when it picks a player's secondary
+  /// positions.
   WorldPack get asWritten => copyWith(
-    formatVersion: _needsFormat9
+    formatVersion: _needsFormat10
         ? kPackFormatVersion
+        : _needsFormat9
+        ? 9
         : _needsFormat8
         ? 8
         : _needsFormat7
@@ -1019,7 +1050,7 @@ class WorldPack {
     );
   }
 
-  /// Upgrades older JSON step by step to [kPackFormatVersion]. Identity at v8
+  /// Upgrades older JSON step by step to [kPackFormatVersion]. Identity at v10
   /// for a pack naming no renamed club ([_retiredClubs]).
   /// Throws [FormatException] for a missing or newer version. Never changes
   /// [json] itself.
@@ -1045,6 +1076,7 @@ class WorldPack {
     if (v <= 6) out = _from6To7(out, v);
     if (v <= 7) out = _from7To8(out, v);
     if (v <= 8) out = _from8To9(out, v);
+    if (v <= 9) out = _from9To10(out, v);
     return _retiredClubs(out);
   }
 
@@ -1224,6 +1256,25 @@ class WorldPack {
       );
     }
     return {...json, 'formatVersion': 9};
+  }
+
+  /// Format 9 to 10: no player has picked secondary positions, so the game
+  /// derives every one as it did. A pack of format [from] whose players
+  /// already carry them is not a file of that format.
+  static Map<String, Object?> _from9To10(Map<String, Object?> json, int from) {
+    bool picks(Object? lists) =>
+        lists is Map &&
+        lists.values.any(
+          (l) =>
+              l is List &&
+              l.any((p) => p is Map && p.containsKey('secondaries')),
+        );
+    if (picks(json['squads']) || picks(json['pools'])) {
+      throw FormatException(
+        'Format $from pack has format 10 secondary positions',
+      );
+    }
+    return {...json, 'formatVersion': 10};
   }
 
   static ({String name, String nationality, int? age}) _manager(Object? raw) {

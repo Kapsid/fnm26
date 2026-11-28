@@ -15446,6 +15446,52 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
+  String playerAlsoPlays(String positions) {
+    return 'เล่น $positions ได้ด้วย';
+  }
+
+  @override
+  String playerSecondaryAbout(String position) {
+    return 'เล่น $position ได้เกือบดีเท่าตำแหน่งหลัก';
+  }
+
+  @override
+  String playerLearningPosition(String position) {
+    return 'กำลังเรียนรู้ $position:';
+  }
+
+  @override
+  String playerLearnedPosition(String position) {
+    return 'เรียนรู้ $position แล้ว';
+  }
+
+  @override
+  String get tacticsSecondBadge => 'รอง';
+
+  @override
+  String get editorPlayerSecondaries => 'เล่นได้อีก';
+
+  @override
+  String get editorPlayerSecondariesDerived => 'คำนวณ';
+
+  @override
+  String get editorPlayerSecondariesDerivedAbout =>
+      'เกมคำนวณตำแหน่งอื่นที่เขาเล่นได้จากคุณสมบัติของเขา';
+
+  @override
+  String get editorPlayerSecondariesNone => 'เฉพาะตำแหน่งหลัก ในทุกอาชีพ';
+
+  @override
+  String editorPlayerSecondariesPicked(int max) {
+    return 'ตำแหน่งเหล่านี้ในทุกอาชีพ เลือกได้สูงสุด $max';
+  }
+
+  @override
+  String editorPlayerSecondariesMax(int max) {
+    return 'ผู้เล่นมีตำแหน่งรองได้ไม่เกิน $max ตำแหน่ง ยกเลิกหนึ่งตำแหน่งก่อน';
+  }
+
+  @override
   String editorPlayerTraitUnknown(String trait) {
     return '$trait (เวอร์ชันนี้ไม่รู้จัก)';
   }

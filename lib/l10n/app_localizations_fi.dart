@@ -15822,6 +15822,52 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
+  String playerAlsoPlays(String positions) {
+    return 'myös $positions';
+  }
+
+  @override
+  String playerSecondaryAbout(String position) {
+    return 'Pelaa paikkaa $position lähes yhtä hyvin kuin omaansa';
+  }
+
+  @override
+  String playerLearningPosition(String position) {
+    return 'Opettelee: $position';
+  }
+
+  @override
+  String playerLearnedPosition(String position) {
+    return 'Oppinut: $position';
+  }
+
+  @override
+  String get tacticsSecondBadge => '2.';
+
+  @override
+  String get editorPlayerSecondaries => 'Pelaa myös';
+
+  @override
+  String get editorPlayerSecondariesDerived => 'Johdettu';
+
+  @override
+  String get editorPlayerSecondariesDerivedAbout =>
+      'Peli päättelee hänen muut pelipaikkansa ominaisuuksista.';
+
+  @override
+  String get editorPlayerSecondariesNone => 'Vain oma pelipaikka, joka uralla.';
+
+  @override
+  String editorPlayerSecondariesPicked(int max) {
+    return 'Nämä pelipaikat joka uralla. Valitse enintään $max.';
+  }
+
+  @override
+  String editorPlayerSecondariesMax(int max) {
+    return 'Pelaajalla on enintään $max sivupelipaikkaa. Poista ensin yksi.';
+  }
+
+  @override
   String editorPlayerTraitUnknown(String trait) {
     return '$trait (tuntematon tälle versiolle)';
   }

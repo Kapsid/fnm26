@@ -21,6 +21,9 @@ _Player _$PlayerFromJson(Map<String, dynamic> json) => _Player(
   fixedTraits: (json['fixedTraits'] as List<dynamic>?)
       ?.map((e) => $enumDecode(_$PlayerTraitEnumMap, e))
       .toList(),
+  fixedSecondaries: (json['fixedSecondaries'] as List<dynamic>?)
+      ?.map((e) => $enumDecode(_$PlayerPositionEnumMap, e))
+      .toList(),
 );
 
 Map<String, dynamic> _$PlayerToJson(_Player instance) => <String, dynamic>{
@@ -35,6 +38,9 @@ Map<String, dynamic> _$PlayerToJson(_Player instance) => <String, dynamic>{
   'clubStars': instance.clubStars,
   'fixedTraits': ?instance.fixedTraits
       ?.map((e) => _$PlayerTraitEnumMap[e]!)
+      .toList(),
+  'fixedSecondaries': ?instance.fixedSecondaries
+      ?.map((e) => _$PlayerPositionEnumMap[e]!)
       .toList(),
 };
 

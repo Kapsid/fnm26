@@ -10,7 +10,8 @@ import 'package:drift/drift.dart'
         BooleanExpressionOperators,
         ComparableExpr,
         InsertMode,
-        StringExpressionOperators;
+        StringExpressionOperators,
+        Value;
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:fnm/core/rng/seeded_rng.dart';
@@ -24,7 +25,8 @@ import 'package:fnm/data/seed/mononyms.dart';
 import 'package:fnm/data/seed/pool_generator.dart';
 import 'package:fnm/data/seed/real_internationals.dart';
 import 'package:fnm/data/seed/seed_source.dart';
-import 'package:fnm/domain/entities/enums.dart' show Confederation, YouthLevel;
+import 'package:fnm/domain/entities/enums.dart'
+    show Confederation, PlayerPosition, YouthLevel;
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/repositories/career_repository.dart'
@@ -36,6 +38,7 @@ import 'package:fnm/domain/services/names/name_pool.dart';
 import 'package:fnm/domain/services/nation/dormant_nations.dart';
 import 'package:fnm/domain/services/player/golden_generation.dart';
 import 'package:fnm/domain/services/player/international_retirement.dart';
+import 'package:fnm/domain/services/player/learned_positions.dart';
 import 'package:fnm/domain/services/player/player_aging.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
@@ -309,16 +312,106 @@ class DriftPlayerRepository implements PlayerRepository {
       exports: exports,
       avoidReturns: avoidReturns,
     );
-    return _settledClubs(
-      [for (final p in selectable) name(p)],
-      careerId: careerId,
-      seeded: seeded,
-      agingYears: agingYears,
-      saveSeed: saveSeed,
-      youthBonusByCycle: youthBonusByCycle,
-      careerStartsByPlayer: careerStartsByPlayer,
-      finish: finish,
+    return _withLearned(
+      await _settledClubs(
+        [for (final p in selectable) name(p)],
+        careerId: careerId,
+        seeded: seeded,
+        agingYears: agingYears,
+        saveSeed: saveSeed,
+        youthBonusByCycle: youthBonusByCycle,
+        careerStartsByPlayer: careerStartsByPlayer,
+        finish: finish,
+      ),
+      careerId,
+      agingYears,
     );
+  }
+
+  /// [players] with what each has learned of other positions in
+  /// [careerId] ([Player.learned]): his starts there, faded by the seasons
+  /// since his latest ([LearnedPositions.fade]) at [agingYears]. As they
+  /// are without a career, or with no start anywhere new.
+  Future<List<Player>> _withLearned(
+    List<Player> players,
+    int? careerId,
+    int agingYears,
+  ) async {
+    if (careerId == null || players.isEmpty) return players;
+    final t = _db.positionStarts;
+    final ids = [for (final p in players) p.id];
+    final rows = <PositionStartRow>[];
+    // In chunks: SQLite caps the parameters of one statement.
+    for (var i = 0; i < ids.length; i += 500) {
+      final chunk = ids.sublist(i, i + 500 > ids.length ? ids.length : i + 500);
+      rows.addAll(
+        await (_db.select(
+              t,
+            )..where(
+              (r) => r.careerId.equals(careerId) & r.playerId.isIn(chunk),
+            ))
+            .get(),
+      );
+    }
+    if (rows.isEmpty) return players;
+    final by = <int, Map<PlayerPosition, double>>{};
+    for (final r in rows) {
+      final starts = LearnedPositions.fade(r.matches, agingYears - r.lastAging);
+      if (starts <= 0) continue;
+      (by[r.playerId] ??= {})[r.position] = starts;
+    }
+    return [
+      for (final p in players)
+        if (by[p.id] case final learned?)
+          p.copyWith(learned: Map.unmodifiable(learned))
+        else
+          p,
+    ];
+  }
+
+  @override
+  Future<void> recordPositionStarts(
+    int careerId,
+    Iterable<({Player player, PlayerPosition position})> starts, {
+    required int aging,
+    bool friendly = false,
+  }) async {
+    final list = [
+      for (final s in starts)
+        if (s.position != s.player.position) s,
+    ];
+    if (list.isEmpty) return;
+    final weight = friendly ? LearnedPositions.friendlyWeight : 1.0;
+    final t = _db.positionStarts;
+    await _db.transaction(() async {
+      for (final s in list) {
+        final key =
+            (_db.select(t)..where(
+                  (r) =>
+                      r.careerId.equals(careerId) &
+                      r.playerId.equals(s.player.id) &
+                      r.position.equalsValue(s.position),
+                ))
+                .getSingleOrNull();
+        final had = await key;
+        // Forgotten starts are gone for good: a man back in a position after
+        // years away picks up from what he still has of it.
+        final kept = had == null
+            ? 0.0
+            : LearnedPositions.fade(had.matches, aging - had.lastAging);
+        await _db
+            .into(t)
+            .insertOnConflictUpdate(
+              PositionStartsCompanion.insert(
+                careerId: careerId,
+                playerId: s.player.id,
+                position: s.position,
+                matches: Value(kept + weight),
+                lastAging: Value(aging),
+              ),
+            );
+      }
+    });
   }
 
   @override
@@ -429,15 +522,19 @@ class DriftPlayerRepository implements PlayerRepository {
       exports: exports,
       avoidReturns: avoidReturns,
     );
-    return _settledClubs(
-      [for (final p in pool) name(p)],
-      careerId: careerId,
-      seeded: seeded,
-      agingYears: agingYears,
-      saveSeed: saveSeed,
-      youthBonusByCycle: youthBonusByCycle,
-      careerStartsByPlayer: careerStartsByPlayer,
-      finish: finish,
+    return _withLearned(
+      await _settledClubs(
+        [for (final p in pool) name(p)],
+        careerId: careerId,
+        seeded: seeded,
+        agingYears: agingYears,
+        saveSeed: saveSeed,
+        youthBonusByCycle: youthBonusByCycle,
+        careerStartsByPlayer: careerStartsByPlayer,
+        finish: finish,
+      ),
+      careerId,
+      agingYears,
     );
   }
 
@@ -529,6 +626,7 @@ class DriftPlayerRepository implements PlayerRepository {
     clubCountry: at.clubCountry,
     clubStars: at.clubStars,
     fixedTraits: at.fixedTraits,
+    fixedSecondaries: at.fixedSecondaries,
   );
 
   /// The first season [careerId]'s clubs settle from ([clubSettledKind]),
@@ -574,7 +672,9 @@ class DriftPlayerRepository implements PlayerRepository {
   /// its country, derived from their current overall + id + save seed —
   /// layered on like the namer — and, in a career on a custom [world], the
   /// traits the world picks for him ([PackPlayer.traits] as
-  /// [Player.fixedTraits]; null, Random, leaves the per-save roll).
+  /// [Player.fixedTraits]; null, Random, leaves the per-save roll) and the
+  /// secondary positions it picks ([PackPlayer.secondaries] as
+  /// [Player.fixedSecondaries]; null derives them).
   ///
   /// [homeCode] and [homeCities] let the assignment keep most of a nation's
   /// players at home; without them every player would be placed abroad.
@@ -639,6 +739,7 @@ class DriftPlayerRepository implements PlayerRepository {
       clubCountry: c.country,
       clubStars: stars,
       fixedTraits: dayOne?.traits,
+      fixedSecondaries: dayOne?.secondaries,
     );
   }
 
@@ -915,7 +1016,12 @@ class DriftPlayerRepository implements PlayerRepository {
     );
     if (careerId == null) return settled;
     final into = await _naturalizedInto(careerId, id);
-    return into == null ? settled : settled.copyWith(nationId: into);
+    final learned = (await _withLearned(
+      [settled],
+      careerId,
+      agingYears,
+    )).single;
+    return into == null ? learned : learned.copyWith(nationId: into);
   }
 
   /// [p] (read by identity at [agingYears]) at the club of the season his

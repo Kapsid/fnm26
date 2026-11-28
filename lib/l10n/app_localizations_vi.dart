@@ -15592,6 +15592,53 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String playerAlsoPlays(String positions) {
+    return 'còn $positions';
+  }
+
+  @override
+  String playerSecondaryAbout(String position) {
+    return 'Chơi $position gần tốt như vị trí sở trường';
+  }
+
+  @override
+  String playerLearningPosition(String position) {
+    return 'Đang học $position:';
+  }
+
+  @override
+  String playerLearnedPosition(String position) {
+    return 'Đã quen $position';
+  }
+
+  @override
+  String get tacticsSecondBadge => 'Phụ';
+
+  @override
+  String get editorPlayerSecondaries => 'Còn chơi';
+
+  @override
+  String get editorPlayerSecondariesDerived => 'Tự tính';
+
+  @override
+  String get editorPlayerSecondariesDerivedAbout =>
+      'Trò chơi tính các vị trí khác của anh ấy từ phẩm chất.';
+
+  @override
+  String get editorPlayerSecondariesNone =>
+      'Chỉ vị trí sở trường, ở mọi sự nghiệp.';
+
+  @override
+  String editorPlayerSecondariesPicked(int max) {
+    return 'Các vị trí này ở mọi sự nghiệp. Chọn tối đa $max.';
+  }
+
+  @override
+  String editorPlayerSecondariesMax(int max) {
+    return 'Một cầu thủ có tối đa $max vị trí phụ. Hãy bỏ chọn một vị trí trước.';
+  }
+
+  @override
   String editorPlayerTraitUnknown(String trait) {
     return '$trait (phiên bản này không nhận ra)';
   }

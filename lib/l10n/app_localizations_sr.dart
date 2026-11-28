@@ -16093,6 +16093,53 @@ class AppLocalizationsSr extends AppLocalizations {
   }
 
   @override
+  String playerAlsoPlays(String positions) {
+    return 'такође $positions';
+  }
+
+  @override
+  String playerSecondaryAbout(String position) {
+    return 'Игра $position готово једнако добро као своју позицију';
+  }
+
+  @override
+  String playerLearningPosition(String position) {
+    return 'Учи $position:';
+  }
+
+  @override
+  String playerLearnedPosition(String position) {
+    return 'Научио $position';
+  }
+
+  @override
+  String get tacticsSecondBadge => '2.';
+
+  @override
+  String get editorPlayerSecondaries => 'Игра и';
+
+  @override
+  String get editorPlayerSecondariesDerived => 'Изведено';
+
+  @override
+  String get editorPlayerSecondariesDerivedAbout =>
+      'Игра из његових квалитета изводи позиције које још игра.';
+
+  @override
+  String get editorPlayerSecondariesNone =>
+      'Само његова позиција, у свакој каријери.';
+
+  @override
+  String editorPlayerSecondariesPicked(int max) {
+    return 'Ове позиције у свакој каријери. Изабери до $max.';
+  }
+
+  @override
+  String editorPlayerSecondariesMax(int max) {
+    return 'Играч има највише $max споредне позиције. Прво уклони једну.';
+  }
+
+  @override
   String editorPlayerTraitUnknown(String trait) {
     return '$trait (непознато овој верзији)';
   }

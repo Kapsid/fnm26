@@ -778,7 +778,7 @@ abstract final class CallUpAdvice {
     final places = formation.positions;
     double value(Player p, PlayerPosition place) =>
         (p.overall + (conditionDelta[p.id] ?? 0)).clamp(1, 99) *
-        PositionFit.factor(p.position, place);
+        PositionFit.factorFor(p, place);
     final xi = _assign(places, players, value);
     var total = 0.0;
     for (var i = 0; i < xi.length; i++) {
