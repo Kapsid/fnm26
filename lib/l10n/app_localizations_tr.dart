@@ -782,6 +782,9 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'Tüm zamanların ilk 11\'i';
+
+  @override
   String get recordsNoWorldHistory =>
       'Dünyanın henüz bir geçmişi yok. Birkaç kampanya oyna, tüm zamanların büyükleri burada görünecek.';
 

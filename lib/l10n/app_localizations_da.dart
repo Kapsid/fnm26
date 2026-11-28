@@ -799,6 +799,9 @@ class AppLocalizationsDa extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'Alle tiders hold';
+
+  @override
   String get recordsNoWorldHistory =>
       'Verden har ingen historie endnu. Spil nogle kampagner færdige, så dukker alle tiders største navne op her.';
 

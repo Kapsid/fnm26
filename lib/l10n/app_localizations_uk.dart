@@ -782,6 +782,9 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'Склад всіх часів';
+
+  @override
   String get recordsNoWorldHistory =>
       'У світу ще немає історії. Зіграй кілька кампаній, і тут з’являться великі імена всіх часів.';
 

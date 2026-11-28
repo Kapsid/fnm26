@@ -106,10 +106,18 @@ List<Override> fakeRecordsOverrides() => [
   rivalryProvider(kSeededCareerId).overrideWith((ref) async => fakeRivalry()),
 ];
 
-/// Sixteen of the manager's players ranked into a hall of fame, and the
-/// all-time XI the ranking picks from them.
+/// Sixteen of the manager's players ranked into a hall of fame (his fifteen
+/// best and his best keeper, so the XI has one), and the all-time XI the
+/// ranking picks from them.
 LegendsView fakeLegends() {
-  final squad = squadOf(seededNationId);
+  final all = squadOf(seededNationId);
+  final keeper = all.firstWhere(
+    (p) => p.category == PositionCategory.goalkeeper,
+  );
+  final best = all.where((p) => p != keeper).take(15).toList();
+  final squad = all.take(16).contains(keeper)
+      ? all.take(16).toList()
+      : [...best, keeper];
   final ranked = Legends.rank([
     for (var i = 0; i < 16; i++)
       (
@@ -123,10 +131,19 @@ LegendsView fakeLegends() {
         avgRating: 7.4 - i * 0.05,
       ),
   ]);
+  final nation = realNationsById[seededNationId]!;
   return (
-    nationName: realNationsById[seededNationId]!.name,
+    nationName: nation.name,
     allTimeXi: Legends.allTimeXi(ranked),
     hallOfFame: ranked.take(20).toList(),
+    formation: legendsXiFormation,
+    players: {for (final p in squad.take(16)) p.id: p},
+    // Spans of eight or nine years from 2026 on; a title for every third.
+    careers: {
+      for (var i = 0; i < 16; i++)
+        squad[i].id: (from: 2026 + i % 5, to: 2034 + i % 4, titles: 2 - i % 3),
+    },
+    kit: (primary: nation.primaryColor, secondary: nation.secondaryColor),
   );
 }
 

@@ -826,6 +826,9 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'Ενδεκάδα όλων των εποχών';
+
+  @override
   String get recordsNoWorldHistory =>
       'Ο κόσμος δεν έχει ακόμη ιστορία. Παίξε μερικές εκστρατείες και οι μεγάλοι όλων των εποχών θα εμφανιστούν εδώ.';
 

@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Rekord se nije mogao učitati.\n{error}",
   "recordsNoLegends": "Još nema legendi. Odigraj nekoliko kampanja i ovdje će se pojaviti velikani reprezentacije: {nation}.",
   "recordsGreatestSide": "Najbolja momčad koju je reprezentacija {nation} ikad mogla postaviti.",
+  "recordsAllTimeXiSubtitle": "Najboljih 11 svih vremena",
   "recordsNoWorldHistory": "Svijet još nema povijest. Odigraj nekoliko kampanja i ovdje će se pojaviti velikani svih vremena.",
   "recordsPlayToWriteHistory": "Odigraj nekoliko utakmica i počni pisati povijest: {nation}.",
   "tacticsLineGk": "VR",

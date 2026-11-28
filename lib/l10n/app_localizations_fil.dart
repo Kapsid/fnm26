@@ -788,6 +788,9 @@ class AppLocalizationsFil extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'All-time XI';
+
+  @override
   String get recordsNoWorldHistory =>
       'Wala pang kasaysayan ang mundo. Tapusin ang ilang kampanya at lilitaw dito ang mga dakila sa lahat ng panahon.';
 

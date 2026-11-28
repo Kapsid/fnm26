@@ -773,6 +773,9 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => '11 ตัวจริงตลอดกาล';
+
+  @override
   String get recordsNoWorldHistory =>
       'โลกยังไม่มีประวัติศาสตร์ ลงเล่นสักหลายแคมเปญ แล้วยอดผู้เล่นตลอดกาลจะปรากฏที่นี่';
 

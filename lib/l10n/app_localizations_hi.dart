@@ -781,6 +781,9 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'ऑल-टाइम XI';
+
+  @override
   String get recordsNoWorldHistory =>
       'दुनिया का अभी कोई इतिहास नहीं। कुछ सीज़न खेलें और ऑल-टाइम महान खिलाड़ी यहाँ दिखेंगे।';
 

@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "โหลดสถิติไม่ได้\n{error}",
   "recordsNoLegends": "ยังไม่มีตำนาน ลงเล่นสักหลายแคมเปญ แล้วยอดผู้เล่นของ {nation} จะปรากฏที่นี่",
   "recordsGreatestSide": "ทีมที่ยิ่งใหญ่ที่สุดที่ {nation} เคยส่งลงสนามได้",
+  "recordsAllTimeXiSubtitle": "11 ตัวจริงตลอดกาล",
   "recordsNoWorldHistory": "โลกยังไม่มีประวัติศาสตร์ ลงเล่นสักหลายแคมเปญ แล้วยอดผู้เล่นตลอดกาลจะปรากฏที่นี่",
   "recordsPlayToWriteHistory": "ลงเล่นสักสองสามนัดเพื่อเริ่มเขียนประวัติศาสตร์ของ {nation}",
   "tacticsLineGk": "GK",

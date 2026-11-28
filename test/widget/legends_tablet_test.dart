@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
-import 'package:fnm/domain/services/squad/legends.dart';
 import 'package:fnm/features/player/player_detail_screen.dart';
 import 'package:fnm/features/records/legends_screen.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
-import 'package:fnm/shared/tablet/tablet.dart';
+import 'package:fnm/features/tactics/tactics_pitch.dart';
 
 import '../helpers/history_fixtures.dart';
 import '../helpers/seeded_save.dart';
+import 'legends_phone_test.dart' show expectReadOnlyDiscs, xiDiscs;
 
 Future<SeededSave> _open(
   WidgetTester tester,
@@ -30,11 +30,14 @@ Future<SeededSave> _open(
   return save;
 }
 
-Finder get _grid => find.byType(DataGrid<RankedLegend>);
+/// The player the tablet now shows: on his own page, as the legends have no
+/// pane beside them.
+int _shownPlayer(WidgetTester tester) =>
+    tester.widget<PlayerDetailScreen>(find.byType(PlayerDetailScreen)).playerId;
 
 void main() {
   for (final size in kTabletSizes) {
-    testWidgets('the hall of fame as a grid, the pane beside it, $size', (
+    testWidgets('the XI on the pitch, the hall of fame beside it, $size', (
       tester,
     ) async {
       await _open(tester, size);
@@ -42,43 +45,65 @@ void main() {
       expect(find.byKey(LegendsScreen.tabletLayoutKey), findsOneWidget);
       expect(find.byType(PhoneWidthFrame), findsNothing);
       expect(find.byType(AppBar), findsNothing);
+      expect(xiDiscs(), findsNWidgets(11));
+      expectReadOnlyDiscs();
+      expect(find.text(enL.recordsAllTimeXiSubtitle), findsOneWidget);
       expect(
-        tester.widget<DataGrid<RankedLegend>>(_grid).rows,
-        fakeLegends().hallOfFame,
+        find.descendant(
+          of: find.byKey(LegendsScreen.formationKey),
+          matching: find.text('4-3-3'),
+        ),
+        findsOneWidget,
       );
-      expect(find.text(enL.panePickPlayer), findsOneWidget);
-      expect(
-        tester.getCenter(_grid).dx,
-        lessThan(tester.getCenter(find.text(enL.panePickPlayer)).dx),
-      );
+      // The pitch on one side, the cards on the other, two abreast.
+      final pitch = tester.getRect(find.byKey(LegendsScreen.xiPitchKey));
+      final hall = fakeLegends().hallOfFame;
+      Rect card(int i) =>
+          tester.getRect(find.byKey(LegendsScreen.cardKey(hall[i].playerId)));
+      expect(card(0).left, greaterThan(pitch.right));
+      expect(card(0).top, card(1).top);
+      expect(card(1).left, greaterThan(card(0).right));
+      expect(find.text(enL.recordsHallOfFame), findsOneWidget);
       await tester.pumpWidget(const SizedBox());
     });
   }
 
-  testWidgets('a legend opens in the pane', (tester) async {
+  testWidgets('the whole hall of fame scrolls into view', (tester) async {
     await _open(tester, kTabletSize);
-    final first = fakeLegends().hallOfFame.first;
-    await tester.tap(
-      find.descendant(of: _grid, matching: find.text(first.name)),
+    final last = fakeLegends().hallOfFame.last;
+    await tester.scrollUntilVisible(
+      find.byKey(LegendsScreen.cardKey(last.playerId)),
+      200,
+      scrollable: find
+          .descendant(
+            of: find.byKey(LegendsScreen.tabletLayoutKey),
+            matching: find.byType(Scrollable),
+          )
+          .last,
     );
-    await settle(tester);
-    expect(
-      tester.widget<PlayerView>(find.byType(PlayerView)).playerId,
-      first.playerId,
-    );
-    expect(tester.widget<DataGrid<RankedLegend>>(_grid).selected, first);
+    expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox());
   });
 
-  testWidgets('the all-time XI is the second tab', (tester) async {
-    final save = await _open(tester, kTabletSize);
-    await showTab(tester, 1);
-    expect(
-      tester.widget<DataGrid<RankedLegend>>(_grid).rows,
-      fakeLegends().allTimeXi,
+  testWidgets('a card opens its legend', (tester) async {
+    await _open(tester, kTabletSize);
+    final first = fakeLegends().hallOfFame.first;
+    await tester.tap(find.byKey(LegendsScreen.cardKey(first.playerId)));
+    await settle(tester);
+    expect(_shownPlayer(tester), first.playerId);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('a disc of the XI opens its legend', (tester) async {
+    await _open(tester, kTabletSize);
+    final pitch = tester.widget<TacticsPitch>(find.byType(TacticsPitch));
+    final id = pitch.lineup[0]!;
+    await tester.tap(
+      find.byKey(const ValueKey('pitchDisc0')),
+      warnIfMissed: false,
     );
-    final me = save.nations.firstWhere((n) => n.id == save.nationId);
-    expect(find.text(enL.recordsGreatestSide(me.name)), findsOneWidget);
+    await settle(tester);
+    expect(_shownPlayer(tester), id);
     await tester.pumpWidget(const SizedBox());
   });
 
@@ -87,6 +112,7 @@ void main() {
     expect(find.byKey(LegendsScreen.tabletLayoutKey), findsOneWidget);
     final me = save.nations.firstWhere((n) => n.id == save.nationId);
     expect(find.text(enL.recordsNoLegends(me.name)), findsOneWidget);
+    expect(find.byKey(LegendsScreen.xiPitchKey), findsNothing);
     await tester.pumpWidget(const SizedBox());
   });
 }

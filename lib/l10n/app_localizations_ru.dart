@@ -838,6 +838,9 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'Символическая сборная';
+
+  @override
   String get recordsNoWorldHistory =>
       'У мира ещё нет истории. Проведи несколько кампаний, и здесь появятся великие игроки всех времён.';
 

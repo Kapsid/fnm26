@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Rekod tidak dapat dimuatkan.\n{error}",
   "recordsNoLegends": "Belum ada legenda. Main beberapa kempen dan pemain hebat {nation} akan muncul di sini.",
   "recordsGreatestSide": "Pasukan terhebat yang pernah boleh diturunkan oleh {nation}.",
+  "recordsAllTimeXiSubtitle": "Kesebelasan terhebat",
   "recordsNoWorldHistory": "Dunia belum mempunyai sejarah. Main beberapa kempen dan pemain hebat sepanjang zaman akan muncul di sini.",
   "recordsPlayToWriteHistory": "Main beberapa perlawanan untuk mula menulis sejarah {nation}.",
   "tacticsLineGk": "PG",

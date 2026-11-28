@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "成績を読み込めませんでした。\n{error}",
   "recordsNoLegends": "レジェンドはまだいません。大会を重ねれば、{nation}の名選手たちがここに現れます。",
   "recordsGreatestSide": "{nation}史上最強の布陣。",
+  "recordsAllTimeXiSubtitle": "歴代ベストイレブン",
   "recordsNoWorldHistory": "世界にはまだ歴史がありません。大会を重ねれば、歴代の名選手がここに現れます。",
   "recordsPlayToWriteHistory": "試合をこなして、{nation}の歴史を刻み始めましょう。",
   "tacticsLineGk": "GK",
