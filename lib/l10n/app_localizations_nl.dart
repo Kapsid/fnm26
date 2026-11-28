@@ -1068,21 +1068,6 @@ class AppLocalizationsNl extends AppLocalizations {
   String get tacticsFullBackOff => 'Geen instructie';
 
   @override
-  String tacticsFullBackUpHint(String side) {
-    return '$side: opkomen. Iets meer aanval, iets meer risico.';
-  }
-
-  @override
-  String tacticsFullBackDownHint(String side) {
-    return '$side: achterblijven. Iets veiliger, iets minder aanval.';
-  }
-
-  @override
-  String tacticsFullBackOffHint(String side) {
-    return '$side: geen instructie, speelt volgens het teamplan.';
-  }
-
-  @override
   String tacticsFullBackSemantics(String side, String state) {
     return '$side, pijl: $state';
   }
@@ -1091,10 +1076,6 @@ class AppLocalizationsNl extends AppLocalizations {
   String tacticsSubsUsed(int used, int max) {
     return 'WISSELS · $used/$max';
   }
-
-  @override
-  String get tacticsDragSubOn =>
-      'Tik op een speler in het veld om hem eraf te halen, of houd een wisselspeler vast en sleep hem erheen.';
 
   @override
   String get tacticsNoSubs => 'Geen wisselspelers beschikbaar.';
@@ -1250,13 +1231,6 @@ class AppLocalizationsNl extends AppLocalizations {
   String get tacticsTabSetPieces => 'STANDAARDSITUATIES';
 
   @override
-  String get tacticsTabRolesSetPieces => 'ROLLEN EN STANDAARDSITUATIES';
-
-  @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Geef elke basisspeler een rol. Tik op de penalty-badge (⚽) of vrije-trap-badge (▲) om je nemer te kiezen.';
-
-  @override
   String get tacticsTooltipCallUps => 'Oproepen';
 
   @override
@@ -1290,10 +1264,6 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get tacticsTapSpotReplace =>
       'Tik op hun plek in het veld om een vervanger te kiezen.';
-
-  @override
-  String get tacticsTapOrDrag =>
-      'Tik op een speler om hem te wisselen, of houd er een vast en sleep hem om te verplaatsen.';
 
   @override
   String get tacticsPlayerRoles => 'SPELERSROLLEN';
@@ -1358,11 +1328,6 @@ class AppLocalizationsNl extends AppLocalizations {
   String get tacticsSkillPas => 'PAS';
 
   @override
-  String tacticsRolePlayer(String name) {
-    return 'ROL · $name';
-  }
-
-  @override
   String get roleFitGood => 'Past goed';
 
   @override
@@ -1399,34 +1364,77 @@ class AppLocalizationsNl extends AppLocalizations {
   String get tacticsRunLegendManual => 'Jouw instructie';
 
   @override
-  String get tacticsPitchPlanHint =>
-      'Tik op de badge van een speler voor zijn rol en op zijn pijl voor zijn loopactie.';
+  String get tacticsSheetPost => 'Positie';
 
   @override
-  String tacticsRoleBadgeSemantics(String role) {
-    return 'Rol: $role. Tik om te wijzigen.';
+  String get tacticsSheetAdvanced => 'Geavanceerd';
+
+  @override
+  String get tacticsSheetAutoPick => 'Neemt ze nu, automatisch';
+
+  @override
+  String get tacticsSheetFresh => 'Fris';
+
+  @override
+  String get tacticsSheetFitHere => 'Op deze positie';
+
+  @override
+  String tacticsSheetFitSemantics(int dots) {
+    return 'Geschiktheid voor de positie: $dots van 5';
   }
 
   @override
-  String tacticsRunMarkSemantics(String run) {
-    return 'Loopactie: $run. Tik om te wijzigen.';
-  }
+  String get tacticsSheetSwap => 'Wissel';
+
+  @override
+  String get tacticsSheetProfile => 'Profiel';
+
+  @override
+  String get tacticsSheetRecommended => 'Aanbevolen';
+
+  @override
+  String get tacticsSheetRunHint =>
+      'Tik op een richting voor je eigen pijl. Het midden zet de loopactie van de rol terug.';
+
+  @override
+  String get tacticsPostDm => 'Speelt voor de verdediging en schermt die af.';
+
+  @override
+  String get tacticsPostCm =>
+      'Verbindt verdediging en aanval, werkt beide kanten op.';
+
+  @override
+  String get tacticsPostAm => 'Speelt tussen de linies, achter de spitsen.';
+
+  @override
+  String get tacticsPostWideMid => 'Dieper en breder, helpt zijn back.';
+
+  @override
+  String get tacticsPostWinger => 'Hoger, zoekt het duel met de back.';
+
+  @override
+  String get tacticsPostSt => 'Leidt de aanval en maakt kansen af.';
+
+  @override
+  String get tacticsPitchHint =>
+      'Tik op een speler om zijn positie, rol en loopactie in te stellen. Houd vast en sleep om hem te verplaatsen.';
+
+  @override
+  String get tacticsSubHint =>
+      'Tik op een speler om hem in te stellen of te wisselen. Houd een wissel vast en sleep hem op hem.';
+
+  @override
+  String get tacticsLegendTooltip => 'Zo lees je het veld';
+
+  @override
+  String get tacticsLegendRoleTag =>
+      'Het kleine badge op een speler is zijn rol.';
 
   @override
   String get tacticsPlanRoleHeading => 'ROL';
 
   @override
   String get tacticsPlanMovementHeading => 'BEWEGING';
-
-  @override
-  String tacticsPlanTitle(String position, String name) {
-    return '$position · $name';
-  }
-
-  @override
-  String tacticsArrowSet(String name, String movement) {
-    return '$name: $movement';
-  }
 
   @override
   String get tacticsKeeperNoRun => 'Een keeper heeft geen loopactie.';
@@ -1493,9 +1501,6 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get tacticsSave => 'Opslaan';
-
-  @override
-  String get tacticsTapToAssign => 'Tik om toe te wijzen';
 
   @override
   String get tacticsHoldDragSub =>
@@ -14388,14 +14393,6 @@ class AppLocalizationsNl extends AppLocalizations {
   String yPunditPick5(String competition, String favourite, String darkHorse) {
     return '$favourite wint het $competition en het wordt saai. Wil je een verhaal, kijk dan naar $darkHorse.';
   }
-
-  @override
-  String tacticsSlotSwitchHeading(String formation) {
-    return 'Positie binnen de $formation';
-  }
-
-  @override
-  String get tacticsSlotSwitchReset => 'Herstellen';
 
   @override
   String get tacticsSlotSwitchLimit =>

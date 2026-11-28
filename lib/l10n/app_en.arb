@@ -1579,33 +1579,6 @@
   "@tacticsFullBackOff": {
     "description": "Full-back arrow state: no individual instruction."
   },
-  "tacticsFullBackUpHint": "{side}: push on. A little more attack, a little more risk.",
-  "@tacticsFullBackUpHint": {
-    "description": "Brief message after tapping a full-back's arrow to 'push on'. side = Left-back / Right-back.",
-    "placeholders": {
-      "side": {
-        "type": "String"
-      }
-    }
-  },
-  "tacticsFullBackDownHint": "{side}: hold back. A little safer, a little less attack.",
-  "@tacticsFullBackDownHint": {
-    "description": "Brief message after tapping a full-back's arrow to 'hold back'. side = Left-back / Right-back.",
-    "placeholders": {
-      "side": {
-        "type": "String"
-      }
-    }
-  },
-  "tacticsFullBackOffHint": "{side}: no instruction, plays the team plan.",
-  "@tacticsFullBackOffHint": {
-    "description": "Brief message after tapping a full-back's arrow back to no instruction. side = Left-back / Right-back.",
-    "placeholders": {
-      "side": {
-        "type": "String"
-      }
-    }
-  },
   "tacticsFullBackSemantics": "{side} arrow: {state}",
   "@tacticsFullBackSemantics": {
     "description": "Screen-reader label of the full-back arrow on the tactics pitch. side = Left-back / Right-back; state = Push on / Hold back / No instruction.",
@@ -1631,10 +1604,6 @@
         "example": "5"
       }
     }
-  },
-  "tacticsDragSubOn": "Tap a man on the pitch to take him off, or hold and drag a sub onto him.",
-  "@tacticsDragSubOn": {
-    "description": "Hint above the bench in the in-match editor, naming both ways of making a change."
   },
   "tacticsNoSubs": "No substitutes available.",
   "@tacticsNoSubs": {
@@ -1854,14 +1823,6 @@
   "@tacticsTabSetPieces": {
     "description": "Tab for set-piece takers."
   },
-  "tacticsTabRolesSetPieces": "ROLES & SET PIECES",
-  "@tacticsTabRolesSetPieces": {
-    "description": "Merged tab: player roles and set-piece takers."
-  },
-  "tacticsRolesSetPiecesBlurb": "Give each starter a role. Tap the penalty (⚽) or free-kick (▲) badge to set your taker.",
-  "@tacticsRolesSetPiecesBlurb": {
-    "description": "Blurb for the merged roles & set-pieces tab."
-  },
   "tacticsTooltipCallUps": "Call-ups",
   "@tacticsTooltipCallUps": {
     "description": "Tooltip for the call-ups action."
@@ -1909,10 +1870,6 @@
   "tacticsTapSpotReplace": "Tap their spot on the pitch to pick a replacement.",
   "@tacticsTapSpotReplace": {
     "description": "Hint on how to replace an unavailable starter."
-  },
-  "tacticsTapOrDrag": "Tap a player to swap them out, or hold and drag one to move them.",
-  "@tacticsTapOrDrag": {
-    "description": "Hint above the pitch on how to edit the XI."
   },
   "tacticsPlayerRoles": "PLAYER ROLES",
   "@tacticsPlayerRoles": {
@@ -1990,16 +1947,6 @@
   "@tacticsSkillPas": {
     "description": "Abbreviated skill label for passing."
   },
-  "tacticsRolePlayer": "ROLE · {name}",
-  "@tacticsRolePlayer": {
-    "description": "Heading of the role-picker sheet for a player.",
-    "placeholders": {
-      "name": {
-        "type": "String",
-        "example": "Jude Bellingham"
-      }
-    }
-  },
   "roleFitGood": "Good fit",
   "@roleFitGood": {
     "description": "How well a role suits the player: his attributes fit it."
@@ -2048,27 +1995,90 @@
   "@tacticsRunLegendManual": {
     "description": "Legend under the tactics pitch: a solid arrow is a movement the manager set for the player."
   },
-  "tacticsPitchPlanHint": "Tap a player's badge to set his role, his arrow to set his run.",
-  "@tacticsPitchPlanHint": {
-    "description": "Hint under the tactics pitch: the small badge on each player's disc opens his role sheet, and the small arrow mark on it moves his run on, one run per tap."
+  "tacticsSheetPost": "Position",
+  "@tacticsSheetPost": {
+    "description": "Heading of the player slot sheet's section that picks the place the slot plays within the formation."
   },
-  "tacticsRoleBadgeSemantics": "Role: {role}. Tap to change.",
-  "@tacticsRoleBadgeSemantics": {
-    "description": "Screen-reader label of the role badge on a player's disc on the tactics pitch; tapping it opens his role sheet.",
+  "tacticsSheetAdvanced": "Advanced",
+  "@tacticsSheetAdvanced": {
+    "description": "Folded section at the foot of the player slot sheet: the armband and set-piece duties."
+  },
+  "tacticsSheetAutoPick": "Takes them now, automatically",
+  "@tacticsSheetAutoPick": {
+    "description": "Under a set-piece duty in the player slot sheet: nobody is named and the engine picks this player anyway."
+  },
+  "tacticsSheetFresh": "Fresh",
+  "@tacticsSheetFresh": {
+    "description": "Player slot sheet header: the player's legs are fresh."
+  },
+  "tacticsSheetFitHere": "On this position",
+  "@tacticsSheetFitHere": {
+    "description": "Player slot sheet header, before five dots: how well the player suits the place he is playing."
+  },
+  "tacticsSheetFitSemantics": "Fit for this position: {dots} of 5",
+  "@tacticsSheetFitSemantics": {
+    "description": "Screen-reader label for the fit dots in the player slot sheet.",
     "placeholders": {
-      "role": {
-        "type": "String"
+      "dots": {
+        "type": "int"
       }
     }
   },
-  "tacticsRunMarkSemantics": "Run: {run}. Tap to change.",
-  "@tacticsRunMarkSemantics": {
-    "description": "Screen-reader label of the arrow mark on a player's disc on the tactics pitch; each tap moves his run on to the next one his place offers.",
-    "placeholders": {
-      "run": {
-        "type": "String"
-      }
-    }
+  "tacticsSheetSwap": "Swap",
+  "@tacticsSheetSwap": {
+    "description": "Button in the player slot sheet that opens the list of players for this slot."
+  },
+  "tacticsSheetProfile": "Profile",
+  "@tacticsSheetProfile": {
+    "description": "Link in the player slot sheet to the player's full page."
+  },
+  "tacticsSheetRecommended": "Recommended",
+  "@tacticsSheetRecommended": {
+    "description": "Tooltip on the star marking the role that suits the player best."
+  },
+  "tacticsSheetRunHint": "Tap a direction for your own arrow. The centre restores the role's run.",
+  "@tacticsSheetRunHint": {
+    "description": "Hint beside the movement compass in the player slot sheet."
+  },
+  "tacticsPostDm": "Sits in front of the back line and shields it.",
+  "@tacticsPostDm": {
+    "description": "One line on playing as a defensive midfielder, in the player slot sheet."
+  },
+  "tacticsPostCm": "Links defence and attack, works both ways.",
+  "@tacticsPostCm": {
+    "description": "One line on playing as a central midfielder, in the player slot sheet."
+  },
+  "tacticsPostAm": "Plays between the lines, behind the strikers.",
+  "@tacticsPostAm": {
+    "description": "One line on playing as an attacking midfielder, in the player slot sheet."
+  },
+  "tacticsPostWideMid": "Deeper and wider, helps his full-back.",
+  "@tacticsPostWideMid": {
+    "description": "One line on playing as a wide midfielder, in the player slot sheet."
+  },
+  "tacticsPostWinger": "Higher up, takes on the full-back.",
+  "@tacticsPostWinger": {
+    "description": "One line on playing as a winger, in the player slot sheet."
+  },
+  "tacticsPostSt": "Leads the line and finishes chances.",
+  "@tacticsPostSt": {
+    "description": "One line on playing as a striker, in the player slot sheet."
+  },
+  "tacticsPitchHint": "Tap a player to set his position, role and run. Hold and drag to move him.",
+  "tacticsSubHint": "Tap a player to set him up or swap him. Hold and drag a sub onto him.",
+  "@tacticsPitchHint": {
+    "description": "Hint under the tactics pitch."
+  },
+  "@tacticsSubHint": {
+    "description": "Hint under the in-match tactics pitch: a tap opens the player sheet (with Swap), and a sub can be dragged onto a player."
+  },
+  "tacticsLegendTooltip": "Reading the pitch",
+  "@tacticsLegendTooltip": {
+    "description": "Tooltip of the info button under the tactics pitch, and title of the legend it opens."
+  },
+  "tacticsLegendRoleTag": "The small badge on a player is his role.",
+  "@tacticsLegendRoleTag": {
+    "description": "Legend line explaining the role glyph on a player's disc."
   },
   "tacticsPlanRoleHeading": "ROLE",
   "@tacticsPlanRoleHeading": {
@@ -2077,30 +2087,6 @@
   "tacticsPlanMovementHeading": "MOVEMENT",
   "@tacticsPlanMovementHeading": {
     "description": "Heading of the movement choices in a player's role and run sheet."
-  },
-  "tacticsPlanTitle": "{position} · {name}",
-  "@tacticsPlanTitle": {
-    "description": "Title of a player's role and run sheet: his position and name.",
-    "placeholders": {
-      "position": {
-        "type": "String"
-      },
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "tacticsArrowSet": "{name}: {movement}",
-  "@tacticsArrowSet": {
-    "description": "Note after a player's arrow mark is tapped on the tactics pitch: the player and the run he now makes.",
-    "placeholders": {
-      "name": {
-        "type": "String"
-      },
-      "movement": {
-        "type": "String"
-      }
-    }
   },
   "tacticsKeeperNoRun": "A keeper has no run to set.",
   "@tacticsKeeperNoRun": {
@@ -2194,10 +2180,6 @@
   "tacticsSave": "Save",
   "@tacticsSave": {
     "description": "Confirm the name-preset dialog."
-  },
-  "tacticsTapToAssign": "Tap to assign",
-  "@tacticsTapToAssign": {
-    "description": "Shown when a player has no role assigned."
   },
   "tacticsHoldDragSub": "Hold a sub, then drag them onto a player to bring them on.",
   "@tacticsHoldDragSub": {
@@ -22262,20 +22244,6 @@
         "type": "String"
       }
     }
-  },
-  "tacticsSlotSwitchHeading": "Position within the {formation}",
-  "@tacticsSlotSwitchHeading": {
-    "description": "Small heading above the position chips at the top of the player picker a tap on a pitch slot opens. The chips change what that one slot plays (e.g. a central midfielder to a defensive or attacking midfielder) without changing the formation. {formation} is the formation's short label.",
-    "placeholders": {
-      "formation": {
-        "type": "String",
-        "example": "4-3-3"
-      }
-    }
-  },
-  "tacticsSlotSwitchReset": "Reset",
-  "@tacticsSlotSwitchReset": {
-    "description": "Small button beside the position chips that puts a slot back to the position its formation gives it."
   },
   "tacticsSlotSwitchLimit": "Two positions are already changed in this shape. Reset one to change this one.",
   "@tacticsSlotSwitchLimit": {

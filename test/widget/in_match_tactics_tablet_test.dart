@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/shared/widgets/app_segmented_tabs.dart';
+import 'package:fnm/features/tactics/player_slot_sheet.dart';
 
 import '../helpers/in_match_editor.dart';
 import '../helpers/seeded_save.dart';
@@ -27,6 +28,9 @@ void main() {
     await openEditor(tester, size: kTabletSize, tabletLayout: true);
     await tester.tap(find.byKey(const ValueKey('pitchDisc10')));
     await tester.pumpAndSettle();
+    expect(find.byKey(SlotSheetKeys.sheet), findsOneWidget, reason: 'panel');
+    await tester.tap(find.byKey(SlotSheetKeys.swap));
+    await tester.pumpAndSettle();
     expect(find.byType(Dialog), findsOneWidget, reason: 'picker is open');
     await tester.tap(
       find.descendant(
@@ -36,6 +40,14 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.byType(Dialog), findsNothing, reason: 'picker closed');
+    // The panel stays, on the man who came on.
+    expect(
+      find.descendant(
+        of: find.byKey(SlotSheetKeys.sheet),
+        matching: find.text('Bench12'),
+      ),
+      findsOneWidget,
+    );
     expect(find.byKey(InMatchTacticsKeys.tabletLayout), findsOneWidget);
     expect(find.text(enL.tacticsSubsUsed(1, 5)), findsOneWidget);
   });

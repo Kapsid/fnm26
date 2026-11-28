@@ -1064,21 +1064,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tacticsFullBackOff => 'No instruction';
 
   @override
-  String tacticsFullBackUpHint(String side) {
-    return '$side: push on. A little more attack, a little more risk.';
-  }
-
-  @override
-  String tacticsFullBackDownHint(String side) {
-    return '$side: hold back. A little safer, a little less attack.';
-  }
-
-  @override
-  String tacticsFullBackOffHint(String side) {
-    return '$side: no instruction, plays the team plan.';
-  }
-
-  @override
   String tacticsFullBackSemantics(String side, String state) {
     return '$side arrow: $state';
   }
@@ -1087,10 +1072,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String tacticsSubsUsed(int used, int max) {
     return 'SUBS · $used/$max';
   }
-
-  @override
-  String get tacticsDragSubOn =>
-      'Tap a man on the pitch to take him off, or hold and drag a sub onto him.';
 
   @override
   String get tacticsNoSubs => 'No substitutes available.';
@@ -1246,13 +1227,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tacticsTabSetPieces => 'SET PIECES';
 
   @override
-  String get tacticsTabRolesSetPieces => 'ROLES & SET PIECES';
-
-  @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Give each starter a role. Tap the penalty (⚽) or free-kick (▲) badge to set your taker.';
-
-  @override
   String get tacticsTooltipCallUps => 'Call-ups';
 
   @override
@@ -1286,10 +1260,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tacticsTapSpotReplace =>
       'Tap their spot on the pitch to pick a replacement.';
-
-  @override
-  String get tacticsTapOrDrag =>
-      'Tap a player to swap them out, or hold and drag one to move them.';
 
   @override
   String get tacticsPlayerRoles => 'PLAYER ROLES';
@@ -1354,11 +1324,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tacticsSkillPas => 'PAS';
 
   @override
-  String tacticsRolePlayer(String name) {
-    return 'ROLE · $name';
-  }
-
-  @override
   String get roleFitGood => 'Good fit';
 
   @override
@@ -1395,34 +1360,75 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tacticsRunLegendManual => 'Your instruction';
 
   @override
-  String get tacticsPitchPlanHint =>
-      'Tap a player\'s badge to set his role, his arrow to set his run.';
+  String get tacticsSheetPost => 'Position';
 
   @override
-  String tacticsRoleBadgeSemantics(String role) {
-    return 'Role: $role. Tap to change.';
+  String get tacticsSheetAdvanced => 'Advanced';
+
+  @override
+  String get tacticsSheetAutoPick => 'Takes them now, automatically';
+
+  @override
+  String get tacticsSheetFresh => 'Fresh';
+
+  @override
+  String get tacticsSheetFitHere => 'On this position';
+
+  @override
+  String tacticsSheetFitSemantics(int dots) {
+    return 'Fit for this position: $dots of 5';
   }
 
   @override
-  String tacticsRunMarkSemantics(String run) {
-    return 'Run: $run. Tap to change.';
-  }
+  String get tacticsSheetSwap => 'Swap';
+
+  @override
+  String get tacticsSheetProfile => 'Profile';
+
+  @override
+  String get tacticsSheetRecommended => 'Recommended';
+
+  @override
+  String get tacticsSheetRunHint =>
+      'Tap a direction for your own arrow. The centre restores the role\'s run.';
+
+  @override
+  String get tacticsPostDm => 'Sits in front of the back line and shields it.';
+
+  @override
+  String get tacticsPostCm => 'Links defence and attack, works both ways.';
+
+  @override
+  String get tacticsPostAm => 'Plays between the lines, behind the strikers.';
+
+  @override
+  String get tacticsPostWideMid => 'Deeper and wider, helps his full-back.';
+
+  @override
+  String get tacticsPostWinger => 'Higher up, takes on the full-back.';
+
+  @override
+  String get tacticsPostSt => 'Leads the line and finishes chances.';
+
+  @override
+  String get tacticsPitchHint =>
+      'Tap a player to set his position, role and run. Hold and drag to move him.';
+
+  @override
+  String get tacticsSubHint =>
+      'Tap a player to set him up or swap him. Hold and drag a sub onto him.';
+
+  @override
+  String get tacticsLegendTooltip => 'Reading the pitch';
+
+  @override
+  String get tacticsLegendRoleTag => 'The small badge on a player is his role.';
 
   @override
   String get tacticsPlanRoleHeading => 'ROLE';
 
   @override
   String get tacticsPlanMovementHeading => 'MOVEMENT';
-
-  @override
-  String tacticsPlanTitle(String position, String name) {
-    return '$position · $name';
-  }
-
-  @override
-  String tacticsArrowSet(String name, String movement) {
-    return '$name: $movement';
-  }
 
   @override
   String get tacticsKeeperNoRun => 'A keeper has no run to set.';
@@ -1489,9 +1495,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tacticsSave => 'Save';
-
-  @override
-  String get tacticsTapToAssign => 'Tap to assign';
 
   @override
   String get tacticsHoldDragSub =>
@@ -14339,14 +14342,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String yPunditPick5(String competition, String favourite, String darkHorse) {
     return '$favourite will win the $competition and it will be dull. If you want a story, watch $darkHorse.';
   }
-
-  @override
-  String tacticsSlotSwitchHeading(String formation) {
-    return 'Position within the $formation';
-  }
-
-  @override
-  String get tacticsSlotSwitchReset => 'Reset';
 
   @override
   String get tacticsSlotSwitchLimit =>

@@ -9,6 +9,7 @@ import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
+import 'package:fnm/features/tactics/player_slot_sheet.dart';
 
 import '../helpers/seeded_save.dart';
 
@@ -79,8 +80,11 @@ void main() {
     );
     expect(find.text(boy.name), findsNothing, reason: 'not in the XI');
 
-    // Slot 0 is the keeper; slot 5 is an outfield disc.
+    // Slot 0 is the keeper; slot 5 is an outfield disc. A tap opens his
+    // sheet, and Swap the men who could play there.
     await tester.tap(find.byKey(const ValueKey('pitchDisc5')));
+    await settle(tester);
+    await tester.tap(find.byKey(SlotSheetKeys.swap));
     await settle(tester);
     // The sheet is a lazy list and he is a boy, so he sorts low: scroll to him.
     await tester.scrollUntilVisible(
@@ -89,7 +93,10 @@ void main() {
       scrollable: find.byType(Scrollable).last,
     );
     expect(find.text(boy.name), findsOneWidget);
-    // Close the sheet, so no picker is open when the container goes.
+    // Close the picker and the sheet, so none is open when the container
+    // goes.
+    await tester.tapAt(const Offset(5, 5));
+    await settle(tester);
     await tester.tapAt(const Offset(5, 5));
     await settle(tester);
     await tester.pumpWidget(const SizedBox());

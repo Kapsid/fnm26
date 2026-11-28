@@ -27,7 +27,7 @@ import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/full_back_instructions.dart';
 import 'package:fnm/features/tactics/pitch_plan.dart';
-import 'package:fnm/features/tactics/slot_switch_strip.dart';
+import 'package:fnm/features/tactics/player_slot_sheet.dart';
 import 'package:fnm/features/tactics/tactic_preset_tile.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -310,34 +310,106 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     });
   }
 
-  /// A tap on [slot]'s arrow mark: his run moved on to the next one his
-  /// place offers ([nextPitchArrow]), answered with the run he now has.
-  MoveArrow _cycleArrow(int slot) {
-    _setArrow(slot, nextPitchArrow(_positions[slot], _asTactic.arrowAt(slot)));
-    return _asTactic.arrowAt(slot);
-  }
-
-  Future<void> _planSlot(int slot) {
-    final t = _asTactic;
-    return showSlotPlanSheet(
+  /// A tap on [slot]'s disc: his sheet when a man plays there (his place,
+  /// role and run, his duties, and Swap for a change), the men to fill it
+  /// when nobody does. A hole a red card left takes no one.
+  Future<void> _openSlot(int slot) async {
+    final l = AppLocalizations.of(context);
+    if (_dead.contains(slot)) {
+      _refuse(l.tacticsSlotLostToRedCard);
+      return;
+    }
+    final player = _byId[_lineup[slot]];
+    if (player == null) {
+      final picked = await _pickFor(slot, context);
+      if (picked != null && mounted) _setSlot(slot, picked);
+      return;
+    }
+    return showPlayerSlotSheet(
       context,
-      position: _positions[slot],
-      player: _byId[_lineup[slot]],
-      role: t.roleAt(slot),
-      arrow: t.arrowAt(slot),
+      tactic: _asTactic,
+      slot: slot,
+      player: player,
+      energy: widget.energyByPlayer[player.id],
+      card: widget.cardsByPlayer[player.id],
+      status: widget.injuredIds.contains(player.id)
+          ? l.tacticsInjuredShort
+          : null,
+      onPosition: (p) async {
+        final next = _switches.withSlot(_formation, slot, p);
+        if (next.apply(_formation)[slot] != p) return false;
+        setState(() => _switches = next);
+        return true;
+      },
       onRole: (r) => _setRole(slot, r),
       onArrow: (a) => _setArrow(slot, a),
+      // Through the same rules as every other change: a refused one says
+      // why, and the sheet keeps the man who is still there.
+      onSwap: (sheetContext) async {
+        final picked = await _pickFor(slot, sheetContext);
+        if (picked == null || !mounted) return null;
+        _setSlot(slot, picked);
+        return _byId[_lineup[slot]];
+      },
+      advanced: _dutyToggles(l, player),
     );
   }
 
-  /// What the two kinds of run line are, and how to set a role and a run
-  /// from the discs: under the pitch, always shown.
-  Widget _legend() => const PitchRunLegend(
-    padding: EdgeInsets.fromLTRB(
+  /// [player]'s set-piece duties for his sheet, live as the takers below
+  /// the dials are.
+  List<SlotSheetToggle> _dutyToggles(AppLocalizations l, Player player) {
+    final xi = _onPitchPlayers;
+    final live = _liveTakers;
+    final thrower = _liveThrower;
+    final id = player.id;
+    return [
+      SlotSheetToggle(
+        id: 'penalty',
+        icon: Icons.sports_soccer,
+        label: l.tacticsPenalties,
+        value: live.penalty == id,
+        auto: live.penalty == null && SetPiecePicks.penalty(xi) == id,
+        onChanged: (on) => setState(
+          () => _takers = (
+            penalty: on ? id : null,
+            deadBall: _liveTakers.deadBall,
+          ),
+        ),
+      ),
+      SlotSheetToggle(
+        id: 'deadBall',
+        icon: Icons.flag_rounded,
+        label: l.tacticsCornersFreeKicks,
+        value: live.deadBall == id,
+        auto: live.deadBall == null && SetPiecePicks.deadBall(xi) == id,
+        onChanged: (on) => setState(
+          () => _takers = (
+            penalty: _liveTakers.penalty,
+            deadBall: on ? id : null,
+          ),
+        ),
+      ),
+      SlotSheetToggle(
+        id: 'throwIn',
+        icon: SetPieceTakerSummary.throwInIcon,
+        label: l.tacticsThrowIns,
+        value: thrower == id,
+        auto: thrower == null && SetPiecePicks.throwIn(xi) == id,
+        onChanged: (on) => setState(() => _thrower = on ? id : null),
+      ),
+    ];
+  }
+
+  /// What a tap and a hold do on the pitch in a match (his sheet and its
+  /// Swap; a sub dragged onto him), and the legend behind a small info
+  /// button.
+  Widget _legend() => PitchHintRow(
+    text: AppLocalizations.of(context).tacticsSubHint,
+    padding: const EdgeInsetsDirectional.fromSTEB(
       AppSpacing.marginMobile,
+      0,
       AppSpacing.xs,
-      AppSpacing.marginMobile,
-      AppSpacing.xs,
+      0,
     ),
   );
   late ({int? penalty, int? deadBall}) _takers = widget.takers;
@@ -966,15 +1038,6 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     switches: _switches,
     roles: pitchRolesOf(_asTactic),
     arrows: pitchArrowsOf(_asTactic),
-    onPlanSlot: (slot) {
-      if (_dead.contains(slot)) return;
-      unawaited(_planSlot(slot));
-    },
-    onCycleArrow: (slot) async => _cycleArrow(slot),
-    onCycleFullBack: (side) async {
-      setState(() => _fullBacks = _fullBacks.cycled(side));
-      return _fullBacks.of(side);
-    },
     lineup: _lineup,
     byId: _byId,
     teamColors: widget.teamColors,
@@ -987,7 +1050,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     // The holes a red card left, drawn as holes rather than as spaces
     // waiting to be filled.
     deadSlots: _dead,
-    onTapSlot: _pickPlayer,
+    onTapSlot: (slot) => unawaited(_openSlot(slot)),
     onSwap: (a, b) {
       // A hole swapped with a team-mate is a straight swap whatever the two
       // lines: the point is to move the hole into his line, and a reshape
@@ -1050,18 +1113,15 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Both gestures are named, tap first. The drag was the only one
-          // there was, and it is the least discoverable thing on a phone.
-          Text(
-            comingOff == null
-                ? l.tacticsDragSubOn
-                : l.tacticsPickReplacementFor(comingOff.name),
-            style: AppTypography.labelSmall.copyWith(
-              color: comingOff == null
-                  ? AppColors.onSurfaceVariant
-                  : AppColors.primary,
+          // The gestures are named in the hint under the pitch; here, only
+          // the change in hand, once a man has been picked to come off.
+          if (comingOff != null)
+            Text(
+              l.tacticsPickReplacementFor(comingOff.name),
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.primary,
+              ),
             ),
-          ),
           // Only while there is something to take back, and only ever what
           // THIS sheet changed. A misclicked substitution used to be final
           // the moment it landed: the one way out was to leave the editor,
@@ -1279,7 +1339,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xs),
-                const PitchRunLegend(),
+                PitchHintRow(text: AppLocalizations.of(context).tacticsSubHint),
               ],
             ),
           ),
@@ -1630,11 +1690,9 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     }
   }
 
-  Future<void> _pickPlayer(int slot) async {
-    if (_dead.contains(slot)) {
-      _refuse(AppLocalizations.of(context).tacticsSlotLostToRedCard);
-      return;
-    }
+  /// The men who could play [slot], in tabs, opened over [over] (the editor,
+  /// or the slot's sheet): answers with the one picked, or null.
+  Future<int?> _pickFor(int slot, BuildContext over) async {
     final position = _positions[slot];
     final isKeeperSlot = position.category == PositionCategory.goalkeeper;
     // A goalkeeping slot is keeper-only; any other slot can be filled by any
@@ -1690,19 +1748,12 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     // line saying why. A manager a man short has to be able to field SOMEBODY.
     final noFit = suitableHere.isEmpty && availableHere.isNotEmpty;
 
-    // A player id, or a place for the slot itself (see [SlotSwitchStrip]).
-    final picked = await showAdaptiveSheet<Object>(
-      context: context,
+    final picked = await showAdaptiveSheet<int>(
+      context: over,
       backgroundColor: AppColors.surfaceContainer,
       isScrollControlled: true,
       builder: (sheetContext) => _SlotPickerSheet(
         title: pickPositionTitle(l, position),
-        header: SlotSwitchStrip(
-          formation: _formation,
-          switches: _switches,
-          slot: slot,
-          onPick: (p) => Navigator.of(sheetContext).pop(p),
-        ),
         suitable: noFit ? availableHere : suitableHere,
         onPitch: onPitchHere,
         other: otherHere,
@@ -1712,15 +1763,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
             _pickerRow(sheetContext, p, position, onPitch, l),
       ),
     );
-    if (!mounted) return;
-    switch (picked) {
-      case final int playerId:
-        _setSlot(slot, playerId);
-      case final PlayerPosition place:
-        setState(
-          () => _switches = _switches.withSlot(_formation, slot, place),
-        );
-    }
+    return mounted ? picked : null;
   }
 
   /// One candidate's row in the slot picker.
@@ -1838,14 +1881,9 @@ class _SlotPickerSheet extends StatefulWidget {
     required this.onPitchCount,
     required this.noFitNote,
     required this.row,
-    this.header,
   });
 
   final String title;
-
-  /// Drawn under the title, above the tabs: the slot's own place and its
-  /// alternatives within the formation.
-  final Widget? header;
   final List<Player> suitable;
   final List<Player> onPitch;
   final List<Player> other;
@@ -1885,10 +1923,6 @@ class _SlotPickerSheetState extends State<_SlotPickerSheet> {
                 color: AppColors.primary,
               ),
             ),
-            if (widget.header case final header?) ...[
-              const SizedBox(height: AppSpacing.sm),
-              header,
-            ],
             _SquadTabs(
               tab: _tab,
               suitableLabel: l.tacticsTabSuitable,

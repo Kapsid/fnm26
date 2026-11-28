@@ -11,6 +11,7 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/features/tactics/pitch_plan.dart';
+import 'package:fnm/features/tactics/player_slot_sheet.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 
@@ -103,11 +104,16 @@ void main() {
     expect(_layer(tester, PitchPlanKeys.arrows), {
       10: const PitchRun.manual(MoveArrow.forwardInside),
     });
-    // One pitch: the legend under it always says which line is which.
-    expect(find.byKey(PitchPlanKeys.legend), findsOneWidget);
+    await _shot(tester, 'career_tactics');
+    // One pitch: the legend behind its info button says which line is which.
+    await tester.ensureVisible(find.byKey(PitchPlanKeys.legendButton));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(PitchPlanKeys.legendButton));
+    await tester.pumpAndSettle();
     expect(find.text(enL.tacticsRunLegendRole), findsOneWidget);
     expect(find.text(enL.tacticsRunLegendManual), findsOneWidget);
-    await _shot(tester, 'career_tactics');
+    await tester.tap(find.text('OK'));
+    await tester.pumpAndSettle();
 
     // Taking the arrow off brings the role's run back.
     await change((t) => t.withArrow(10, MoveArrow.none));
@@ -159,12 +165,17 @@ void main() {
     });
     await _shot(tester, 'in_match_pitch');
 
-    // The right-back's push mark is still reachable over his wing-back run,
-    // and pushing him on replaces that run with his arrow.
+    // An untouched right-back wears no push mark; pushing him on from his
+    // sheet replaces his wing-back run with his arrow, and the mark shows.
     final mark = find.byKey(const ValueKey('pitchFullBack4'));
-    expect(mark, findsOneWidget);
-    await tester.tap(mark);
+    expect(mark, findsNothing);
+    await tester.tap(find.byKey(const ValueKey('pitchDisc4')));
     await tester.pumpAndSettle();
+    await tester.tap(find.byKey(SlotSheetKeys.run(MoveArrow.forward)));
+    await tester.pumpAndSettle();
+    Navigator.of(tester.element(find.byKey(SlotSheetKeys.sheet))).pop();
+    await tester.pumpAndSettle();
+    expect(mark, findsOneWidget);
     expect(
       _layer(tester, PitchPlanKeys.arrows)[4],
       const PitchRun.manual(MoveArrow.forward),

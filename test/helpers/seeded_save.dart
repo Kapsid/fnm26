@@ -263,6 +263,7 @@ Future<void> pumpRoute(
   Size size = kPhoneSize,
   bool allowSpinner = false,
   Locale locale = const Locale('en'),
+  double textScale = 1,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -279,6 +280,14 @@ Future<void> pumpRoute(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           routerConfig: router,
+          builder: textScale == 1
+              ? null
+              : (context, child) => MediaQuery(
+                  data: MediaQuery.of(
+                    context,
+                  ).copyWith(textScaler: TextScaler.linear(textScale)),
+                  child: child!,
+                ),
         ),
       ),
     ),

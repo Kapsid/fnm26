@@ -1058,21 +1058,6 @@ class AppLocalizationsSv extends AppLocalizations {
   String get tacticsFullBackOff => 'Ingen instruktion';
 
   @override
-  String tacticsFullBackUpHint(String side) {
-    return '$side: gå med framåt. Lite mer anfall, lite mer risk.';
-  }
-
-  @override
-  String tacticsFullBackDownHint(String side) {
-    return '$side: stanna hemma. Lite säkrare, lite mindre anfall.';
-  }
-
-  @override
-  String tacticsFullBackOffHint(String side) {
-    return '$side: ingen instruktion, spelar efter lagets plan.';
-  }
-
-  @override
   String tacticsFullBackSemantics(String side, String state) {
     return '$side, pil: $state';
   }
@@ -1081,10 +1066,6 @@ class AppLocalizationsSv extends AppLocalizations {
   String tacticsSubsUsed(int used, int max) {
     return 'BYTEN · $used/$max';
   }
-
-  @override
-  String get tacticsDragSubOn =>
-      'Tryck på en spelare på planen för att ta av honom, eller håll och dra en avbytare till honom.';
 
   @override
   String get tacticsNoSubs => 'Inga avbytare tillgängliga.';
@@ -1240,13 +1221,6 @@ class AppLocalizationsSv extends AppLocalizations {
   String get tacticsTabSetPieces => 'FASTA SITUATIONER';
 
   @override
-  String get tacticsTabRolesSetPieces => 'ROLLER & FASTA';
-
-  @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Ge varje startspelare en roll. Tryck på straff- (⚽) eller frisparksmärket (▲) för att utse din utförare.';
-
-  @override
   String get tacticsTooltipCallUps => 'Uttagning';
 
   @override
@@ -1280,10 +1254,6 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get tacticsTapSpotReplace =>
       'Tryck på platsen på planen för att välja en ersättare.';
-
-  @override
-  String get tacticsTapOrDrag =>
-      'Tryck på en spelare för att byta ut honom, eller håll och dra för att flytta honom.';
 
   @override
   String get tacticsPlayerRoles => 'SPELARROLLER';
@@ -1348,11 +1318,6 @@ class AppLocalizationsSv extends AppLocalizations {
   String get tacticsSkillPas => 'PAS';
 
   @override
-  String tacticsRolePlayer(String name) {
-    return 'ROLL · $name';
-  }
-
-  @override
   String get roleFitGood => 'Passar bra';
 
   @override
@@ -1389,34 +1354,78 @@ class AppLocalizationsSv extends AppLocalizations {
   String get tacticsRunLegendManual => 'Din instruktion';
 
   @override
-  String get tacticsPitchPlanHint =>
-      'Tryck på en spelares märke för roll och på hans pil för löpning.';
+  String get tacticsSheetPost => 'Position';
 
   @override
-  String tacticsRoleBadgeSemantics(String role) {
-    return 'Roll: $role. Tryck för att ändra.';
+  String get tacticsSheetAdvanced => 'Avancerat';
+
+  @override
+  String get tacticsSheetAutoPick => 'Tar dem nu, automatiskt';
+
+  @override
+  String get tacticsSheetFresh => 'Utvilad';
+
+  @override
+  String get tacticsSheetFitHere => 'På den här positionen';
+
+  @override
+  String tacticsSheetFitSemantics(int dots) {
+    return 'Lämplighet för positionen: $dots av 5';
   }
 
   @override
-  String tacticsRunMarkSemantics(String run) {
-    return 'Löpning: $run. Tryck för att ändra.';
-  }
+  String get tacticsSheetSwap => 'Byt';
+
+  @override
+  String get tacticsSheetProfile => 'Profil';
+
+  @override
+  String get tacticsSheetRecommended => 'Rekommenderad';
+
+  @override
+  String get tacticsSheetRunHint =>
+      'Tryck på en riktning för din egen pil. Mitten återställer rollens löpning.';
+
+  @override
+  String get tacticsPostDm => 'Ligger framför backlinjen och skyddar den.';
+
+  @override
+  String get tacticsPostCm =>
+      'Binder ihop försvar och anfall, jobbar åt båda hållen.';
+
+  @override
+  String get tacticsPostAm => 'Spelar mellan lagdelarna, bakom anfallarna.';
+
+  @override
+  String get tacticsPostWideMid =>
+      'Djupare och bredare, hjälper sin ytterback.';
+
+  @override
+  String get tacticsPostWinger => 'Högre upp, utmanar ytterbacken.';
+
+  @override
+  String get tacticsPostSt => 'Leder anfallet och sätter chanserna.';
+
+  @override
+  String get tacticsPitchHint =>
+      'Tryck på en spelare för att ställa in position, roll och löpning. Håll och dra för att flytta honom.';
+
+  @override
+  String get tacticsSubHint =>
+      'Tryck på en spelare för att ställa in eller byta honom. Håll och dra en avbytare till honom.';
+
+  @override
+  String get tacticsLegendTooltip => 'Så läser du planen';
+
+  @override
+  String get tacticsLegendRoleTag =>
+      'Det lilla märket på en spelare är hans roll.';
 
   @override
   String get tacticsPlanRoleHeading => 'ROLL';
 
   @override
   String get tacticsPlanMovementHeading => 'RÖRELSE';
-
-  @override
-  String tacticsPlanTitle(String position, String name) {
-    return '$position · $name';
-  }
-
-  @override
-  String tacticsArrowSet(String name, String movement) {
-    return '$name: $movement';
-  }
 
   @override
   String get tacticsKeeperNoRun => 'En målvakt har ingen löpning att välja.';
@@ -1483,9 +1492,6 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get tacticsSave => 'Spara';
-
-  @override
-  String get tacticsTapToAssign => 'Tryck för att tilldela';
 
   @override
   String get tacticsHoldDragSub =>
@@ -14306,14 +14312,6 @@ class AppLocalizationsSv extends AppLocalizations {
   String yPunditPick5(String competition, String favourite, String darkHorse) {
     return '$favourite vinner $competition och det blir tråkigt. Vill ni ha en berättelse, titta på $darkHorse.';
   }
-
-  @override
-  String tacticsSlotSwitchHeading(String formation) {
-    return 'Position i $formation';
-  }
-
-  @override
-  String get tacticsSlotSwitchReset => 'Återställ';
 
   @override
   String get tacticsSlotSwitchLimit =>

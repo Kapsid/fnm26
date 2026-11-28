@@ -2,12 +2,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/domain/entities/player_role.dart';
+import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/features/federation/host_bid_screen.dart';
 import 'package:fnm/features/federation/national_stadiums_screen.dart';
 import 'package:fnm/features/federation/stadium_map/stadium_map.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/features/press/press_sheet.dart';
+import 'package:fnm/features/tactics/player_slot_sheet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'promo_main.dart';
@@ -194,14 +197,23 @@ Future<void> runScenes(Promo p) async {
         await p.holdDrag(seen[0], seen[1]);
         await p.wait(1.2);
       }
-      final arrows = find.byWidgetPredicate(
-        (w) =>
-            w.key is ValueKey<String> &&
-            (w.key! as ValueKey<String>).value.startsWith('pitchFullBack'),
-      );
-      for (var i = 0; i < arrows.evaluate().length && i < 2; i++) {
-        await p.tap(arrows.at(i), after: 1);
-        await p.tap(arrows.at(i), after: 1.2);
+      // A man's sheet: his role, then his run on the compass, the pitch
+      // behind it moving with each pick.
+      if (await p.tap(find.byKey(const ValueKey('pitchDisc4')), after: 1.4)) {
+        await p.tap(
+          find.byKey(SlotSheetKeys.role(PlayerRole.wingBack)),
+          after: 1.2,
+          warn: false,
+        );
+        await p.tap(
+          find.byKey(SlotSheetKeys.run(MoveArrow.forward)),
+          after: 1.4,
+          warn: false,
+        );
+        final sheet = find.byKey(SlotSheetKeys.sheet);
+        if (sheet.evaluate().isNotEmpty) {
+          Navigator.of(sheet.evaluate().first).pop();
+        }
       }
       await p.wait(1);
     },

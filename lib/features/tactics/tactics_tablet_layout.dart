@@ -43,9 +43,6 @@ class _TacticsTabletLayout extends ConsumerWidget {
         data: (data) {
           if (data == null) return Center(child: Text(l.tacticsNoTacticSet));
           final tactic = data.tactic;
-          final roles =
-              ref.watch(playerRolesProvider(careerId)).valueOrNull ??
-              const <int, PlayerRole>{};
           final takers = ref
               .watch(setPieceTakersProvider(careerId))
               .valueOrNull;
@@ -86,13 +83,15 @@ class _TacticsTabletLayout extends ConsumerWidget {
                           const SizedBox(width: AppSpacing.md),
                           Expanded(
                             child: Text(
-                              l.tacticsTapOrDrag,
+                              l.tacticsPitchHint,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.end,
                               style: TabletText.barMeta,
                             ),
                           ),
+                          // The legend, when asked for.
+                          const PitchLegendButton(),
                         ],
                       ),
                       if (data.unavailableStarters.isNotEmpty) ...[
@@ -116,8 +115,6 @@ class _TacticsTabletLayout extends ConsumerWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.xs),
-                      const PitchRunLegend(),
                       // The starters worth a mark, on one line under the
                       // pitch; the bench chips carry their own.
                       if (starters.any(
@@ -161,11 +158,10 @@ class _TacticsTabletLayout extends ConsumerWidget {
                                                   condition: conditions[p.id],
                                                 )
                                               : null,
-                                          onTap: () => context.push(
-                                            '${Routes.player}'
-                                            '?careerId=$careerId'
-                                            '&playerId=${p.id}',
-                                          ),
+                                          // Generated players (a Classic
+                                          // Cup's) have no page to open.
+                                          onTap: () =>
+                                              screen._openPlayer(context, p),
                                         ),
                                     ],
                                   ),
@@ -180,8 +176,8 @@ class _TacticsTabletLayout extends ConsumerWidget {
                   child: PanelBox(
                     child: DefaultTabController(
                       length: 3,
-                      // The phone's tabs are line-up, instructions, roles and
-                      // set pieces: the first two are this Formation tab.
+                      // The phone's tabs are line-up, instructions and set
+                      // pieces: the first two are this Formation tab.
                       initialIndex: screen.initialTab == 2 ? 1 : 0,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -205,7 +201,7 @@ class _TacticsTabletLayout extends ConsumerWidget {
                                         ),
                                       ),
                                       SegmentTab(
-                                        l.tacticsTabRolesSetPieces.capsIn(
+                                        l.tacticsTabSetPieces.capsIn(
                                           l.localeName,
                                         ),
                                       ),
@@ -271,13 +267,11 @@ class _TacticsTabletLayout extends ConsumerWidget {
                                   padding: const EdgeInsets.all(
                                     AppSpacing.marginMobile,
                                   ),
-                                  children: screen._rolesChildren(
-                                    context,
+                                  children: screen._setPiecesChildren(
                                     ref,
                                     l,
                                     data,
                                     t,
-                                    roles,
                                   ),
                                 ),
                                 _OppositionTab(careerId: careerId),

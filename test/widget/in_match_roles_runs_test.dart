@@ -4,6 +4,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/features/tactics/pitch_plan.dart';
+import 'package:fnm/features/tactics/player_slot_sheet.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 
 import '../helpers/expect_whole.dart';
@@ -18,30 +19,46 @@ Map<int, PitchRun> _arrows(WidgetTester tester) {
   return {for (final r in painter.runs) r.slot: r.run};
 }
 
-/// Roles and runs in the in-match editor, on its one pitch: the role badge
-/// on a disc opens the same sheet, a tap on his arrow mark sets his run, and
-/// what is set comes back with the confirmed setup. 4-4-2: slot 5 is the
-/// left midfielder, slot 9 a striker.
+/// Roles and runs in the in-match editor, on its one pitch: a tap on a disc
+/// opens the man's sheet, where his place, role and run are set, and what
+/// is set comes back with the confirmed setup. 4-4-2: slot 5 is the left
+/// midfielder, slot 9 a striker.
 void main() {
+  Future<void> close(WidgetTester tester) async {
+    Navigator.of(tester.element(find.byKey(SlotSheetKeys.sheet))).pop();
+    await tester.pumpAndSettle();
+  }
+
   Future<void> setRoleAndRun(WidgetTester tester) async {
-    // No Players / Roles & runs switch: one pitch, with its legend.
+    // No Players / Roles & runs switch: one pitch, its legend behind a
+    // small info button.
     expect(find.byType(SegmentedButton<bool>), findsNothing);
-    expect(find.byKey(PitchPlanKeys.legend), findsOneWidget);
-    await tester.tap(find.byKey(PitchPlanKeys.badge(9)));
+    expect(find.byKey(PitchPlanKeys.legendButton), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('pitchDisc9')));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(PitchPlanKeys.role(PlayerRole.poacher)));
+    await tester.tap(find.byKey(SlotSheetKeys.role(PlayerRole.poacher)));
     await tester.pumpAndSettle();
-    expectNothingCut(tester, 'the in-match role sheet');
-    await tester.tap(find.byKey(PitchPlanKeys.close));
-    await tester.pumpAndSettle();
+    expectNothingCut(tester, 'the in-match sheet');
+    await close(tester);
     expect(find.byKey(PitchPlanKeys.tag(9)), findsOneWidget);
 
-    // One tap on the left midfielder's arrow mark: his first run.
-    await tester.tap(find.byKey(PitchPlanKeys.runMark(5)));
+    // The left midfielder's sheet: his first run, on the compass.
+    await tester.tap(find.byKey(const ValueKey('pitchDisc5')));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.byKey(SlotSheetKeys.run(MoveArrow.forward)));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(SlotSheetKeys.run(MoveArrow.forward)));
     await tester.pumpAndSettle();
     expect(_arrows(tester), {5: const PitchRun.manual(MoveArrow.forward)});
-    // The note says what he now does.
-    expect(find.textContaining('Get forward'), findsOneWidget);
+    // The caption says what he now does.
+    expect(
+      find.descendant(
+        of: find.byKey(SlotSheetKeys.runCaption),
+        matching: find.text('Get forward'),
+      ),
+      findsOneWidget,
+    );
+    await close(tester);
   }
 
   testWidgets('phone: a role and a run come back with the setup', (
@@ -70,26 +87,61 @@ void main() {
     expect(r.arrows.bySlot[5], MoveArrow.forward);
   });
 
-  testWidgets('tapping round every run the place offers comes back to none', (
-    tester,
-  ) async {
+  testWidgets('the centre of the compass gives the role its run back, and a '
+      'place switched in the sheet comes back too', (tester) async {
     final outcome = await openEditor(tester, size: const Size(400, 2600));
     await setRoleAndRun(tester);
-    // The rest of a left midfielder's runs in turn, then none again.
-    final seen = <MoveArrow>[MoveArrow.forward];
-    for (var i = 0; i < 6; i++) {
-      await tester.tap(find.byKey(PitchPlanKeys.runMark(5)));
+    await tester.tap(find.byKey(const ValueKey('pitchDisc5')));
+    await tester.pumpAndSettle();
+    // Each run the place offers in turn: only one is ever drawn.
+    for (final a in MoveArrowX.optionsFor(PlayerPosition.lm)) {
+      await tester.tap(find.byKey(SlotSheetKeys.run(a)));
       await tester.pumpAndSettle();
-      seen.add(_arrows(tester)[5]?.arrow ?? MoveArrow.none);
+      expect(_arrows(tester), {5: PitchRun.manual(a)});
     }
-    expect(seen, [
-      ...MoveArrowX.optionsFor(PlayerPosition.lm),
-      MoveArrow.none,
-    ]);
+    await tester.tap(find.byKey(SlotSheetKeys.run(MoveArrow.none)));
+    await tester.pumpAndSettle();
     expect(find.byKey(PitchPlanKeys.arrows), findsNothing);
+    // Pushed on as a winger.
+    await tester.tap(find.byKey(SlotSheetKeys.post(PlayerPosition.lw)));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('pitchPos5')), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('pitchPos5')),
+        matching: find.text('LW'),
+      ),
+      findsOneWidget,
+    );
+    await close(tester);
     await tester.tap(find.text('APPLY'));
     await tester.pumpAndSettle();
     expect(outcome.result!.arrows, SlotArrows.none);
     expect(outcome.result!.roles.bySlot[9], PlayerRole.poacher);
+    expect(outcome.result!.switches.bySlot[5], PlayerPosition.lw);
+  });
+
+  testWidgets('Swap in the sheet brings a man on through the sub rules', (
+    tester,
+  ) async {
+    final outcome = await openEditor(tester, size: const Size(400, 2600));
+    await tester.tap(find.byKey(const ValueKey('pitchDisc9')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(SlotSheetKeys.swap));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Bench12').last);
+    await tester.pumpAndSettle();
+    // The sheet stays, on the man who came on.
+    expect(
+      find.descendant(
+        of: find.byKey(SlotSheetKeys.sheet),
+        matching: find.text('Bench12'),
+      ),
+      findsOneWidget,
+    );
+    await close(tester);
+    await tester.tap(find.text('APPLY'));
+    await tester.pumpAndSettle();
+    expect(outcome.result!.lineup[9], 12);
   });
 }

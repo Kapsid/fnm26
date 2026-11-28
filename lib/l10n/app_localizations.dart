@@ -1864,24 +1864,6 @@ abstract class AppLocalizations {
   /// **'No instruction'**
   String get tacticsFullBackOff;
 
-  /// Brief message after tapping a full-back's arrow to 'push on'. side = Left-back / Right-back.
-  ///
-  /// In en, this message translates to:
-  /// **'{side}: push on. A little more attack, a little more risk.'**
-  String tacticsFullBackUpHint(String side);
-
-  /// Brief message after tapping a full-back's arrow to 'hold back'. side = Left-back / Right-back.
-  ///
-  /// In en, this message translates to:
-  /// **'{side}: hold back. A little safer, a little less attack.'**
-  String tacticsFullBackDownHint(String side);
-
-  /// Brief message after tapping a full-back's arrow back to no instruction. side = Left-back / Right-back.
-  ///
-  /// In en, this message translates to:
-  /// **'{side}: no instruction, plays the team plan.'**
-  String tacticsFullBackOffHint(String side);
-
   /// Screen-reader label of the full-back arrow on the tactics pitch. side = Left-back / Right-back; state = Push on / Hold back / No instruction.
   ///
   /// In en, this message translates to:
@@ -1893,12 +1875,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'SUBS · {used}/{max}'**
   String tacticsSubsUsed(int used, int max);
-
-  /// Hint above the bench in the in-match editor, naming both ways of making a change.
-  ///
-  /// In en, this message translates to:
-  /// **'Tap a man on the pitch to take him off, or hold and drag a sub onto him.'**
-  String get tacticsDragSubOn;
 
   /// Shown when the bench is empty.
   ///
@@ -2194,18 +2170,6 @@ abstract class AppLocalizations {
   /// **'SET PIECES'**
   String get tacticsTabSetPieces;
 
-  /// Merged tab: player roles and set-piece takers.
-  ///
-  /// In en, this message translates to:
-  /// **'ROLES & SET PIECES'**
-  String get tacticsTabRolesSetPieces;
-
-  /// Blurb for the merged roles & set-pieces tab.
-  ///
-  /// In en, this message translates to:
-  /// **'Give each starter a role. Tap the penalty (⚽) or free-kick (▲) badge to set your taker.'**
-  String get tacticsRolesSetPiecesBlurb;
-
   /// Tooltip for the call-ups action.
   ///
   /// In en, this message translates to:
@@ -2253,12 +2217,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap their spot on the pitch to pick a replacement.'**
   String get tacticsTapSpotReplace;
-
-  /// Hint above the pitch on how to edit the XI.
-  ///
-  /// In en, this message translates to:
-  /// **'Tap a player to swap them out, or hold and drag one to move them.'**
-  String get tacticsTapOrDrag;
 
   /// Heading of the roles tab.
   ///
@@ -2374,12 +2332,6 @@ abstract class AppLocalizations {
   /// **'PAS'**
   String get tacticsSkillPas;
 
-  /// Heading of the role-picker sheet for a player.
-  ///
-  /// In en, this message translates to:
-  /// **'ROLE · {name}'**
-  String tacticsRolePlayer(String name);
-
   /// How well a role suits the player: his attributes fit it.
   ///
   /// In en, this message translates to:
@@ -2452,23 +2404,125 @@ abstract class AppLocalizations {
   /// **'Your instruction'**
   String get tacticsRunLegendManual;
 
-  /// Hint under the tactics pitch: the small badge on each player's disc opens his role sheet, and the small arrow mark on it moves his run on, one run per tap.
+  /// Heading of the player slot sheet's section that picks the place the slot plays within the formation.
   ///
   /// In en, this message translates to:
-  /// **'Tap a player\'s badge to set his role, his arrow to set his run.'**
-  String get tacticsPitchPlanHint;
+  /// **'Position'**
+  String get tacticsSheetPost;
 
-  /// Screen-reader label of the role badge on a player's disc on the tactics pitch; tapping it opens his role sheet.
+  /// Folded section at the foot of the player slot sheet: the armband and set-piece duties.
   ///
   /// In en, this message translates to:
-  /// **'Role: {role}. Tap to change.'**
-  String tacticsRoleBadgeSemantics(String role);
+  /// **'Advanced'**
+  String get tacticsSheetAdvanced;
 
-  /// Screen-reader label of the arrow mark on a player's disc on the tactics pitch; each tap moves his run on to the next one his place offers.
+  /// Under a set-piece duty in the player slot sheet: nobody is named and the engine picks this player anyway.
   ///
   /// In en, this message translates to:
-  /// **'Run: {run}. Tap to change.'**
-  String tacticsRunMarkSemantics(String run);
+  /// **'Takes them now, automatically'**
+  String get tacticsSheetAutoPick;
+
+  /// Player slot sheet header: the player's legs are fresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Fresh'**
+  String get tacticsSheetFresh;
+
+  /// Player slot sheet header, before five dots: how well the player suits the place he is playing.
+  ///
+  /// In en, this message translates to:
+  /// **'On this position'**
+  String get tacticsSheetFitHere;
+
+  /// Screen-reader label for the fit dots in the player slot sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Fit for this position: {dots} of 5'**
+  String tacticsSheetFitSemantics(int dots);
+
+  /// Button in the player slot sheet that opens the list of players for this slot.
+  ///
+  /// In en, this message translates to:
+  /// **'Swap'**
+  String get tacticsSheetSwap;
+
+  /// Link in the player slot sheet to the player's full page.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get tacticsSheetProfile;
+
+  /// Tooltip on the star marking the role that suits the player best.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended'**
+  String get tacticsSheetRecommended;
+
+  /// Hint beside the movement compass in the player slot sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a direction for your own arrow. The centre restores the role\'s run.'**
+  String get tacticsSheetRunHint;
+
+  /// One line on playing as a defensive midfielder, in the player slot sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Sits in front of the back line and shields it.'**
+  String get tacticsPostDm;
+
+  /// One line on playing as a central midfielder, in the player slot sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Links defence and attack, works both ways.'**
+  String get tacticsPostCm;
+
+  /// One line on playing as an attacking midfielder, in the player slot sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Plays between the lines, behind the strikers.'**
+  String get tacticsPostAm;
+
+  /// One line on playing as a wide midfielder, in the player slot sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Deeper and wider, helps his full-back.'**
+  String get tacticsPostWideMid;
+
+  /// One line on playing as a winger, in the player slot sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Higher up, takes on the full-back.'**
+  String get tacticsPostWinger;
+
+  /// One line on playing as a striker, in the player slot sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Leads the line and finishes chances.'**
+  String get tacticsPostSt;
+
+  /// Hint under the tactics pitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a player to set his position, role and run. Hold and drag to move him.'**
+  String get tacticsPitchHint;
+
+  /// Hint under the in-match tactics pitch: a tap opens the player sheet (with Swap), and a sub can be dragged onto a player.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a player to set him up or swap him. Hold and drag a sub onto him.'**
+  String get tacticsSubHint;
+
+  /// Tooltip of the info button under the tactics pitch, and title of the legend it opens.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading the pitch'**
+  String get tacticsLegendTooltip;
+
+  /// Legend line explaining the role glyph on a player's disc.
+  ///
+  /// In en, this message translates to:
+  /// **'The small badge on a player is his role.'**
+  String get tacticsLegendRoleTag;
 
   /// Heading of the role list in a player's role and run sheet.
   ///
@@ -2481,18 +2535,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'MOVEMENT'**
   String get tacticsPlanMovementHeading;
-
-  /// Title of a player's role and run sheet: his position and name.
-  ///
-  /// In en, this message translates to:
-  /// **'{position} · {name}'**
-  String tacticsPlanTitle(String position, String name);
-
-  /// Note after a player's arrow mark is tapped on the tactics pitch: the player and the run he now makes.
-  ///
-  /// In en, this message translates to:
-  /// **'{name}: {movement}'**
-  String tacticsArrowSet(String name, String movement);
 
   /// In a player's role and run sheet: a goalkeeper has no movement to set.
   ///
@@ -2607,12 +2649,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save'**
   String get tacticsSave;
-
-  /// Shown when a player has no role assigned.
-  ///
-  /// In en, this message translates to:
-  /// **'Tap to assign'**
-  String get tacticsTapToAssign;
 
   /// Hint above the substitutes list on the squad tab.
   ///
@@ -21574,18 +21610,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{favourite} will win the {competition} and it will be dull. If you want a story, watch {darkHorse}.'**
   String yPunditPick5(String competition, String favourite, String darkHorse);
-
-  /// Small heading above the position chips at the top of the player picker a tap on a pitch slot opens. The chips change what that one slot plays (e.g. a central midfielder to a defensive or attacking midfielder) without changing the formation. {formation} is the formation's short label.
-  ///
-  /// In en, this message translates to:
-  /// **'Position within the {formation}'**
-  String tacticsSlotSwitchHeading(String formation);
-
-  /// Small button beside the position chips that puts a slot back to the position its formation gives it.
-  ///
-  /// In en, this message translates to:
-  /// **'Reset'**
-  String get tacticsSlotSwitchReset;
 
   /// Note under the position chips when the limit of two changed positions within one formation is already reached and this slot is not one of them.
   ///

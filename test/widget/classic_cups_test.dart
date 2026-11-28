@@ -38,7 +38,7 @@ import 'package:fnm/features/paywall/paywall_sheet.dart';
 import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/features/tactics/nation_squad_tab.dart';
-import 'package:fnm/features/tactics/pitch_plan.dart';
+import 'package:fnm/features/tactics/player_slot_sheet.dart';
 import 'package:fnm/features/tactics/tactic_preset_providers.dart';
 import 'package:fnm/features/tactics/tactics_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -462,36 +462,40 @@ void main() {
       await tester.tap(find.text('4-4-2').last);
       await settle(tester);
 
-      // A role and a run for the slot-10 striker, on the one pitch: his
-      // role badge opens the sheet, his arrow mark sets the run.
+      // A role and a run for the slot-10 striker, from his sheet: a tap on
+      // him opens it, with no profile link (Classic players have no page).
       expect(find.byType(SegmentedButton<bool>), findsNothing);
-      final badge = find.byKey(PitchPlanKeys.badge(10));
+      final striker = find.byKey(const ValueKey('pitchDisc10'));
       await tester.fling(
         find.byType(ListView).first,
         const Offset(0, 2000),
         3000,
       );
       await tester.pumpAndSettle();
-      await tester.ensureVisible(badge);
+      await tester.ensureVisible(striker);
       await tester.pumpAndSettle();
-      await tester.tap(badge);
+      await tester.tap(striker);
       await tester.pumpAndSettle();
-      expect(find.byKey(PitchPlanKeys.sheet), findsOneWidget);
+      expect(find.byKey(SlotSheetKeys.sheet), findsOneWidget);
+      expect(find.byKey(SlotSheetKeys.profile), findsNothing);
       final role = PlayerRole.values.firstWhere(
         (r) =>
             r != PlayerRole.none &&
-            find.byKey(PitchPlanKeys.role(r)).evaluate().isNotEmpty,
+            find.byKey(SlotSheetKeys.role(r)).evaluate().isNotEmpty,
       );
-      await tester.tap(find.byKey(PitchPlanKeys.role(role)));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(PitchPlanKeys.close));
+      await tester.tap(find.byKey(SlotSheetKeys.role(role)));
       await settle(tester);
-      // A striker's first run, on one tap of his arrow mark.
+      // A striker's first run, on his compass.
       final arrow = MoveArrowX.optionsFor(PlayerPosition.st).first;
-      await tester.tap(find.byKey(PitchPlanKeys.runMark(10)));
+      final run = find.byKey(SlotSheetKeys.run(arrow));
+      await tester.ensureVisible(run);
+      await tester.pumpAndSettle();
+      await tester.tap(run);
+      await settle(tester);
+      Navigator.of(tester.element(find.byKey(SlotSheetKeys.sheet))).pop();
       await settle(tester);
 
-      // A man from the bench into slot 9, picked by tap as in a career.
+      // A man from the bench into slot 9, picked from his sheet's Swap.
       await tester.fling(
         find.byType(ListView).first,
         const Offset(0, 2000),
@@ -502,6 +506,8 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('pitchDisc9')));
       await tester.pumpAndSettle();
+      await tester.tap(find.byKey(SlotSheetKeys.swap));
+      await tester.pumpAndSettle();
       final outside = find.byWidgetPredicate(
         (w) => w is ListTile && w.onTap != null && !w.selected,
       );
@@ -509,6 +515,8 @@ void main() {
       final pickedName =
           ((tester.widget<ListTile>(outside.first).title! as Text).data)!;
       await tester.tap(outside.first);
+      await settle(tester);
+      Navigator.of(tester.element(find.byKey(SlotSheetKeys.sheet))).pop();
       await settle(tester);
 
       final stored = (await tester.runAsync(

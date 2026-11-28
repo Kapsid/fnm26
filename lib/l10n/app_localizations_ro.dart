@@ -1040,21 +1040,6 @@ class AppLocalizationsRo extends AppLocalizations {
   String get tacticsFullBackOff => 'Fără instrucțiune';
 
   @override
-  String tacticsFullBackUpHint(String side) {
-    return '$side: urcă în atac. Puțin mai mult atac, puțin mai mult risc.';
-  }
-
-  @override
-  String tacticsFullBackDownHint(String side) {
-    return '$side: rămâne în spate. Puțin mai sigur, puțin mai puțin atac.';
-  }
-
-  @override
-  String tacticsFullBackOffHint(String side) {
-    return '$side: fără instrucțiune, joacă după planul echipei.';
-  }
-
-  @override
   String tacticsFullBackSemantics(String side, String state) {
     return '$side, săgeată: $state';
   }
@@ -1063,10 +1048,6 @@ class AppLocalizationsRo extends AppLocalizations {
   String tacticsSubsUsed(int used, int max) {
     return 'SCHIMBĂRI · $used/$max';
   }
-
-  @override
-  String get tacticsDragSubOn =>
-      'Atingeți un jucător de pe teren ca să-l scoateți sau țineți apăsat și trageți o rezervă peste el.';
 
   @override
   String get tacticsNoSubs => 'Nicio rezervă disponibilă.';
@@ -1222,13 +1203,6 @@ class AppLocalizationsRo extends AppLocalizations {
   String get tacticsTabSetPieces => 'FAZE FIXE';
 
   @override
-  String get tacticsTabRolesSetPieces => 'ROLURI ȘI FAZE FIXE';
-
-  @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Dați fiecărui titular un rol. Atingeți insigna de penalty (⚽) sau lovitură liberă (▲) ca să alegeți executantul.';
-
-  @override
   String get tacticsTooltipCallUps => 'Convocări';
 
   @override
@@ -1263,10 +1237,6 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get tacticsTapSpotReplace =>
       'Atingeți postul lui pe teren ca să alegeți un înlocuitor.';
-
-  @override
-  String get tacticsTapOrDrag =>
-      'Atingeți un jucător ca să-l schimbați sau țineți apăsat și trageți ca să-l mutați.';
 
   @override
   String get tacticsPlayerRoles => 'ROLURILE JUCĂTORILOR';
@@ -1331,11 +1301,6 @@ class AppLocalizationsRo extends AppLocalizations {
   String get tacticsSkillPas => 'PAS';
 
   @override
-  String tacticsRolePlayer(String name) {
-    return 'ROL · $name';
-  }
-
-  @override
   String get roleFitGood => 'Potrivit';
 
   @override
@@ -1372,34 +1337,78 @@ class AppLocalizationsRo extends AppLocalizations {
   String get tacticsRunLegendManual => 'Instrucțiunea ta';
 
   @override
-  String get tacticsPitchPlanHint =>
-      'Atinge insigna unui jucător pentru rol și săgeata lui pentru mișcare.';
+  String get tacticsSheetPost => 'Post';
 
   @override
-  String tacticsRoleBadgeSemantics(String role) {
-    return 'Rol: $role. Atinge pentru a schimba.';
+  String get tacticsSheetAdvanced => 'Avansat';
+
+  @override
+  String get tacticsSheetAutoPick => 'Le execută acum, automat';
+
+  @override
+  String get tacticsSheetFresh => 'Odihnit';
+
+  @override
+  String get tacticsSheetFitHere => 'Pe acest post';
+
+  @override
+  String tacticsSheetFitSemantics(int dots) {
+    return 'Potrivire pentru post: $dots din 5';
   }
 
   @override
-  String tacticsRunMarkSemantics(String run) {
-    return 'Mișcare: $run. Atinge pentru a schimba.';
-  }
+  String get tacticsSheetSwap => 'Schimbă';
+
+  @override
+  String get tacticsSheetProfile => 'Profil';
+
+  @override
+  String get tacticsSheetRecommended => 'Recomandat';
+
+  @override
+  String get tacticsSheetRunHint =>
+      'Atingeți o direcție pentru propria săgeată. Centrul readuce mișcarea rolului.';
+
+  @override
+  String get tacticsPostDm => 'Stă în fața defensivei și o protejează.';
+
+  @override
+  String get tacticsPostCm =>
+      'Leagă apărarea de atac, muncește în ambele direcții.';
+
+  @override
+  String get tacticsPostAm => 'Joacă între linii, în spatele atacanților.';
+
+  @override
+  String get tacticsPostWideMid =>
+      'Mai retras și mai lateral, își ajută fundașul.';
+
+  @override
+  String get tacticsPostWinger => 'Mai sus, îl provoacă pe fundașul lateral.';
+
+  @override
+  String get tacticsPostSt => 'Conduce atacul și finalizează ocaziile.';
+
+  @override
+  String get tacticsPitchHint =>
+      'Atingeți un jucător ca să-i setați postul, rolul și mișcarea. Țineți apăsat și trageți ca să-l mutați.';
+
+  @override
+  String get tacticsSubHint =>
+      'Atingeți un jucător ca să-l setați sau să-l schimbați. Țineți apăsat și trageți o rezervă peste el.';
+
+  @override
+  String get tacticsLegendTooltip => 'Cum se citește terenul';
+
+  @override
+  String get tacticsLegendRoleTag =>
+      'Insigna mică de pe jucător este rolul lui.';
 
   @override
   String get tacticsPlanRoleHeading => 'ROL';
 
   @override
   String get tacticsPlanMovementHeading => 'MIȘCARE';
-
-  @override
-  String tacticsPlanTitle(String position, String name) {
-    return '$position · $name';
-  }
-
-  @override
-  String tacticsArrowSet(String name, String movement) {
-    return '$name: $movement';
-  }
 
   @override
   String get tacticsKeeperNoRun => 'Portarul nu are o mișcare de setat.';
@@ -1468,9 +1477,6 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get tacticsSave => 'Salvați';
-
-  @override
-  String get tacticsTapToAssign => 'Atingeți pentru a atribui';
 
   @override
   String get tacticsHoldDragSub =>
@@ -14709,14 +14715,6 @@ class AppLocalizationsRo extends AppLocalizations {
   String yPunditPick5(String competition, String favourite, String darkHorse) {
     return '$favourite va câștiga $competition și va fi plictisitor. Dacă vreți o poveste, urmăriți $darkHorse.';
   }
-
-  @override
-  String tacticsSlotSwitchHeading(String formation) {
-    return 'Postul în $formation';
-  }
-
-  @override
-  String get tacticsSlotSwitchReset => 'Resetați';
 
   @override
   String get tacticsSlotSwitchLimit =>

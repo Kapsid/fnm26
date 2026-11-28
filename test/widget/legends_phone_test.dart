@@ -264,9 +264,10 @@ void expectReadOnlyDiscs() {
   expect(find.byKey(PitchPlanKeys.arrows), findsNothing);
   for (var slot = 0; slot < 11; slot++) {
     expect(find.byKey(ValueKey('pitchPos$slot')), findsNothing);
-    expect(find.byKey(PitchPlanKeys.badge(slot)), findsNothing);
+    // The editable pitch's old rim targets: gone everywhere now.
+    expect(find.byKey(ValueKey('pitchRoleBadge$slot')), findsNothing);
     expect(find.byKey(PitchPlanKeys.tag(slot)), findsNothing);
-    expect(find.byKey(PitchPlanKeys.runMark(slot)), findsNothing);
+    expect(find.byKey(ValueKey('pitchRunMark$slot')), findsNothing);
     expect(find.byKey(ValueKey('pitchFullBack$slot')), findsNothing);
     expect(find.byKey(ValueKey('pitchRating$slot')), findsNothing);
     expect(find.byKey(ValueKey('pitchGoals$slot')), findsNothing);

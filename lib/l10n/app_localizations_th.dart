@@ -1012,21 +1012,6 @@ class AppLocalizationsTh extends AppLocalizations {
   String get tacticsFullBackOff => 'ไม่มีคำสั่ง';
 
   @override
-  String tacticsFullBackUpHint(String side) {
-    return '$side: ขึ้นเกมรุก เกมรุกเพิ่มขึ้นเล็กน้อย ความเสี่ยงก็เพิ่มขึ้นเล็กน้อย';
-  }
-
-  @override
-  String tacticsFullBackDownHint(String side) {
-    return '$side: อยู่เกมรับ ปลอดภัยขึ้นเล็กน้อย เกมรุกลดลงเล็กน้อย';
-  }
-
-  @override
-  String tacticsFullBackOffHint(String side) {
-    return '$side: ไม่มีคำสั่ง เล่นตามแผนของทีม';
-  }
-
-  @override
   String tacticsFullBackSemantics(String side, String state) {
     return 'ลูกศร$side: $state';
   }
@@ -1035,10 +1020,6 @@ class AppLocalizationsTh extends AppLocalizations {
   String tacticsSubsUsed(int used, int max) {
     return 'เปลี่ยนตัว · $used/$max';
   }
-
-  @override
-  String get tacticsDragSubOn =>
-      'แตะผู้เล่นในสนามเพื่อเปลี่ยนออก หรือกดค้างแล้วลากตัวสำรองไปวางทับ';
 
   @override
   String get tacticsNoSubs => 'ไม่มีตัวสำรอง';
@@ -1194,13 +1175,6 @@ class AppLocalizationsTh extends AppLocalizations {
   String get tacticsTabSetPieces => 'ลูกตั้งเตะ';
 
   @override
-  String get tacticsTabRolesSetPieces => 'บทบาทและลูกตั้งเตะ';
-
-  @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'กำหนดบทบาทให้ตัวจริงแต่ละคน แตะสัญลักษณ์จุดโทษ (⚽) หรือฟรีคิก (▲) เพื่อเลือกคนสังหาร';
-
-  @override
   String get tacticsTooltipCallUps => 'เรียกตัว';
 
   @override
@@ -1232,10 +1206,6 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get tacticsTapSpotReplace => 'แตะตำแหน่งของเขาในสนามเพื่อเลือกตัวแทน';
-
-  @override
-  String get tacticsTapOrDrag =>
-      'แตะผู้เล่นเพื่อเปลี่ยนตัว หรือกดค้างแล้วลากเพื่อย้ายตำแหน่ง';
 
   @override
   String get tacticsPlayerRoles => 'บทบาทผู้เล่น';
@@ -1299,11 +1269,6 @@ class AppLocalizationsTh extends AppLocalizations {
   String get tacticsSkillPas => 'จ่าย';
 
   @override
-  String tacticsRolePlayer(String name) {
-    return 'บทบาท · $name';
-  }
-
-  @override
   String get roleFitGood => 'เหมาะ';
 
   @override
@@ -1340,34 +1305,75 @@ class AppLocalizationsTh extends AppLocalizations {
   String get tacticsRunLegendManual => 'คำสั่งของคุณ';
 
   @override
-  String get tacticsPitchPlanHint =>
-      'แตะป้ายของผู้เล่นเพื่อเลือกบทบาท แตะลูกศรเพื่อเลือกการวิ่ง';
+  String get tacticsSheetPost => 'ตำแหน่ง';
 
   @override
-  String tacticsRoleBadgeSemantics(String role) {
-    return 'บทบาท: $role แตะเพื่อเปลี่ยน';
+  String get tacticsSheetAdvanced => 'ขั้นสูง';
+
+  @override
+  String get tacticsSheetAutoPick => 'ตอนนี้เป็นคนรับหน้าที่โดยอัตโนมัติ';
+
+  @override
+  String get tacticsSheetFresh => 'สดชื่น';
+
+  @override
+  String get tacticsSheetFitHere => 'ในตำแหน่งนี้';
+
+  @override
+  String tacticsSheetFitSemantics(int dots) {
+    return 'ความเหมาะกับตำแหน่ง: $dots จาก 5';
   }
 
   @override
-  String tacticsRunMarkSemantics(String run) {
-    return 'การวิ่ง: $run แตะเพื่อเปลี่ยน';
-  }
+  String get tacticsSheetSwap => 'สลับ';
+
+  @override
+  String get tacticsSheetProfile => 'โปรไฟล์';
+
+  @override
+  String get tacticsSheetRecommended => 'แนะนำ';
+
+  @override
+  String get tacticsSheetRunHint =>
+      'แตะทิศทางเพื่อกำหนดลูกศรเอง ตรงกลางจะคืนการวิ่งตามบทบาท';
+
+  @override
+  String get tacticsPostDm => 'ยืนหน้าแนวรับและคอยปกป้อง';
+
+  @override
+  String get tacticsPostCm => 'เชื่อมเกมรับกับเกมรุก ทำงานทั้งสองทาง';
+
+  @override
+  String get tacticsPostAm => 'เล่นระหว่างแนว หลังกองหน้า';
+
+  @override
+  String get tacticsPostWideMid => 'ต่ำลงและกว้างขึ้น ช่วยฟูลแบ็กฝั่งตัวเอง';
+
+  @override
+  String get tacticsPostWinger => 'สูงขึ้น ท้าดวลกับฟูลแบ็ก';
+
+  @override
+  String get tacticsPostSt => 'นำแนวรุกและจบสกอร์';
+
+  @override
+  String get tacticsPitchHint =>
+      'แตะผู้เล่นเพื่อกำหนดตำแหน่ง บทบาท และการวิ่ง กดค้างแล้วลากเพื่อย้าย';
+
+  @override
+  String get tacticsSubHint =>
+      'แตะผู้เล่นเพื่อตั้งค่าหรือเปลี่ยนตัว กดค้างแล้วลากตัวสำรองไปวางบนเขา';
+
+  @override
+  String get tacticsLegendTooltip => 'วิธีอ่านสนาม';
+
+  @override
+  String get tacticsLegendRoleTag => 'ป้ายเล็กบนตัวผู้เล่นคือบทบาทของเขา';
 
   @override
   String get tacticsPlanRoleHeading => 'บทบาท';
 
   @override
   String get tacticsPlanMovementHeading => 'การเคลื่อนที่';
-
-  @override
-  String tacticsPlanTitle(String position, String name) {
-    return '$position · $name';
-  }
-
-  @override
-  String tacticsArrowSet(String name, String movement) {
-    return '$name: $movement';
-  }
 
   @override
   String get tacticsKeeperNoRun => 'ผู้รักษาประตูไม่มีการวิ่งให้ตั้ง';
@@ -1434,9 +1440,6 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get tacticsSave => 'บันทึก';
-
-  @override
-  String get tacticsTapToAssign => 'แตะเพื่อกำหนด';
 
   @override
   String get tacticsHoldDragSub =>
@@ -14047,14 +14050,6 @@ class AppLocalizationsTh extends AppLocalizations {
   String yPunditPick5(String competition, String favourite, String darkHorse) {
     return '$favourite จะคว้า $competition และมันจะน่าเบื่อ ถ้าอยากได้เรื่องราว ดู $darkHorse';
   }
-
-  @override
-  String tacticsSlotSwitchHeading(String formation) {
-    return 'ตำแหน่งในแผน $formation';
-  }
-
-  @override
-  String get tacticsSlotSwitchReset => 'รีเซ็ต';
 
   @override
   String get tacticsSlotSwitchLimit =>

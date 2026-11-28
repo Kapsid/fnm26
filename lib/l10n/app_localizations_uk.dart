@@ -1021,21 +1021,6 @@ class AppLocalizationsUk extends AppLocalizations {
   String get tacticsFullBackOff => 'Без вказівки';
 
   @override
-  String tacticsFullBackUpHint(String side) {
-    return '$side: підключається до атаки. Трохи більше атаки, трохи більше ризику.';
-  }
-
-  @override
-  String tacticsFullBackDownHint(String side) {
-    return '$side: залишається позаду. Трохи надійніше, трохи менше атаки.';
-  }
-
-  @override
-  String tacticsFullBackOffHint(String side) {
-    return '$side: без вказівки, грає за планом команди.';
-  }
-
-  @override
   String tacticsFullBackSemantics(String side, String state) {
     return '$side, стрілка: $state';
   }
@@ -1044,10 +1029,6 @@ class AppLocalizationsUk extends AppLocalizations {
   String tacticsSubsUsed(int used, int max) {
     return 'ЗАМІНИ · $used/$max';
   }
-
-  @override
-  String get tacticsDragSubOn =>
-      'Торкнись гравця на полі, щоб зняти його, або утримуй і перетягни запасного на нього.';
 
   @override
   String get tacticsNoSubs => 'Запасних немає.';
@@ -1203,13 +1184,6 @@ class AppLocalizationsUk extends AppLocalizations {
   String get tacticsTabSetPieces => 'СТАНДАРТИ';
 
   @override
-  String get tacticsTabRolesSetPieces => 'РОЛІ І СТАНДАРТИ';
-
-  @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Дай кожному гравцю основи роль. Торкнись значка пенальті (⚽) або штрафного (▲), щоб обрати виконавця.';
-
-  @override
   String get tacticsTooltipCallUps => 'Виклики';
 
   @override
@@ -1245,10 +1219,6 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get tacticsTapSpotReplace =>
       'Торкнись його місця на полі, щоб обрати заміну.';
-
-  @override
-  String get tacticsTapOrDrag =>
-      'Торкнись гравця, щоб замінити його, або утримуй і перетягни, щоб перемістити.';
 
   @override
   String get tacticsPlayerRoles => 'РОЛІ ГРАВЦІВ';
@@ -1313,11 +1283,6 @@ class AppLocalizationsUk extends AppLocalizations {
   String get tacticsSkillPas => 'ПАС';
 
   @override
-  String tacticsRolePlayer(String name) {
-    return 'РОЛЬ · $name';
-  }
-
-  @override
   String get roleFitGood => 'Підходить';
 
   @override
@@ -1354,34 +1319,77 @@ class AppLocalizationsUk extends AppLocalizations {
   String get tacticsRunLegendManual => 'Ваша вказівка';
 
   @override
-  String get tacticsPitchPlanHint =>
-      'Торкніться значка гравця, щоб вибрати роль, і його стрілки, щоб вибрати рух.';
+  String get tacticsSheetPost => 'Позиція';
 
   @override
-  String tacticsRoleBadgeSemantics(String role) {
-    return 'Роль: $role. Торкніться, щоб змінити.';
+  String get tacticsSheetAdvanced => 'Додатково';
+
+  @override
+  String get tacticsSheetAutoPick => 'Зараз виконує автоматично';
+
+  @override
+  String get tacticsSheetFresh => 'Свіжий';
+
+  @override
+  String get tacticsSheetFitHere => 'На цій позиції';
+
+  @override
+  String tacticsSheetFitSemantics(int dots) {
+    return 'Придатність до позиції: $dots з 5';
   }
 
   @override
-  String tacticsRunMarkSemantics(String run) {
-    return 'Рух: $run. Торкніться, щоб змінити.';
-  }
+  String get tacticsSheetSwap => 'Замінити';
+
+  @override
+  String get tacticsSheetProfile => 'Профіль';
+
+  @override
+  String get tacticsSheetRecommended => 'Рекомендовано';
+
+  @override
+  String get tacticsSheetRunHint =>
+      'Торкнись напрямку для власної стрілки. Центр повертає рух ролі.';
+
+  @override
+  String get tacticsPostDm => 'Грає перед захистом і прикриває його.';
+
+  @override
+  String get tacticsPostCm => 'Пов’язує захист і атаку, працює в обидва боки.';
+
+  @override
+  String get tacticsPostAm => 'Грає між лініями, за нападниками.';
+
+  @override
+  String get tacticsPostWideMid =>
+      'Глибше й ширше, допомагає своєму крайньому захиснику.';
+
+  @override
+  String get tacticsPostWinger => 'Вище, кидає виклик крайньому захиснику.';
+
+  @override
+  String get tacticsPostSt => 'Веде атаку й завершує моменти.';
+
+  @override
+  String get tacticsPitchHint =>
+      'Торкнись гравця, щоб задати позицію, роль і рух. Утримуй і перетягни, щоб перемістити.';
+
+  @override
+  String get tacticsSubHint =>
+      'Торкнись гравця, щоб налаштувати або замінити його. Утримуй і перетягни на нього запасного.';
+
+  @override
+  String get tacticsLegendTooltip => 'Як читати поле';
+
+  @override
+  String get tacticsLegendRoleTag =>
+      'Маленький значок на гравці позначає його роль.';
 
   @override
   String get tacticsPlanRoleHeading => 'РОЛЬ';
 
   @override
   String get tacticsPlanMovementHeading => 'РУХ';
-
-  @override
-  String tacticsPlanTitle(String position, String name) {
-    return '$position · $name';
-  }
-
-  @override
-  String tacticsArrowSet(String name, String movement) {
-    return '$name: $movement';
-  }
 
   @override
   String get tacticsKeeperNoRun => 'Воротареві рух не задається.';
@@ -1448,9 +1456,6 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get tacticsSave => 'Зберегти';
-
-  @override
-  String get tacticsTapToAssign => 'Торкнись, щоб призначити';
 
   @override
   String get tacticsHoldDragSub =>
@@ -14602,14 +14607,6 @@ class AppLocalizationsUk extends AppLocalizations {
   String yPunditPick5(String competition, String favourite, String darkHorse) {
     return 'Турнір $competition виграє $favourite, і буде нудно. Хочете історію, дивіться команду $darkHorse.';
   }
-
-  @override
-  String tacticsSlotSwitchHeading(String formation) {
-    return 'Позиція в схемі $formation';
-  }
-
-  @override
-  String get tacticsSlotSwitchReset => 'Скинути';
 
   @override
   String get tacticsSlotSwitchLimit =>

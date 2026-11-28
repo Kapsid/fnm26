@@ -1077,21 +1077,6 @@ class AppLocalizationsHr extends AppLocalizations {
   String get tacticsFullBackOff => 'Bez upute';
 
   @override
-  String tacticsFullBackUpHint(String side) {
-    return '$side: uključuje se u napad. Malo više napada, malo više rizika.';
-  }
-
-  @override
-  String tacticsFullBackDownHint(String side) {
-    return '$side: ostaje straga. Malo sigurnije, malo manje napada.';
-  }
-
-  @override
-  String tacticsFullBackOffHint(String side) {
-    return '$side: bez upute, igra prema planu momčadi.';
-  }
-
-  @override
   String tacticsFullBackSemantics(String side, String state) {
     return '$side, strelica: $state';
   }
@@ -1100,10 +1085,6 @@ class AppLocalizationsHr extends AppLocalizations {
   String tacticsSubsUsed(int used, int max) {
     return 'IZMJENE · $used/$max';
   }
-
-  @override
-  String get tacticsDragSubOn =>
-      'Dodirni igrača na terenu da ga izvadiš ili drži i povuci zamjenu na njega.';
 
   @override
   String get tacticsNoSubs => 'Nema raspoloživih zamjena.';
@@ -1259,13 +1240,6 @@ class AppLocalizationsHr extends AppLocalizations {
   String get tacticsTabSetPieces => 'STAJALICE';
 
   @override
-  String get tacticsTabRolesSetPieces => 'ULOGE I STAJALICE';
-
-  @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Daj svakom igraču iz početne postave ulogu. Dodirni oznaku za jedanaesterac (⚽) ili slobodni udarac (▲) da odrediš izvođača.';
-
-  @override
   String get tacticsTooltipCallUps => 'Pozivi';
 
   @override
@@ -1300,10 +1274,6 @@ class AppLocalizationsHr extends AppLocalizations {
   @override
   String get tacticsTapSpotReplace =>
       'Dodirni njegovo mjesto na terenu za odabir zamjene.';
-
-  @override
-  String get tacticsTapOrDrag =>
-      'Dodirni igrača da ga zamijeniš ili ga drži i povuci da ga premjestiš.';
 
   @override
   String get tacticsPlayerRoles => 'ULOGE IGRAČA';
@@ -1368,11 +1338,6 @@ class AppLocalizationsHr extends AppLocalizations {
   String get tacticsSkillPas => 'DOD';
 
   @override
-  String tacticsRolePlayer(String name) {
-    return 'ULOGA · $name';
-  }
-
-  @override
   String get roleFitGood => 'Odgovara';
 
   @override
@@ -1409,34 +1374,75 @@ class AppLocalizationsHr extends AppLocalizations {
   String get tacticsRunLegendManual => 'Tvoja uputa';
 
   @override
-  String get tacticsPitchPlanHint =>
-      'Dodirni značku igrača za ulogu, a njegovu strelicu za kretanje.';
+  String get tacticsSheetPost => 'Pozicija';
 
   @override
-  String tacticsRoleBadgeSemantics(String role) {
-    return 'Uloga: $role. Dodirni za promjenu.';
+  String get tacticsSheetAdvanced => 'Napredno';
+
+  @override
+  String get tacticsSheetAutoPick => 'Sada ih izvodi, automatski';
+
+  @override
+  String get tacticsSheetFresh => 'Odmoran';
+
+  @override
+  String get tacticsSheetFitHere => 'Na ovoj poziciji';
+
+  @override
+  String tacticsSheetFitSemantics(int dots) {
+    return 'Prikladnost za poziciju: $dots od 5';
   }
 
   @override
-  String tacticsRunMarkSemantics(String run) {
-    return 'Kretanje: $run. Dodirni za promjenu.';
-  }
+  String get tacticsSheetSwap => 'Zamijeni';
+
+  @override
+  String get tacticsSheetProfile => 'Profil';
+
+  @override
+  String get tacticsSheetRecommended => 'Preporučeno';
+
+  @override
+  String get tacticsSheetRunHint =>
+      'Dodirni smjer za vlastitu strelicu. Sredina vraća kretanje uloge.';
+
+  @override
+  String get tacticsPostDm => 'Igra ispred obrane i štiti je.';
+
+  @override
+  String get tacticsPostCm => 'Povezuje obranu i napad, radi u oba smjera.';
+
+  @override
+  String get tacticsPostAm => 'Igra između linija, iza napadača.';
+
+  @override
+  String get tacticsPostWideMid => 'Dublje i šire, pomaže svom bočnom.';
+
+  @override
+  String get tacticsPostWinger => 'Više, ide na bočnog obrambenog.';
+
+  @override
+  String get tacticsPostSt => 'Predvodi napad i završava prilike.';
+
+  @override
+  String get tacticsPitchHint =>
+      'Dodirni igrača da mu postaviš poziciju, ulogu i kretanje. Drži i povuci da ga premjestiš.';
+
+  @override
+  String get tacticsSubHint =>
+      'Dodirni igrača da ga postaviš ili zamijeniš. Drži i povuci pričuvu na njega.';
+
+  @override
+  String get tacticsLegendTooltip => 'Kako čitati teren';
+
+  @override
+  String get tacticsLegendRoleTag => 'Mala značka na igraču je njegova uloga.';
 
   @override
   String get tacticsPlanRoleHeading => 'ULOGA';
 
   @override
   String get tacticsPlanMovementHeading => 'KRETANJE';
-
-  @override
-  String tacticsPlanTitle(String position, String name) {
-    return '$position · $name';
-  }
-
-  @override
-  String tacticsArrowSet(String name, String movement) {
-    return '$name: $movement';
-  }
 
   @override
   String get tacticsKeeperNoRun => 'Vrataru se ne zadaje kretanje.';
@@ -1504,9 +1510,6 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get tacticsSave => 'Spremi';
-
-  @override
-  String get tacticsTapToAssign => 'Dodirni za dodjelu';
 
   @override
   String get tacticsHoldDragSub =>
@@ -14634,14 +14637,6 @@ class AppLocalizationsHr extends AppLocalizations {
   String yPunditPick5(String competition, String favourite, String darkHorse) {
     return 'Turnir $competition osvojit će $favourite i bit će dosadno. Ako želite priču, gledajte momčad $darkHorse.';
   }
-
-  @override
-  String tacticsSlotSwitchHeading(String formation) {
-    return 'Pozicija u formaciji $formation';
-  }
-
-  @override
-  String get tacticsSlotSwitchReset => 'Vrati';
 
   @override
   String get tacticsSlotSwitchLimit =>

@@ -218,10 +218,8 @@ void main() {
     expect(on(PitchPlanKeys.roleRuns), findsNothing);
     expect(on(PitchPlanKeys.arrows), findsNothing);
     for (var slot = 0; slot < 11; slot++) {
-      // No role glyph or badge, no arrow mark, no full-back push mark.
+      // No role glyph, no full-back push mark.
       expect(on(PitchPlanKeys.tag(slot)), findsNothing, reason: '$slot');
-      expect(on(PitchPlanKeys.badge(slot)), findsNothing, reason: '$slot');
-      expect(on(PitchPlanKeys.runMark(slot)), findsNothing, reason: '$slot');
       expect(on(ValueKey('pitchFullBack$slot')), findsNothing);
       // The players and their marks as before.
       expect(on(ValueKey('pitchRating$slot')), findsOneWidget);

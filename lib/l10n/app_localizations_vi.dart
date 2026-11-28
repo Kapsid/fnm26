@@ -1023,21 +1023,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String get tacticsFullBackOff => 'Không chỉ thị';
 
   @override
-  String tacticsFullBackUpHint(String side) {
-    return '$side: dâng cao. Tấn công nhiều hơn một chút, rủi ro hơn một chút.';
-  }
-
-  @override
-  String tacticsFullBackDownHint(String side) {
-    return '$side: lùi sâu. An toàn hơn một chút, tấn công ít hơn một chút.';
-  }
-
-  @override
-  String tacticsFullBackOffHint(String side) {
-    return '$side: không chỉ thị, chơi theo kế hoạch của đội.';
-  }
-
-  @override
   String tacticsFullBackSemantics(String side, String state) {
     return '$side, mũi tên: $state';
   }
@@ -1046,10 +1031,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String tacticsSubsUsed(int used, int max) {
     return 'THAY NGƯỜI · $used/$max';
   }
-
-  @override
-  String get tacticsDragSubOn =>
-      'Chạm vào cầu thủ trên sân để rút ra, hoặc giữ và kéo một cầu thủ dự bị vào vị trí đó.';
 
   @override
   String get tacticsNoSubs => 'Không còn cầu thủ dự bị.';
@@ -1205,13 +1186,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String get tacticsTabSetPieces => 'BÓNG CHẾT';
 
   @override
-  String get tacticsTabRolesSetPieces => 'VAI TRÒ & BÓNG CHẾT';
-
-  @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Giao vai trò cho từng cầu thủ đá chính. Chạm vào biểu tượng phạt đền (⚽) hoặc đá phạt (▲) để chọn người thực hiện.';
-
-  @override
   String get tacticsTooltipCallUps => 'Triệu tập';
 
   @override
@@ -1244,10 +1218,6 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get tacticsTapSpotReplace =>
       'Chạm vào vị trí của họ trên sân để chọn người thay thế.';
-
-  @override
-  String get tacticsTapOrDrag =>
-      'Chạm vào một cầu thủ để thay ra, hoặc giữ và kéo để di chuyển.';
 
   @override
   String get tacticsPlayerRoles => 'VAI TRÒ CẦU THỦ';
@@ -1312,11 +1282,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String get tacticsSkillPas => 'CHB';
 
   @override
-  String tacticsRolePlayer(String name) {
-    return 'VAI TRÒ · $name';
-  }
-
-  @override
   String get roleFitGood => 'Phù hợp';
 
   @override
@@ -1353,34 +1318,78 @@ class AppLocalizationsVi extends AppLocalizations {
   String get tacticsRunLegendManual => 'Chỉ đạo của bạn';
 
   @override
-  String get tacticsPitchPlanHint =>
-      'Chạm huy hiệu của cầu thủ để chọn vai trò, chạm mũi tên để chọn hướng di chuyển.';
+  String get tacticsSheetPost => 'Vị trí';
 
   @override
-  String tacticsRoleBadgeSemantics(String role) {
-    return 'Vai trò: $role. Chạm để đổi.';
+  String get tacticsSheetAdvanced => 'Nâng cao';
+
+  @override
+  String get tacticsSheetAutoPick => 'Đang tự động đảm nhận';
+
+  @override
+  String get tacticsSheetFresh => 'Sung sức';
+
+  @override
+  String get tacticsSheetFitHere => 'Ở vị trí này';
+
+  @override
+  String tacticsSheetFitSemantics(int dots) {
+    return 'Độ phù hợp với vị trí: $dots/5';
   }
 
   @override
-  String tacticsRunMarkSemantics(String run) {
-    return 'Di chuyển: $run. Chạm để đổi.';
-  }
+  String get tacticsSheetSwap => 'Đổi';
+
+  @override
+  String get tacticsSheetProfile => 'Hồ sơ';
+
+  @override
+  String get tacticsSheetRecommended => 'Đề xuất';
+
+  @override
+  String get tacticsSheetRunHint =>
+      'Chạm vào một hướng để đặt mũi tên riêng. Ô giữa trả lại hướng chạy của vai trò.';
+
+  @override
+  String get tacticsPostDm => 'Đứng trước hàng thủ và che chắn cho hàng thủ.';
+
+  @override
+  String get tacticsPostCm =>
+      'Kết nối phòng ngự và tấn công, làm việc cả hai chiều.';
+
+  @override
+  String get tacticsPostAm => 'Chơi giữa các tuyến, phía sau tiền đạo.';
+
+  @override
+  String get tacticsPostWideMid =>
+      'Lùi sâu và dạt rộng hơn, hỗ trợ hậu vệ biên.';
+
+  @override
+  String get tacticsPostWinger => 'Dâng cao hơn, đối đầu hậu vệ biên.';
+
+  @override
+  String get tacticsPostSt => 'Dẫn dắt hàng công và dứt điểm cơ hội.';
+
+  @override
+  String get tacticsPitchHint =>
+      'Chạm vào cầu thủ để đặt vị trí, vai trò và hướng chạy. Giữ và kéo để di chuyển cầu thủ.';
+
+  @override
+  String get tacticsSubHint =>
+      'Chạm vào cầu thủ để thiết lập hoặc thay người. Giữ và kéo một cầu thủ dự bị lên cầu thủ đó.';
+
+  @override
+  String get tacticsLegendTooltip => 'Cách đọc sân';
+
+  @override
+  String get tacticsLegendRoleTag =>
+      'Huy hiệu nhỏ trên cầu thủ là vai trò của anh ấy.';
 
   @override
   String get tacticsPlanRoleHeading => 'VAI TRÒ';
 
   @override
   String get tacticsPlanMovementHeading => 'DI CHUYỂN';
-
-  @override
-  String tacticsPlanTitle(String position, String name) {
-    return '$position · $name';
-  }
-
-  @override
-  String tacticsArrowSet(String name, String movement) {
-    return '$name: $movement';
-  }
 
   @override
   String get tacticsKeeperNoRun => 'Thủ môn không có hướng di chuyển để chọn.';
@@ -1447,9 +1456,6 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get tacticsSave => 'Lưu';
-
-  @override
-  String get tacticsTapToAssign => 'Chạm để giao';
 
   @override
   String get tacticsHoldDragSub =>
@@ -14170,14 +14176,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String yPunditPick5(String competition, String favourite, String darkHorse) {
     return '$favourite sẽ vô địch $competition và sẽ rất nhàm chán. Muốn có câu chuyện thì hãy xem $darkHorse.';
   }
-
-  @override
-  String tacticsSlotSwitchHeading(String formation) {
-    return 'Vị trí trong sơ đồ $formation';
-  }
-
-  @override
-  String get tacticsSlotSwitchReset => 'Đặt lại';
 
   @override
   String get tacticsSlotSwitchLimit =>

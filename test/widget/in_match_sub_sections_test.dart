@@ -245,7 +245,7 @@ void main() {
     // sheet, which is the whole of what the third section used to say.
     expect(find.text('Starter11'), findsNothing);
     // The prompt is gone with the change it asked for.
-    expect(find.text(l.tacticsDragSubOn), findsOneWidget);
+    expect(find.text(l.tacticsSubHint), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -263,7 +263,7 @@ void main() {
     await showPitchTab(tester, l);
     await tapRow(tester, 'Starter11');
     expect(find.text(l.tacticsPickReplacementFor('Starter11')), findsNothing);
-    expect(find.text(l.tacticsDragSubOn), findsOneWidget);
+    expect(find.text(l.tacticsSubHint), findsOneWidget);
     expect(find.text(l.tacticsSubsUsed(0, 5)), findsOneWidget);
   });
 

@@ -982,21 +982,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get tacticsFullBackOff => '지시 없음';
 
   @override
-  String tacticsFullBackUpHint(String side) {
-    return '$side: 공격 가담. 공격이 조금 늘고 위험도 조금 늘어납니다.';
-  }
-
-  @override
-  String tacticsFullBackDownHint(String side) {
-    return '$side: 수비 유지. 조금 더 안전하지만 공격은 조금 줄어듭니다.';
-  }
-
-  @override
-  String tacticsFullBackOffHint(String side) {
-    return '$side: 지시 없음. 팀 계획대로 플레이합니다.';
-  }
-
-  @override
   String tacticsFullBackSemantics(String side, String state) {
     return '$side 화살표: $state';
   }
@@ -1005,9 +990,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String tacticsSubsUsed(int used, int max) {
     return '교체 · $used/$max';
   }
-
-  @override
-  String get tacticsDragSubOn => '경기장의 선수를 눌러 빼거나, 교체 선수를 길게 눌러 그 위로 끌어다 놓으세요.';
 
   @override
   String get tacticsNoSubs => '교체 가능한 선수가 없습니다.';
@@ -1163,13 +1145,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get tacticsTabSetPieces => '세트피스';
 
   @override
-  String get tacticsTabRolesSetPieces => '역할 및 세트피스';
-
-  @override
-  String get tacticsRolesSetPiecesBlurb =>
-      '선발 선수마다 역할을 정하세요. 페널티킥(⚽) 또는 프리킥(▲) 배지를 눌러 키커를 지정합니다.';
-
-  @override
   String get tacticsTooltipCallUps => '소집';
 
   @override
@@ -1201,9 +1176,6 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get tacticsTapSpotReplace => '경기장에서 해당 자리를 눌러 대체 선수를 고르세요.';
-
-  @override
-  String get tacticsTapOrDrag => '선수를 눌러 교체하거나, 길게 눌러 끌어서 위치를 옮기세요.';
 
   @override
   String get tacticsPlayerRoles => '선수 역할';
@@ -1267,11 +1239,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get tacticsSkillPas => '패스';
 
   @override
-  String tacticsRolePlayer(String name) {
-    return '역할 · $name';
-  }
-
-  @override
   String get roleFitGood => '잘 맞음';
 
   @override
@@ -1308,33 +1275,73 @@ class AppLocalizationsKo extends AppLocalizations {
   String get tacticsRunLegendManual => '직접 지시';
 
   @override
-  String get tacticsPitchPlanHint => '선수 배지를 탭해 역할을, 화살표를 탭해 움직임을 정하세요.';
+  String get tacticsSheetPost => '포지션';
 
   @override
-  String tacticsRoleBadgeSemantics(String role) {
-    return '역할: $role. 탭해서 변경';
+  String get tacticsSheetAdvanced => '고급';
+
+  @override
+  String get tacticsSheetAutoPick => '지금 자동으로 맡고 있음';
+
+  @override
+  String get tacticsSheetFresh => '쌩쌩함';
+
+  @override
+  String get tacticsSheetFitHere => '이 포지션 적합도';
+
+  @override
+  String tacticsSheetFitSemantics(int dots) {
+    return '포지션 적합도: 5점 중 $dots점';
   }
 
   @override
-  String tacticsRunMarkSemantics(String run) {
-    return '움직임: $run. 탭해서 변경';
-  }
+  String get tacticsSheetSwap => '교체';
+
+  @override
+  String get tacticsSheetProfile => '프로필';
+
+  @override
+  String get tacticsSheetRecommended => '추천';
+
+  @override
+  String get tacticsSheetRunHint =>
+      '방향을 눌러 직접 화살표를 정하세요. 가운데는 역할의 움직임으로 되돌립니다.';
+
+  @override
+  String get tacticsPostDm => '수비 라인 앞에서 수비를 보호합니다.';
+
+  @override
+  String get tacticsPostCm => '수비와 공격을 잇고, 공수 양쪽에서 뜁니다.';
+
+  @override
+  String get tacticsPostAm => '공격수 뒤, 라인 사이에서 뜁니다.';
+
+  @override
+  String get tacticsPostWideMid => '더 깊고 넓게 서서 풀백을 돕습니다.';
+
+  @override
+  String get tacticsPostWinger => '더 높이 올라가 상대 풀백과 맞섭니다.';
+
+  @override
+  String get tacticsPostSt => '최전방을 이끌고 기회를 마무리합니다.';
+
+  @override
+  String get tacticsPitchHint => '선수를 눌러 포지션, 역할, 움직임을 정하세요. 길게 눌러 끌면 옮겨집니다.';
+
+  @override
+  String get tacticsSubHint => '선수를 눌러 설정하거나 교체하세요. 교체 선수를 길게 눌러 그 위로 끌어도 됩니다.';
+
+  @override
+  String get tacticsLegendTooltip => '피치 보는 법';
+
+  @override
+  String get tacticsLegendRoleTag => '선수의 작은 배지는 그의 역할입니다.';
 
   @override
   String get tacticsPlanRoleHeading => '역할';
 
   @override
   String get tacticsPlanMovementHeading => '움직임';
-
-  @override
-  String tacticsPlanTitle(String position, String name) {
-    return '$position · $name';
-  }
-
-  @override
-  String tacticsArrowSet(String name, String movement) {
-    return '$name: $movement';
-  }
 
   @override
   String get tacticsKeeperNoRun => '골키퍼는 움직임을 정하지 않습니다.';
@@ -1401,9 +1408,6 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get tacticsSave => '저장';
-
-  @override
-  String get tacticsTapToAssign => '눌러서 지정';
 
   @override
   String get tacticsHoldDragSub => '교체 선수를 길게 눌러 선수 위로 끌어다 놓으면 투입됩니다.';
@@ -13829,14 +13833,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String yPunditPick5(String competition, String favourite, String darkHorse) {
     return '$competition는 $favourite가 우승하고 지루할 겁니다. 이야기를 원한다면 $darkHorse를 보세요.';
   }
-
-  @override
-  String tacticsSlotSwitchHeading(String formation) {
-    return '$formation 안에서의 포지션';
-  }
-
-  @override
-  String get tacticsSlotSwitchReset => '초기화';
 
   @override
   String get tacticsSlotSwitchLimit =>

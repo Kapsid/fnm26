@@ -1080,21 +1080,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tacticsFullBackOff => 'Bez pokynu';
 
   @override
-  String tacticsFullBackUpHint(String side) {
-    return '$side: podporovat útok. O něco víc útoku, o něco víc rizika.';
-  }
-
-  @override
-  String tacticsFullBackDownHint(String side) {
-    return '$side: držet pozici. O něco bezpečnější, o něco méně útoku.';
-  }
-
-  @override
-  String tacticsFullBackOffHint(String side) {
-    return '$side: bez pokynu, hraje podle týmového plánu.';
-  }
-
-  @override
   String tacticsFullBackSemantics(String side, String state) {
     return '$side, šipka: $state';
   }
@@ -1103,10 +1088,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String tacticsSubsUsed(int used, int max) {
     return 'STŘÍDÁNÍ · $used/$max';
   }
-
-  @override
-  String get tacticsDragSubOn =>
-      'Klepnutím na hráče na hřišti ho pošlete ven, nebo podržte náhradníka a přetáhněte ho na něj.';
 
   @override
   String get tacticsNoSubs => 'Žádní náhradníci k dispozici.';
@@ -1262,13 +1243,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tacticsTabSetPieces => 'STANDARDNÍ SITUACE';
 
   @override
-  String get tacticsTabRolesSetPieces => 'ROLE A STANDARDKY';
-
-  @override
-  String get tacticsRolesSetPiecesBlurb =>
-      'Přiřaďte každému hráči roli. Klepnutím na odznak penalty (⚽) nebo přímého kopu (▲) určete vykonavatele.';
-
-  @override
   String get tacticsTooltipCallUps => 'Nominace';
 
   @override
@@ -1304,10 +1278,6 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get tacticsTapSpotReplace =>
       'Klepněte na jeho místo na hřišti a vyberte náhradu.';
-
-  @override
-  String get tacticsTapOrDrag =>
-      'Klepnutím hráče vyměníte, podržením a tažením ho přesunete.';
 
   @override
   String get tacticsPlayerRoles => 'ROLE HRÁČŮ';
@@ -1371,11 +1341,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tacticsSkillPas => 'PŘI';
 
   @override
-  String tacticsRolePlayer(String name) {
-    return 'ROLE · $name';
-  }
-
-  @override
   String get roleFitGood => 'Sedí mu';
 
   @override
@@ -1412,34 +1377,77 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tacticsRunLegendManual => 'Váš pokyn';
 
   @override
-  String get tacticsPitchPlanHint =>
-      'Klepnutím na odznak hráče nastavíte roli, na jeho šipku náběh.';
+  String get tacticsSheetPost => 'Pozice';
 
   @override
-  String tacticsRoleBadgeSemantics(String role) {
-    return 'Role: $role. Klepnutím změníte.';
+  String get tacticsSheetAdvanced => 'Pokročilé';
+
+  @override
+  String get tacticsSheetAutoPick => 'Teď je zahrává automaticky';
+
+  @override
+  String get tacticsSheetFresh => 'Odpočatý';
+
+  @override
+  String get tacticsSheetFitHere => 'Na této pozici';
+
+  @override
+  String tacticsSheetFitSemantics(int dots) {
+    return 'Vhodnost pro pozici: $dots z 5';
   }
 
   @override
-  String tacticsRunMarkSemantics(String run) {
-    return 'Náběh: $run. Klepnutím změníte.';
-  }
+  String get tacticsSheetSwap => 'Vyměnit';
+
+  @override
+  String get tacticsSheetProfile => 'Profil';
+
+  @override
+  String get tacticsSheetRecommended => 'Doporučeno';
+
+  @override
+  String get tacticsSheetRunHint =>
+      'Klepnutím na směr nastavíte vlastní šipku. Střed vrátí pohyb role.';
+
+  @override
+  String get tacticsPostDm => 'Hraje před obranou a kryje ji.';
+
+  @override
+  String get tacticsPostCm =>
+      'Spojuje obranu s útokem, pracuje dopředu i dozadu.';
+
+  @override
+  String get tacticsPostAm => 'Hraje mezi řadami, za útočníky.';
+
+  @override
+  String get tacticsPostWideMid =>
+      'Hlouběji a víc u lajny, pomáhá krajnímu obránci.';
+
+  @override
+  String get tacticsPostWinger => 'Výš, jde do souboje s krajním obráncem.';
+
+  @override
+  String get tacticsPostSt => 'Vede útok a zakončuje šance.';
+
+  @override
+  String get tacticsPitchHint =>
+      'Klepnutím na hráče nastavíte pozici, roli a pohyb. Podržením a tažením ho přesunete.';
+
+  @override
+  String get tacticsSubHint =>
+      'Klepnutím na hráče ho nastavíte nebo vyměníte. Náhradníka na něj přetáhněte podržením.';
+
+  @override
+  String get tacticsLegendTooltip => 'Jak číst hřiště';
+
+  @override
+  String get tacticsLegendRoleTag => 'Malý odznak na hráči je jeho role.';
 
   @override
   String get tacticsPlanRoleHeading => 'ROLE';
 
   @override
   String get tacticsPlanMovementHeading => 'POHYB';
-
-  @override
-  String tacticsPlanTitle(String position, String name) {
-    return '$position · $name';
-  }
-
-  @override
-  String tacticsArrowSet(String name, String movement) {
-    return '$name: $movement';
-  }
 
   @override
   String get tacticsKeeperNoRun => 'Brankáři se náběh nenastavuje.';
@@ -1506,9 +1514,6 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tacticsSave => 'Uložit';
-
-  @override
-  String get tacticsTapToAssign => 'Klepnutím přiřadit';
 
   @override
   String get tacticsHoldDragSub =>
@@ -14681,14 +14686,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String yPunditPick5(String competition, String favourite, String darkHorse) {
     return '$competition vyhraje $favourite a bude to nuda. Jestli chcete příběh, sledujte, co předvede $darkHorse.';
   }
-
-  @override
-  String tacticsSlotSwitchHeading(String formation) {
-    return 'Pozice v rozestavení $formation';
-  }
-
-  @override
-  String get tacticsSlotSwitchReset => 'Obnovit';
 
   @override
   String get tacticsSlotSwitchLimit =>

@@ -7,7 +7,7 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
-import 'package:fnm/features/tactics/slot_switch_strip.dart';
+import 'package:fnm/features/tactics/player_slot_sheet.dart';
 import 'package:fnm/features/tactics/switched_layout.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -16,8 +16,8 @@ import '../helpers/expect_whole.dart';
 import '../helpers/fixtures.dart';
 
 /// Changing a place within the formation from the pitch: a TAP on a slot
-/// opens its picker with the position chips at its head; a long press still
-/// drags, and never opens anything.
+/// opens the man's sheet, whose position row changes the place; a long press
+/// still drags, and never opens anything.
 void main() {
   const formation = Formation.f433;
 
@@ -98,6 +98,11 @@ void main() {
       )
       .data!;
 
+  Future<void> closeSheet(WidgetTester tester) async {
+    Navigator.of(tester.element(find.byKey(SlotSheetKeys.sheet))).pop();
+    await tester.pumpAndSettle();
+  }
+
   Future<void> apply(WidgetTester tester, AppLocalizations l) async {
     await tester.tap(find.text(l.tacticsApply));
     await tester.pumpAndSettle();
@@ -110,12 +115,12 @@ void main() {
     expect(badge(tester, 6), 'CM');
     await tester.tap(disc(6));
     await tester.pumpAndSettle();
-    expect(find.text(l.tacticsSlotSwitchHeading('4-3-3')), findsOneWidget);
-    await tester.tap(find.byKey(SlotSwitchKeys.choice(PlayerPosition.dm)));
+    expect(find.byKey(SlotSheetKeys.postRow), findsOneWidget);
+    await tester.tap(find.byKey(SlotSheetKeys.post(PlayerPosition.dm)));
     await tester.pumpAndSettle();
-    // The sheet has closed and the pitch says what the slot now is.
-    expect(find.byType(SlotSwitchStrip), findsNothing);
+    // The pitch behind the sheet already says what the slot now is.
     expect(badge(tester, 6), 'DM');
+    await closeSheet(tester);
 
     await apply(tester, l);
     expect(result!.formation, formation);
@@ -141,10 +146,15 @@ void main() {
     await open(tester, width: 320, height: 690, locale: const Locale('cs'));
     await tester.tap(disc(6));
     await tester.pumpAndSettle();
-    final names = find.byWidgetPredicate(
-      (w) =>
-          w is Text &&
-          (w.data ?? '').startsWith(RegExp('Bartolomej|Maximilián')),
+    await tester.tap(find.byKey(SlotSheetKeys.swap));
+    await tester.pumpAndSettle();
+    final names = find.descendant(
+      of: find.byType(ListTile),
+      matching: find.byWidgetPredicate(
+        (w) =>
+            w is Text &&
+            (w.data ?? '').startsWith(RegExp('Bartolomej|Maximilián')),
+      ),
     );
     expect(names, findsWidgets);
     for (final e in names.evaluate()) {
@@ -180,18 +190,17 @@ void main() {
       for (final slot in [6, 9]) {
         await tester.tap(disc(slot));
         await tester.pumpAndSettle();
-        expect(find.byType(SlotSwitchStrip), findsOneWidget);
+        expect(find.byKey(SlotSheetKeys.postRow), findsOneWidget);
         expect(tester.takeException(), isNull, reason: 'slot $slot');
-        // The strip's own copy; the editor's app bar is not this test's.
+        // The position row's own copy.
         expectWhole(
           find.descendant(
-            of: find.byType(SlotSwitchStrip),
+            of: find.byKey(SlotSheetKeys.postRow),
             matching: find.byType(RichText),
           ),
-          'slot $slot chips',
+          'slot $slot places',
         );
-        await tester.tapAt(const Offset(5, 5));
-        await tester.pumpAndSettle();
+        await closeSheet(tester);
       }
     });
   }
@@ -202,7 +211,10 @@ void main() {
     await open(tester);
     await tester.tap(disc(2)); // a centre-back
     await tester.pumpAndSettle();
-    expect(find.byKey(SlotSwitchKeys.choice(PlayerPosition.cb)), findsNothing);
+    expect(find.byKey(SlotSheetKeys.sheet), findsOneWidget);
+    expect(find.byKey(SlotSheetKeys.postRow), findsNothing);
+    expect(find.byKey(SlotSheetKeys.post(PlayerPosition.cb)), findsNothing);
+    await closeSheet(tester);
   });
 
   testWidgets('the limit is two, and the sheet says so', (tester) async {
@@ -215,20 +227,20 @@ void main() {
     );
     await tester.tap(disc(9)); // the striker
     await tester.pumpAndSettle();
-    expect(find.byKey(SlotSwitchKeys.limit), findsOneWidget);
+    expect(find.byKey(SlotSheetKeys.postLimit), findsOneWidget);
     expect(find.text(l.tacticsSlotSwitchLimit), findsOneWidget);
-    await tester.tap(find.byKey(SlotSwitchKeys.choice(PlayerPosition.am)));
+    await tester.tap(find.byKey(SlotSheetKeys.post(PlayerPosition.am)));
     await tester.pumpAndSettle();
     expect(badge(tester, 9), 'ST', reason: 'a third switch is refused');
+    await closeSheet(tester);
 
-    // A switched slot offers its reset, which brings back the room.
-    await tester.tapAt(const Offset(5, 5)); // dismiss
-    await tester.pumpAndSettle();
+    // A switched slot's own place is always offered, and brings back room.
     await tester.tap(disc(7));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(SlotSwitchKeys.reset));
+    await tester.tap(find.byKey(SlotSheetKeys.post(PlayerPosition.cm)));
     await tester.pumpAndSettle();
     expect(badge(tester, 7), 'CM');
+    await closeSheet(tester);
     await apply(tester, l);
     expect(result!.switches.bySlot, {6: PlayerPosition.dm});
   });
@@ -246,7 +258,7 @@ void main() {
     await tester.pump();
     await gesture.up();
     await tester.pumpAndSettle();
-    expect(find.byType(SlotSwitchStrip), findsNothing);
+    expect(find.byKey(SlotSheetKeys.sheet), findsNothing);
     // The players swapped; the places did not move with them.
     expect(badge(tester, 6), 'DM');
     await apply(tester, l);

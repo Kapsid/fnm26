@@ -9,36 +9,22 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/squad_label.dart';
-import 'package:fnm/domain/entities/enums.dart';
-import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/l10n/app_localizations.dart';
-import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 
 /// Keys the roles-and-runs pieces of the tactics pitch carry, for tests.
 abstract final class PitchPlanKeys {
-  static const Key hint = ValueKey('pitchPlan.hint');
-  static const Key sheet = ValueKey('pitchPlan.sheet');
-  static const Key close = ValueKey('pitchPlan.close');
-  static Key role(PlayerRole r) => ValueKey('pitchPlan.role.${r.name}');
-  static Key fit(PlayerRole r) => ValueKey('pitchPlan.fit.${r.name}');
-  static Key arrow(MoveArrow a) => ValueKey('pitchPlan.arrow.${a.name}');
-
   /// The glyph of a set role on a man's disc.
   static Key tag(int slot) => ValueKey('pitchRoleTag$slot');
-
-  /// The tappable role badge on a man's disc, which opens his role sheet.
-  static Key badge(int slot) => ValueKey('pitchRoleBadge$slot');
-
-  /// The arrow mark on an outfield man's disc (the full-backs' is
-  /// `pitchFullBack<slot>`), which moves his run on one tap.
-  static Key runMark(int slot) => ValueKey('pitchRunMark$slot');
   static const Key arrows = ValueKey('pitchPlan.arrows');
 
   /// The layer of the roles' natural runs, under the set arrows.
   static const Key roleRuns = ValueKey('pitchPlan.roleRuns');
   static const Key legend = ValueKey('pitchPlan.legend');
+
+  /// The small info button under the pitch that opens the legend.
+  static const Key legendButton = ValueKey('pitchPlan.legendButton');
   static Key runGlyph(int slot) => ValueKey('pitchPlan.runGlyph.$slot');
 }
 
@@ -338,71 +324,131 @@ class _GlyphPainter extends CustomPainter {
 }
 
 /// Says what the two kinds of line on the pitch are: a dashed one is the
-/// role's natural run, a solid one the manager's instruction, and how to set
-/// each from the discs: the badge for a role, the arrow for a run. Compact,
-/// for under the pitch, where it is always shown.
+/// role's natural run, a solid one the manager's instruction. Shown in the
+/// dialog [PitchLegendButton] opens, not under the pitch.
 class PitchRunLegend extends StatelessWidget {
-  const PitchRunLegend({this.padding = EdgeInsets.zero, super.key});
-
-  final EdgeInsets padding;
+  const PitchRunLegend({super.key});
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final style = AppTypography.labelSmall.copyWith(
+    final style = AppTypography.bodySmall.copyWith(
       color: AppColors.onSurfaceVariant,
     );
-    Widget item(PitchRun run, String text) => Row(
+    Widget item(Widget glyph, String text) => Padding(
+      padding: const EdgeInsetsDirectional.only(bottom: AppSpacing.sm),
+      child: Row(
+        children: [
+          SizedBox(width: 28, child: Center(child: glyph)),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(child: Text(text, style: style)),
+        ],
+      ),
+    );
+    // Pointing along the line of text, where a dash shows best.
+    Widget run(PitchRun r) => ExcludeSemantics(
+      child: RotatedBox(
+        quarterTurns: 1,
+        child: PitchRunGlyph(run: r, flank: 0, size: 24),
+      ),
+    );
+    return Column(
+      key: PitchPlanKeys.legend,
+      crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Pointing along the line of text, where a dash shows best.
-        ExcludeSemantics(
-          child: RotatedBox(
-            quarterTurns: 1,
-            child: PitchRunGlyph(run: run, flank: 0, size: 22),
-          ),
+        item(run(const PitchRun.role(RoleRun.forward)), l.tacticsRunLegendRole),
+        item(
+          run(const PitchRun.manual(MoveArrow.forward)),
+          l.tacticsRunLegendManual,
         ),
-        const SizedBox(width: 4),
-        Flexible(child: Text(text, style: style)),
+        item(
+          Icon(
+            roleIcon(PlayerRole.playmaker),
+            size: 18,
+            color: AppColors.primary,
+          ),
+          l.tacticsLegendRoleTag,
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        Text(l.tacticsPitchHint, style: style),
       ],
     );
-    return Padding(
-      padding: padding,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Wrap(
-            key: PitchPlanKeys.legend,
-            spacing: AppSpacing.md,
-            runSpacing: 0,
-            children: [
-              item(
-                const PitchRun.role(RoleRun.forward),
-                l.tacticsRunLegendRole,
-              ),
-              item(
-                const PitchRun.manual(MoveArrow.forward),
-                l.tacticsRunLegendManual,
-              ),
-            ],
+  }
+}
+
+/// A small info button that opens [PitchRunLegend] in a dialog: the legend
+/// is there when asked for, and the space under the pitch stays quiet.
+class PitchLegendButton extends StatelessWidget {
+  const PitchLegendButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return IconButton(
+      key: PitchPlanKeys.legendButton,
+      tooltip: l.tacticsLegendTooltip,
+      visualDensity: VisualDensity.compact,
+      icon: const Icon(
+        Icons.info_outline_rounded,
+        size: 20,
+        color: AppColors.onSurfaceVariant,
+      ),
+      onPressed: () => showDialog<void>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          backgroundColor: AppColors.surfaceContainerHigh,
+          title: Text(
+            l.tacticsLegendTooltip,
+            style: AppTypography.titleMedium,
           ),
-          Text(l.tacticsPitchPlanHint, key: PitchPlanKeys.hint, style: style),
-        ],
+          content: const PitchRunLegend(),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(MaterialLocalizations.of(context).okButtonLabel),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-/// The run after [now] for a man playing [position], as a tap on his arrow
-/// mark moves it: none, then each run the place offers
-/// ([MoveArrowX.optionsFor]) in turn, then none again. A run the place does
-/// not offer starts the round again from the first.
-MoveArrow nextPitchArrow(PlayerPosition position, MoveArrow now) {
-  final round = [MoveArrow.none, ...MoveArrowX.optionsFor(position)];
-  final at = round.indexOf(now);
-  if (round.length == 1) return MoveArrow.none;
-  return round[at < 0 ? 1 : (at + 1) % round.length];
+/// The line under the pitch: what a tap and a hold do, and the legend
+/// behind a small info button.
+class PitchHintRow extends StatelessWidget {
+  const PitchHintRow({
+    this.padding = EdgeInsetsDirectional.zero,
+    this.text,
+    super.key,
+  });
+
+  final EdgeInsetsGeometry padding;
+
+  /// The hint; null says what a tap and a hold do on the pitch.
+  final String? text;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Padding(
+      padding: padding,
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              text ?? l.tacticsPitchHint,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ),
+          const PitchLegendButton(),
+        ],
+      ),
+    );
+  }
 }
 
 /// The role each slot of [tactic] plays as the pitch shows it: its slot role,
@@ -484,309 +530,4 @@ Widget moveArrowGlyph(
     angle: angle,
     child: Icon(Icons.arrow_upward_rounded, size: size, color: color),
   );
-}
-
-/// Opens the role-and-run sheet for one slot, from his role badge: the roles
-/// its place offers, each with what it does and how well it suits [player],
-/// and the runs it offers. Each pick is applied at once through [onRole] / [onArrow] and the
-/// sheet stays open, so the manager can set both and close it.
-Future<void> showSlotPlanSheet(
-  BuildContext context, {
-  required PlayerPosition position,
-  required Player? player,
-  required PlayerRole role,
-  required MoveArrow arrow,
-  required ValueChanged<PlayerRole> onRole,
-  required ValueChanged<MoveArrow> onArrow,
-}) => showAdaptiveSheet<void>(
-  context: context,
-  backgroundColor: AppColors.surfaceContainerHigh,
-  isScrollControlled: true,
-  builder: (sheetContext) => ConstrainedBox(
-    constraints: BoxConstraints(
-      maxHeight: MediaQuery.of(context).size.height * 0.8,
-    ),
-    child: _SlotPlanSheet(
-      position: position,
-      player: player,
-      role: role,
-      arrow: arrow,
-      onRole: onRole,
-      onArrow: onArrow,
-    ),
-  ),
-);
-
-class _SlotPlanSheet extends StatefulWidget {
-  const _SlotPlanSheet({
-    required this.position,
-    required this.player,
-    required this.role,
-    required this.arrow,
-    required this.onRole,
-    required this.onArrow,
-  });
-
-  final PlayerPosition position;
-  final Player? player;
-  final PlayerRole role;
-  final MoveArrow arrow;
-  final ValueChanged<PlayerRole> onRole;
-  final ValueChanged<MoveArrow> onArrow;
-
-  @override
-  State<_SlotPlanSheet> createState() => _SlotPlanSheetState();
-}
-
-class _SlotPlanSheetState extends State<_SlotPlanSheet> {
-  late PlayerRole _role = widget.role;
-  late MoveArrow _arrow = widget.arrow;
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final p = widget.player;
-    final options = [
-      ...PlayerRoleX.optionsFor(widget.position),
-      // A legacy role this place does not list still shows, so the manager
-      // can see what the man has and change it.
-      if (!PlayerRoleX.optionsFor(widget.position).contains(_role)) _role,
-    ];
-    final arrows = MoveArrowX.optionsFor(widget.position);
-    final flank = flankOf(widget.position);
-    return Padding(
-      key: PitchPlanKeys.sheet,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.marginMobile),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Container(
-              width: 40,
-              height: 4,
-              margin: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-              decoration: const BoxDecoration(
-                color: AppColors.outlineVariant,
-                borderRadius: AppRadii.smAll,
-              ),
-            ),
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  p == null
-                      ? widget.position.label
-                      : l.tacticsPlanTitle(widget.position.label, p.name),
-                  style: AppTypography.labelMedium.copyWith(
-                    color: AppColors.primary,
-                  ),
-                ),
-              ),
-              IconButton(
-                key: PitchPlanKeys.close,
-                tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
-                icon: const Icon(Icons.close, size: 20),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ],
-          ),
-          Flexible(
-            child: ListView(
-              shrinkWrap: true,
-              padding: const EdgeInsets.only(bottom: AppSpacing.lg),
-              children: [
-                _heading(l.tacticsPlanRoleHeading),
-                for (final r in options)
-                  _RoleTile(
-                    role: r,
-                    selected: r == _role,
-                    fit: p == null || r == PlayerRole.none
-                        ? null
-                        : r.fitOf(p.attributes),
-                    onTap: () {
-                      setState(() => _role = r);
-                      widget.onRole(r);
-                    },
-                  ),
-                const SizedBox(height: AppSpacing.md),
-                _heading(l.tacticsPlanMovementHeading),
-                if (arrows.isEmpty)
-                  Text(
-                    l.tacticsKeeperNoRun,
-                    style: AppTypography.bodySmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
-                    ),
-                  )
-                else
-                  Wrap(
-                    spacing: AppSpacing.sm,
-                    runSpacing: AppSpacing.sm,
-                    children: [
-                      for (final a in [MoveArrow.none, ...arrows])
-                        ChoiceChip(
-                          key: PitchPlanKeys.arrow(a),
-                          selected: a == _arrow,
-                          showCheckmark: false,
-                          // No arrow of his own leaves the role's natural
-                          // run, so that is what the choice shows and says.
-                          avatar:
-                              a == MoveArrow.none && _role.run != RoleRun.none
-                              ? ExcludeSemantics(
-                                  child: PitchRunGlyph(
-                                    run: PitchRun.role(_role.run),
-                                    flank: flank,
-                                    size: 18,
-                                  ),
-                                )
-                              : moveArrowGlyph(
-                                  a,
-                                  flank,
-                                  color: a == _arrow
-                                      ? AppColors.onPrimary
-                                      : moveArrowColor(a),
-                                ),
-                          label: Text(
-                            a == MoveArrow.none && _role.run != RoleRun.none
-                                ? l.tacticsRunLegendRole
-                                : moveArrowLabel(l, a),
-                          ),
-                          onSelected: (_) {
-                            setState(() => _arrow = a);
-                            widget.onArrow(a);
-                          },
-                        ),
-                    ],
-                  ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _heading(String text) => Padding(
-    padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-    child: Text(
-      text,
-      style: AppTypography.labelMedium.copyWith(
-        color: AppColors.onSurfaceVariant,
-      ),
-    ),
-  );
-}
-
-/// One role in the sheet: its glyph, name and line on what it does, and how
-/// well it suits the man (none for "No role", or for an empty slot).
-class _RoleTile extends StatelessWidget {
-  const _RoleTile({
-    required this.role,
-    required this.selected,
-    required this.fit,
-    required this.onTap,
-  });
-
-  final PlayerRole role;
-  final bool selected;
-  final RoleFit? fit;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final f = fit;
-    return InkWell(
-      key: PitchPlanKeys.role(role),
-      borderRadius: AppRadii.smAll,
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.sm,
-          vertical: AppSpacing.sm,
-        ),
-        decoration: BoxDecoration(
-          borderRadius: AppRadii.smAll,
-          color: selected ? AppColors.primary.withValues(alpha: 0.12) : null,
-          border: Border.all(
-            color: selected ? AppColors.primary : Colors.transparent,
-          ),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(
-              selected
-                  ? Icons.radio_button_checked_rounded
-                  : Icons.radio_button_off_rounded,
-              size: 20,
-              color: selected ? AppColors.primary : AppColors.onSurfaceVariant,
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Wrap(
-                    spacing: AppSpacing.sm,
-                    runSpacing: 2,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (role != PlayerRole.none) ...[
-                            Icon(
-                              roleIcon(role),
-                              size: 16,
-                              color: AppColors.onSurfaceVariant,
-                            ),
-                            const SizedBox(width: 4),
-                          ],
-                          Flexible(
-                            child: Text(
-                              playerRoleLabel(l, role),
-                              style: AppTypography.bodyMedium.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      if (f != null)
-                        Container(
-                          key: PitchPlanKeys.fit(role),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 1,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: AppRadii.smAll,
-                            border: Border.all(color: roleFitColor(f)),
-                          ),
-                          child: Text(
-                            roleFitLabel(l, f),
-                            style: AppTypography.labelSmall.copyWith(
-                              color: roleFitColor(f),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    playerRoleBlurb(l, role),
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

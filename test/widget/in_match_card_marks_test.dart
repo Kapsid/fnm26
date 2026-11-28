@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/services/match/card_status.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/shared/widgets/card_mark.dart';
+import 'package:fnm/features/tactics/player_slot_sheet.dart';
 
 import '../helpers/in_match_editor.dart';
 import '../helpers/seeded_save.dart';
@@ -79,8 +80,11 @@ void main() {
       // A central-midfield place, so the bench midfielders are its shortlist.
       await tester.tap(find.byKey(const ValueKey('pitchDisc6')));
       await tester.pumpAndSettle();
-      final sheet = find.byType(BottomSheet);
-      expect(sheet, findsOneWidget);
+      await tester.tap(find.byKey(SlotSheetKeys.swap));
+      await tester.pumpAndSettle();
+      // The picker, over the man's own sheet.
+      final sheet = find.byType(BottomSheet).last;
+      expect(find.byType(BottomSheet), findsNWidgets(2));
       Finder inSheet(String name) => find.descendant(
         of: find
             .ancestor(
