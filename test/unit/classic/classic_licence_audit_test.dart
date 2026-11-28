@@ -35,6 +35,7 @@ void main() {
     'световна купа',
     'кубок світу',
     'кубок мира',
+    'мундиаль',
     'παγκόσμιο κύπελλο',
     'dünya kupası',
     'piala dunia',
@@ -89,7 +90,7 @@ void main() {
   test('the new copy in every language says World Championship, never '
       'the trademark', () {
     final arbs = files('lib/l10n', '.arb');
-    expect(arbs, hasLength(29));
+    expect(arbs, hasLength(30));
     for (final f in arbs) {
       final lang = f.path.split('app_').last.replaceAll('.arb', '');
       final arb = (jsonDecode(f.readAsStringSync()) as Map)

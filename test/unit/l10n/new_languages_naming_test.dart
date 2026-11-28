@@ -37,6 +37,7 @@ void main() {
     'th': ['ฟุตบอลโลก', 'เวิลด์คัพ'],
     'ms': ['Piala Dunia'],
     'sr': ['Светски куп', 'Мундијал'],
+    'ru': ['Кубок мира', 'мундиаль'],
   };
 
   // Every phrase is checked in every new language: a Dutch translator quoting

@@ -6,6 +6,7 @@ import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/federation/naturalization_rules.dart';
+import 'package:fnm/domain/services/federation/naturalization_suitors.dart';
 
 /// How an approach by a rival federation ended.
 enum PoachOutcome {
@@ -62,6 +63,11 @@ typedef PoachCandidate = ({
 /// [deadlineMatches] competitive matches. Minutes in one of them cap-tie him.
 /// Past the deadline he may go, likelier the less he has been involved.
 ///
+/// Only a stronger side asks (see [pickRival]), only for a man good enough
+/// to make its squad or nearly ([interestBar]), at most once a cycle
+/// ([cycleKind]), and never twice for the same man: once approached, whatever
+/// came of it, he is never approached again.
+///
 /// Everything is stored as `draws_watched` markers (cycle 0), so nothing in
 /// the schema changes and an older save simply has no approach yet. A switch
 /// itself is written as a naturalisation link to the rival (see
@@ -84,8 +90,17 @@ abstract final class Poaching {
   /// `poach:roll:<quarter>`: this quarter's approach roll has been made.
   static const String rollPrefix = 'poach:roll:';
 
+  /// `poach:cycle:<cycle>`: an approach was made in that cycle. At most one
+  /// a cycle (approaches made before the marker existed are dated by their
+  /// `since`, see [PoachingService]).
+  static const String cyclePrefix = 'poach:cycle:';
+
+  static String cycleKind(int cycle) => '$cyclePrefix$cycle';
+
   /// The chance, each quarter of the year, that a rival tries it (when the
-  /// manager has a player to lose and no approach is open).
+  /// manager has a player to lose, no approach is open and none was made this
+  /// cycle), before the rival's appetite scales it (see
+  /// [NaturalizationSuitors.appetite]).
   static const double approachChance = 0.15;
 
   /// Competitive matches the manager has to cap-tie him in.
@@ -212,45 +227,37 @@ abstract final class Poaching {
     return sorted.last.player;
   }
 
-  /// The federation that asks: a nation near [home] on the ranking, a
-  /// stronger one or one a little weaker, likelier a stronger one and one of
-  /// the same confederation. [excluded] are never picked (the dormant ones a
-  /// world leaves out, for instance). Null when the world has nobody else.
+  /// The federation that asks: one ranked above [home], likelier one well
+  /// above it, a top side, and one of the same confederation (see
+  /// [NaturalizationSuitors.rivals]). A weaker side, the bottom of the table
+  /// and the dormant micro-nations never ask. [excluded] are never picked
+  /// (the dormant ones a world leaves out, for instance). Null when nobody
+  /// qualifies.
   static Nation? pickRival(
     Nation home,
     List<Nation> nations,
     SeededRng rng, {
     Set<int> excluded = const {},
-  }) {
-    final others = [
-      for (final n in nations)
-        if (n.id != home.id && !excluded.contains(n.id)) n,
-    ]..sort((a, b) => a.id.compareTo(b.id));
-    if (others.isEmpty) return null;
-    var band = [
-      for (final n in others)
-        if (n.ranking >= home.ranking - 60 && n.ranking <= home.ranking + 15) n,
-    ];
-    if (band.isEmpty) {
-      band =
-          ([...others]..sort(
-                (a, b) => (a.ranking - home.ranking).abs().compareTo(
-                  (b.ranking - home.ranking).abs(),
-                ),
-              ))
-              .take(10)
-              .toList();
-    }
-    double weight(Nation n) =>
-        (n.confederation == home.confederation ? 2.0 : 1.0) *
-        (n.ranking < home.ranking ? 1.5 : 1.0);
-    final total = band.fold<double>(0, (s, n) => s + weight(n));
-    var roll = rng.nextDouble() * total;
-    for (final n in band) {
-      roll -= weight(n);
-      if (roll < 0) return n;
-    }
-    return band.last;
+  }) => NaturalizationSuitors.pick(
+    NaturalizationSuitors.rivals(home, nations, excluded: excluded),
+    rng,
+  );
+
+  /// The squad places a rival is thought to pick from.
+  static const int rivalSquadSize = 23;
+
+  /// How far below the rival's last squad place a man may be and still
+  /// interest it: "he would walk in, or nearly".
+  static const int nearlyMargin = 2;
+
+  /// The rating a man needs to interest a rival whose players are rated
+  /// [ratings]: its [rivalSquadSize]th best, less [nearlyMargin]. Null for a
+  /// rival with no players at all (nobody interests it).
+  static int? interestBar(Iterable<int> ratings) {
+    if (ratings.isEmpty) return null;
+    final sorted = [...ratings]..sort((a, b) => b.compareTo(a));
+    final last = sorted[(rivalSquadSize - 1).clamp(0, sorted.length - 1)];
+    return last - nearlyMargin;
   }
 
   /// The chance he switches once the deadline has passed without a

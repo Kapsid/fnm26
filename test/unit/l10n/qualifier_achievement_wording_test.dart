@@ -44,6 +44,7 @@ void main() {
     'th',
     'ms',
     'sr',
+    'ru',
   ];
   const keys = ['achQualWcDesc', 'achQualContDesc'];
   // Every locale's word for a final, a finals stage or a final tournament.

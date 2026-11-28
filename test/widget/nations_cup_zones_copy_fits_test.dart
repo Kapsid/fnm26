@@ -52,6 +52,7 @@ const _locales = [
   'th',
   'ms',
   'sr',
+  'ru',
 ];
 
 Future<void> _pump(

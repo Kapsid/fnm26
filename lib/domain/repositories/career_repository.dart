@@ -47,6 +47,15 @@ typedef NaturalizationLink = ({
 /// in the existing status column, so no schema change is involved.
 const String poachedStatusPrefix = 'poached:';
 
+/// One stored naturalisation offer, as [CareerRepository.naturalizationOffers]
+/// reads it back.
+typedef NaturalizationOfferRow = ({
+  int playerId,
+  int sourceNationId,
+  int cycle,
+  String status,
+});
+
 /// The nation [link]'s player plays for now: the rival that lured him, or the
 /// nation the manager was in charge of in the offer's cycle ([stints], with
 /// [currentNationId] for a save that has none).
@@ -179,6 +188,13 @@ abstract interface class CareerRepository {
     int playerId,
     String status,
   );
+
+  /// Every naturalisation row the save holds, whatever its status (pending,
+  /// accepted, declined, or a player lured away by a rival: see
+  /// [poachedStatusPrefix]). The record of every offer ever made, so a man
+  /// once offered is never offered again and a cycle that already had its
+  /// offer gets no second one.
+  Future<List<NaturalizationOfferRow>> naturalizationOffers(int careerId);
 
   /// Every accepted naturalised player's link (playerId + source nation), so
   /// the pool can graft them into the manager's nation. Players lured away by

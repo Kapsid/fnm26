@@ -41,6 +41,7 @@ void main() {
     'uk',
     'fil',
     'ms',
+    'ru',
   ]) {
     testWidgets('$code: the stands fit at 360 and 1.4', (tester) async {
       tester.view.physicalSize = const Size(360, 800);
