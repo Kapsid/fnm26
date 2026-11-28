@@ -8,6 +8,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/bidi.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
@@ -695,8 +696,11 @@ class _CareerRecord extends ConsumerWidget {
               (l.statsWinRate, '${(s.winRate * 100).round()}%'),
               (
                 l.statsGoals,
-                '${s.goalsFor}:${s.goalsAgainst} '
-                    '(${s.goalDifference >= 0 ? '+' : ''}${s.goalDifference})',
+                BidiRun.ltr(
+                  context,
+                  '${s.goalsFor}:${s.goalsAgainst} '
+                  '(${s.goalDifference >= 0 ? '+' : ''}${s.goalDifference})',
+                ),
               ),
               (l.statsCleanSheets, '${s.cleanSheets}'),
               (l.statsFailedToScore, '${s.failedToScore}'),

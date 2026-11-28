@@ -12,6 +12,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/core/util/bidi.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/federation_label.dart';
@@ -874,7 +875,7 @@ class HubHeader extends StatelessWidget {
                   // flag rather than as an overflow anyone can see.
                   Flexible(
                     child: Text(
-                      '$managerName · $date',
+                      '${BidiRun.name(context, managerName)} · $date',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTypography.bodySmall.copyWith(

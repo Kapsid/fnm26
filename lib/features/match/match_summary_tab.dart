@@ -523,6 +523,9 @@ class MatchSummaryTab extends StatelessWidget {
           const SizedBox(height: AppSpacing.sm),
           Text.rich(
             key: attendanceKey,
+            // "71,546 / 83,000 · 86%" is figures only: read left to right in
+            // every language (sized to its text, it still sits at the start).
+            textDirection: TextDirection.ltr,
             TextSpan(
               children: [
                 TextSpan(

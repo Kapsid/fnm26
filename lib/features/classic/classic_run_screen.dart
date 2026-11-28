@@ -10,6 +10,8 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/core/util/bidi.dart';
 import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/data/classic/classic_world.dart';
 import 'package:fnm/domain/entities/formation.dart';
@@ -177,8 +179,10 @@ class _RunBody extends StatelessWidget {
 void openClassicTactics(BuildContext context, int year) =>
     unawaited(context.push('${Routes.classicTactics}?year=$year'));
 
-String _dateLabel(AppLocalizations l, DateTime d) =>
-    DateFormat.MMMd(l.localeName).format(d);
+String _dateLabel(AppLocalizations l, DateTime d) {
+  AppDate.westernDigits();
+  return DateFormat.MMMd(l.localeName).format(d);
+}
 
 class _NextCard extends ConsumerWidget {
   const _NextCard({required this.world, required this.t});
@@ -464,8 +468,11 @@ class _GroupsTab extends StatelessWidget {
                           ),
                           _cell('${s.played}'),
                           _cell(
-                            '${s.goalDifference >= 0 ? '+' : ''}'
-                            '${s.goalDifference}',
+                            BidiRun.ltr(
+                              context,
+                              '${s.goalDifference >= 0 ? '+' : ''}'
+                              '${s.goalDifference}',
+                            ),
                           ),
                           _cell('${s.points}', bold: true),
                         ],

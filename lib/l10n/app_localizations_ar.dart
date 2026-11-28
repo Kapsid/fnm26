@@ -1047,7 +1047,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String tacticsPickReplacementFor(String name) {
-    return 'اضغط على بديل لـ$name، أو اضغط عليه مجددًا للإلغاء.';
+    return 'اضغط على بديل لـ⁨$name⁩، أو اضغط عليه مجددًا للإلغاء.';
   }
 
   @override
@@ -1290,7 +1290,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String tacticsPlayerOut(String name, String reason) {
-    return '⁦$name: $reason⁩';
+    return '⁦⁨$name⁩: $reason⁩';
   }
 
   @override
@@ -1367,7 +1367,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String tacticsRolePlayer(String name) {
-    return 'الدور · $name';
+    return 'الدور · ⁨$name⁩';
   }
 
   @override
@@ -1428,12 +1428,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String tacticsPlanTitle(String position, String name) {
-    return '$position · $name';
+    return '$position · ⁨$name⁩';
   }
 
   @override
   String tacticsArrowSet(String name, String movement) {
-    return '⁦$name: $movement⁩';
+    return '⁦⁨$name⁩: $movement⁩';
   }
 
   @override
@@ -1463,12 +1463,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String tacticsSavedPreset(String name) {
-    return 'تم حفظ «$name»';
+    return 'تم حفظ «⁨$name⁩»';
   }
 
   @override
   String tacticsAppliedPreset(String name) {
-    return 'تم تطبيق «$name»';
+    return 'تم تطبيق «⁨$name⁩»';
   }
 
   @override
@@ -1854,7 +1854,7 @@ class AppLocalizationsAr extends AppLocalizations {
       one: 'هدف واحد',
       zero: '$goals هدف',
     );
-    return '$name · $_temp0';
+    return '⁨$name⁩ · $_temp0';
   }
 
   @override
@@ -1959,20 +1959,20 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String hubGroupName(String name) {
-    return 'المجموعة $name';
+    return 'المجموعة ⁨$name⁩';
   }
 
   @override
   String get hubTblTeam => 'الفريق';
 
   @override
-  String get hubTblP => 'لعب';
+  String get hubTblP => 'ل';
 
   @override
-  String get hubTblGd => 'فارق';
+  String get hubTblGd => '+/-';
 
   @override
-  String get hubTblPts => 'نقاط';
+  String get hubTblPts => 'ن';
 
   @override
   String get homeSettings => 'الإعدادات';
@@ -2187,7 +2187,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String careerWinnersName(String name) {
-    return 'الفائز: $name';
+    return 'الفائز: ⁨$name⁩';
   }
 
   @override
@@ -2359,7 +2359,7 @@ class AppLocalizationsAr extends AppLocalizations {
     String gd,
     int winRate,
   ) {
-    return 'الأهداف ⁦$goalsFor–$goalsAgainst⁩  ($gd)  ·  نسبة الفوز $winRate%';
+    return 'الأهداف ⁦$goalsFor–$goalsAgainst⁩  (⁦$gd⁩)  ·  نسبة الفوز $winRate%';
   }
 
   @override
@@ -2385,7 +2385,7 @@ class AppLocalizationsAr extends AppLocalizations {
     int goalsAgainst,
     String gd,
   ) {
-    return 'ف$won ت$drawn خ$lost  ·  له $goalsFor عليه $goalsAgainst ($gd)';
+    return 'ف$won ت$drawn خ$lost  ·  له $goalsFor عليه $goalsAgainst (⁦$gd⁩)';
   }
 
   @override
@@ -2499,7 +2499,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String matchGoalAssist(String name) {
-    return 'صناعة $name';
+    return 'صناعة ⁨$name⁩';
   }
 
   @override
@@ -2615,17 +2615,17 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String matchSetupWarnCaptainInjured(String name) {
-    return '$name مصاب ولا يمكنه قيادة الفريق في هذه المباراة. اضغط لنقل الشارة';
+    return '⁨$name⁩ مصاب ولا يمكنه قيادة الفريق في هذه المباراة. اضغط لنقل الشارة';
   }
 
   @override
   String matchSetupWarnCaptainSuspended(String name) {
-    return '$name موقوف في هذه المباراة. اضغط لنقل الشارة';
+    return '⁨$name⁩ موقوف في هذه المباراة. اضغط لنقل الشارة';
   }
 
   @override
   String matchSetupWarnCaptainDropped(String name) {
-    return '$name يحمل الشارة لكنه ليس في قائمتك. اضغط لنقلها';
+    return '⁨$name⁩ يحمل الشارة لكنه ليس في قائمتك. اضغط لنقلها';
   }
 
   @override
@@ -2651,7 +2651,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String deptEffectCommercial(String amount) {
-    return '$amount تعود عند ختام الدورة';
+    return '⁦$amount⁩ تعود عند ختام الدورة';
   }
 
   @override
@@ -2843,12 +2843,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String captainStandIn(String vice, String captain) {
-    return 'نائب القائد $vice يقود الفريق؛ القائد $captain غير متاح';
+    return 'نائب القائد ⁨$vice⁩ يقود الفريق؛ القائد ⁨$captain⁩ غير متاح';
   }
 
   @override
   String captainStandInUnnamed(String vice) {
-    return 'نائب القائد $vice يقود الفريق';
+    return 'نائب القائد ⁨$vice⁩ يقود الفريق';
   }
 
   @override
@@ -2902,7 +2902,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String resultsGroup(String name) {
-    return 'المجموعة $name';
+    return 'المجموعة ⁨$name⁩';
   }
 
   @override
@@ -3581,7 +3581,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String paywallUnlockProPriced(String price) {
-    return 'افتح الإصدار غير المحدود · $price';
+    return 'افتح الإصدار غير المحدود · ⁦$price⁩';
   }
 
   @override
@@ -3628,12 +3628,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String federationNaturalisedTitle(String name) {
-    return 'تجنيس $name';
+    return 'تجنيس ⁨$name⁩';
   }
 
   @override
   String federationNaturalisedBody(String name, String nation) {
-    return 'أكمل $name انتقاله وأصبح مؤهلًا للعب مع $nation. استدعه من اختيار القائمة.';
+    return 'أكمل ⁨$name⁩ انتقاله وأصبح مؤهلًا للعب مع $nation. استدعه من اختيار القائمة.';
   }
 
   @override
@@ -3658,7 +3658,7 @@ class AppLocalizationsAr extends AppLocalizations {
     String playerNation,
     String sourceNation,
   ) {
-    return 'لدى $name روابط مع $playerNation وهو مستعد للتجنيس. اقبل ليصبح متاحًا للاختيار؛ ارفض ويبقى مع $sourceNation.';
+    return 'لدى ⁨$name⁩ روابط مع $playerNation وهو مستعد للتجنيس. اقبل ليصبح متاحًا للاختيار؛ ارفض ويبقى مع $sourceNation.';
   }
 
   @override
@@ -3686,12 +3686,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String federationDistributeBudget(String amount) {
-    return 'وزّع $amount على الأقسام لافتتاح الدورة. أنفقها بحكمة.';
+    return 'وزّع ⁦$amount⁩ على الأقسام لافتتاح الدورة. أنفقها بحكمة.';
   }
 
   @override
   String federationOverBudget(String amount) {
-    return '$amount أكثر مما يملكه الاتحاد. استرجع بعضها';
+    return '⁦$amount⁩ أكثر مما يملكه الاتحاد. استرجع بعضها';
   }
 
   @override
@@ -3962,7 +3962,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String clubAtClub(String club, String standing) {
-    return '⁦$club: $standing⁩';
+    return '⁦⁨$club⁩: $standing⁩';
   }
 
   @override
@@ -4822,47 +4822,47 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String yScorerHero0(String name, String opponent) {
-    return '$name أمام $opponent. سيسمّون أطفالهم باسمه.';
+    return '⁨$name⁩ أمام $opponent. سيسمّون أطفالهم باسمه.';
   }
 
   @override
   String yScorerHero1(String name, String opponent) {
-    return 'تمثال لـ$name. الليلة أمام $opponent كان كل شيء.';
+    return 'تمثال لـ⁨$name⁩. الليلة أمام $opponent كان كل شيء.';
   }
 
   @override
   String yScorerHero2(String name, String opponent) {
-    return '$name، يا لك من رائع. تذكروا هذه الليلة أمام $opponent.';
+    return '⁨$name⁩، يا لك من رائع. تذكروا هذه الليلة أمام $opponent.';
   }
 
   @override
   String yScorerHero3(String name, String opponent) {
-    return 'حسمها $name أمام $opponent. رجل المباراة، بلا نقاش.';
+    return 'حسمها ⁨$name⁩ أمام $opponent. رجل المباراة، بلا نقاش.';
   }
 
   @override
   String yScorerHero4(String name, String opponent) {
-    return 'أمام $opponent، كانت الليلة ملكًا لـ$name.';
+    return 'أمام $opponent، كانت الليلة ملكًا لـ⁨$name⁩.';
   }
 
   @override
   String yScorerHero5(String name, String opponent) {
-    return 'حضر $name حين كان الأمر مهمًا أمام $opponent.';
+    return 'حضر ⁨$name⁩ حين كان الأمر مهمًا أمام $opponent.';
   }
 
   @override
   String yScorerHero6(String name, String opponent) {
-    return 'كان $name رائعًا أمام $opponent. والآن كرّرها كل أسبوع.';
+    return 'كان ⁨$name⁩ رائعًا أمام $opponent. والآن كرّرها كل أسبوع.';
   }
 
   @override
   String yScorerHero7(String name, String opponent) {
-    return 'أنقذ $name الفريق أمام $opponent. لم يساعد غيره كثيرًا.';
+    return 'أنقذ ⁨$name⁩ الفريق أمام $opponent. لم يساعد غيره كثيرًا.';
   }
 
   @override
   String yScorerHero8(String name, String opponent) {
-    return 'أزيلوا $name من المعادلة وستكون ليلة مختلفة تمامًا أمام $opponent.';
+    return 'أزيلوا ⁨$name⁩ من المعادلة وستكون ليلة مختلفة تمامًا أمام $opponent.';
   }
 
   @override
@@ -5527,7 +5527,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String hubEventGrievance(String player) {
-    return '$player يريد كلمة معك';
+    return '⁨$player⁩ يريد كلمة معك';
   }
 
   @override
@@ -5556,17 +5556,17 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String grievanceGameTime(String player) {
-    return '$player موجود في القائمة ولم يلمس الكرة. يريد أن يعرف السبب.';
+    return '⁨$player⁩ موجود في القائمة ولم يلمس الكرة. يريد أن يعرف السبب.';
   }
 
   @override
   String grievanceSquadPlace(String player) {
-    return '$player ليس في القائمة ولا يفهم السبب. يريد جوابًا واضحًا، في أي اتجاه.';
+    return '⁨$player⁩ ليس في القائمة ولا يفهم السبب. يريد جوابًا واضحًا، في أي اتجاه.';
   }
 
   @override
   String grievanceRole(String player) {
-    return '$player يُشرك باستمرار في غير مركزه وقد طفح كيله.';
+    return '⁨$player⁩ يُشرك باستمرار في غير مركزه وقد طفح كيله.';
   }
 
   @override
@@ -5580,42 +5580,42 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String yScorerStar0(String name, int goals) {
-    return 'سجّل $name $goals منها. لا أحد يقترب منه.';
+    return 'سجّل ⁨$name⁩ $goals منها. لا أحد يقترب منه.';
   }
 
   @override
   String yScorerStar1(String name, int goals) {
-    return '$goals لـ$name. إنه يحمل هذا الفريق.';
+    return '$goals لـ⁨$name⁩. إنه يحمل هذا الفريق.';
   }
 
   @override
   String yScorerStar2(String name, int goals) {
-    return '⁦$name: $goals⁩ في هذا اليوم. يا له من لاعب.';
+    return '⁦⁨$name⁩: $goals⁩ في هذا اليوم. يا له من لاعب.';
   }
 
   @override
   String yScorerStar3(String name, int goals) {
-    return 'وضع $name $goals في شباكهم. انحنِ للجمهور.';
+    return 'وضع ⁨$name⁩ $goals في شباكهم. انحنِ للجمهور.';
   }
 
   @override
   String yScorerStar4(String name, int goals) {
-    return '$goals لـ$name، والبقية كانوا مجرد ركاب.';
+    return '$goals لـ⁨$name⁩، والبقية كانوا مجرد ركاب.';
   }
 
   @override
   String yScorerStar5(String name, int goals) {
-    return '$name مجددًا. $goals. تخيلوا هذا الفريق من دونه.';
+    return '⁨$name⁩ مجددًا. $goals. تخيلوا هذا الفريق من دونه.';
   }
 
   @override
   String yScorerStar6(String name, int goals) {
-    return '$goals من $name. لا ينبغي لرجل واحد أن يفعل كل هذا.';
+    return '$goals من ⁨$name⁩. لا ينبغي لرجل واحد أن يفعل كل هذا.';
   }
 
   @override
   String yScorerStar7(String name, int goals) {
-    return 'أزيلوا $name من المعادلة وستكون $goals أقل وعصرًا مختلفًا تمامًا.';
+    return 'أزيلوا ⁨$name⁩ من المعادلة وستكون $goals أقل وعصرًا مختلفًا تمامًا.';
   }
 
   @override
@@ -5740,102 +5740,102 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String yInjuryBlow0(String name) {
-    return '$name يخرج مصابًا. آخر ما يحتاجه هذا الفريق.';
+    return '⁨$name⁩ يخرج مصابًا. آخر ما يحتاجه هذا الفريق.';
   }
 
   @override
   String yInjuryBlow1(String name) {
-    return 'خسارة $name تغيّر شكل كل شيء.';
+    return 'خسارة ⁨$name⁩ تغيّر شكل كل شيء.';
   }
 
   @override
   String yInjuryBlow2(String name) {
-    return '$name يعرج. احبسوا أنفاسكم.';
+    return '⁨$name⁩ يعرج. احبسوا أنفاسكم.';
   }
 
   @override
   String yInjuryBlow3(String name) {
-    return 'لا $name لفترة إذن. على أحدهم أن يتقدم.';
+    return 'لا ⁨$name⁩ لفترة إذن. على أحدهم أن يتقدم.';
   }
 
   @override
   String yInjuryBlow4(String name) {
-    return '$name غائب. بالطبع هو $name.';
+    return '⁨$name⁩ غائب. بالطبع هو ⁨$name⁩.';
   }
 
   @override
   String yInjuryBlow5(String name) {
-    return 'من دون $name يصبح هذا فريقًا عاديًا جدًا.';
+    return 'من دون ⁨$name⁩ يصبح هذا فريقًا عاديًا جدًا.';
   }
 
   @override
   String yInjuryBlow6(String name) {
-    return '$name مصاب مجددًا. على أحدهم أن يسأل لماذا.';
+    return '⁨$name⁩ مصاب مجددًا. على أحدهم أن يسأل لماذا.';
   }
 
   @override
   String yInjuryBlow7(String name) {
-    return 'خسرنا $name، ولا أحد خلفه. هذه هي المشكلة الحقيقية.';
+    return 'خسرنا ⁨$name⁩، ولا أحد خلفه. هذه هي المشكلة الحقيقية.';
   }
 
   @override
   String ySentOff0(String name, String minute) {
-    return 'بطاقة حمراء لـ$name في الدقيقة $minute والبلاد كلها تنقلب عليه. لقد قدّم لنا أكثر من معظمهم. دعوه.';
+    return 'بطاقة حمراء لـ⁨$name⁩ في الدقيقة $minute والبلاد كلها تنقلب عليه. لقد قدّم لنا أكثر من معظمهم. دعوه.';
   }
 
   @override
   String ySentOff1(String name, String minute) {
-    return '$name يُطرد بعد $minute دقيقة. قاسٍ. بعشرة لاعبين وما زلنا نحاول، وهذا يقول الكثير.';
+    return '⁨$name⁩ يُطرد بعد $minute دقيقة. قاسٍ. بعشرة لاعبين وما زلنا نحاول، وهذا يقول الكثير.';
   }
 
   @override
   String ySentOff2(String name, String minute) {
-    return '$name، الدقيقة $minute، بطاقة حمراء. عشرة لاعبين من هناك.';
+    return '⁨$name⁩، الدقيقة $minute، بطاقة حمراء. عشرة لاعبين من هناك.';
   }
 
   @override
   String ySentOff3(String name, String minute) {
-    return 'طرد: $name في الدقيقة $minute. ليست أول مباراة تنقلب بقرار واحد.';
+    return 'طرد: ⁨$name⁩ في الدقيقة $minute. ليست أول مباراة تنقلب بقرار واحد.';
   }
 
   @override
   String ySentOff4(String name, String minute) {
-    return 'رائع. $name يغادر في الدقيقة $minute ونحن بعشرة لاعبين. مجددًا.';
+    return 'رائع. ⁨$name⁩ يغادر في الدقيقة $minute ونحن بعشرة لاعبين. مجددًا.';
   }
 
   @override
   String ySentOff5(String name, String minute) {
-    return 'طُرد $name بعد $minute دقيقة. من بالضبط يدرّب الانضباط هنا؟';
+    return 'طُرد ⁨$name⁩ بعد $minute دقيقة. من بالضبط يدرّب الانضباط هنا؟';
   }
 
   @override
   String ySentOff6(String name, String minute) {
-    return '$minute دقيقة. هذا ما استطاع $name الحفاظ فيه على هدوئه. كرة قدم احترافية.';
+    return '$minute دقيقة. هذا ما استطاع ⁨$name⁩ الحفاظ فيه على هدوئه. كرة قدم احترافية.';
   }
 
   @override
   String ySentOff7(String name, String minute) {
-    return 'بطاقة حمراء لـ$name في الدقيقة $minute، ويُفترض أن أصدق أن هذا تقدم.';
+    return 'بطاقة حمراء لـ⁨$name⁩ في الدقيقة $minute، ويُفترض أن أصدق أن هذا تقدم.';
   }
 
   @override
   String ySentOffAgain0(String name, String minute, String count) {
-    return 'بطاقة حمراء أخرى، $name في الدقيقة $minute، ونحن الآن $count. كل واحد من الرجال الباقين في الملعب لديه صوتي.';
+    return 'بطاقة حمراء أخرى، ⁨$name⁩ في الدقيقة $minute، ونحن الآن $count. كل واحد من الرجال الباقين في الملعب لديه صوتي.';
   }
 
   @override
   String ySentOffAgain1(String name, String minute, String count) {
-    return 'بطاقة حمراء أخرى: $name، الدقيقة $minute. بقي $count في الملعب.';
+    return 'بطاقة حمراء أخرى: ⁨$name⁩، الدقيقة $minute. بقي $count في الملعب.';
   }
 
   @override
   String ySentOffAgain2(String name, String minute, String count) {
-    return 'بطاقة حمراء أخرى. $name يغادر في الدقيقة $minute ونحن الآن $count. لا يُصدَّق.';
+    return 'بطاقة حمراء أخرى. ⁨$name⁩ يغادر في الدقيقة $minute ونحن الآن $count. لا يُصدَّق.';
   }
 
   @override
   String ySentOffAgain3(String name, String minute, String count) {
-    return '$name أيضًا، في الدقيقة $minute. بقي $count لاعبين. هل هناك أحد مسؤول فعلًا عن هذا الفريق؟';
+    return '⁨$name⁩ أيضًا، في الدقيقة $minute. بقي $count لاعبين. هل هناك أحد مسؤول فعلًا عن هذا الفريق؟';
   }
 
   @override
@@ -6354,7 +6354,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String tourSharedGroupName(String name) {
-    return 'المجموعة $name';
+    return 'المجموعة ⁨$name⁩';
   }
 
   @override
@@ -6446,7 +6446,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String tourContBackgroundRegion(String name) {
-    return 'تُحاكى $name في الخلفية. تظهر النتائج هنا مع كل جولة.';
+    return 'تُحاكى ⁨$name⁩ في الخلفية. تظهر النتائج هنا مع كل جولة.';
   }
 
   @override
@@ -6463,12 +6463,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String tourContChampionsHeading(String name) {
-    return 'أبطال $name';
+    return 'أبطال ⁨$name⁩';
   }
 
   @override
   String tourContWinnersTitle(String name) {
-    return 'أبطال $name';
+    return 'أبطال ⁨$name⁩';
   }
 
   @override
@@ -6476,7 +6476,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String tourContGroupHeading(String name) {
-    return 'المجموعة $name';
+    return 'المجموعة ⁨$name⁩';
   }
 
   @override
@@ -6484,7 +6484,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String tourContGroupDropdown(String name) {
-    return 'المجموعة $name';
+    return 'المجموعة ⁨$name⁩';
   }
 
   @override
@@ -6542,7 +6542,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String tourContWinTheClash(String name) {
-    return '$name يفوز بالصدام';
+    return '⁨$name⁩ يفوز بالصدام';
   }
 
   @override
@@ -6737,12 +6737,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String tourCupGroupName(String name) {
-    return 'المجموعة $name';
+    return 'المجموعة ⁨$name⁩';
   }
 
   @override
   String tourCupGroupNameShort(String name) {
-    return 'المجموعة $name';
+    return 'المجموعة ⁨$name⁩';
   }
 
   @override
@@ -7567,7 +7567,7 @@ class AppLocalizationsAr extends AppLocalizations {
       one: 'مباراة دولية واحدة',
       zero: '$caps مباراة دولية',
     );
-    return '$name · $_temp0';
+    return '⁨$name⁩ · $_temp0';
   }
 
   @override
@@ -7582,12 +7582,12 @@ class AppLocalizationsAr extends AppLocalizations {
       one: 'هدف واحد',
       zero: '$goals هدف',
     );
-    return '$name · $_temp0';
+    return '⁨$name⁩ · $_temp0';
   }
 
   @override
   String squadAgeClub(int age, String club) {
-    return '$age · $club';
+    return '$age · ⁨$club⁩';
   }
 
   @override
@@ -7605,12 +7605,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String tacticsSubAlreadyOff(String name) {
-    return '$name خرج بالفعل ولا يمكنه العودة.';
+    return '⁨$name⁩ خرج بالفعل ولا يمكنه العودة.';
   }
 
   @override
   String tacticsSubSentOff(String name) {
-    return '$name طُرد ولن يشارك بعد الآن.';
+    return '⁨$name⁩ طُرد ولن يشارك بعد الآن.';
   }
 
   @override
@@ -7925,12 +7925,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String msgWpotyBodyMine(String name, String nation, int year) {
-    return '$name ($nation) يُتوَّج أفضل لاعب في العالم لعام $year، وهو من لاعبيك.';
+    return '⁨$name⁩ ($nation) يُتوَّج أفضل لاعب في العالم لعام $year، وهو من لاعبيك.';
   }
 
   @override
   String msgWpotyBodyOther(String name, String nation, int year) {
-    return '$name ($nation) يُتوَّج أفضل لاعب في العالم لعام $year.';
+    return '⁨$name⁩ ($nation) يُتوَّج أفضل لاعب في العالم لعام $year.';
   }
 
   @override
@@ -7938,12 +7938,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String msgYpotBodyMine(String name, String nation, int age, int year) {
-    return '$name ($nation)، البالغ $age عامًا، يُتوَّج أفضل لاعب شاب في بطولة $year، وهو من لاعبيك.';
+    return '⁨$name⁩ ($nation)، البالغ $age عامًا، يُتوَّج أفضل لاعب شاب في بطولة $year، وهو من لاعبيك.';
   }
 
   @override
   String msgYpotBodyOther(String name, String nation, int age, int year) {
-    return '$name ($nation)، البالغ $age عامًا، يُتوَّج أفضل لاعب شاب في بطولة $year.';
+    return '⁨$name⁩ ($nation)، البالغ $age عامًا، يُتوَّج أفضل لاعب شاب في بطولة $year.';
   }
 
   @override
@@ -8143,22 +8143,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String msgCapsTitle(String name, int count) {
-    return '$name يبلغ $count مباراة دولية';
+    return '⁨$name⁩ يبلغ $count مباراة دولية';
   }
 
   @override
   String msgCapsBody(String name, int count) {
-    return 'خاض $name الآن $count مباراة مع منتخبك.';
+    return 'خاض ⁨$name⁩ الآن $count مباراة مع منتخبك.';
   }
 
   @override
   String msgGoalsTitle(String name, int count) {
-    return '$name يبلغ $count هدفًا';
+    return '⁨$name⁩ يبلغ $count هدفًا';
   }
 
   @override
   String msgGoalsBody(String name, int count) {
-    return 'سجّل $name $count هدفًا دوليًا لمنتخبك.';
+    return 'سجّل ⁨$name⁩ $count هدفًا دوليًا لمنتخبك.';
   }
 
   @override
@@ -8199,22 +8199,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String msgRetireCaptainTitle(String name) {
-    return 'قائدك $name يعتزل';
+    return 'قائدك ⁨$name⁩ يعتزل';
   }
 
   @override
   String msgRetireTitle(String name) {
-    return '$name يعتزل اللعب الدولي';
+    return '⁨$name⁩ يعتزل اللعب الدولي';
   }
 
   @override
   String msgRetireBody(String name, int age) {
-    return 'اعتزل $name اللعب الدولي في سن $age.';
+    return 'اعتزل ⁨$name⁩ اللعب الدولي في سن $age.';
   }
 
   @override
   String msgRetireBodyWith(String name, String tally, int age) {
-    return 'اعتزل $name اللعب الدولي في سن $age، مودّعًا برصيد $tally.';
+    return 'اعتزل ⁨$name⁩ اللعب الدولي في سن $age، مودّعًا برصيد $tally.';
   }
 
   @override
@@ -8253,7 +8253,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String msgHofTitle(String name) {
-    return '$name يدخل قاعة المشاهير';
+    return '⁨$name⁩ يدخل قاعة المشاهير';
   }
 
   @override
@@ -8278,12 +8278,12 @@ class AppLocalizationsAr extends AppLocalizations {
       one: 'هدف واحد',
       zero: '$goals هدف',
     );
-    return 'ينضم $name إلى قاعة مشاهير منتخبك ($_temp0، $_temp1). شاهده في الأساطير.';
+    return 'ينضم ⁨$name⁩ إلى قاعة مشاهير منتخبك ($_temp0، $_temp1). شاهده في الأساطير.';
   }
 
   @override
   String hubBanTitle(String name) {
-    return 'إيقاف $name';
+    return 'إيقاف ⁨$name⁩';
   }
 
   @override
@@ -8298,7 +8298,7 @@ class AppLocalizationsAr extends AppLocalizations {
       one: 'في مباراتك التالية',
       zero: '$matches مباراة',
     );
-    return '$name $how وأُوقف $_temp0. لن يكون متاحًا للاختيار.';
+    return '⁨$name⁩ $how وأُوقف $_temp0. لن يكون متاحًا للاختيار.';
   }
 
   @override
@@ -8312,7 +8312,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String hubInjuryTitle(String name) {
-    return 'إصابة $name';
+    return 'إصابة ⁨$name⁩';
   }
 
   @override
@@ -8327,7 +8327,7 @@ class AppLocalizationsAr extends AppLocalizations {
       one: 'مباراة واحدة',
       zero: '$matches مباراة',
     );
-    return 'تعرّض $name لإصابة وسيغيب $_temp0.';
+    return 'تعرّض ⁨$name⁩ لإصابة وسيغيب $_temp0.';
   }
 
   @override
@@ -8435,7 +8435,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String newsRecordScorerBody(String name, int goals) {
-    return '$name أصبح الآن الهداف التاريخي للعبة برصيد $goals هدف.';
+    return '⁨$name⁩ أصبح الآن الهداف التاريخي للعبة برصيد $goals هدف.';
   }
 
   @override
@@ -8443,7 +8443,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String newsRecordCapsBody(String name, int caps) {
-    return '$name أصبح الآن الأكثر مشاركة دوليًا في اللعبة برصيد $caps مباراة.';
+    return '⁨$name⁩ أصبح الآن الأكثر مشاركة دوليًا في اللعبة برصيد $caps مباراة.';
   }
 
   @override
@@ -8451,7 +8451,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String newsTransferTitle(String name, String club) {
-    return '$name ينضم إلى $club';
+    return '⁨$name⁩ ينضم إلى ⁨$club⁩';
   }
 
   @override
@@ -8463,12 +8463,12 @@ class AppLocalizationsAr extends AppLocalizations {
     String fee,
     int rating,
   ) {
-    return 'غادر $name ($position، $rating) $fromClub للتوقيع مع $destination مقابل $fee.';
+    return 'غادر ⁨$name⁩ ($position، $rating) ⁨$fromClub⁩ للتوقيع مع $destination مقابل ⁦$fee⁩.';
   }
 
   @override
   String newsTransferAbroad(String club, String country) {
-    return '$club في $country';
+    return '⁨$club⁩ في $country';
   }
 
   @override
@@ -8476,12 +8476,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String newsNatzStarTitle(String name, String nation) {
-    return '$name مستعد للانتقال إلى $nation!';
+    return '⁨$name⁩ مستعد للانتقال إلى $nation!';
   }
 
   @override
   String newsNatzTitle(String name, String nation) {
-    return '$name يريد اللعب لـ$nation';
+    return '⁨$name⁩ يريد اللعب لـ$nation';
   }
 
   @override
@@ -8493,7 +8493,7 @@ class AppLocalizationsAr extends AppLocalizations {
     int age,
     int rating,
   ) {
-    return '$name، لاعب $position يبلغ $age عامًا وتقييمه $rating ويلعب حاليًا مع $fromNation، لديه روابط عائلية مع $nation ومنفتح على الانتقال. افتح عرض التجنيس للقبول أو الرفض.';
+    return '⁨$name⁩، لاعب $position يبلغ $age عامًا وتقييمه $rating ويلعب حاليًا مع $fromNation، لديه روابط عائلية مع $nation ومنفتح على الانتقال. افتح عرض التجنيس للقبول أو الرفض.';
   }
 
   @override
@@ -8505,7 +8505,7 @@ class AppLocalizationsAr extends AppLocalizations {
     int age,
     int rating,
   ) {
-    return '$name، لاعب $position يبلغ $age عامًا وتقييمه $rating ويلعب حاليًا مع $fromNation، نجم لديه روابط عائلية مع $nation ومنفتح على الانتقال. افتح عرض التجنيس للقبول أو الرفض.';
+    return '⁨$name⁩، لاعب $position يبلغ $age عامًا وتقييمه $rating ويلعب حاليًا مع $fromNation، نجم لديه روابط عائلية مع $nation ومنفتح على الانتقال. افتح عرض التجنيس للقبول أو الرفض.';
   }
 
   @override
@@ -8621,12 +8621,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String newsPotyBody(String name) {
-    return '$name هو أفضل لاعب في العالم هذا العام.';
+    return '⁨$name⁩ هو أفضل لاعب في العالم هذا العام.';
   }
 
   @override
   String newsPotyYoungSuffix(String name) {
-    return ' $name ينال جائزة أفضل لاعب شاب.';
+    return ' ⁨$name⁩ ينال جائزة أفضل لاعب شاب.';
   }
 
   @override
@@ -8646,22 +8646,22 @@ class AppLocalizationsAr extends AppLocalizations {
       one: 'نقطة واحدة',
       zero: '$gain نقطة',
     );
-    return 'قفز $name إلى $rating، بزيادة $_temp0 عن العام الماضي.';
+    return 'قفز ⁨$name⁩ إلى $rating، بزيادة $_temp0 عن العام الماضي.';
   }
 
   @override
   String newsWatchBand(String name, String band) {
-    return '$name يرتقي إلى فئة الـ$band.';
+    return '⁨$name⁩ يرتقي إلى فئة الـ$band.';
   }
 
   @override
   String newsWatchDebutTitle(String name) {
-    return '$name يخوض مباراته الدولية الأولى';
+    return '⁨$name⁩ يخوض مباراته الدولية الأولى';
   }
 
   @override
   String newsWatchDebutBody(String name, int age, int rating) {
-    return 'خاض $name مباراته الدولية الأولى في سن $age، بتقييم $rating. أحد الفتيان الذين تتابعهم.';
+    return 'خاض ⁨$name⁩ مباراته الدولية الأولى في سن $age، بتقييم $rating. أحد الفتيان الذين تتابعهم.';
   }
 
   @override
@@ -8756,12 +8756,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String matchShootoutKickScored(String name) {
-    return '$name: سجّل';
+    return '⁨$name⁩: سجّل';
   }
 
   @override
   String matchShootoutKickMissed(String name) {
-    return '$name: أهدر';
+    return '⁨$name⁩: أهدر';
   }
 
   @override
@@ -8811,7 +8811,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String tourGroupNamed(String name) {
-    return 'المجموعة $name';
+    return 'المجموعة ⁨$name⁩';
   }
 
   @override
@@ -8868,7 +8868,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String newsWalkoutTitle(String name) {
-    return '$name يرحل';
+    return '⁨$name⁩ يرحل';
   }
 
   @override
@@ -8883,7 +8883,7 @@ class AppLocalizationsAr extends AppLocalizations {
       one: 'مباراة دولية واحدة',
       zero: '$caps مباراة دولية',
     );
-    return 'اعتزل $name اللعب الدولي في سن $age، برصيد $_temp0. طلب أن يعرف موقعه ولم يُخبَر، ولن ينتظر أكثر.';
+    return 'اعتزل ⁨$name⁩ اللعب الدولي في سن $age، برصيد $_temp0. طلب أن يعرف موقعه ولم يُخبَر، ولن ينتظر أكثر.';
   }
 
   @override
@@ -9335,7 +9335,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String managerStaffWages(String amount) {
-    return 'الرواتب: $amount لكل دورة';
+    return 'الرواتب: ⁦$amount⁩ لكل دورة';
   }
 
   @override
@@ -9827,62 +9827,62 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String yDebut0(String name) {
-    return '$name يخوض مباراته الدولية الأولى. تذكروا الاسم.';
+    return '⁨$name⁩ يخوض مباراته الدولية الأولى. تذكروا الاسم.';
   }
 
   @override
   String yDebut1(String name) {
-    return 'ظهور أول لـ$name. يمكنكم رؤية ذلك فيه، أليس كذلك؟';
+    return 'ظهور أول لـ⁨$name⁩. يمكنكم رؤية ذلك فيه، أليس كذلك؟';
   }
 
   @override
   String yDebut2(String name) {
-    return '$name، المباراة الدولية الأولى. لنرَ ما سيفعله بها.';
+    return '⁨$name⁩، المباراة الدولية الأولى. لنرَ ما سيفعله بها.';
   }
 
   @override
   String yDebut3(String name) {
-    return 'ظهور أول لـ$name. احتاج الفريق إلى أرجل جديدة في مكان ما.';
+    return 'ظهور أول لـ⁨$name⁩. احتاج الفريق إلى أرجل جديدة في مكان ما.';
   }
 
   @override
   String yDebut4(String name) {
-    return '$name ينال مباراة دولية. منحنا الكثير منها مؤخرًا.';
+    return '⁨$name⁩ ينال مباراة دولية. منحنا الكثير منها مؤخرًا.';
   }
 
   @override
   String yDebut5(String name) {
-    return 'ظهور أول لـ$name. واحد آخر سننساه بحلول الربيع.';
+    return 'ظهور أول لـ⁨$name⁩. واحد آخر سننساه بحلول الربيع.';
   }
 
   @override
   String yDrought0(String name, int count) {
-    return '$name خاض $count مباريات دون تسجيل ويفعل كل شيء آخر في الملعب.';
+    return '⁨$name⁩ خاض $count مباريات دون تسجيل ويفعل كل شيء آخر في الملعب.';
   }
 
   @override
   String yDrought1(String name, int count) {
-    return '$count مباريات دون هدف لـ$name. الأهداف تأتي ثلاثًا، دائمًا.';
+    return '$count مباريات دون هدف لـ⁨$name⁩. الأهداف تأتي ثلاثًا، دائمًا.';
   }
 
   @override
   String yDrought2(String name, int count) {
-    return '⁦$name: $count⁩ مباريات، بلا أهداف.';
+    return '⁦⁨$name⁩: $count⁩ مباريات، بلا أهداف.';
   }
 
   @override
   String yDrought3(String name, int count) {
-    return '$count دون هدف لـ$name. يستحق المراقبة.';
+    return '$count دون هدف لـ⁨$name⁩. يستحق المراقبة.';
   }
 
   @override
   String yDrought4(String name, int count) {
-    return '$count مباريات. بلا أهداف. $name لا يستطيع إصابة باب حظيرة.';
+    return '$count مباريات. بلا أهداف. ⁨$name⁩ لا يستطيع إصابة باب حظيرة.';
   }
 
   @override
   String yDrought5(String name, int count) {
-    return '$name لم يسجل في $count. أشركوا أي أحد آخر حرفيًا.';
+    return '⁨$name⁩ لم يسجل في $count. أشركوا أي أحد آخر حرفيًا.';
   }
 
   @override
@@ -10629,62 +10629,62 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String pressBeatStandoutWarm1(String player) {
-    return 'كان $player مذهلًا الليلة. إلى أي مدى يمكنه الوصول؟';
+    return 'كان ⁨$player⁩ مذهلًا الليلة. إلى أي مدى يمكنه الوصول؟';
   }
 
   @override
   String pressBeatStandoutWarm2(String player) {
-    return '$player في كل العناوين الليلة. هل توقعت ذلك؟';
+    return '⁨$player⁩ في كل العناوين الليلة. هل توقعت ذلك؟';
   }
 
   @override
   String pressBeatStandoutNeutral1(String player) {
-    return 'تألق $player. ماذا طلبت منه الليلة؟';
+    return 'تألق ⁨$player⁩. ماذا طلبت منه الليلة؟';
   }
 
   @override
   String pressBeatStandoutNeutral2(String player) {
-    return 'هل كان $player الفارق الليلة؟';
+    return 'هل كان ⁨$player⁩ الفارق الليلة؟';
   }
 
   @override
   String pressBeatStandoutHostile1(String player) {
-    return 'من دون $player القصة مختلفة. هل هذا فريق، أم لاعب واحد؟';
+    return 'من دون ⁨$player⁩ القصة مختلفة. هل هذا فريق، أم لاعب واحد؟';
   }
 
   @override
   String pressBeatStandoutHostile2(String player) {
-    return 'كان $player رائعًا. بفضلك، أم بفضله؟';
+    return 'كان ⁨$player⁩ رائعًا. بفضلك، أم بفضله؟';
   }
 
   @override
   String pressBeatStrugglerWarm1(String player) {
-    return 'مرّ $player بليلة صعبة. هل يعاني من إصابة؟';
+    return 'مرّ ⁨$player⁩ بليلة صعبة. هل يعاني من إصابة؟';
   }
 
   @override
   String pressBeatStrugglerWarm2(String player) {
-    return 'لم تكن ليلة $player. هل ستحتضنه؟';
+    return 'لم تكن ليلة ⁨$player⁩. هل ستحتضنه؟';
   }
 
   @override
   String pressBeatStrugglerNeutral1(String player) {
-    return 'عانى $player الليلة. هل يحتفظ بمكانه؟';
+    return 'عانى ⁨$player⁩ الليلة. هل يحتفظ بمكانه؟';
   }
 
   @override
   String pressBeatStrugglerNeutral2(String player) {
-    return 'بدا $player بعيدًا عن الإيقاع. ما رأيك في مباراته؟';
+    return 'بدا ⁨$player⁩ بعيدًا عن الإيقاع. ما رأيك في مباراته؟';
   }
 
   @override
   String pressBeatStrugglerHostile1(String player) {
-    return 'كان $player مجرد راكب مجددًا. لماذا تواصل اختياره؟';
+    return 'كان ⁨$player⁩ مجرد راكب مجددًا. لماذا تواصل اختياره؟';
   }
 
   @override
   String pressBeatStrugglerHostile2(String player) {
-    return 'رأى الجميع أن $player لم يكن في مستواه. الجميع باستثناء الدكة؟';
+    return 'رأى الجميع أن ⁨$player⁩ لم يكن في مستواه. الجميع باستثناء الدكة؟';
   }
 
   @override
@@ -10737,62 +10737,62 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String pressThrowbackBackKeptWarm(String player) {
-    return 'دعمت $player حين لم يفعل الآخرون. وقدّم. هل لك جزء من الفضل؟';
+    return 'دعمت ⁨$player⁩ حين لم يفعل الآخرون. وقدّم. هل لك جزء من الفضل؟';
   }
 
   @override
   String pressThrowbackBackKeptNeutral(String player) {
-    return 'دعمت $player. وقدّم. إيمان، أم معرفة؟';
+    return 'دعمت ⁨$player⁩. وقدّم. إيمان، أم معرفة؟';
   }
 
   @override
   String pressThrowbackBackKeptHostile(String player) {
-    return 'دعمت $player، ولمرة واحدة نجح الأمر. هل ستكون واثقًا هكذا في المرة القادمة؟';
+    return 'دعمت ⁨$player⁩، ولمرة واحدة نجح الأمر. هل ستكون واثقًا هكذا في المرة القادمة؟';
   }
 
   @override
   String pressThrowbackBackBrokenWarm(String player) {
-    return 'وقفت إلى جانب $player، ولم ينجح الأمر. هل لا تزال تؤمن به؟';
+    return 'وقفت إلى جانب ⁨$player⁩، ولم ينجح الأمر. هل لا تزال تؤمن به؟';
   }
 
   @override
   String pressThrowbackBackBrokenNeutral(String player) {
-    return 'دعمت $player. لم يردّ الجميل. هل كان ذلك خطأ؟';
+    return 'دعمت ⁨$player⁩. لم يردّ الجميل. هل كان ذلك خطأ؟';
   }
 
   @override
   String pressThrowbackBackBrokenHostile(String player) {
-    return 'حكمك أم ولاؤك: أيهما خذلك مع $player؟';
+    return 'حكمك أم ولاؤك: أيهما خذلك مع ⁨$player⁩؟';
   }
 
   @override
   String pressThrowbackBlameKeptWarm(String player) {
-    return 'كنت قاسيًا على $player، والمباريات منذ ذلك الحين أثبتت أنك محق. هل يرضيك ذلك؟';
+    return 'كنت قاسيًا على ⁨$player⁩، والمباريات منذ ذلك الحين أثبتت أنك محق. هل يرضيك ذلك؟';
   }
 
   @override
   String pressThrowbackBlameKeptNeutral(String player) {
-    return 'انتقدت $player علنًا، ولم يردّ. هل هناك طريق للعودة له؟';
+    return 'انتقدت ⁨$player⁩ علنًا، ولم يردّ. هل هناك طريق للعودة له؟';
   }
 
   @override
   String pressThrowbackBlameKeptHostile(String player) {
-    return 'تخليت عن $player علنًا ولم يتعافَ. هل حطّمته؟';
+    return 'تخليت عن ⁨$player⁩ علنًا ولم يتعافَ. هل حطّمته؟';
   }
 
   @override
   String pressThrowbackBlameBrokenWarm(String player) {
-    return 'انتقدت $player علنًا، وردّ عليك في الملعب. هل كانت تلك الفكرة منذ البداية؟';
+    return 'انتقدت ⁨$player⁩ علنًا، وردّ عليك في الملعب. هل كانت تلك الفكرة منذ البداية؟';
   }
 
   @override
   String pressThrowbackBlameBrokenNeutral(String player) {
-    return 'ألقيت اللوم على $player، ومنذ ذلك الحين كان من أفضل لاعبيك. هل تدين له باعتذار؟';
+    return 'ألقيت اللوم على ⁨$player⁩، ومنذ ذلك الحين كان من أفضل لاعبيك. هل تدين له باعتذار؟';
   }
 
   @override
   String pressThrowbackBlameBrokenHostile(String player) {
-    return 'رميت $player تحت الحافلة، وكان أفضل لاعبيك منذ ذلك الحين. هل ستعتذر؟';
+    return 'رميت ⁨$player⁩ تحت الحافلة، وكان أفضل لاعبيك منذ ذلك الحين. هل ستعتذر؟';
   }
 
   @override
@@ -10925,42 +10925,42 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String pressReplyBackPlayer1(String player) {
-    return '$player يحظى بدعمي الكامل. سيعود إلى مستواه.';
+    return '⁨$player⁩ يحظى بدعمي الكامل. سيعود إلى مستواه.';
   }
 
   @override
   String pressReplyBackPlayer2(String player) {
-    return 'أؤمن بـ$player، وسيُريكم السبب.';
+    return 'أؤمن بـ⁨$player⁩، وسيُريكم السبب.';
   }
 
   @override
   String pressReplyBackPlayer3(String player) {
-    return 'لن تسمعوا مني كلمة ضد $player. سيقدّم.';
+    return 'لن تسمعوا مني كلمة ضد ⁨$player⁩. سيقدّم.';
   }
 
   @override
   String pressReplyBackPlayer4(String player) {
-    return '$player يبقى ضمن خططي. شاهدوا ما سيفعله بعد ذلك.';
+    return '⁨$player⁩ يبقى ضمن خططي. شاهدوا ما سيفعله بعد ذلك.';
   }
 
   @override
   String pressReplyBlamePlayer1(String player) {
-    return 'خذلنا $player الليلة، وهو يعرف ذلك.';
+    return 'خذلنا ⁨$player⁩ الليلة، وهو يعرف ذلك.';
   }
 
   @override
   String pressReplyBlamePlayer2(String player) {
-    return 'توقعت أكثر بكثير من $player. عليه أن يجيب عن ذلك.';
+    return 'توقعت أكثر بكثير من ⁨$player⁩. عليه أن يجيب عن ذلك.';
   }
 
   @override
   String pressReplyBlamePlayer3(String player) {
-    return 'لم يكن $player في المستوى. سأقولها علنًا.';
+    return 'لم يكن ⁨$player⁩ في المستوى. سأقولها علنًا.';
   }
 
   @override
   String pressReplyBlamePlayer4(String player) {
-    return 'لم يكن ذلك جيدًا بما يكفي من $player، وسيسمع ذلك مني.';
+    return 'لم يكن ذلك جيدًا بما يكفي من ⁨$player⁩، وسيسمع ذلك مني.';
   }
 
   @override
@@ -10971,12 +10971,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String pressOnRecordBack(String player) {
-    return 'مسجّل: دعم $player.';
+    return 'مسجّل: دعم ⁨$player⁩.';
   }
 
   @override
   String pressOnRecordBlame(String player) {
-    return 'مسجّل: $player خذلك.';
+    return 'مسجّل: ⁨$player⁩ خذلك.';
   }
 
   @override
@@ -11232,32 +11232,32 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String pressBeatKeyPlayerWarm1(String player) {
-    return '$player في مستوى رائع. هل هذه لحظته؟';
+    return '⁨$player⁩ في مستوى رائع. هل هذه لحظته؟';
   }
 
   @override
   String pressBeatKeyPlayerWarm2(String player) {
-    return '$player في كل العناوين. هل يستطيع حمل هذا الفريق؟';
+    return '⁨$player⁩ في كل العناوين. هل يستطيع حمل هذا الفريق؟';
   }
 
   @override
   String pressBeatKeyPlayerNeutral1(String player) {
-    return 'إلى أي مدى تعتمد هذه الحملة على $player؟';
+    return 'إلى أي مدى تعتمد هذه الحملة على ⁨$player⁩؟';
   }
 
   @override
   String pressBeatKeyPlayerNeutral2(String player) {
-    return 'هل $player مستعد لقيادة هذا الفريق؟';
+    return 'هل ⁨$player⁩ مستعد لقيادة هذا الفريق؟';
   }
 
   @override
   String pressBeatKeyPlayerHostile1(String player) {
-    return 'إن لم يكن $player في أفضل حالاته، هل لدى هذا الفريق أي شيء؟';
+    return 'إن لم يكن ⁨$player⁩ في أفضل حالاته، هل لدى هذا الفريق أي شيء؟';
   }
 
   @override
   String pressBeatKeyPlayerHostile2(String player) {
-    return '$player يحمل الكثير على كتفيه. أكثر من اللازم؟';
+    return '⁨$player⁩ يحمل الكثير على كتفيه. أكثر من اللازم؟';
   }
 
   @override
@@ -11343,7 +11343,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String deptLevelCost(int level, String amount) {
-    return 'المستوى $level · $amount';
+    return 'المستوى $level · ⁦$amount⁩';
   }
 
   @override
@@ -11644,7 +11644,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String hubEventInjuryCover(String player) {
-    return 'عوّض المصاب $player';
+    return 'عوّض المصاب ⁨$player⁩';
   }
 
   @override
@@ -11667,17 +11667,17 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String injuryCoverBanner(String player, String position) {
-    return '$player ($position) مصاب. استدعِ أي لاعب من خارج القائمة، في أي مركز، أو أبقِه وواصل.';
+    return '⁨$player⁩ ($position) مصاب. استدعِ أي لاعب من خارج القائمة، في أي مركز، أو أبقِه وواصل.';
   }
 
   @override
   String injuryCoverConfirm(String player) {
-    return 'استدعِ $player';
+    return 'استدعِ ⁨$player⁩';
   }
 
   @override
   String injuryCoverKeep(String player) {
-    return 'أبقِ $player وواصل';
+    return 'أبقِ ⁨$player⁩ وواصل';
   }
 
   @override
@@ -12021,17 +12021,17 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String newsYouthTitle1(String name, String level) {
-    return '$name يتألق مع فئة $level';
+    return '⁨$name⁩ يتألق مع فئة $level';
   }
 
   @override
   String newsYouthTitle2(String name, String level) {
-    return 'تقرير الأكاديمية: $name يلفت الأنظار';
+    return 'تقرير الأكاديمية: ⁨$name⁩ يلفت الأنظار';
   }
 
   @override
   String newsYouthTitle3(String name, String level) {
-    return 'نجم فئة ⁦$level: $name⁩';
+    return 'نجم فئة ⁦$level: ⁨$name⁩⁩';
   }
 
   @override
@@ -12051,7 +12051,7 @@ class AppLocalizationsAr extends AppLocalizations {
       one: 'مرة واحدة',
       zero: '$count مرة',
     );
-    return 'هزّ $name الشباك $_temp0 مع فئة $level أمام $opponent في النافذة الدولية الأخيرة.';
+    return 'هزّ ⁨$name⁩ الشباك $_temp0 مع فئة $level أمام $opponent في النافذة الدولية الأخيرة.';
   }
 
   @override
@@ -12071,7 +12071,7 @@ class AppLocalizationsAr extends AppLocalizations {
       one: 'هدف',
       zero: '$count هدف',
     );
-    return '$_temp0 لـ$name حين واجهت فئة $level $opponent في هذه النافذة.';
+    return '$_temp0 لـ⁨$name⁩ حين واجهت فئة $level $opponent في هذه النافذة.';
   }
 
   @override
@@ -12091,7 +12091,7 @@ class AppLocalizationsAr extends AppLocalizations {
       one: 'بهدف',
       zero: 'بـ$count هدف',
     );
-    return 'واجهت فئة $level $opponent، وخرج $name $_temp0 باسمه.';
+    return 'واجهت فئة $level $opponent، وخرج ⁨$name⁩ $_temp0 باسمه.';
   }
 
   @override
@@ -12111,7 +12111,7 @@ class AppLocalizationsAr extends AppLocalizations {
       one: 'هدفًا',
       zero: '$count هدف',
     );
-    return 'صنع $name $_temp0 لفئة $level أمام $opponent وأدار المباراة من بدايتها إلى نهايتها.';
+    return 'صنع ⁨$name⁩ $_temp0 لفئة $level أمام $opponent وأدار المباراة من بدايتها إلى نهايتها.';
   }
 
   @override
@@ -12131,17 +12131,17 @@ class AppLocalizationsAr extends AppLocalizations {
       one: 'تمريرة حاسمة',
       zero: '$count تمريرة حاسمة',
     );
-    return 'واجهت فئة $level $opponent في هذه النافذة، وكان $name يحرك الخيوط: $_temp0 وأداء لا يزال الطاقم يتحدث عنه.';
+    return 'واجهت فئة $level $opponent في هذه النافذة، وكان ⁨$name⁩ يحرك الخيوط: $_temp0 وأداء لا يزال الطاقم يتحدث عنه.';
   }
 
   @override
   String newsYouthCleanSheet1(String name, String level, String opponent) {
-    return 'كان $name مذهلًا حين حافظت فئة $level على نظافة شباكها أمام $opponent.';
+    return 'كان ⁨$name⁩ مذهلًا حين حافظت فئة $level على نظافة شباكها أمام $opponent.';
   }
 
   @override
   String newsYouthCleanSheet2(String name, String level, String opponent) {
-    return 'شباك نظيفة لفئة $level أمام $opponent، وكان $name السبب في معظمها.';
+    return 'شباك نظيفة لفئة $level أمام $opponent، وكان ⁨$name⁩ السبب في معظمها.';
   }
 
   @override
@@ -12151,7 +12151,7 @@ class AppLocalizationsAr extends AppLocalizations {
     String opponent,
     int mark,
   ) {
-    return 'أبهر $name مع فئة $level أمام $opponent، ومنح الطاقم أداءه $mark من عشرة.';
+    return 'أبهر ⁨$name⁩ مع فئة $level أمام $opponent، ومنح الطاقم أداءه $mark من عشرة.';
   }
 
   @override
@@ -12161,7 +12161,7 @@ class AppLocalizationsAr extends AppLocalizations {
     String opponent,
     int mark,
   ) {
-    return 'لعبت فئة $level أمام $opponent في هذه النافذة، وأشاد المدربون بـ⁦$name: $mark⁩ من عشرة، أفضل علامة في الفريق.';
+    return 'لعبت فئة $level أمام $opponent في هذه النافذة، وأشاد المدربون بـ⁦⁨$name⁩: $mark⁩ من عشرة، أفضل علامة في الفريق.';
   }
 
   @override
@@ -12556,7 +12556,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String backupDriveSignedInAs(String email) {
-    return 'مسجّل الدخول باسم $email';
+    return 'مسجّل الدخول باسم ⁨$email⁩';
   }
 
   @override
@@ -12674,12 +12674,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String tacticsLibrarySaved(String name) {
-    return 'تم حفظ «$name» في مكتبتك';
+    return 'تم حفظ «⁨$name⁩» في مكتبتك';
   }
 
   @override
   String tacticsLibraryLoaded(String name) {
-    return 'تم تحميل «$name»';
+    return 'تم تحميل «⁨$name⁩»';
   }
 
   @override
@@ -12708,7 +12708,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String tacticsLibraryDeleteTitle(String name) {
-    return 'حذف «$name»؟';
+    return 'حذف «⁨$name⁩»؟';
   }
 
   @override
@@ -12736,7 +12736,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String hostBidPrize(String amount) {
-    return 'افز، وتستضيف وتتأهل تلقائيًا وتتلقى منحة لمرة واحدة بقيمة $amount للميزانية القادمة.';
+    return 'افز، وتستضيف وتتأهل تلقائيًا وتتلقى منحة لمرة واحدة بقيمة ⁦$amount⁩ للميزانية القادمة.';
   }
 
   @override
@@ -12768,7 +12768,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String hostBidPrizeJoint(String nation, String amount) {
-    return 'افز، وتستضيف مع $nation: يتأهل المنتخبان تلقائيًا، وتتلقى منحة لمرة واحدة بقيمة $amount، حصتك، للميزانية القادمة.';
+    return 'افز، وتستضيف مع $nation: يتأهل المنتخبان تلقائيًا، وتتلقى منحة لمرة واحدة بقيمة ⁦$amount⁩، حصتك، للميزانية القادمة.';
   }
 
   @override
@@ -12790,7 +12790,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String hostBidFreeFunds(String amount) {
-    return 'الأموال المتاحة: $amount';
+    return 'الأموال المتاحة: ⁦$amount⁩';
   }
 
   @override
@@ -12809,7 +12809,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String hostBidWonBody(String amount) {
-    return 'سنستضيف البطولة ونتأهل تلقائيًا كمستضيفين. منحة لمرة واحدة بقيمة $amount أصبحت الآن في أموال الاتحاد، ويمكنك توزيعها على أقسام هذه الدورة مباشرة من الرئيسية.';
+    return 'سنستضيف البطولة ونتأهل تلقائيًا كمستضيفين. منحة لمرة واحدة بقيمة ⁦$amount⁩ أصبحت الآن في أموال الاتحاد، ويمكنك توزيعها على أقسام هذه الدورة مباشرة من الرئيسية.';
   }
 
   @override
@@ -12827,7 +12827,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String hostBidGrantBanner(String amount) {
-    return 'منحة الاستضافة: $amount لإضافتها إلى أقسام هذه الدورة الآن. ما حددته بالفعل يبقى؛ وأي فائض يبقى في الرصيد.';
+    return 'منحة الاستضافة: ⁦$amount⁩ لإضافتها إلى أقسام هذه الدورة الآن. ما حددته بالفعل يبقى؛ وأي فائض يبقى في الرصيد.';
   }
 
   @override
@@ -12842,7 +12842,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String stadiumsIncome(String amount) {
-    return 'دخل الملاعب: $amount لكل دورة';
+    return 'دخل الملاعب: ⁦$amount⁩ لكل دورة';
   }
 
   @override
@@ -13055,17 +13055,17 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String hostBidWonBodyBudget(String amount) {
-    return 'سنستضيف البطولة ونتأهل تلقائيًا كمستضيفين. منحة لمرة واحدة بقيمة $amount موجودة بالفعل في أموال الاتحاد، جاهزة لميزانية هذه الدورة.';
+    return 'سنستضيف البطولة ونتأهل تلقائيًا كمستضيفين. منحة لمرة واحدة بقيمة ⁦$amount⁩ موجودة بالفعل في أموال الاتحاد، جاهزة لميزانية هذه الدورة.';
   }
 
   @override
   String hostBidWonJointBody(String hosts, String amount) {
-    return 'سيستضيف $hosts البطولة معًا، ونتأهل تلقائيًا كمستضيفين. حصتنا من منحة الاستضافة، $amount، أصبحت الآن في أموال الاتحاد، ويمكنك توزيعها على أقسام هذه الدورة مباشرة من الرئيسية.';
+    return 'سيستضيف $hosts البطولة معًا، ونتأهل تلقائيًا كمستضيفين. حصتنا من منحة الاستضافة، ⁦$amount⁩، أصبحت الآن في أموال الاتحاد، ويمكنك توزيعها على أقسام هذه الدورة مباشرة من الرئيسية.';
   }
 
   @override
   String hostBidWonJointBodyBudget(String hosts, String amount) {
-    return 'سيستضيف $hosts البطولة معًا، ونتأهل تلقائيًا كمستضيفين. حصتنا من منحة الاستضافة، $amount، موجودة بالفعل في أموال الاتحاد، جاهزة لميزانية هذه الدورة.';
+    return 'سيستضيف $hosts البطولة معًا، ونتأهل تلقائيًا كمستضيفين. حصتنا من منحة الاستضافة، ⁦$amount⁩، موجودة بالفعل في أموال الاتحاد، جاهزة لميزانية هذه الدورة.';
   }
 
   @override
@@ -13084,7 +13084,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String stadiumsGroundIncome(String amount) {
-    return 'يدرّ $amount لكل دورة';
+    return 'يدرّ ⁦$amount⁩ لكل دورة';
   }
 
   @override
@@ -13227,22 +13227,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String msgIntlRetireNewsTitle(String nation, String name) {
-    return '⁦$nation: $name⁩ يعتزل اللعب الدولي';
+    return '⁦$nation: ⁨$name⁩⁩ يعتزل اللعب الدولي';
   }
 
   @override
   String msgIntlRetireNewsBody(String name, String nation, int age) {
-    return 'أعلن $name ($nation) اعتزاله اللعب الدولي في سن $age.';
+    return 'أعلن ⁨$name⁩ ($nation) اعتزاله اللعب الدولي في سن $age.';
   }
 
   @override
   String msgIntlComebackTitle(String name) {
-    return '$name يعود عن اعتزاله الدولي';
+    return '⁨$name⁩ يعود عن اعتزاله الدولي';
   }
 
   @override
   String msgIntlComebackBody(String name, int age) {
-    return 'جعل $name نفسه متاحًا للاختيار مجددًا، في سن $age.';
+    return 'جعل ⁨$name⁩ نفسه متاحًا للاختيار مجددًا، في سن $age.';
   }
 
   @override
@@ -13254,17 +13254,17 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String msgIntlComebackNewsTitle(String nation, String name) {
-    return '⁦$nation: $name⁩ يعود عن اعتزاله الدولي';
+    return '⁦$nation: ⁨$name⁩⁩ يعود عن اعتزاله الدولي';
   }
 
   @override
   String msgIntlComebackNewsBody(String name, String nation, int age) {
-    return '$name ($nation) متاح للاختيار مجددًا، في سن $age.';
+    return '⁨$name⁩ ($nation) متاح للاختيار مجددًا، في سن $age.';
   }
 
   @override
   String msgPoachTitle(String rival, String name) {
-    return '$rival يحاول استقطاب $name';
+    return '$rival يحاول استقطاب ⁨$name⁩';
   }
 
   @override
@@ -13276,42 +13276,42 @@ class AppLocalizationsAr extends AppLocalizations {
     String nation,
     int count,
   ) {
-    return 'تواصل $rival مع $name ($age، $position) بشأن تغيير جنسيته الرياضية. لم يخض بعد أي مباراة رسمية مع $nation، لذا لا يزال حرًا في التغيير. امنحه دقائق في إحدى مبارياتنا الرسمية الـ$count القادمة وسيرتبط بنا نهائيًا. وإلا، فقد يقبل عرضهم.';
+    return 'تواصل $rival مع ⁨$name⁩ ($age، $position) بشأن تغيير جنسيته الرياضية. لم يخض بعد أي مباراة رسمية مع $nation، لذا لا يزال حرًا في التغيير. امنحه دقائق في إحدى مبارياتنا الرسمية الـ$count القادمة وسيرتبط بنا نهائيًا. وإلا، فقد يقبل عرضهم.';
   }
 
   @override
   String msgPoachTiedTitle(String name, String rival) {
-    return '$rival يخسر $name';
+    return '$rival يخسر ⁨$name⁩';
   }
 
   @override
   String msgPoachTiedBody(String name, String rival, String nation) {
-    return 'خاض $name مباراة رسمية مع $nation، لذا لم يعد بإمكان $rival اختياره. إنه مرتبط بنا نهائيًا.';
+    return 'خاض ⁨$name⁩ مباراة رسمية مع $nation، لذا لم يعد بإمكان $rival اختياره. إنه مرتبط بنا نهائيًا.';
   }
 
   @override
   String msgPoachStayedTitle(String name, String rival) {
-    return '$name يرفض $rival';
+    return '⁨$name⁩ يرفض $rival';
   }
 
   @override
   String msgPoachStayedBody(String name, String rival, String nation) {
-    return 'لم يخض $name بعد أي مباراة رسمية مع $nation، لكنه أخبر $rival أنه يريد انتظار فرصته معنا.';
+    return 'لم يخض ⁨$name⁩ بعد أي مباراة رسمية مع $nation، لكنه أخبر $rival أنه يريد انتظار فرصته معنا.';
   }
 
   @override
   String msgPoachSwitchedTitle(String name, String rival) {
-    return '$name ينتقل إلى $rival';
+    return '⁨$name⁩ ينتقل إلى $rival';
   }
 
   @override
   String msgPoachSwitchedBody(String name, String rival, String nation) {
-    return 'قبل $name عرض $rival وسيلعب لهم من الآن فصاعدًا. دون مباراة رسمية مع $nation، لم يكن هناك ما يبقيه.';
+    return 'قبل ⁨$name⁩ عرض $rival وسيلعب لهم من الآن فصاعدًا. دون مباراة رسمية مع $nation، لم يكن هناك ما يبقيه.';
   }
 
   @override
   String msgPoachSwitchedBodyPromise(String name, String rival, String nation) {
-    return 'قبل $name عرض $rival. وُعد بدقائق مع $nation لم تأتِ أبدًا، وسيلعب لـ$rival من الآن فصاعدًا.';
+    return 'قبل ⁨$name⁩ عرض $rival. وُعد بدقائق مع $nation لم تأتِ أبدًا، وسيلعب لـ$rival من الآن فصاعدًا.';
   }
 
   @override
@@ -13339,22 +13339,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String yLegendRetires0(String name) {
-    return 'شكرًا، $name. بعضهم يرتدي القميص، وهو حمله.';
+    return 'شكرًا، ⁨$name⁩. بعضهم يرتدي القميص، وهو حمله.';
   }
 
   @override
   String yLegendRetires1(String name) {
-    return '$name يُنهي مسيرته الدولية. نهاية حقبة.';
+    return '⁨$name⁩ يُنهي مسيرته الدولية. نهاية حقبة.';
   }
 
   @override
   String yLegendRetires2(String name) {
-    return '$name يعتزل. متأخرًا ببطولة واحدة، إن كنا صادقين.';
+    return '⁨$name⁩ يعتزل. متأخرًا ببطولة واحدة، إن كنا صادقين.';
   }
 
   @override
   String yLegendRetires3(String name) {
-    return 'إذن انتهى $name. حان وقت منح الشباب فرصة.';
+    return 'إذن انتهى ⁨$name⁩. حان وقت منح الشباب فرصة.';
   }
 
   @override
@@ -13449,7 +13449,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String yFansProtest2(String nation, String manager) {
-    return 'نصف الملعب فارغ، والنصف الذي حضر قضى الشوط الثاني يهتف #ارحل_$manager.';
+    return 'نصف الملعب فارغ، والنصف الذي حضر قضى الشوط الثاني يهتف #ارحل_⁨$manager⁩.';
   }
 
   @override
@@ -13459,12 +13459,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String yFansProtest4(String nation, String manager) {
-    return '#ارحل_$manager. لم أعد غاضبًا. فقط انتهيت.';
+    return '#ارحل_⁨$manager⁩. لم أعد غاضبًا. فقط انتهيت.';
   }
 
   @override
   String yFansProtest5(String nation, String manager) {
-    return 'صورة من الليلة: صفوف من المقاعد الفارغة وملاءة واحدة مكتوب عليها #ارحل_$manager. هذا هو تقرير المباراة.';
+    return 'صورة من الليلة: صفوف من المقاعد الفارغة وملاءة واحدة مكتوب عليها #ارحل_⁨$manager⁩. هذا هو تقرير المباراة.';
   }
 
   @override
@@ -13503,7 +13503,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String hubEventScandal(String player) {
-    return 'فضيحة في المعسكر: $player';
+    return 'فضيحة في المعسكر: ⁨$player⁩';
   }
 
   @override
@@ -13514,22 +13514,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String scandalStoryParty(String player) {
-    return 'كان $player في حفلة استمرت حتى الفجر، والصور ملأت كل الصحف صباح تجمّع الفريق.';
+    return 'كان ⁨$player⁩ في حفلة استمرت حتى الفجر، والصور ملأت كل الصحف صباح تجمّع الفريق.';
   }
 
   @override
   String scandalStoryCurfew(String player) {
-    return 'خالف $player حظر التجول الخاص بالفريق وضُبط عائدًا إلى الفندق في ساعات الفجر الأولى.';
+    return 'خالف ⁨$player⁩ حظر التجول الخاص بالفريق وضُبط عائدًا إلى الفندق في ساعات الفجر الأولى.';
   }
 
   @override
   String scandalStoryNightclub(String player) {
-    return 'صُوّر $player في ملهى ليلي عشية المعسكر، والصور في كل مكان.';
+    return 'صُوّر ⁨$player⁩ في ملهى ليلي عشية المعسكر، والصور في كل مكان.';
   }
 
   @override
   String scandalStoryCasino(String player) {
-    return 'قضى $player الليلة السابقة للمعسكر على طاولة كازينو، ولدى صحيفة شعبية الصور.';
+    return 'قضى ⁨$player⁩ الليلة السابقة للمعسكر على طاولة كازينو، ولدى صحيفة شعبية الصور.';
   }
 
   @override
@@ -13537,12 +13537,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String scandalSendHomeCover(String player) {
-    return 'أعده إلى الديار، واستدعِ $player';
+    return 'أعده إلى الديار، واستدعِ ⁨$player⁩';
   }
 
   @override
   String scandalKeep(String player) {
-    return 'أبقِ $player';
+    return 'أبقِ ⁨$player⁩';
   }
 
   @override
@@ -13562,127 +13562,127 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String newsScandalTitle(String player) {
-    return 'فضيحة في المعسكر: $player';
+    return 'فضيحة في المعسكر: ⁨$player⁩';
   }
 
   @override
   String yScandalParty0(String player, String tag) {
-    return 'الشباب شباب. $player في حفلة قبل المعسكر بليلة، وما زلت أريده في الملعب. #$tag';
+    return 'الشباب شباب. ⁨$player⁩ في حفلة قبل المعسكر بليلة، وما زلت أريده في الملعب. #$tag';
   }
 
   @override
   String yScandalParty1(String player, String tag) {
-    return '$player مُصوَّر في حفلة امتدت طوال الليل قبل ساعات من تجمع الفريق. أُبلغ الاتحاد. #$tag';
+    return '⁨$player⁩ مُصوَّر في حفلة امتدت طوال الليل قبل ساعات من تجمع الفريق. أُبلغ الاتحاد. #$tag';
   }
 
   @override
   String yScandalParty2(String player, String tag) {
-    return 'حفلة طوال الليل قبل المعسكر. $player، بماذا كنت تفكر؟ لا يُصدَّق. #$tag';
+    return 'حفلة طوال الليل قبل المعسكر. ⁨$player⁩، بماذا كنت تفكر؟ لا يُصدَّق. #$tag';
   }
 
   @override
   String yScandalCurfew0(String player, String tag) {
-    return 'عاد بعد حظر التجول، حسنًا، هذا يحدث. على $player فقط أن يصلح ذلك في الملعب. #$tag';
+    return 'عاد بعد حظر التجول، حسنًا، هذا يحدث. على ⁨$player⁩ فقط أن يصلح ذلك في الملعب. #$tag';
   }
 
   @override
   String yScandalCurfew1(String player, String tag) {
-    return '$player ضُبط عائدًا إلى فندق الفريق بعد حظر التجول، قبل ساعات من التدريب. #$tag';
+    return '⁨$player⁩ ضُبط عائدًا إلى فندق الفريق بعد حظر التجول، قبل ساعات من التدريب. #$tag';
   }
 
   @override
   String yScandalCurfew2(String player, String tag) {
-    return 'حظر التجول ليس معقدًا. $player لم يستطع الالتزام ليلة واحدة. #$tag';
+    return 'حظر التجول ليس معقدًا. ⁨$player⁩ لم يستطع الالتزام ليلة واحدة. #$tag';
   }
 
   @override
   String yScandalNightclub0(String player, String tag) {
-    return 'إذن كان $player في ملهى ليلي. للاعبي الكرة حياة أيضًا. دعوه يلعب. #$tag';
+    return 'إذن كان ⁨$player⁩ في ملهى ليلي. للاعبي الكرة حياة أيضًا. دعوه يلعب. #$tag';
   }
 
   @override
   String yScandalNightclub1(String player, String tag) {
-    return 'صور تُظهر $player في ملهى ليلي عشية المعسكر الدولي. #$tag';
+    return 'صور تُظهر ⁨$player⁩ في ملهى ليلي عشية المعسكر الدولي. #$tag';
   }
 
   @override
   String yScandalNightclub2(String player, String tag) {
-    return 'صور الملهى الليلي عشية المعسكر. $player أحرج القميص. #$tag';
+    return 'صور الملهى الليلي عشية المعسكر. ⁨$player⁩ أحرج القميص. #$tag';
   }
 
   @override
   String yScandalCasino0(String player, String tag) {
-    return 'ليلة في الكازينو ليست جريمة. $player سيكون بخير. #$tag';
+    return 'ليلة في الكازينو ليست جريمة. ⁨$player⁩ سيكون بخير. #$tag';
   }
 
   @override
   String yScandalCasino1(String player, String tag) {
-    return 'رُصد $player على طاولة كازينو في الليلة السابقة لتجمع الفريق. #$tag';
+    return 'رُصد ⁨$player⁩ على طاولة كازينو في الليلة السابقة لتجمع الفريق. #$tag';
   }
 
   @override
   String yScandalCasino2(String player, String tag) {
-    return 'كازينو طوال الليل قبل المعسكر. $player قامر بأكثر من المال. #$tag';
+    return 'كازينو طوال الليل قبل المعسكر. ⁨$player⁩ قامر بأكثر من المال. #$tag';
   }
 
   @override
   String yScandalSentHome0(String player) {
-    return 'قرار صائب. لا أحد أكبر من الفريق، بما في ذلك $player.';
+    return 'قرار صائب. لا أحد أكبر من الفريق، بما في ذلك ⁨$player⁩.';
   }
 
   @override
   String yScandalSentHome1(String player) {
-    return 'إعادة $player إلى الديار كانت الجواب الوحيد. كل الاحترام للمدرب.';
+    return 'إعادة ⁨$player⁩ إلى الديار كانت الجواب الوحيد. كل الاحترام للمدرب.';
   }
 
   @override
   String yScandalSentHome2(String player) {
-    return 'الانضباط انضباط. كان $player يعرف القواعد.';
+    return 'الانضباط انضباط. كان ⁨$player⁩ يعرف القواعد.';
   }
 
   @override
   String yScandalSentHome3(String player) {
-    return 'رسالة واضحة للفريق: $player على متن الطائرة عائدًا.';
+    return 'رسالة واضحة للفريق: ⁨$player⁩ على متن الطائرة عائدًا.';
   }
 
   @override
   String yScandalSentHome4(String player) {
-    return 'قاسٍ على $player. ليلة خروج واحدة وانتهت نافذته؟';
+    return 'قاسٍ على ⁨$player⁩. ليلة خروج واحدة وانتهت نافذته؟';
   }
 
   @override
   String yScandalSentHome5(String player) {
-    return 'إعادة $player إلى الديار تضعفنا. سندفع الثمن في الملعب.';
+    return 'إعادة ⁨$player⁩ إلى الديار تضعفنا. سندفع الثمن في الملعب.';
   }
 
   @override
   String yScandalKept0(String player) {
-    return 'إبقاء $player مقامرة. من الأفضل أن يرد الجميل في الملعب.';
+    return 'إبقاء ⁨$player⁩ مقامرة. من الأفضل أن يرد الجميل في الملعب.';
   }
 
   @override
   String yScandalKept1(String player) {
-    return 'حسنًا، $player يبقى. إذن فهو يدين للجميع بأداء.';
+    return 'حسنًا، ⁨$player⁩ يبقى. إذن فهو يدين للجميع بأداء.';
   }
 
   @override
   String yScandalKept2(String player) {
-    return 'إذن القواعد لا تنطبق على $player. من الجيد معرفة ذلك.';
+    return 'إذن القواعد لا تنطبق على ⁨$player⁩. من الجيد معرفة ذلك.';
   }
 
   @override
   String yScandalKept3(String player) {
-    return 'حظر التجول اختياري الآن على ما يبدو. اسألوا $player.';
+    return 'حظر التجول اختياري الآن على ما يبدو. اسألوا ⁨$player⁩.';
   }
 
   @override
   String yScandalKept4(String player) {
-    return 'إبقاء $player بعد ذلك؟ هذا الفريق مخيم عطلات.';
+    return 'إبقاء ⁨$player⁩ بعد ذلك؟ هذا الفريق مخيم عطلات.';
   }
 
   @override
   String yScandalKept5(String player) {
-    return 'حفلة طوال الليل، ثم مباشرة إلى التشكيلة الأساسية. رسالة رائعة يا مدرب. لا بد أن $player مسرور.';
+    return 'حفلة طوال الليل، ثم مباشرة إلى التشكيلة الأساسية. رسالة رائعة يا مدرب. لا بد أن ⁨$player⁩ مسرور.';
   }
 
   @override
@@ -14135,7 +14135,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String hostingBidPledged(String amount, String percent) {
-    return 'الملف المقدم: $amount، مع فرصة $percent للاستضافة.';
+    return 'الملف المقدم: ⁦$amount⁩، مع فرصة $percent للاستضافة.';
   }
 
   @override
@@ -14250,7 +14250,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String jobDossierOneStar(String name) {
-    return '$name يحمل هذا الفريق.';
+    return '⁨$name⁩ يحمل هذا الفريق.';
   }
 
   @override
@@ -14434,7 +14434,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String punditsSays(String pundit, String words) {
-    return '⁦$pundit: $words⁩';
+    return '⁦⁨$pundit⁩: $words⁩';
   }
 
   @override
@@ -14741,12 +14741,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String sponsorPerkMarketing(String amount, String department) {
-    return 'تموّل $amount من $department هذه الدورة';
+    return 'تموّل ⁦$amount⁩ من $department هذه الدورة';
   }
 
   @override
   String sponsorPerkMarketingNote(String amount) {
-    return '$amount إضافية تعود عند ختام الدورة، فوق استثمارك الخاص';
+    return '⁦$amount⁩ إضافية تعود عند ختام الدورة، فوق استثمارك الخاص';
   }
 
   @override
@@ -14769,7 +14769,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String sponsorRolloverLine(String brand) {
-    return 'الراعي الرئيسي: $brand';
+    return 'الراعي الرئيسي: ⁨$brand⁩';
   }
 
   @override
@@ -15100,47 +15100,47 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String ySponsorDubious0(String brand) {
-    return '$brand هو الراعي الرئيسي الجديد للاتحاد. اضحكوا إن شئتم، الأكاديمية لا تزال بحاجة إلى المال.';
+    return '⁨$brand⁩ هو الراعي الرئيسي الجديد للاتحاد. اضحكوا إن شئتم، الأكاديمية لا تزال بحاجة إلى المال.';
   }
 
   @override
   String ySponsorDubious1(String brand) {
-    return 'وقّع الاتحاد مع $brand راعيًا رئيسيًا جديدًا. قيل إنه أكبر عرض على الطاولة.';
+    return 'وقّع الاتحاد مع ⁨$brand⁩ راعيًا رئيسيًا جديدًا. قيل إنه أكبر عرض على الطاولة.';
   }
 
   @override
   String ySponsorDubious2(String brand) {
-    return '$brand. راعينا الرئيسي الجديد هو $brand. أحتاج إلى الاستلقاء.';
+    return '⁨$brand⁩. راعينا الرئيسي الجديد هو ⁨$brand⁩. أحتاج إلى الاستلقاء.';
   }
 
   @override
   String ySponsorMocked0(String brand) {
-    return 'المال مال. إن دفع $brand ثمن ملاعب جديدة، سأرتدي القميص بفخر.';
+    return 'المال مال. إن دفع ⁨$brand⁩ ثمن ملاعب جديدة، سأرتدي القميص بفخر.';
   }
 
   @override
   String ySponsorMocked1(String brand) {
-    return 'قولوا ما شئتم عن $brand، شيكهم صُرف.';
+    return 'قولوا ما شئتم عن ⁨$brand⁩، شيكهم صُرف.';
   }
 
   @override
   String ySponsorMocked2(String brand) {
-    return 'في مكان ما فريق تسويق فخور جدًا بشعار $brand على صدورنا.';
+    return 'في مكان ما فريق تسويق فخور جدًا بشعار ⁨$brand⁩ على صدورنا.';
   }
 
   @override
   String ySponsorMocked3(String brand) {
-    return 'إذن نحن منتخب $brand الآن. مفهوم.';
+    return 'إذن نحن منتخب ⁨$brand⁩ الآن. مفهوم.';
   }
 
   @override
   String ySponsorMocked4(String brand) {
-    return 'تخيلوا بيع القميص لـ$brand. فقط تخيلوا.';
+    return 'تخيلوا بيع القميص لـ⁨$brand⁩. فقط تخيلوا.';
   }
 
   @override
   String ySponsorMocked5(String brand) {
-    return 'من بين كل الرعاة في العالم، اخترنا $brand. كل منافسينا يضحكون علينا.';
+    return 'من بين كل الرعاة في العالم، اخترنا ⁨$brand⁩. كل منافسينا يضحكون علينا.';
   }
 
   @override
@@ -15279,7 +15279,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String editorCopyName(String name) {
-    return 'نسخة من $name';
+    return 'نسخة من ⁨$name⁩';
   }
 
   @override
@@ -15299,7 +15299,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String editorDeleteBody(String name) {
-    return 'ستُحذف «$name» من هذا الجهاز. المسيرات التي بدأت عليها بالفعل تواصل العمل.';
+    return 'ستُحذف «⁨$name⁩» من هذا الجهاز. المسيرات التي بدأت عليها بالفعل تواصل العمل.';
   }
 
   @override
@@ -15664,22 +15664,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String editorIssueAge(String name) {
-    return '$name: يجب أن يكون العمر من 15 إلى 45';
+    return '⁨$name⁩: يجب أن يكون العمر من 15 إلى 45';
   }
 
   @override
   String editorIssueRating(String name) {
-    return '$name: يجب أن يكون التقييم العام من 1 إلى 99';
+    return '⁨$name⁩: يجب أن يكون التقييم العام من 1 إلى 99';
   }
 
   @override
   String editorIssuePotential(String name) {
-    return '$name: يجب أن تكون الإمكانات بين التقييم العام و99';
+    return '⁨$name⁩: يجب أن تكون الإمكانات بين التقييم العام و99';
   }
 
   @override
   String editorIssueRenameEmpty(String name) {
-    return 'الاسم الجديد لـ$name فارغ';
+    return 'الاسم الجديد لـ⁨$name⁩ فارغ';
   }
 
   @override
@@ -15687,17 +15687,17 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String editorIssueNameTooLong(String name) {
-    return '«$name» طويل جدًا';
+    return '«⁨$name⁩» طويل جدًا';
   }
 
   @override
   String editorIssueNameBadCharacters(String name) {
-    return '«$name» يحتوي على أحرف لا يمكن استخدامها';
+    return '«⁨$name⁩» يحتوي على أحرف لا يمكن استخدامها';
   }
 
   @override
   String editorIssueNameTaken(String name) {
-    return '«$name» مستخدم بالفعل';
+    return '«⁨$name⁩» مستخدم بالفعل';
   }
 
   @override
@@ -15761,7 +15761,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String editorSquadRemoved(String name) {
-    return 'حُذف $name من القائمة';
+    return 'حُذف ⁨$name⁩ من القائمة';
   }
 
   @override
@@ -15936,7 +15936,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String editorNamesGameName(String name) {
-    return 'اسم اللعبة: $name';
+    return 'اسم اللعبة: ⁨$name⁩';
   }
 
   @override
@@ -15985,7 +15985,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String editorLanguageMainName(String name) {
-    return 'الاسم الرئيسي: $name';
+    return 'الاسم الرئيسي: ⁨$name⁩';
   }
 
   @override
@@ -16085,7 +16085,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String editorPoolRemoved(String name) {
-    return 'حُذف $name من المجموعة';
+    return 'حُذف ⁨$name⁩ من المجموعة';
   }
 
   @override
@@ -16144,7 +16144,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String editorAddedRemoved(String name) {
-    return 'حُذف $name';
+    return 'حُذف ⁨$name⁩';
   }
 
   @override
@@ -16501,7 +16501,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String editorIssueUnknownEntry(String name) {
-    return '$name لم يعد في اللعبة';
+    return '⁨$name⁩ لم يعد في اللعبة';
   }
 
   @override
@@ -16513,7 +16513,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String worldChip(String name) {
-    return 'العالم: $name';
+    return 'العالم: ⁨$name⁩';
   }
 
   @override
@@ -16549,632 +16549,632 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String pitchComShotGoal1(String player) {
-    return 'هدف! $player يهز الشباك!';
+    return 'هدف! ⁨$player⁩ يهز الشباك!';
   }
 
   @override
   String pitchComShotGoal2(String player) {
-    return '$player يسددها في المرمى! هدف!';
+    return '⁨$player⁩ يسددها في المرمى! هدف!';
   }
 
   @override
   String pitchComShotGoal3(String player) {
-    return 'هدف! إنهاء حاسم من $player.';
+    return 'هدف! إنهاء حاسم من ⁨$player⁩.';
   }
 
   @override
   String pitchComReboundGoal1(String player, String other) {
-    return '$other يسدد، الحارس يصد، و$player يتابع! هدف!';
+    return '⁨$other⁩ يسدد، الحارس يصد، و⁨$player⁩ يتابع! هدف!';
   }
 
   @override
   String pitchComReboundGoal2(String player, String other) {
-    return '$other يُحرم، لكن $player ينقض على الكرة المرتدة! هدف!';
+    return '⁨$other⁩ يُحرم، لكن ⁨$player⁩ ينقض على الكرة المرتدة! هدف!';
   }
 
   @override
   String pitchComReboundGoal3(String player, String other) {
-    return 'هدف! $other يجبر الحارس على التصدي و$player يودع الكرة المرتدة الشباك!';
+    return 'هدف! ⁨$other⁩ يجبر الحارس على التصدي و⁨$player⁩ يودع الكرة المرتدة الشباك!';
   }
 
   @override
   String pitchComReboundOwn1(String player) {
-    return 'تصدٍّ، لكن $player يتابع! هدف!';
+    return 'تصدٍّ، لكن ⁨$player⁩ يتابع! هدف!';
   }
 
   @override
   String pitchComReboundOwn2(String player, String keeper) {
-    return '$keeper يصد، لكن $player يصل إلى الكرة المرتدة أولًا! هدف!';
+    return '⁨$keeper⁩ يصد، لكن ⁨$player⁩ يصل إلى الكرة المرتدة أولًا! هدف!';
   }
 
   @override
   String pitchComReboundOwn3(String player) {
-    return 'هدف! صدّها الحارس، و$player الأسرع إلى الكرة المرتدة!';
+    return 'هدف! صدّها الحارس، و⁨$player⁩ الأسرع إلى الكرة المرتدة!';
   }
 
   @override
   String pitchComShotSaved1(String player, String keeper) {
-    return '$player يسدد، لكن $keeper يتصدى.';
+    return '⁨$player⁩ يسدد، لكن ⁨$keeper⁩ يتصدى.';
   }
 
   @override
   String pitchComShotSaved2(String player) {
-    return '$player يجرب حظه، لكن الحارس في الموعد.';
+    return '⁨$player⁩ يجرب حظه، لكن الحارس في الموعد.';
   }
 
   @override
   String pitchComShotSaved3(String player, String keeper) {
-    return '$player يطلقها، و$keeper يبعدها!';
+    return '⁨$player⁩ يطلقها، و⁨$keeper⁩ يبعدها!';
   }
 
   @override
   String pitchComShotWide1(String player) {
-    return '$player يسدد بعيدًا عن المرمى.';
+    return '⁨$player⁩ يسدد بعيدًا عن المرمى.';
   }
 
   @override
   String pitchComShotWide2(String player) {
-    return 'تسديدة خارج الإطار من $player.';
+    return 'تسديدة خارج الإطار من ⁨$player⁩.';
   }
 
   @override
   String pitchComShotWide3(String player) {
-    return '$player يسددها بجانب القائم.';
+    return '⁨$player⁩ يسددها بجانب القائم.';
   }
 
   @override
   String pitchComShotBlocked1(String player) {
-    return '$player يسدد، لكنها تُصد.';
+    return '⁨$player⁩ يسدد، لكنها تُصد.';
   }
 
   @override
   String pitchComShotBlocked2(String player) {
-    return 'صُدّت! $player لا يجد طريقًا.';
+    return 'صُدّت! ⁨$player⁩ لا يجد طريقًا.';
   }
 
   @override
   String pitchComShotBlocked3(String player) {
-    return '$player يطلقها، لكن مدافعًا يعترضها.';
+    return '⁨$player⁩ يطلقها، لكن مدافعًا يعترضها.';
   }
 
   @override
   String pitchComShotWoodwork1(String player) {
-    return 'في القائم! قريبة جدًا من $player.';
+    return 'في القائم! قريبة جدًا من ⁨$player⁩.';
   }
 
   @override
   String pitchComShotWoodwork2(String player) {
-    return '$player يصيب الخشبات!';
+    return '⁨$player⁩ يصيب الخشبات!';
   }
 
   @override
   String pitchComShotWoodwork3(String player) {
-    return 'العارضة! الإطار يحرم $player.';
+    return 'العارضة! الإطار يحرم ⁨$player⁩.';
   }
 
   @override
   String pitchComHeaderGoal1(String player) {
-    return 'هدف! $player يسكنها برأسه!';
+    return 'هدف! ⁨$player⁩ يسكنها برأسه!';
   }
 
   @override
   String pitchComHeaderGoal2(String player) {
-    return '$player يرتقي أعلى الجميع ويسجل! هدف!';
+    return '⁨$player⁩ يرتقي أعلى الجميع ويسجل! هدف!';
   }
 
   @override
   String pitchComHeaderGoal3(String player) {
-    return 'هدف! رأسية قوية من $player.';
+    return 'هدف! رأسية قوية من ⁨$player⁩.';
   }
 
   @override
   String pitchComHeaderSaved1(String player, String keeper) {
-    return '$player يسدد برأسه، و$keeper يتصدى.';
+    return '⁨$player⁩ يسدد برأسه، و⁨$keeper⁩ يتصدى.';
   }
 
   @override
   String pitchComHeaderSaved2(String player) {
-    return 'رأسية من $player، لكن الحارس يمسكها.';
+    return 'رأسية من ⁨$player⁩، لكن الحارس يمسكها.';
   }
 
   @override
   String pitchComHeaderSaved3(String player, String keeper) {
-    return '$keeper يبعد رأسية $player.';
+    return '⁨$keeper⁩ يبعد رأسية ⁨$player⁩.';
   }
 
   @override
   String pitchComHeaderWide1(String player) {
-    return '$player يسددها برأسه بعيدًا.';
+    return '⁨$player⁩ يسددها برأسه بعيدًا.';
   }
 
   @override
   String pitchComHeaderWide2(String player) {
-    return 'رأسية من $player، لكنها خارج الإطار.';
+    return 'رأسية من ⁨$player⁩، لكنها خارج الإطار.';
   }
 
   @override
   String pitchComHeaderWide3(String player) {
-    return '$player لا يستطيع إبقاء رأسيته منخفضة.';
+    return '⁨$player⁩ لا يستطيع إبقاء رأسيته منخفضة.';
   }
 
   @override
   String pitchComHeaderBlocked1(String player) {
-    return '$player يسدد برأسه، لكنها تُصد.';
+    return '⁨$player⁩ يسدد برأسه، لكنها تُصد.';
   }
 
   @override
   String pitchComHeaderBlocked2(String player) {
-    return '$player يوجهها برأسه نحو المرمى، لكنها تُعترض.';
+    return '⁨$player⁩ يوجهها برأسه نحو المرمى، لكنها تُعترض.';
   }
 
   @override
   String pitchComHeaderBlocked3(String player) {
-    return 'صُدّت! $player يلحق بها، لكن مدافعًا هناك.';
+    return 'صُدّت! ⁨$player⁩ يلحق بها، لكن مدافعًا هناك.';
   }
 
   @override
   String pitchComHeaderWoodwork1(String player) {
-    return '$player يصيب العارضة برأسه!';
+    return '⁨$player⁩ يصيب العارضة برأسه!';
   }
 
   @override
   String pitchComHeaderWoodwork2(String player) {
-    return 'في القائم! رأسية $player ترتد.';
+    return 'في القائم! رأسية ⁨$player⁩ ترتد.';
   }
 
   @override
   String pitchComHeaderWoodwork3(String player) {
-    return 'الخشبات! $player يهز الإطار برأسية.';
+    return 'الخشبات! ⁨$player⁩ يهز الإطار برأسية.';
   }
 
   @override
   String pitchComSetPieceGoal1(String player) {
-    return 'هدف! $player يصل إلى الكرة!';
+    return 'هدف! ⁨$player⁩ يصل إلى الكرة!';
   }
 
   @override
   String pitchComSetPieceGoal2(String player, String other) {
-    return 'هدف! $other يرسلها و$player يسجل!';
+    return 'هدف! ⁨$other⁩ يرسلها و⁨$player⁩ يسجل!';
   }
 
   @override
   String pitchComSetPieceGoal3(String player) {
-    return 'من الكرة الثابتة، $player يسجل! هدف!';
+    return 'من الكرة الثابتة، ⁨$player⁩ يسجل! هدف!';
   }
 
   @override
   String pitchComSetPieceSaved1(String player, String keeper) {
-    return '$player يلحق بها، لكن $keeper يتصدى.';
+    return '⁨$player⁩ يلحق بها، لكن ⁨$keeper⁩ يتصدى.';
   }
 
   @override
   String pitchComSetPieceSaved2(String player) {
-    return '$player يلمسها، والحارس يمسكها.';
+    return '⁨$player⁩ يلمسها، والحارس يمسكها.';
   }
 
   @override
   String pitchComSetPieceSaved3(String player, String keeper) {
-    return '$player يسدد، و$keeper متيقظ.';
+    return '⁨$player⁩ يسدد، و⁨$keeper⁩ متيقظ.';
   }
 
   @override
   String pitchComSetPieceWide1(String player) {
-    return '$player يصل إلى الكرة، لكنها بعيدة.';
+    return '⁨$player⁩ يصل إلى الكرة، لكنها بعيدة.';
   }
 
   @override
   String pitchComSetPieceWide2(String player) {
-    return '$player يلحق بالعرضية، خارج الإطار.';
+    return '⁨$player⁩ يلحق بالعرضية، خارج الإطار.';
   }
 
   @override
   String pitchComSetPieceWide3(String player) {
-    return 'فوق العارضة من $player.';
+    return 'فوق العارضة من ⁨$player⁩.';
   }
 
   @override
   String pitchComSetPieceBlocked1(String player) {
-    return '$player يلحق بها، لكنها تُصد.';
+    return '⁨$player⁩ يلحق بها، لكنها تُصد.';
   }
 
   @override
   String pitchComSetPieceBlocked2(String player) {
-    return 'فوضى في المنطقة! $player يُصد.';
+    return 'فوضى في المنطقة! ⁨$player⁩ يُصد.';
   }
 
   @override
   String pitchComSetPieceBlocked3(String player) {
-    return '$player يحاول دفعها إلى الداخل، لكنها تُشتت.';
+    return '⁨$player⁩ يحاول دفعها إلى الداخل، لكنها تُشتت.';
   }
 
   @override
   String pitchComSetPieceWoodwork1(String player) {
-    return '$player يلحق بها ويصيب القائم!';
+    return '⁨$player⁩ يلحق بها ويصيب القائم!';
   }
 
   @override
   String pitchComSetPieceWoodwork2(String player) {
-    return 'في العارضة! $player كاد يسجل من الكرة الثابتة.';
+    return 'في العارضة! ⁨$player⁩ كاد يسجل من الكرة الثابتة.';
   }
 
   @override
   String pitchComSetPieceWoodwork3(String player) {
-    return 'الخشبات! $player قريب جدًا من العرضية.';
+    return 'الخشبات! ⁨$player⁩ قريب جدًا من العرضية.';
   }
 
   @override
   String pitchComDirectFreeKickGoal1(String player) {
-    return 'هدف! $player يلفّها فوق الحائط!';
+    return 'هدف! ⁨$player⁩ يلفّها فوق الحائط!';
   }
 
   @override
   String pitchComDirectFreeKickGoal2(String player) {
-    return 'يا لها من ركلة حرة! $player يجد الزاوية العليا!';
+    return 'يا لها من ركلة حرة! ⁨$player⁩ يجد الزاوية العليا!';
   }
 
   @override
   String pitchComDirectFreeKickGoal3(String player) {
-    return 'هدف! $player يهزم الحارس من الركلة الحرة.';
+    return 'هدف! ⁨$player⁩ يهزم الحارس من الركلة الحرة.';
   }
 
   @override
   String pitchComDirectFreeKickSaved1(String player, String keeper) {
-    return '$player يسدد نحو المرمى، و$keeper يتصدى.';
+    return '⁨$player⁩ يسدد نحو المرمى، و⁨$keeper⁩ يتصدى.';
   }
 
   @override
   String pitchComDirectFreeKickSaved2(String player) {
-    return 'ركلة $player الحرة تُبعد.';
+    return 'ركلة ⁨$player⁩ الحرة تُبعد.';
   }
 
   @override
   String pitchComDirectFreeKickSaved3(String player, String keeper) {
-    return 'تصدٍّ رائع! $keeper يمنع ركلة $player الحرة.';
+    return 'تصدٍّ رائع! ⁨$keeper⁩ يمنع ركلة ⁨$player⁩ الحرة.';
   }
 
   @override
   String pitchComDirectFreeKickWide1(String player) {
-    return 'ركلة $player الحرة تعلو العارضة.';
+    return 'ركلة ⁨$player⁩ الحرة تعلو العارضة.';
   }
 
   @override
   String pitchComDirectFreeKickWide2(String player) {
-    return '$player يسدد نحو المرمى، لكنها بعيدة.';
+    return '⁨$player⁩ يسدد نحو المرمى، لكنها بعيدة.';
   }
 
   @override
   String pitchComDirectFreeKickWide3(String player) {
-    return '$player يخطئ المرمى من الركلة الحرة.';
+    return '⁨$player⁩ يخطئ المرمى من الركلة الحرة.';
   }
 
   @override
   String pitchComDirectFreeKickBlocked1(String player) {
-    return 'ركلة $player الحرة تصطدم بالحائط.';
+    return 'ركلة ⁨$player⁩ الحرة تصطدم بالحائط.';
   }
 
   @override
   String pitchComDirectFreeKickBlocked2(String player) {
-    return 'في الحائط من $player.';
+    return 'في الحائط من ⁨$player⁩.';
   }
 
   @override
   String pitchComDirectFreeKickBlocked3(String player) {
-    return 'الحائط يصمد أمام $player.';
+    return 'الحائط يصمد أمام ⁨$player⁩.';
   }
 
   @override
   String pitchComDirectFreeKickWoodwork1(String player) {
-    return '$player يصيب العارضة بالركلة الحرة!';
+    return '⁨$player⁩ يصيب العارضة بالركلة الحرة!';
   }
 
   @override
   String pitchComDirectFreeKickWoodwork2(String player) {
-    return 'في القائم! $player قريب جدًا من الركلة الحرة.';
+    return 'في القائم! ⁨$player⁩ قريب جدًا من الركلة الحرة.';
   }
 
   @override
   String pitchComDirectFreeKickWoodwork3(String player) {
-    return 'الإطار ينقذ الحارس! $player قريب جدًا.';
+    return 'الإطار ينقذ الحارس! ⁨$player⁩ قريب جدًا.';
   }
 
   @override
   String pitchComPenaltyGoal1(String player) {
-    return 'هدف! $player يرسل الحارس إلى الاتجاه الخاطئ.';
+    return 'هدف! ⁨$player⁩ يرسل الحارس إلى الاتجاه الخاطئ.';
   }
 
   @override
   String pitchComPenaltyGoal2(String player) {
-    return '$player يتقدم ويسجل! هدف!';
+    return '⁨$player⁩ يتقدم ويسجل! هدف!';
   }
 
   @override
   String pitchComPenaltyGoal3(String player) {
-    return 'هدف! $player يسكن ركلة الجزاء الشباك.';
+    return 'هدف! ⁨$player⁩ يسكن ركلة الجزاء الشباك.';
   }
 
   @override
   String pitchComPenaltySaved1(String player, String keeper) {
-    return 'تصدٍّ! $keeper يوقف ركلة جزاء $player!';
+    return 'تصدٍّ! ⁨$keeper⁩ يوقف ركلة جزاء ⁨$player⁩!';
   }
 
   @override
   String pitchComPenaltySaved2(String player) {
-    return '$player يتقدم... ويتصدى لها الحارس!';
+    return '⁨$player⁩ يتقدم... ويتصدى لها الحارس!';
   }
 
   @override
   String pitchComPenaltySaved3(String player, String keeper) {
-    return '$keeper يقرأها جيدًا ويحرم $player!';
+    return '⁨$keeper⁩ يقرأها جيدًا ويحرم ⁨$player⁩!';
   }
 
   @override
   String pitchComPenaltyMissed1(String player) {
-    return '$player يهدر ركلة الجزاء!';
+    return '⁨$player⁩ يهدر ركلة الجزاء!';
   }
 
   @override
   String pitchComPenaltyMissed2(String player) {
-    return 'بعيدة! $player يسدد ركلة الجزاء بجانب القائم.';
+    return 'بعيدة! ⁨$player⁩ يسدد ركلة الجزاء بجانب القائم.';
   }
 
   @override
   String pitchComPenaltyMissed3(String player) {
-    return 'فوق العارضة! $player يطيّر ركلة الجزاء عاليًا.';
+    return 'فوق العارضة! ⁨$player⁩ يطيّر ركلة الجزاء عاليًا.';
   }
 
   @override
   String pitchComPenaltyWoodwork1(String player) {
-    return '$player يصيب القائم من نقطة الجزاء!';
+    return '⁨$player⁩ يصيب القائم من نقطة الجزاء!';
   }
 
   @override
   String pitchComPenaltyWoodwork2(String player) {
-    return 'في العارضة! ركلة جزاء $player تبقى خارجًا.';
+    return 'في العارضة! ركلة جزاء ⁨$player⁩ تبقى خارجًا.';
   }
 
   @override
   String pitchComPenaltyWoodwork3(String player) {
-    return 'الخشبات! $player لا يصدق.';
+    return 'الخشبات! ⁨$player⁩ لا يصدق.';
   }
 
   @override
   String pitchComPenaltyReboundGoal1(String player) {
-    return 'الكرة حرة! $player يتابعها ويودع المرتدة الشباك!';
+    return 'الكرة حرة! ⁨$player⁩ يتابعها ويودع المرتدة الشباك!';
   }
 
   @override
   String pitchComPenaltyReboundGoal2(String player) {
-    return '$player الأسرع إلى الكرة الحرة ويسجل في المحاولة الثانية!';
+    return '⁨$player⁩ الأسرع إلى الكرة الحرة ويسجل في المحاولة الثانية!';
   }
 
   @override
   String pitchComPenaltyReboundGoal3(String player) {
-    return 'المحاولة الثانية تنجح! $player ينقض على الكرة الحرة ويسجل!';
+    return 'المحاولة الثانية تنجح! ⁨$player⁩ ينقض على الكرة الحرة ويسجل!';
   }
 
   @override
   String pitchComPenaltyReboundSaved1(String player, String keeper) {
-    return '$player يتابعها، لكن $keeper يتصدى مجددًا!';
+    return '⁨$player⁩ يتابعها، لكن ⁨$keeper⁩ يتصدى مجددًا!';
   }
 
   @override
   String pitchComPenaltyReboundSaved2(String player) {
-    return '$player يصل إلى المرتدة، لكنها تُمنع مجددًا!';
+    return '⁨$player⁩ يصل إلى المرتدة، لكنها تُمنع مجددًا!';
   }
 
   @override
   String pitchComPenaltyReboundSaved3(String player, String keeper) {
-    return '$keeper ينزل بسرعة ليحرم $player في المتابعة!';
+    return '⁨$keeper⁩ ينزل بسرعة ليحرم ⁨$player⁩ في المتابعة!';
   }
 
   @override
   String pitchComPenaltyReboundWide1(String player) {
-    return '$player يصل إلى المرتدة ويسددها بعيدًا!';
+    return '⁨$player⁩ يصل إلى المرتدة ويسددها بعيدًا!';
   }
 
   @override
   String pitchComPenaltyReboundWide2(String player) {
-    return '$player الأسرع إلى الكرة الحرة، لكنه يطيّرها عاليًا!';
+    return '⁨$player⁩ الأسرع إلى الكرة الحرة، لكنه يطيّرها عاليًا!';
   }
 
   @override
   String pitchComPenaltyReboundWide3(String player) {
-    return 'فرصة ذهبية لـ$player من المرتدة، لكنها تطير بعيدًا!';
+    return 'فرصة ذهبية لـ⁨$player⁩ من المرتدة، لكنها تطير بعيدًا!';
   }
 
   @override
   String pitchComPenaltyReboundBlocked1(String player) {
-    return '$player يتابعها، لكن مدافعًا يصد التسديدة!';
+    return '⁨$player⁩ يتابعها، لكن مدافعًا يصد التسديدة!';
   }
 
   @override
   String pitchComPenaltyReboundBlocked2(String player) {
-    return '$player ينقض على المرتدة، لكنها تُعترض!';
+    return '⁨$player⁩ ينقض على المرتدة، لكنها تُعترض!';
   }
 
   @override
   String pitchComPenaltyReboundBlocked3(String player) {
-    return 'المرتدة تسقط أمام $player، وتسديدته تُصد!';
+    return 'المرتدة تسقط أمام ⁨$player⁩، وتسديدته تُصد!';
   }
 
   @override
   String pitchComPenaltyReboundWoodwork1(String player) {
-    return '$player يتابعها ويصيب القائم!';
+    return '⁨$player⁩ يتابعها ويصيب القائم!';
   }
 
   @override
   String pitchComPenaltyReboundWoodwork2(String player) {
-    return 'في الخشبات! متابعة $player ترتد!';
+    return 'في الخشبات! متابعة ⁨$player⁩ ترتد!';
   }
 
   @override
   String pitchComPenaltyReboundWoodwork3(String player) {
-    return '$player يصل إلى المرتدة ويهز إطار المرمى!';
+    return '⁨$player⁩ يصل إلى المرتدة ويهز إطار المرمى!';
   }
 
   @override
   String pitchComPenaltyReboundCleared1(String defender) {
-    return 'الكرة حرة في المنطقة، لكن $defender يشتتها!';
+    return 'الكرة حرة في المنطقة، لكن ⁨$defender⁩ يشتتها!';
   }
 
   @override
   String pitchComPenaltyReboundCleared2(String defender) {
-    return '$defender يسبق الجميع إلى الكرة الحرة ويشتتها!';
+    return '⁨$defender⁩ يسبق الجميع إلى الكرة الحرة ويشتتها!';
   }
 
   @override
   String pitchComPenaltyReboundCleared3(String defender) {
-    return '$defender يتفاعل أولًا ويركل الكرة الحرة بعيدًا!';
+    return '⁨$defender⁩ يتفاعل أولًا ويركل الكرة الحرة بعيدًا!';
   }
 
   @override
   String pitchComPenaltyAwarded1(String player) {
-    return 'ركلة جزاء! $player يُسقط داخل المنطقة.';
+    return 'ركلة جزاء! ⁨$player⁩ يُسقط داخل المنطقة.';
   }
 
   @override
   String pitchComPenaltyAwarded2(String player, String other) {
-    return 'الحكم يشير إلى نقطة الجزاء! $other يعرقل $player.';
+    return 'الحكم يشير إلى نقطة الجزاء! ⁨$other⁩ يعرقل ⁨$player⁩.';
   }
 
   @override
   String pitchComPenaltyAwarded3(String player, String other) {
-    return 'احتُسبت ركلة جزاء! $other يعرقل $player في المنطقة.';
+    return 'احتُسبت ركلة جزاء! ⁨$other⁩ يعرقل ⁨$player⁩ في المنطقة.';
   }
 
   @override
   String pitchComPenaltyAwardedYellow1(String player, String other) {
-    return 'ركلة جزاء! $player يسقط و$other ينال إنذارًا.';
+    return 'ركلة جزاء! ⁨$player⁩ يسقط و⁨$other⁩ ينال إنذارًا.';
   }
 
   @override
   String pitchComPenaltyAwardedYellow2(String player, String other) {
-    return 'ركلة جزاء، وبطاقة صفراء لـ$other بعد الخطأ على $player.';
+    return 'ركلة جزاء، وبطاقة صفراء لـ⁨$other⁩ بعد الخطأ على ⁨$player⁩.';
   }
 
   @override
   String pitchComPenaltyAwardedYellow3(String player, String other) {
-    return 'ركلة جزاء وإنذار! $other يعرقل $player في المنطقة.';
+    return 'ركلة جزاء وإنذار! ⁨$other⁩ يعرقل ⁨$player⁩ في المنطقة.';
   }
 
   @override
   String pitchComPenaltyAwardedRed1(String player, String other) {
-    return 'ركلة جزاء وبطاقة حمراء! $player يسقط، و$other يُطرد.';
+    return 'ركلة جزاء وبطاقة حمراء! ⁨$player⁩ يسقط، و⁨$other⁩ يُطرد.';
   }
 
   @override
   String pitchComPenaltyAwardedRed2(String player, String other) {
-    return 'ركلة جزاء، و$other يُطرد بسبب الخطأ على $player!';
+    return 'ركلة جزاء، و⁨$other⁩ يُطرد بسبب الخطأ على ⁨$player⁩!';
   }
 
   @override
   String pitchComPenaltyAwardedRed3(String player, String other) {
-    return 'بطاقة حمراء وركلة جزاء! $other يوقف انفراد $player.';
+    return 'بطاقة حمراء وركلة جزاء! ⁨$other⁩ يوقف انفراد ⁨$player⁩.';
   }
 
   @override
   String pitchComCorner1(String player) {
-    return 'ركنية. $player سينفذها.';
+    return 'ركنية. ⁨$player⁩ سينفذها.';
   }
 
   @override
   String pitchComCorner2(String player) {
-    return '$player يرسل الركنية.';
+    return '⁨$player⁩ يرسل الركنية.';
   }
 
   @override
   String pitchComCorner3(String player) {
-    return 'ركنية، و$player يقف أمام الكرة.';
+    return 'ركنية، و⁨$player⁩ يقف أمام الكرة.';
   }
 
   @override
   String pitchComFreeKick1(String player) {
-    return 'ركلة حرة. $player سينفذها.';
+    return 'ركلة حرة. ⁨$player⁩ سينفذها.';
   }
 
   @override
   String pitchComFreeKick2(String player) {
-    return 'ركلة حرة في مكان خطير. $player يقف أمام الكرة.';
+    return 'ركلة حرة في مكان خطير. ⁨$player⁩ يقف أمام الكرة.';
   }
 
   @override
   String pitchComFreeKick3(String player) {
-    return '$player يستعد لتنفيذ الركلة الحرة.';
+    return '⁨$player⁩ يستعد لتنفيذ الركلة الحرة.';
   }
 
   @override
   String pitchComLongThrow1(String player) {
-    return 'رمية تماس طويلة! $player يقذفها إلى المنطقة.';
+    return 'رمية تماس طويلة! ⁨$player⁩ يقذفها إلى المنطقة.';
   }
 
   @override
   String pitchComLongThrow2(String player) {
-    return '$player برمية تماس طويلة إلى المنطقة.';
+    return '⁨$player⁩ برمية تماس طويلة إلى المنطقة.';
   }
 
   @override
   String pitchComLongThrow3(String player) {
-    return 'ها هي رمية التماس الطويلة من $player.';
+    return 'ها هي رمية التماس الطويلة من ⁨$player⁩.';
   }
 
   @override
   String pitchComFoulYellow1(String player) {
-    return 'بطاقة صفراء لـ$player.';
+    return 'بطاقة صفراء لـ⁨$player⁩.';
   }
 
   @override
   String pitchComFoulYellow2(String player, String other) {
-    return '$player ينال إنذارًا بسبب خطأ على $other.';
+    return '⁨$player⁩ ينال إنذارًا بسبب خطأ على ⁨$other⁩.';
   }
 
   @override
   String pitchComFoulYellow3(String player, String other) {
-    return 'تدخل متأخر على $other، و$player ينال إنذارًا.';
+    return 'تدخل متأخر على ⁨$other⁩، و⁨$player⁩ ينال إنذارًا.';
   }
 
   @override
   String pitchComFoulSecondYellow1(String player) {
-    return 'إنذار ثانٍ! $player يُطرد.';
+    return 'إنذار ثانٍ! ⁨$player⁩ يُطرد.';
   }
 
   @override
   String pitchComFoulSecondYellow2(String player) {
-    return '$player ينال إنذارًا ثانيًا ويُطرد.';
+    return '⁨$player⁩ ينال إنذارًا ثانيًا ويُطرد.';
   }
 
   @override
   String pitchComFoulSecondYellow3(String player) {
-    return 'صفراء أخرى لـ$player، وهذه حمراء.';
+    return 'صفراء أخرى لـ⁨$player⁩، وهذه حمراء.';
   }
 
   @override
   String pitchComFoulRed1(String player) {
-    return 'بطاقة حمراء! $player يُطرد.';
+    return 'بطاقة حمراء! ⁨$player⁩ يُطرد.';
   }
 
   @override
   String pitchComFoulRed2(String player, String other) {
-    return 'حمراء مباشرة لـ$player بعد الخطأ على $other!';
+    return 'حمراء مباشرة لـ⁨$player⁩ بعد الخطأ على ⁨$other⁩!';
   }
 
   @override
   String pitchComFoulRed3(String player) {
-    return '$player يرى الحمراء ويجب أن يغادر.';
+    return '⁨$player⁩ يرى الحمراء ويجب أن يغادر.';
   }
 
   @override
   String pitchComOffside1(String player) {
-    return 'تسلل. $player انطلق مبكرًا.';
+    return 'تسلل. ⁨$player⁩ انطلق مبكرًا.';
   }
 
   @override
   String pitchComOffside2(String player) {
-    return 'الراية مرفوعة ضد $player.';
+    return 'الراية مرفوعة ضد ⁨$player⁩.';
   }
 
   @override
   String pitchComOffside3(String player) {
-    return '$player في موقف تسلل.';
+    return '⁨$player⁩ في موقف تسلل.';
   }
 
   @override
@@ -17195,7 +17195,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String pitchComVarCheck2(String player) {
-    return '$player يحتفل، لكن حكم الفيديو يلقي نظرة.';
+    return '⁨$player⁩ يحتفل، لكن حكم الفيديو يلقي نظرة.';
   }
 
   @override
@@ -17203,7 +17203,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String pitchComVarConfirmed2(String player) {
-    return 'رُوجع وتأكد: $player يحتفظ بهدفه.';
+    return 'رُوجع وتأكد: ⁨$player⁩ يحتفظ بهدفه.';
   }
 
   @override
@@ -17212,7 +17212,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String pitchComVarOffside2(String player) {
-    return 'أُلغي! حكم الفيديو يجد تسللًا و$player يُحرم.';
+    return 'أُلغي! حكم الفيديو يجد تسللًا و⁨$player⁩ يُحرم.';
   }
 
   @override
@@ -17221,52 +17221,52 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String pitchComVarFoul2(String player) {
-    return 'أُلغي! حكم الفيديو يرصد خطأً و$player يُحرم.';
+    return 'أُلغي! حكم الفيديو يرصد خطأً و⁨$player⁩ يُحرم.';
   }
 
   @override
   String pitchComSub1(String player, String other) {
-    return 'تبديل: دخول $player، خروج $other.';
+    return 'تبديل: دخول ⁨$player⁩، خروج ⁨$other⁩.';
   }
 
   @override
   String pitchComSub2(String player, String other) {
-    return '$other يفسح المجال لـ$player.';
+    return '⁨$other⁩ يفسح المجال لـ⁨$player⁩.';
   }
 
   @override
   String pitchComSub3(String player, String other) {
-    return '$player يدخل بدلًا من $other.';
+    return '⁨$player⁩ يدخل بدلًا من ⁨$other⁩.';
   }
 
   @override
   String pitchComSubFill1(String player) {
-    return '$player يدخل.';
+    return '⁨$player⁩ يدخل.';
   }
 
   @override
   String pitchComSubFill2(String player) {
-    return 'تبديل: $player في الملعب.';
+    return 'تبديل: ⁨$player⁩ في الملعب.';
   }
 
   @override
   String pitchComSubFill3(String player) {
-    return '$player ينضم إلى المعركة.';
+    return '⁨$player⁩ ينضم إلى المعركة.';
   }
 
   @override
   String pitchComInjury1(String player) {
-    return '$player على الأرض ويحتاج إلى علاج.';
+    return '⁨$player⁩ على الأرض ويحتاج إلى علاج.';
   }
 
   @override
   String pitchComInjury2(String player) {
-    return 'قلق هنا، $player تعرّض لإصابة.';
+    return 'قلق هنا، ⁨$player⁩ تعرّض لإصابة.';
   }
 
   @override
   String pitchComInjury3(String player) {
-    return 'مخاوف من إصابة $player.';
+    return 'مخاوف من إصابة ⁨$player⁩.';
   }
 
   @override
@@ -17279,17 +17279,17 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String pitchComPenaltyAwardedSecondYellow1(String player, String other) {
-    return 'ركلة جزاء، وإنذار ثانٍ! $other يُطرد بسبب الخطأ على $player.';
+    return 'ركلة جزاء، وإنذار ثانٍ! ⁨$other⁩ يُطرد بسبب الخطأ على ⁨$player⁩.';
   }
 
   @override
   String pitchComPenaltyAwardedSecondYellow2(String player, String other) {
-    return 'ركلة جزاء! $player يسقط و$other يرى الصفراء الثانية.';
+    return 'ركلة جزاء! ⁨$player⁩ يسقط و⁨$other⁩ يرى الصفراء الثانية.';
   }
 
   @override
   String pitchComPenaltyAwardedSecondYellow3(String player, String other) {
-    return 'ركلة جزاء! $other يعرقل $player وينال إنذارًا ثانيًا، وهذه حمراء.';
+    return 'ركلة جزاء! ⁨$other⁩ يعرقل ⁨$player⁩ وينال إنذارًا ثانيًا، وهذه حمراء.';
   }
 
   @override
@@ -17325,12 +17325,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String matchSubOff(String name) {
-    return 'خروج: $name';
+    return 'خروج: ⁨$name⁩';
   }
 
   @override
   String matchSubOn(String name) {
-    return 'دخول: $name';
+    return 'دخول: ⁨$name⁩';
   }
 
   @override
@@ -17344,7 +17344,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String editorPromoted(String name) {
-    return 'نُقل $name إلى القائمة';
+    return 'نُقل ⁨$name⁩ إلى القائمة';
   }
 
   @override
@@ -17379,47 +17379,47 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String mgrNewsSacked(String nation, String name) {
-    return '$nation يقيل $name';
+    return '$nation يقيل ⁨$name⁩';
   }
 
   @override
   String mgrNewsResigned(String nation, String name) {
-    return '⁦$nation: $name⁩ يستقيل';
+    return '⁦$nation: ⁨$name⁩⁩ يستقيل';
   }
 
   @override
   String mgrNewsPoached(String nation, String name) {
-    return '⁦$nation: $name⁩ يرحل إلى منتخب آخر';
+    return '⁦$nation: ⁨$name⁩⁩ يرحل إلى منتخب آخر';
   }
 
   @override
   String mgrNewsRetired(String nation, String name) {
-    return '⁦$nation: $name⁩ يعتزل التدريب';
+    return '⁦$nation: ⁨$name⁩⁩ يعتزل التدريب';
   }
 
   @override
   String mgrNewsContractEnd(String nation, String name) {
-    return '⁦$nation: $name⁩ يرحل مع انتهاء عقده';
+    return '⁦$nation: ⁨$name⁩⁩ يرحل مع انتهاء عقده';
   }
 
   @override
   String mgrNewsReplacedByPlayer(String nation, String name) {
-    return '⁦$nation: $name⁩ يفسح المجال لك';
+    return '⁦$nation: ⁨$name⁩⁩ يفسح المجال لك';
   }
 
   @override
   String mgrNewsAppointed(String nation, String name) {
-    return '$nation يعيّن $name';
+    return '$nation يعيّن ⁨$name⁩';
   }
 
   @override
   String mgrNewsAppointedBody(String nation, String name) {
-    return '$name يتولى تدريب $nation.';
+    return '⁨$name⁩ يتولى تدريب $nation.';
   }
 
   @override
   String pressBeatOpposingManager(String manager) {
-    return 'بينك وبين $manager تاريخ. هل لديك ما تقوله عنه؟';
+    return 'بينك وبين ⁨$manager⁩ تاريخ. هل لديك ما تقوله عنه؟';
   }
 
   @override
@@ -17430,22 +17430,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String yMgrTie1(String manager) {
-    return '$manager على مقعد الخصم في المباراة القادمة. بينه وبين مدربنا تاريخ، ولا أطيق الانتظار.';
+    return '⁨$manager⁩ على مقعد الخصم في المباراة القادمة. بينه وبين مدربنا تاريخ، ولا أطيق الانتظار.';
   }
 
   @override
   String yMgrTie2(String manager) {
-    return 'التالي، $manager على مقعد الخصم. هو ومدربنا يعرفان بعضهما منذ زمن.';
+    return 'التالي، ⁨$manager⁩ على مقعد الخصم. هو ومدربنا يعرفان بعضهما منذ زمن.';
   }
 
   @override
   String yMgrTie3(String manager) {
-    return '$manager مجددًا. من الأفضل ألا يحوّل مدربنا هذا إلى مسألة شخصية.';
+    return '⁨$manager⁩ مجددًا. من الأفضل ألا يحوّل مدربنا هذا إلى مسألة شخصية.';
   }
 
   @override
   String yMgrTie4(String manager) {
-    return 'ها نحن ذا. $manager على الخط، ومدربنا يحاول الفوز بخصومة بدل المباراة.';
+    return 'ها نحن ذا. ⁨$manager⁩ على الخط، ومدربنا يحاول الفوز بخصومة بدل المباراة.';
   }
 
   @override
@@ -17546,7 +17546,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String mgrPreviewLine(String name) {
-    return 'مدربهم: $name';
+    return 'مدربهم: ⁨$name⁩';
   }
 
   @override
@@ -17925,7 +17925,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String mgrNewsSeeManager(String name) {
-    return 'الملف: $name';
+    return 'الملف: ⁨$name⁩';
   }
 
   @override
@@ -17962,7 +17962,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String editorIssueNameNotAllowed(String name) {
-    return '«$name» غير مسموح';
+    return '«⁨$name⁩» غير مسموح';
   }
 
   @override
@@ -18037,42 +18037,42 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String pitchComOwnGoal1(String defender) {
-    return 'هدف عكسي! $defender يحولها في شباكه.';
+    return 'هدف عكسي! ⁨$defender⁩ يحولها في شباكه.';
   }
 
   @override
   String pitchComOwnGoal2(String defender, String shooter) {
-    return 'محاولة $shooter ترتطم بـ$defender بقسوة وتدخل.';
+    return 'محاولة ⁨$shooter⁩ ترتطم بـ⁨$defender⁩ بقسوة وتدخل.';
   }
 
   @override
   String pitchComOwnGoal3(String defender) {
-    return 'كارثة لـ$defender، الذي يسكنها شباك حارسه.';
+    return 'كارثة لـ⁨$defender⁩، الذي يسكنها شباك حارسه.';
   }
 
   @override
   String pitchComBigSave1(String keeper, String player) {
-    return 'يا له من تصدٍّ! $keeper يحرم $player من مسافة قريبة.';
+    return 'يا له من تصدٍّ! ⁨$keeper⁩ يحرم ⁨$player⁩ من مسافة قريبة.';
   }
 
   @override
   String pitchComBigSave2(String keeper) {
-    return 'تصدٍّ رائع من $keeper!';
+    return 'تصدٍّ رائع من ⁨$keeper⁩!';
   }
 
   @override
   String pitchComBigSave3(String keeper, String player) {
-    return 'بدا $player متأكدًا من التسجيل، لكن $keeper يمنعها بطريقة ما.';
+    return 'بدا ⁨$player⁩ متأكدًا من التسجيل، لكن ⁨$keeper⁩ يمنعها بطريقة ما.';
   }
 
   @override
   String matchTimelineWoodwork(String name) {
-    return '$name أصاب الخشبات';
+    return '⁨$name⁩ أصاب الخشبات';
   }
 
   @override
   String matchTimelineBigSave(String name) {
-    return 'تصدٍّ كبير من $name';
+    return 'تصدٍّ كبير من ⁨$name⁩';
   }
 
   @override
@@ -18086,7 +18086,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String editorDemoted(String name) {
-    return 'نُقل $name إلى المجموعة';
+    return 'نُقل ⁨$name⁩ إلى المجموعة';
   }
 
   @override
@@ -18134,7 +18134,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String editorWebTitle(String address) {
-    return 'عدّل على حاسوب: $address';
+    return 'عدّل على حاسوب: ⁦$address⁩';
   }
 
   @override
@@ -18181,7 +18181,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String editorMergeReviewTitle(String name) {
-    return 'التغييرات من $name';
+    return 'التغييرات من ⁨$name⁩';
   }
 
   @override
@@ -18348,7 +18348,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String editorHistoryBeforeMerge(String name) {
-    return 'قبل دمج $name';
+    return 'قبل دمج ⁨$name⁩';
   }
 
   @override
@@ -18499,7 +18499,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String nationFactRecordScorer(String name) {
-    return 'أهداف الهداف التاريخي، $name';
+    return 'أهداف الهداف التاريخي، ⁨$name⁩';
   }
 
   @override
@@ -18576,14 +18576,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get nationManageStadiums => 'إدارة الملاعب';
 
   @override
-  String get scheduleHome => 'على أرضنا';
+  String get scheduleHome => 'أرضنا';
 
   @override
-  String get scheduleAway => 'خارج أرضنا';
+  String get scheduleAway => 'خارجًا';
 
   @override
   String scheduleGroupTag(String name) {
-    return 'المجموعة $name';
+    return 'المجموعة ⁨$name⁩';
   }
 
   @override
@@ -18646,7 +18646,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String managerNameAge(String name, int age) {
-    return '$name ($age)';
+    return '⁨$name⁩ ($age)';
   }
 
   @override
@@ -18667,7 +18667,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String mgrNewsRetiredAge(String nation, String name, int age) {
-    return '⁦$nation: $name⁩ ($age) يعتزل التدريب';
+    return '⁦$nation: ⁨$name⁩⁩ ($age) يعتزل التدريب';
   }
 
   @override
@@ -18935,32 +18935,32 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String pitchComHandballPenalty1(String player) {
-    return 'لمسة يد! $player يلمسها بيده في المنطقة، وهي ركلة جزاء.';
+    return 'لمسة يد! ⁨$player⁩ يلمسها بيده في المنطقة، وهي ركلة جزاء.';
   }
 
   @override
   String pitchComHandballPenalty2(String player) {
-    return 'الذراع كانت ممدودة: ركلة جزاء بسبب لمسة يد على $player!';
+    return 'الذراع كانت ممدودة: ركلة جزاء بسبب لمسة يد على ⁨$player⁩!';
   }
 
   @override
   String pitchComHandballPenaltyYellow(String player) {
-    return 'لمسة يد من $player في المنطقة: ركلة جزاء، وبطاقة صفراء.';
+    return 'لمسة يد من ⁨$player⁩ في المنطقة: ركلة جزاء، وبطاقة صفراء.';
   }
 
   @override
   String pitchComHandballPenaltyRed(String player) {
-    return '$player يمنعها بيده! ركلة جزاء، ويُطرد.';
+    return '⁨$player⁩ يمنعها بيده! ركلة جزاء، ويُطرد.';
   }
 
   @override
   String pitchComHandballYellow(String player) {
-    return '$player ينال إنذارًا بسبب لمسة يد.';
+    return '⁨$player⁩ ينال إنذارًا بسبب لمسة يد.';
   }
 
   @override
   String pitchComHandballRed(String player) {
-    return 'لمسة يد متعمدة! $player يُطرد.';
+    return 'لمسة يد متعمدة! ⁨$player⁩ يُطرد.';
   }
 
   @override
@@ -19119,7 +19119,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String regionalCupChampion(String name) {
-    return 'فاز بها $name';
+    return 'فاز بها ⁨$name⁩';
   }
 
   @override

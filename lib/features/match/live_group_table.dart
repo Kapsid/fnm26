@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/bidi.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/services/match/same_day_results.dart';
@@ -195,9 +196,12 @@ class LiveGroupTableCard extends StatelessWidget {
                       ),
                       num('${s.played}', style),
                       num(
-                        s.goalDifference > 0
-                            ? '+${s.goalDifference}'
-                            : '${s.goalDifference}',
+                        BidiRun.ltr(
+                          context,
+                          s.goalDifference > 0
+                              ? '+${s.goalDifference}'
+                              : '${s.goalDifference}',
+                        ),
                         style,
                       ),
                       num('${s.points}', style),

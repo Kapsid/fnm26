@@ -9,6 +9,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/core/util/bidi.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -682,7 +683,7 @@ class _NextWindowCard extends StatelessWidget {
                 )
               else
                 Text(
-                  '+$n',
+                  BidiRun.ltr(context, '+$n'),
                   maxLines: 1,
                   style: AppTypography.bodySmall.copyWith(
                     fontSize: 14,
