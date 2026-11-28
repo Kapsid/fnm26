@@ -75,24 +75,47 @@ void main() {
 
     test('a move his qualities do not suit is slower and caps lower', () {
       final suited = _lw(_runner, learned: {PlayerPosition.lb: 18});
-      final unsuited = _lw(_flair, learned: {PlayerPosition.cb: 18});
+      final unsuited = _lw(_flair, learned: {PlayerPosition.lb: 18});
       expect(
-        LearnedPositions.suits(PlayerPosition.lw, PlayerPosition.cb, _flair),
+        LearnedPositions.suits(PlayerPosition.lw, PlayerPosition.lb, _flair),
         isFalse,
       );
-      final halfway = PositionFit.factorFor(unsuited, PlayerPosition.cb);
+      final halfway = PositionFit.factorFor(unsuited, PlayerPosition.lb);
       expect(
         halfway,
         lessThan(PositionFit.factorFor(suited, PlayerPosition.lb)),
       );
-      final done = _lw(_flair, learned: {PlayerPosition.cb: 100});
+      final done = _lw(_flair, learned: {PlayerPosition.lb: 100});
       expect(
-        PositionFit.factorFor(done, PlayerPosition.cb),
+        PositionFit.factorFor(done, PlayerPosition.lb),
         LearnedPositions.unsuitedCap,
       );
       expect(
         LearnedPositions.unsuitedCap,
         lessThan(LearnedPositions.learnedMin),
+      );
+    });
+
+    test('a move right out of his type barely helps, however long', () {
+      // A winger at centre-back: a pair the game never makes.
+      expect(
+        LearnedPositions.offType(PlayerPosition.lw, PlayerPosition.cb),
+        isTrue,
+      );
+      final none = _lw(_runner);
+      final base = PositionFit.factorFor(none, PlayerPosition.cb);
+      final years = _lw(_runner, learned: {PlayerPosition.cb: 200});
+      final learned = PositionFit.factorFor(years, PlayerPosition.cb);
+      expect(learned, greaterThan(base));
+      expect(
+        learned,
+        lessThanOrEqualTo(base + LearnedPositions.offTypeGain + 1e-9),
+      );
+      // And slowly: after a suited move's whole course, little of it.
+      final early = _lw(_runner, learned: {PlayerPosition.cb: 18});
+      expect(
+        PositionFit.factorFor(early, PlayerPosition.cb) - base,
+        lessThan(LearnedPositions.offTypeGain * 0.5),
       );
     });
 

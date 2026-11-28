@@ -43,6 +43,18 @@ abstract final class LearnedPositions {
   /// The most an unsuited position is ever learned to.
   static const double unsuitedCap = 0.90;
 
+  /// A move right out of his type (one the game never pairs, a striker at
+  /// centre-back): he may try, but it barely helps. Learned only by
+  /// [offTypeLearnedAt] starts, and worth at most [offTypeGain] on top of
+  /// what he plays the slot at anyway (owner: "practically impossible").
+  static const double offTypeGain = 0.03;
+  static const double offTypeLearnedAt = 40;
+
+  /// Whether [slot] is right out of [natural]'s type: a move the game never
+  /// pairs ([SecondaryPositions.candidatesFor]).
+  static bool offType(PlayerPosition natural, PlayerPosition slot) =>
+      !SecondaryPositions.candidatesFor(natural).contains(slot);
+
   /// What a friendly start counts for.
   static const double friendlyWeight = 0.5;
 
@@ -79,7 +91,11 @@ abstract final class LearnedPositions {
     PlayerPosition natural,
     PlayerPosition slot,
     PlayerAttributes a,
-  ) => suits(natural, slot, a) ? learnedAt : slowLearnedAt;
+  ) => suits(natural, slot, a)
+      ? learnedAt
+      : offType(natural, slot)
+      ? offTypeLearnedAt
+      : slowLearnedAt;
 
   /// How far along he is with [slot] after [starts] there, 0 (nothing yet)
   /// to 1 (learned).
@@ -99,7 +115,10 @@ abstract final class LearnedPositions {
   static double? factor(Player p, PlayerPosition slot, double base) {
     final starts = p.learned[slot];
     if (starts == null || starts <= 0 || slot == p.position) return null;
-    final top = cap(p.position, slot, p.attributes);
+    var top = cap(p.position, slot, p.attributes);
+    if (top != null && offType(p.position, slot)) {
+      top = math.min(top, base + offTypeGain);
+    }
     if (top == null || top <= base) return null;
     final f = progress(p.position, slot, p.attributes, starts);
     if (f <= 0) return null;
