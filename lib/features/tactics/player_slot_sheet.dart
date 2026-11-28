@@ -718,43 +718,40 @@ class _Header extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: AppSpacing.xs),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  if (onSwap != null)
-                    OutlinedButton.icon(
-                      key: SlotSheetKeys.swap,
-                      onPressed: onSwap,
-                      style: OutlinedButton.styleFrom(
-                        visualDensity: VisualDensity.compact,
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        minimumSize: const Size(0, 34),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              // Swap and Profile: two silver buttons of one width, a touch
+              // larger in type and icon, in the same 68 px the pair took.
+              IntrinsicWidth(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (onSwap != null)
+                      FilledButton.icon(
+                        key: SlotSheetKeys.swap,
+                        onPressed: onSwap,
+                        style: _silverButton,
+                        icon: const Icon(Icons.swap_horiz_rounded, size: 20),
+                        label: Text(l.tacticsSheetSwap),
                       ),
-                      icon: const Icon(Icons.swap_horiz_rounded, size: 18),
-                      label: Text(l.tacticsSheetSwap),
-                    ),
-                  if (onProfile != null)
-                    TextButton(
-                      key: SlotSheetKeys.profile,
-                      onPressed: onProfile,
-                      style: TextButton.styleFrom(
-                        visualDensity: VisualDensity.compact,
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        minimumSize: const Size(0, 34),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    if (onSwap != null && onProfile != null)
+                      const SizedBox(height: 2),
+                    if (onProfile != null)
+                      FilledButton(
+                        key: SlotSheetKeys.profile,
+                        onPressed: onProfile,
+                        style: _silverButton,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(l.tacticsSheetProfile),
+                            const Icon(Icons.chevron_right_rounded, size: 20),
+                          ],
+                        ),
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(l.tacticsSheetProfile),
-                          const Icon(Icons.chevron_right_rounded, size: 18),
-                        ],
-                      ),
-                    ),
-                  const SizedBox(width: AppSpacing.sm),
-                ],
+                  ],
+                ),
               ),
+              const SizedBox(width: AppSpacing.sm),
               const SizedBox(width: AppSpacing.xs),
             ],
           ),
@@ -1443,3 +1440,19 @@ class _EmptyCell extends StatelessWidget {
     ),
   );
 }
+
+/// The sheet's Swap and Profile buttons: brushed silver, dark ink.
+final ButtonStyle _silverButton = FilledButton.styleFrom(
+  backgroundColor: AppColors.primary,
+  foregroundColor: AppColors.silverInk,
+  visualDensity: VisualDensity.compact,
+  padding: const EdgeInsetsDirectional.symmetric(horizontal: 14),
+  minimumSize: const Size(0, 33),
+  maximumSize: const Size(double.infinity, 33),
+  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+  textStyle: AppTypography.labelLarge.copyWith(
+    fontSize: 15,
+    fontWeight: FontWeight.w700,
+  ),
+  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9)),
+);
