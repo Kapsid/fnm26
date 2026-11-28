@@ -16,6 +16,10 @@ analyzer:
     # language-level strict-raw-types warnings they also trip.
     - "test/generated_migrations/**"
     - "lib/data/db/schema_versions.dart"
+    # Generated from app_ar.arb, whose scores carry Unicode bidi isolates
+    # (U+2066 ... U+2069) so "2–1" reads home-first in a right-to-left line;
+    # gen-l10n writes them raw, which trips text_direction_code_point_*.
+    - "lib/l10n/app_localizations_ar.dart"
     - android/**
     - ios/**
     - web/**

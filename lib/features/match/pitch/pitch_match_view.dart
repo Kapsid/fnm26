@@ -561,8 +561,16 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
     );
   }
 
+  // The 2D pitch is geography: home attacks the same way in every language.
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Directionality(
+    textDirection: TextDirection.ltr,
+
+    child: _buildLtr(context),
+  );
+
+  Widget _buildLtr(BuildContext context) {
     final dpr = MediaQuery.devicePixelRatioOf(context);
     return LayoutBuilder(
       builder: (context, constraints) {

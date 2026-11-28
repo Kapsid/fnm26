@@ -113,8 +113,16 @@ class _ScoreBug extends StatelessWidget {
   /// The stripe's height: one line.
   static const double barHeight = 28;
 
+  // The score bug reads home left, away right in every language.
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Directionality(
+    textDirection: TextDirection.ltr,
+
+    child: _buildLtr(context),
+  );
+
+  Widget _buildLtr(BuildContext context) {
     final goal = this.goal;
     final still = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
     // The score tells two goals by one player in one minute apart: each

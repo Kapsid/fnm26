@@ -123,8 +123,16 @@ class _StadiumMapState extends State<StadiumMap> {
     if (!identical(old.geo, widget.geo)) _fit();
   }
 
+  // A map is geography: never mirrored.
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Directionality(
+    textDirection: TextDirection.ltr,
+
+    child: _buildLtr(context),
+  );
+
+  Widget _buildLtr(BuildContext context) {
     return LayoutBuilder(
       builder: (context, box) {
         final size = Size(box.maxWidth, box.maxHeight);

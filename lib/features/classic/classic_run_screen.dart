@@ -526,11 +526,11 @@ class _GroupRow extends StatelessWidget {
     final accent = through ? AppColors.positive : null;
     return Container(
       decoration: BoxDecoration(
-        border: Border(
-          left: BorderSide(color: accent ?? Colors.transparent, width: 3),
+        border: BorderDirectional(
+          start: BorderSide(color: accent ?? Colors.transparent, width: 3),
         ),
       ),
-      padding: const EdgeInsets.only(top: 3, bottom: 3, left: 4),
+      padding: const EdgeInsetsDirectional.only(top: 3, bottom: 3, start: 4),
       child: Row(
         children: [
           SizedBox(

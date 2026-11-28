@@ -499,7 +499,7 @@ class _TierChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(right: AppSpacing.xs),
+    padding: const EdgeInsetsDirectional.only(end: AppSpacing.xs),
     child: GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,

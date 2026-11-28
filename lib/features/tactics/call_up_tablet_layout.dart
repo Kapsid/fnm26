@@ -122,7 +122,7 @@ class _CallUpTabletLayout extends StatelessWidget {
 
   Widget _lineChips(BuildContext context, AppLocalizations l) {
     Widget chip(String label, PositionCategory? line) => Padding(
-      padding: const EdgeInsets.only(right: AppSpacing.xs),
+      padding: const EdgeInsetsDirectional.only(end: AppSpacing.xs),
       child: ChoiceChip(
         label: Text(label),
         visualDensity: VisualDensity.compact,
@@ -187,7 +187,7 @@ class _CallUpTabletLayout extends StatelessWidget {
               children: [
                 if (!(data.absences[p.id]?.isAvailable ?? true))
                   Padding(
-                    padding: const EdgeInsets.only(right: 4),
+                    padding: const EdgeInsetsDirectional.only(end: 4),
                     child: Icon(
                       (data.absences[p.id]?.injuryMatches ?? 0) > 0
                           ? Icons.personal_injury

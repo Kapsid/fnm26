@@ -9,6 +9,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/club_label.dart';
 import 'package:fnm/features/messages/paged_report.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/widgets/directional_icons.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 /// One move in the window's transfer report.
@@ -241,7 +242,7 @@ class _MoveRow extends StatelessWidget {
           child: Semantics(
             label: l.transfersMovedTo,
             child: const Icon(
-              Icons.east_rounded,
+              DirectionalIcons.onward,
               size: 13,
               color: AppColors.onSurfaceVariant,
             ),
@@ -278,7 +279,7 @@ class _MoveRow extends StatelessWidget {
                   row.fee,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.right,
+                  textAlign: TextAlign.end,
                   style: AppTypography.labelMedium.copyWith(
                     color: AppColors.onSurface,
                   ),
@@ -288,7 +289,9 @@ class _MoveRow extends StatelessWidget {
           ),
           const SizedBox(height: 3),
           Padding(
-            padding: const EdgeInsets.only(left: _chipWidth + AppSpacing.sm),
+            padding: const EdgeInsetsDirectional.only(
+              start: _chipWidth + AppSpacing.sm,
+            ),
             child: _move(context),
           ),
         ],

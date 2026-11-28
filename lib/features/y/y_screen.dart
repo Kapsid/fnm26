@@ -1198,17 +1198,17 @@ class YPostTile extends StatelessWidget {
             // each draw their own segment, so a thread of three is one
             // unbroken line.
             if (_isReply)
-              const Positioned(
+              const PositionedDirectional(
                 top: 0,
                 bottom: 0,
-                left: AppSpacing.marginMobile + _replyIndent / 2 - 1,
+                start: AppSpacing.marginMobile + _replyIndent / 2 - 1,
                 width: 2,
                 child: ColoredBox(color: AppColors.outlineVariant),
               ),
             Padding(
-              padding: EdgeInsets.only(
-                left: AppSpacing.marginMobile + (_isReply ? _replyIndent : 0),
-                right: AppSpacing.marginMobile,
+              padding: EdgeInsetsDirectional.only(
+                start: AppSpacing.marginMobile + (_isReply ? _replyIndent : 0),
+                end: AppSpacing.marginMobile,
                 top: _isReply ? 6 : AppSpacing.sm,
                 bottom: _isReply ? 6 : AppSpacing.sm,
               ),

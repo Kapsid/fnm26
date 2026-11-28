@@ -161,7 +161,7 @@ class _EventBanner extends StatelessWidget {
               child: Center(child: _BugFlag(code, width: 18, height: 12)),
             ),
             const Padding(
-              padding: EdgeInsets.only(left: 2),
+              padding: EdgeInsetsDirectional.only(start: 2),
               child: Center(child: _SubMark()),
             ),
             Expanded(

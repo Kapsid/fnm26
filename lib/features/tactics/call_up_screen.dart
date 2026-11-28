@@ -989,7 +989,7 @@ class PositionFilterChips extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget chip(String label, PlayerPosition? p) => Padding(
-      padding: const EdgeInsets.only(right: AppSpacing.xs),
+      padding: const EdgeInsetsDirectional.only(end: AppSpacing.xs),
       child: ChoiceChip(
         key: CallUpScreen.positionChipKey(line, p),
         label: Text(label, maxLines: 1, softWrap: false),
@@ -1219,7 +1219,7 @@ class _PlayerToggle extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: Align(
-                alignment: Alignment.centerLeft,
+                alignment: AlignmentDirectional.centerStart,
                 child: _AbsenceBadge(reason: reason, isInjury: isInjury),
               ),
             ),

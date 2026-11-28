@@ -718,7 +718,7 @@ class SaveTile extends StatelessWidget {
                 // nothing to anybody who had not already guessed it, and this
                 // is the control that gets a career off the phone.
                 Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: AlignmentDirectional.centerStart,
                   child: Builder(
                     builder: (button) => TextButton.icon(
                       style: TextButton.styleFrom(

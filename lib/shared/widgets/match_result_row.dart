@@ -188,7 +188,9 @@ class _Side extends StatelessWidget {
     if (career == null) return row;
     // The tap hugs the flag and code, never the whole half of the row.
     return Align(
-      alignment: end ? Alignment.centerRight : Alignment.centerLeft,
+      alignment: end
+          ? AlignmentDirectional.centerEnd
+          : AlignmentDirectional.centerStart,
       child: NationTap(careerId: career, nationId: id, child: row),
     );
   }

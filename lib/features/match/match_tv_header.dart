@@ -267,8 +267,16 @@ class _MatchTvHeaderState extends State<MatchTvHeader> {
   String _sideCode(int nationId) =>
       nationId == widget.homeNationId ? widget.homeCode : widget.awayCode;
 
+  // The TV header is a scoreboard: home left, away right in every language.
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Directionality(
+    textDirection: TextDirection.ltr,
+
+    child: _buildLtr(context),
+  );
+
+  Widget _buildLtr(BuildContext context) {
     final w = widget;
     final still = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
     final goal = w.goal;

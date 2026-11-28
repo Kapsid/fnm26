@@ -555,7 +555,7 @@ class _ResultRow extends StatelessWidget {
         children: [
           Expanded(
             child: Align(
-              alignment: Alignment.centerRight,
+              alignment: AlignmentDirectional.centerEnd,
               child: NationTap(
                 careerId: careerId,
                 nationId: fixture.homeNationId,
@@ -587,7 +587,7 @@ class _ResultRow extends StatelessWidget {
           ),
           Expanded(
             child: Align(
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerStart,
               child: NationTap(
                 careerId: careerId,
                 nationId: fixture.awayNationId,

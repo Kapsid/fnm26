@@ -192,12 +192,13 @@ class _TacticsTabletLayout extends ConsumerWidget {
                               children: [
                                 Expanded(
                                   child: AppSegmentedTabs(
-                                    padding: const EdgeInsets.fromLTRB(
-                                      AppSpacing.sm + 4,
-                                      AppSpacing.sm,
-                                      0,
-                                      AppSpacing.sm,
-                                    ),
+                                    padding:
+                                        const EdgeInsetsDirectional.fromSTEB(
+                                          AppSpacing.sm + 4,
+                                          AppSpacing.sm,
+                                          0,
+                                          AppSpacing.sm,
+                                        ),
                                     tabs: [
                                       SegmentTab(
                                         l.tacticsFormation.capsIn(

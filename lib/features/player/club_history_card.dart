@@ -11,6 +11,7 @@ import 'package:fnm/core/util/club_label.dart';
 import 'package:fnm/domain/services/club/club_history.dart';
 import 'package:fnm/features/player/club_history_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/widgets/directional_icons.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 /// Where a player has played, season by season, collapsed into spells.
@@ -171,7 +172,7 @@ class _MoveMark extends StatelessWidget {
       );
     }
     return const Icon(
-      Icons.east_rounded,
+      DirectionalIcons.onward,
       size: 14,
       color: AppColors.onSurfaceVariant,
     );

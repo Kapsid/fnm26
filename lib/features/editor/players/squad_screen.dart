@@ -768,7 +768,7 @@ class _GroupHeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.fromLTRB(
+    padding: const EdgeInsetsDirectional.fromSTEB(
       AppSpacing.xs,
       AppSpacing.md,
       0,
@@ -802,8 +802,8 @@ class _SwipeRow extends StatelessWidget {
       key: ValueKey(id),
       direction: DismissDirection.endToStart,
       background: Container(
-        alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: AppSpacing.lg),
+        alignment: AlignmentDirectional.centerEnd,
+        padding: const EdgeInsetsDirectional.only(end: AppSpacing.lg),
         decoration: BoxDecoration(
           color: AppColors.error.withValues(alpha: 0.85),
           borderRadius: AppRadii.mdAll,
@@ -866,7 +866,7 @@ class _PoolPane extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.fromLTRB(
+          padding: EdgeInsetsDirectional.fromSTEB(
             padding.left,
             AppSpacing.sm,
             padding.right,
@@ -898,7 +898,7 @@ class _PoolPane extends StatelessWidget {
         // phone.
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          padding: EdgeInsets.fromLTRB(
+          padding: EdgeInsetsDirectional.fromSTEB(
             padding.left,
             AppSpacing.xs,
             padding.right,
@@ -908,7 +908,7 @@ class _PoolPane extends StatelessWidget {
             children: [
               for (final c in [null, ...PositionCategory.values])
                 Padding(
-                  padding: const EdgeInsets.only(right: AppSpacing.xs),
+                  padding: const EdgeInsetsDirectional.only(end: AppSpacing.xs),
                   child: ChoiceChip(
                     key: SquadScreen.poolFilterKey(c),
                     label: Text(
@@ -925,7 +925,7 @@ class _PoolPane extends StatelessWidget {
         ),
         Expanded(
           child: ListView.builder(
-            padding: EdgeInsets.fromLTRB(
+            padding: EdgeInsetsDirectional.fromSTEB(
               padding.left,
               AppSpacing.xs,
               padding.right,
@@ -1077,7 +1077,7 @@ class _PoolBanner extends StatelessWidget {
             ),
           if (view.issues.length > 6)
             Padding(
-              padding: const EdgeInsets.only(top: 2, left: 20),
+              padding: const EdgeInsetsDirectional.only(top: 2, start: 20),
               child: Text(
                 l.editorCountToFix(view.issues.length - 6),
                 style: AppTypography.labelSmall.copyWith(
@@ -1193,7 +1193,7 @@ class _Summary extends StatelessWidget {
               ),
           if (view.issues.length > 6)
             Padding(
-              padding: const EdgeInsets.only(top: 2, left: 20),
+              padding: const EdgeInsetsDirectional.only(top: 2, start: 20),
               child: Text(
                 l.editorCountToFix(view.issues.length - 6),
                 style: AppTypography.labelSmall.copyWith(color: color),

@@ -388,7 +388,7 @@ class _PathCard extends StatelessWidget {
             ),
             if (won)
               Padding(
-                padding: const EdgeInsets.only(right: AppSpacing.sm),
+                padding: const EdgeInsetsDirectional.only(end: AppSpacing.sm),
                 child: Text(
                   isFinal ? l.euroPlayoffQualified : l.euroPlayoffToFinal,
                   key: Key(

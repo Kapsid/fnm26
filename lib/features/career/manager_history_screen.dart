@@ -358,8 +358,8 @@ class _TrophySlot extends StatelessWidget {
                 );
               }(),
               if (count > 1)
-                Positioned(
-                  right: -2,
+                PositionedDirectional(
+                  end: -2,
                   top: -2,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
@@ -527,7 +527,7 @@ class _Finish extends StatelessWidget {
           children: [
             if (gold)
               const Padding(
-                padding: EdgeInsets.only(right: 4),
+                padding: EdgeInsetsDirectional.only(end: 4),
                 child: Icon(
                   Icons.emoji_events,
                   size: 14,

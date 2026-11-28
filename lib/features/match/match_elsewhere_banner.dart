@@ -155,7 +155,7 @@ class _ElsewhereBanner extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
+                  alignment: AlignmentDirectional.centerStart,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -183,7 +183,7 @@ class _ElsewhereBanner extends StatelessWidget {
             ),
             if (place != null)
               Padding(
-                padding: const EdgeInsets.only(right: 4),
+                padding: const EdgeInsetsDirectional.only(end: 4),
                 child: Row(
                   key: const Key('match.elsewhereBanner.place'),
                   mainAxisSize: MainAxisSize.min,

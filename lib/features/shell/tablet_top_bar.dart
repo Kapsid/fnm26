@@ -157,7 +157,7 @@ class TabletTopBar extends ConsumerWidget {
             const SizedBox(width: AppSpacing.md),
             Expanded(
               child: Align(
-                alignment: Alignment.centerLeft,
+                alignment: AlignmentDirectional.centerStart,
                 child: _NextChip(hub: hub, next: next),
               ),
             ),

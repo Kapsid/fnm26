@@ -40,8 +40,11 @@ class CardMark extends StatelessWidget {
       height: size,
       child: Stack(
         children: [
-          Positioned(left: 0, child: _card(kYellowCardColor, size * 14 / 16)),
-          Positioned(right: 0, child: _card(kRedCardColor, size)),
+          PositionedDirectional(
+            start: 0,
+            child: _card(kYellowCardColor, size * 14 / 16),
+          ),
+          PositionedDirectional(end: 0, child: _card(kRedCardColor, size)),
         ],
       ),
     ),

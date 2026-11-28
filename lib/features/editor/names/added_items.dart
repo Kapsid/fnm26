@@ -2108,7 +2108,7 @@ Future<void> showEditorFormSheet(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Align(
-            alignment: Alignment.centerRight,
+            alignment: AlignmentDirectional.centerEnd,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
               child: CloseButton(

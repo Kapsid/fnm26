@@ -144,7 +144,7 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
           ),
           const SizedBox(height: AppSpacing.md),
           Align(
-            alignment: Alignment.centerRight,
+            alignment: AlignmentDirectional.centerEnd,
             child: SizedBox(width: 320, child: _action(l, data)),
           ),
         ],

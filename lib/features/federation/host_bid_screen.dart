@@ -610,15 +610,15 @@ class HostBidChanceBar extends StatelessWidget {
                 ),
               ),
               // Filled to the total, in the colours of the scale beneath.
-              Positioned(
-                left: 0,
+              PositionedDirectional(
+                start: 0,
                 top: 0,
                 bottom: 0,
                 width: x(quote.total),
                 child: ClipRRect(
                   borderRadius: AppRadii.smAll,
                   child: OverflowBox(
-                    alignment: Alignment.centerLeft,
+                    alignment: AlignmentDirectional.centerStart,
                     maxWidth: w,
                     minWidth: w,
                     child: const DecoratedBox(
@@ -629,8 +629,8 @@ class HostBidChanceBar extends StatelessWidget {
                 ),
               ),
               // The base part, shaded.
-              Positioned(
-                left: 0,
+              PositionedDirectional(
+                start: 0,
                 top: 0,
                 bottom: 0,
                 width: x(quote.base),
@@ -642,8 +642,8 @@ class HostBidChanceBar extends StatelessWidget {
                 ),
               ),
               // The ceiling.
-              Positioned(
-                left: (x(quote.cap) - 1).clamp(0.0, w - 2),
+              PositionedDirectional(
+                start: (x(quote.cap) - 1).clamp(0.0, w - 2),
                 top: -2,
                 bottom: -2,
                 width: 2,

@@ -105,7 +105,7 @@ class _RedCardBanner extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
                 child: Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: AlignmentDirectional.centerStart,
                   child: Text(
                     initialledName(event.playerName),
                     maxLines: 1,
@@ -120,7 +120,7 @@ class _RedCardBanner extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(right: AppSpacing.sm),
+              padding: const EdgeInsetsDirectional.only(end: AppSpacing.sm),
               child: Center(
                 child: Text(
                   _eventClock(event),

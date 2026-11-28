@@ -126,7 +126,12 @@ class _WorldRankingTabletLayoutState
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(12, 8, 4, 0),
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                              12,
+                              8,
+                              4,
+                              0,
+                            ),
                             child: TabletScreenHeader(
                               title: l.tourSharedWorldRankingTitle,
                               trailing: Row(

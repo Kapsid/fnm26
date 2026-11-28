@@ -253,7 +253,7 @@ class _PotsPreview extends StatelessWidget {
                 AppSpacing.lg,
               ),
               child: Align(
-                alignment: Alignment.centerRight,
+                alignment: AlignmentDirectional.centerEnd,
                 child: SizedBox(
                   width: 320,
                   child: PrimaryButton(

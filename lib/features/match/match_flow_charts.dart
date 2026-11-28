@@ -54,8 +54,16 @@ class MatchFlowCharts extends StatelessWidget {
 
   int get _upTo => math.min(minute, math.min(homeXg.length, awayXg.length) - 1);
 
+  // Charts over match time run left to right in every language.
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Directionality(
+    textDirection: TextDirection.ltr,
+
+    child: _buildLtr(context),
+  );
+
+  Widget _buildLtr(BuildContext context) {
     final l = AppLocalizations.of(context);
     final upTo = math.max(0, _upTo);
     final span = upTo > 90 || homeXg.length > 91 ? 120 : 90;

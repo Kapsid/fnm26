@@ -1134,8 +1134,8 @@ class _GroupCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: isPlayer ? AppColors.surfaceContainerHigh : null,
-        border: Border(
-          left: BorderSide(
+        border: BorderDirectional(
+          start: BorderSide(
             color: accent ?? Colors.transparent,
             width: 3,
           ),

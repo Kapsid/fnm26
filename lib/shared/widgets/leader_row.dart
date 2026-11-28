@@ -138,7 +138,7 @@ class LeaderRow extends StatelessWidget {
                   // ("EN ACTIVITÉ").
                   : FittedBox(
                       fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
+                      alignment: AlignmentDirectional.centerStart,
                       child: trailing,
                     ),
             ),

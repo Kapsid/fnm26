@@ -163,7 +163,7 @@ class _SquadTabletLayoutState extends ConsumerState<SquadTabletLayout> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 12, 4, 0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 4, 0),
                     child: Row(
                       children: [
                         Text(l.sideSquad, style: TabletText.screenTitle),
@@ -280,12 +280,12 @@ List<GridColumnSet<NationSquadRow>> squadColumnSets(
         // scans this list for.
         if (r.starting)
           const Padding(
-            padding: EdgeInsets.only(right: 4),
+            padding: EdgeInsetsDirectional.only(end: 4),
             child: Icon(Icons.star_rounded, size: 13, color: AppColors.primary),
           )
         else if (r.calledUp)
           const Padding(
-            padding: EdgeInsets.only(right: 4),
+            padding: EdgeInsetsDirectional.only(end: 4),
             child: Icon(
               Icons.check_circle,
               size: 12,
@@ -299,7 +299,7 @@ List<GridColumnSet<NationSquadRow>> squadColumnSets(
         Flexible(
           child: FittedBox(
             fit: BoxFit.scaleDown,
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             child: PlayerTraitGlyphs(player: r.player, saveSeed: saveSeed),
           ),
         ),
@@ -388,7 +388,7 @@ List<GridColumnSet<NationSquadRow>> squadColumnSets(
       final rating = r.condition?.formRating ?? 0;
       if (rating <= 0) return const Text('-');
       return Align(
-        alignment: Alignment.centerRight,
+        alignment: AlignmentDirectional.centerEnd,
         child: RatingBadge(rating, compact: true),
       );
     },
@@ -431,7 +431,7 @@ List<GridColumnSet<NationSquadRow>> squadColumnSets(
     sortKey: shiftKey,
     firstAscending: true,
     cell: (r) => Align(
-      alignment: Alignment.centerLeft,
+      alignment: AlignmentDirectional.centerStart,
       child: ConditionMark(condition: r.condition, size: 13),
     ),
   );

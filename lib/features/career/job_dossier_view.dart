@@ -211,7 +211,7 @@ class JobDossierBody extends ConsumerWidget {
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(right: AppSpacing.xs),
+                  padding: const EdgeInsetsDirectional.only(end: AppSpacing.xs),
                   child: Text(l.matchDossierForm, style: label),
                 ),
                 if (form == null || form.results.isEmpty)

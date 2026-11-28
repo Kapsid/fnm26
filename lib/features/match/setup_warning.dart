@@ -228,7 +228,7 @@ class SquadSetupWarning extends ConsumerWidget {
         children: [
           card,
           Align(
-            alignment: Alignment.centerRight,
+            alignment: AlignmentDirectional.centerEnd,
             child: TextButton(
               onPressed: () =>
                   ref.read(setPieceTakersStoreProvider).acceptAuto(careerId),

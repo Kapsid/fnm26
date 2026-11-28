@@ -38,7 +38,7 @@ class _CampaignVerdictTabletLayout extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           Align(
-            alignment: Alignment.centerRight,
+            alignment: AlignmentDirectional.centerEnd,
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 320),
               child: action,

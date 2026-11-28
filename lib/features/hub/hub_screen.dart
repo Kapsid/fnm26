@@ -786,7 +786,9 @@ class _Upcoming extends StatelessWidget {
                   minHeight: AppSpacing.minHitArea,
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(left: AppSpacing.sm),
+                  padding: const EdgeInsetsDirectional.only(
+                    start: AppSpacing.sm,
+                  ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -1132,8 +1134,8 @@ class _GroupTable extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: isPlayer ? AppColors.surfaceContainerHigh : null,
-        border: Border(
-          left: BorderSide(
+        border: BorderDirectional(
+          start: BorderSide(
             color: zoneColor ?? Colors.transparent,
             width: 3,
           ),
@@ -1200,7 +1202,7 @@ class _GroupTable extends StatelessWidget {
       color: AppColors.onSurfaceVariant,
     );
     return Padding(
-      padding: const EdgeInsets.only(left: 7),
+      padding: const EdgeInsetsDirectional.only(start: 7),
       child: Row(
         children: [
           SizedBox(width: 20, child: Text(a, style: style)),

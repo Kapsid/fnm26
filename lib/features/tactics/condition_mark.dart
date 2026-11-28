@@ -169,7 +169,10 @@ class LineupConditionStrip extends StatelessWidget {
             child: Row(
               children: [
                 for (final c in chips)
-                  Padding(padding: const EdgeInsets.only(right: 6), child: c),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(end: 6),
+                    child: c,
+                  ),
               ],
             ),
           )

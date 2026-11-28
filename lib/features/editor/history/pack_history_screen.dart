@@ -321,7 +321,7 @@ class _VersionRow extends ConsumerWidget {
       padding: const EdgeInsets.only(bottom: AppSpacing.xs),
       child: AppCard(
         key: PackHistoryScreen.rowKey(v.id),
-        padding: const EdgeInsets.fromLTRB(
+        padding: const EdgeInsetsDirectional.fromSTEB(
           AppSpacing.md,
           AppSpacing.sm,
           AppSpacing.xs,

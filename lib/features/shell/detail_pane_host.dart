@@ -71,7 +71,7 @@ class DetailPaneHost extends StatelessWidget {
         Container(
           height: 34,
           color: AppColors.surfaceContainer,
-          padding: const EdgeInsets.only(left: 12, right: 4),
+          padding: const EdgeInsetsDirectional.only(start: 12, end: 4),
           child: Row(
             children: [
               Expanded(

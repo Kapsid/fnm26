@@ -556,7 +556,7 @@ class _AgainstYouCard extends StatelessWidget {
               maxLines: 1,
             ),
           Align(
-            alignment: Alignment.centerRight,
+            alignment: AlignmentDirectional.centerEnd,
             child: TextButton(
               onPressed: () => context.push(
                 '${Routes.h2hMeetings}?careerId=$careerId'
@@ -731,7 +731,7 @@ class _ResultsCardState extends State<_ResultsCard> {
           ],
           if (more || d.isPlayerNation)
             Align(
-              alignment: Alignment.centerRight,
+              alignment: AlignmentDirectional.centerEnd,
               child: TextButton(
                 key: NationVitrineScreen.allMatchesKey,
                 onPressed: () {
@@ -1000,7 +1000,7 @@ class _StadiumsTab extends ConsumerWidget {
         ),
         if (d.isPlayerNation)
           Align(
-            alignment: Alignment.centerRight,
+            alignment: AlignmentDirectional.centerEnd,
             child: TextButton(
               onPressed: () =>
                   context.push('${Routes.stadiums}?careerId=$careerId'),

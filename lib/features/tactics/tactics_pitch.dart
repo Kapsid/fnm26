@@ -595,8 +595,16 @@ class TacticsPitch extends StatelessWidget {
   /// disc in the tighter shapes.
   double _nodeHeight(double disc) => disc + _badgeOverhang * 2;
 
+  // The tactics pitch is geography: left back is on the left in every language.
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Directionality(
+    textDirection: TextDirection.ltr,
+
+    child: _buildLtr(context),
+  );
+
+  Widget _buildLtr(BuildContext context) {
     final layout = switchedLayoutOf(formation, switches);
     final positions = switches.apply(formation);
     final base = formation.positions;

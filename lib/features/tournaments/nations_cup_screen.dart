@@ -640,8 +640,8 @@ class _GroupCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: isPlayer ? AppColors.surfaceContainerHigh : null,
-        border: Border(
-          left: BorderSide(color: zone ?? Colors.transparent, width: 3),
+        border: BorderDirectional(
+          start: BorderSide(color: zone ?? Colors.transparent, width: 3),
         ),
       ),
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
@@ -833,7 +833,7 @@ class _FinalsCard extends StatelessWidget {
       child: WholeText(
         name(id),
         breakWords: false,
-        textAlign: right ? TextAlign.right : TextAlign.left,
+        textAlign: right ? TextAlign.end : TextAlign.start,
         style: AppTypography.bodySmall.copyWith(
           color: winner ? AppColors.primary : AppColors.onSurface,
           fontWeight: (winner || isPlayer) ? FontWeight.w700 : FontWeight.w400,

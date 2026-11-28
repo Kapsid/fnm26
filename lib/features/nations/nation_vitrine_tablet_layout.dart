@@ -123,7 +123,7 @@ class _SidePanel extends StatelessWidget {
           if (d.isPlayerNation) ...[
             const SizedBox(height: AppSpacing.sm),
             Align(
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerStart,
               child: TacticalChip(l.nationsYourTeam, emphasized: true),
             ),
           ],

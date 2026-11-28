@@ -150,7 +150,7 @@ class _CurrentCompetition extends ConsumerWidget {
               minHeight: AppSpacing.minHitArea - 8,
             ),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 6, 8, 6),
+              padding: const EdgeInsetsDirectional.fromSTEB(10, 6, 8, 6),
               child: Row(
                 children: [
                   const Icon(

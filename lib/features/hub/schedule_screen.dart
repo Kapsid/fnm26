@@ -124,7 +124,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
     Widget chip(ScheduleFilter f, String label) {
       final active = _filter == f;
       return Padding(
-        padding: const EdgeInsets.only(right: AppSpacing.sm),
+        padding: const EdgeInsetsDirectional.only(end: AppSpacing.sm),
         child: Semantics(
           button: true,
           selected: active,

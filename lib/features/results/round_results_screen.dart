@@ -603,7 +603,7 @@ class _FriendlyRow extends StatelessWidget {
         children: [
           Expanded(
             child: Align(
-              alignment: Alignment.centerRight,
+              alignment: AlignmentDirectional.centerEnd,
               child: NationTap(
                 careerId: careerId,
                 nationId: result.homeId,
@@ -640,7 +640,7 @@ class _FriendlyRow extends StatelessWidget {
           ),
           Expanded(
             child: Align(
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerStart,
               child: NationTap(
                 careerId: careerId,
                 nationId: result.awayId,
@@ -716,8 +716,8 @@ class _StandingRow extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: isPlayer ? AppColors.surfaceContainerHigh : null,
-        border: Border(
-          left: BorderSide(
+        border: BorderDirectional(
+          start: BorderSide(
             color: accent ?? Colors.transparent,
             width: 3,
           ),

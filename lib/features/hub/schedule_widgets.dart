@@ -670,7 +670,7 @@ class _NextWindowCard extends StatelessWidget {
             children: [
               FittedBox(
                 fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
+                alignment: AlignmentDirectional.centerStart,
                 child: Text(name, maxLines: 1, style: _metaStyle),
               ),
               const SizedBox(height: AppSpacing.xs),

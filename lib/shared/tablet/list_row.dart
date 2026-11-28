@@ -49,8 +49,8 @@ class TabletListRow extends StatelessWidget {
             height: height,
             padding: const EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
-              border: Border(
-                left: BorderSide(
+              border: BorderDirectional(
+                start: BorderSide(
                   color: selected ? AppColors.primary : Colors.transparent,
                   width: 3,
                 ),
