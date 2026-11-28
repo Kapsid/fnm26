@@ -1182,6 +1182,10 @@
       }
     }
   },
+  "recordsAllTimeXiSubtitle": "All-time XI",
+  "@recordsAllTimeXiSubtitle": {
+    "description": "Subtitle under the LEGENDS heading on the Legends screen, over the all-time XI pitch. Sentence case."
+  },
   "recordsNoWorldHistory": "The world has no history yet. Play out some campaigns and the all-time greats will appear here.",
   "@recordsNoWorldHistory": {
     "description": "Empty state on the all-time world records screen."

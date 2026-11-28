@@ -1454,6 +1454,12 @@ abstract class AppLocalizations {
   /// **'The greatest side {nation} could ever field.'**
   String recordsGreatestSide(String nation);
 
+  /// Subtitle under the LEGENDS heading on the Legends screen, over the all-time XI pitch. Sentence case.
+  ///
+  /// In en, this message translates to:
+  /// **'All-time XI'**
+  String get recordsAllTimeXiSubtitle;
+
   /// Empty state on the all-time world records screen.
   ///
   /// In en, this message translates to:

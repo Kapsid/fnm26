@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Gagal memuat rekor.\n{error}",
   "recordsNoLegends": "Belum ada legenda. Mainkan beberapa kampanye dan para bintang {nation} akan muncul di sini.",
   "recordsGreatestSide": "Tim terhebat yang bisa diturunkan {nation}.",
+  "recordsAllTimeXiSubtitle": "Susunan terbaik sepanjang masa",
   "recordsNoWorldHistory": "Dunia belum punya sejarah. Mainkan beberapa kampanye dan para bintang sepanjang masa akan muncul di sini.",
   "recordsPlayToWriteHistory": "Mainkan beberapa laga untuk mulai menulis sejarah {nation}.",
   "tacticsLineGk": "KIP",

@@ -782,6 +782,9 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'Đội hình mọi thời đại';
+
+  @override
   String get recordsNoWorldHistory =>
       'Thế giới chưa có lịch sử. Hãy chơi vài chiến dịch, những huyền thoại mọi thời đại sẽ xuất hiện ở đây.';
 

@@ -4,17 +4,99 @@
 // recreate it. Unauthorized copying may result in legal action. See NOTICE.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/formation.dart';
+import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/squad/legends.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 
 /// The manager's nation's legends: an all-time XI and a hall of fame, ranked
 /// across every cycle in the save.
+///
+/// [formation] is the shape the XI is picked in, [players] each legend as
+/// the save reads him (for the pitch's discs), [careers] each legend's span
+/// and titles (for the hall of fame's cards), and [kit] the nation's
+/// `#RRGGBB` kit colours, primary then secondary.
 typedef LegendsView = ({
   String nationName,
   List<RankedLegend> allTimeXi,
   List<RankedLegend> hallOfFame,
+  Formation formation,
+  Map<int, Player> players,
+  Map<int, LegendCareer> careers,
+  ({String primary, String secondary}) kit,
 });
+
+/// A legend's international career as the save saw it: the first and last
+/// year of the matches it rated him in (null when it rated none), and the
+/// titles his nation won in those years.
+typedef LegendCareer = ({int? from, int? to, int titles});
+
+/// [playerId]'s [LegendCareer] for [nationId], from his rated matches and
+/// the roll of [honours].
+Future<LegendCareer> legendCareerOf(
+  CompetitionRepository comp,
+  int careerId,
+  int nationId,
+  int playerId,
+  List<Honour> honours,
+) async {
+  final history = await comp.playerMatchHistory(
+    careerId,
+    playerId,
+    limit: 100000,
+  );
+  int? from;
+  int? to;
+  for (final m in history) {
+    if (m.nationId != 0 && m.nationId != nationId) continue;
+    final y = m.date.year;
+    if (from == null || y < from) from = y;
+    if (to == null || y > to) to = y;
+  }
+  if (from == null || to == null) return (from: null, to: null, titles: 0);
+  final titles = honours
+      .where(
+        (h) =>
+            h.champions.contains(nationId) && h.year >= from! && h.year <= to!,
+      )
+      .length;
+  return (from: from, to: to, titles: titles);
+}
+
+/// The shape the all-time XI is picked in: [Legends.xiShape]'s 4-3-3.
+const Formation legendsXiFormation = Formation.f433;
+
+/// The all-time XI placed in [formation]'s slots, by slot: each slot first
+/// takes a legend of exactly its position, then the best one left from its
+/// line, so a left-back plays left-back and a second centre-back fills the
+/// right. A slot its line has no legend for stays empty (null).
+List<int?> legendsXiLineup(Formation formation, List<RankedLegend> xi) {
+  final positions = formation.positions;
+  final lineup = List<int?>.filled(positions.length, null);
+  final used = <int>{};
+  for (var slot = 0; slot < positions.length; slot++) {
+    for (final l in xi) {
+      if (l.position == positions[slot] && used.add(l.playerId)) {
+        lineup[slot] = l.playerId;
+        break;
+      }
+    }
+  }
+  for (var slot = 0; slot < positions.length; slot++) {
+    if (lineup[slot] != null) continue;
+    for (final l in xi) {
+      if (l.position.category == positions[slot].category &&
+          used.add(l.playerId)) {
+        lineup[slot] = l.playerId;
+        break;
+      }
+    }
+  }
+  return lineup;
+}
 
 final AutoDisposeFutureProviderFamily<LegendsView?, int>
 legendsProvider = FutureProvider.autoDispose.family<LegendsView?, int>((
@@ -45,11 +127,20 @@ legendsProvider = FutureProvider.autoDispose.family<LegendsView?, int>((
     ...scorers.map((s) => s.playerId),
     ...assisters.map((a) => a.playerId),
   };
+  final nation = nations[nationId];
+  final kit = (
+    primary: nation?.primaryColor ?? '#1E88E5',
+    secondary: nation?.secondaryColor ?? '#FFFFFF',
+  );
   if (ids.isEmpty) {
     return (
-      nationName: nations[nationId]?.name ?? 'Your nation',
+      nationName: nation?.name ?? 'Your nation',
       allTimeXi: const <RankedLegend>[],
       hallOfFame: const <RankedLegend>[],
+      formation: legendsXiFormation,
+      players: const <int, Player>{},
+      careers: const <int, LegendCareer>{},
+      kit: kit,
     );
   }
 
@@ -63,6 +154,7 @@ legendsProvider = FutureProvider.autoDispose.family<LegendsView?, int>((
   int maxOf(int a, int b) => a > b ? a : b;
 
   final stats = <LegendStat>[];
+  final players = <int, Player>{};
   for (final id in ids) {
     final career0 = await comp.playerCareerStats(careerId, id);
     final capCount = maxOf(career0?.caps ?? 0, capsByPlayer[id] ?? 0);
@@ -76,6 +168,7 @@ legendsProvider = FutureProvider.autoDispose.family<LegendsView?, int>((
       careerStartsByPlayer: careerDev,
     );
     if (player == null) continue;
+    players[id] = player;
     stats.add((
       playerId: id,
       name: player.name,
@@ -89,9 +182,24 @@ legendsProvider = FutureProvider.autoDispose.family<LegendsView?, int>((
   }
 
   final ranked = Legends.rank(stats);
+  final xi = Legends.allTimeXi(ranked);
+  final hall = ranked.take(20).toList();
+  final shown = {...xi.map((l) => l.playerId), ...hall.map((l) => l.playerId)};
+  final honours = await comp.honours(careerId);
+  final careers = <int, LegendCareer>{
+    for (final id in hall.map((l) => l.playerId))
+      id: await legendCareerOf(comp, careerId, nationId, id, honours),
+  };
   return (
-    nationName: nations[nationId]?.name ?? 'Your nation',
-    allTimeXi: Legends.allTimeXi(ranked),
-    hallOfFame: ranked.take(20).toList(),
+    nationName: nation?.name ?? 'Your nation',
+    allTimeXi: xi,
+    hallOfFame: hall,
+    formation: legendsXiFormation,
+    players: {
+      for (final id in shown)
+        if (players[id] != null) id: players[id]!,
+    },
+    careers: careers,
+    kit: kit,
   );
 });

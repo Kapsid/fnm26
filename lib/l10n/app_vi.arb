@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Không tải được thành tích.\n{error}",
   "recordsNoLegends": "Chưa có huyền thoại nào. Hãy chơi vài chiến dịch, những tên tuổi lớn của {nation} sẽ xuất hiện ở đây.",
   "recordsGreatestSide": "Đội hình mạnh nhất mà {nation} từng có.",
+  "recordsAllTimeXiSubtitle": "Đội hình mọi thời đại",
   "recordsNoWorldHistory": "Thế giới chưa có lịch sử. Hãy chơi vài chiến dịch, những huyền thoại mọi thời đại sẽ xuất hiện ở đây.",
   "recordsPlayToWriteHistory": "Hãy chơi vài trận để bắt đầu viết nên lịch sử của {nation}.",
   "tacticsLineGk": "TM",

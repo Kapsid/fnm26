@@ -828,6 +828,9 @@ class AppLocalizationsNl extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'Elftal aller tijden';
+
+  @override
   String get recordsNoWorldHistory =>
       'De wereld heeft nog geen geschiedenis. Speel een paar campagnes uit en de grootsten aller tijden verschijnen hier.';
 

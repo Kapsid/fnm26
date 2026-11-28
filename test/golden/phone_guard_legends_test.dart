@@ -5,16 +5,13 @@ import 'package:fnm/core/routing/app_router.dart';
 import '../helpers/history_fixtures.dart';
 import '../helpers/seeded_save.dart';
 
-/// The phone legends, pinned before the tablet layout is added beside them:
-/// as a fresh save shows them (none yet), and the fake hall of fame in a
-/// tall window.
+/// The phone legends, pinned: as a fresh save shows them (none yet), and the
+/// fake legends in a tall window (the all-time XI on the pitch, the whole
+/// hall of fame as cards below it).
 ///
-/// At 390 wide every hall-of-fame row already overflows its 44 px leading
-/// slot by a few pixels (an 18 px rank beside the position chip). That is the
-/// phone as it ships (every row of the fake), so the tall guard pins it as it
-/// is, as the tournaments guard does: it lets RenderFlex overflows through,
-/// counts them, and expects one per row, so a change that adds or removes one
-/// still fails here.
+/// The hall of fame's old list rows each overflowed their 44 px leading slot
+/// by a few pixels at 390 wide; the cards that replaced them overflow
+/// nowhere, and the tall guard now says so.
 void main() {
   testWidgets('legends_phone', (tester) async {
     final save = await seedSave(tester);
@@ -30,30 +27,13 @@ void main() {
 
   testWidgets('legends_phone_tall', (tester) async {
     final save = await seedSave(tester, overrides: [fakeLegendsOverride()]);
-    var seen = 0;
-    final original = FlutterError.onError;
-    FlutterError.onError = (details) {
-      if (details.exceptionAsString().contains('A RenderFlex overflowed')) {
-        seen++;
-        return;
-      }
-      original?.call(details);
-    };
-    try {
-      await pumpRoute(
-        tester,
-        save,
-        '${Routes.legends}?careerId=${save.careerId}',
-        size: const Size(390, 2400),
-      );
-    } finally {
-      FlutterError.onError = original;
-    }
-    expect(
-      seen,
-      fakeLegends().hallOfFame.length,
-      reason: 'the hall of fame overflows differently',
+    await pumpRoute(
+      tester,
+      save,
+      '${Routes.legends}?careerId=${save.careerId}',
+      size: const Size(390, 2400),
     );
+    expect(tester.takeException(), isNull);
     expect(find.text(enL.recordsHallOfFame), findsOneWidget);
     await expectAppGolden('goldens/legends_phone_tall.png');
   });

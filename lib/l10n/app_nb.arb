@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Kunne ikke laste rekorden.\n{error}",
   "recordsNoLegends": "Ingen legender ennå. Spill noen kampanjer, så dukker de store navnene fra {nation} opp her.",
   "recordsGreatestSide": "Det beste laget {nation} noen gang kunne stilt.",
+  "recordsAllTimeXiSubtitle": "Alltidslaget",
   "recordsNoWorldHistory": "Verden har ingen historie ennå. Spill noen kampanjer, så dukker alle tiders store navn opp her.",
   "recordsPlayToWriteHistory": "Spill noen kamper for å begynne å skrive historien til {nation}.",
   "tacticsLineGk": "MV",

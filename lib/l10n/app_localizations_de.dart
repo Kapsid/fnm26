@@ -837,6 +837,9 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'All-Time-Elf';
+
+  @override
   String get recordsNoWorldHistory =>
       'Die Welt hat noch keine Geschichte. Spielen Sie einige Kampagnen, dann erscheinen hier die Größen aller Zeiten.';
 

@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Nepodařilo se načíst bilanci.\n{error}",
   "recordsNoLegends": "Zatím žádné legendy. Odehrajte několik kampaní a objeví se zde velikáni týmu {nation}.",
   "recordsGreatestSide": "Nejlepší sestava, jakou kdy {nation} mohl postavit.",
+  "recordsAllTimeXiSubtitle": "Jedenáctka historie",
   "recordsNoWorldHistory": "Svět zatím nemá žádnou historii. Odehrajte několik kampaní a objeví se zde největší legendy.",
   "recordsPlayToWriteHistory": "Odehrajte nějaké zápasy a začněte psát historii týmu {nation}.",
   "tacticsLineGk": "BR",

@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Det gick inte att ladda rekordet.\n{error}",
   "recordsNoLegends": "Inga legender ännu. Spela ut några kampanjer så dyker de största namnen i {nation} upp här.",
   "recordsGreatestSide": "Det bästa laget {nation} någonsin kunnat ställa upp.",
+  "recordsAllTimeXiSubtitle": "Tidernas elva",
   "recordsNoWorldHistory": "Världen har ingen historia ännu. Spela ut några kampanjer så dyker de största genom tiderna upp här.",
   "recordsPlayToWriteHistory": "Spela några matcher för att börja skriva historien för {nation}.",
   "tacticsLineGk": "MV",

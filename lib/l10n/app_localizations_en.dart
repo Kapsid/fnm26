@@ -824,6 +824,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'All-time XI';
+
+  @override
   String get recordsNoWorldHistory =>
       'The world has no history yet. Play out some campaigns and the all-time greats will appear here.';
 

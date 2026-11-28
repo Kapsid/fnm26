@@ -217,6 +217,7 @@
   "recordsCouldNotLoadRecord": "Impossible de charger le bilan.\n{error}",
   "recordsNoLegends": "Pas encore de légendes. Disputez quelques campagnes et les grands noms de la sélection {nation} apparaîtront ici.",
   "recordsGreatestSide": "La meilleure équipe que la sélection {nation} puisse aligner.",
+  "recordsAllTimeXiSubtitle": "Onze de légende",
   "recordsNoWorldHistory": "Le monde n’a pas encore d’histoire. Disputez quelques campagnes et les légendes apparaîtront ici.",
   "recordsPlayToWriteHistory": "Sélection {nation} : jouez quelques matchs pour commencer à écrire son histoire.",
   "tacticsLineGk": "G",

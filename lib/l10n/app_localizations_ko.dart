@@ -744,6 +744,9 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => '역대 베스트 11';
+
+  @override
   String get recordsNoWorldHistory =>
       '세계에 아직 역사가 없습니다. 몇 차례 대회 주기를 치르면 역대 최고의 선수들이 이곳에 나타납니다.';
 

@@ -830,6 +830,9 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get recordsAllTimeXiSubtitle => 'Onze de légende';
+
+  @override
   String get recordsNoWorldHistory =>
       'Le monde n’a pas encore d’histoire. Disputez quelques campagnes et les légendes apparaîtront ici.';
 
