@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 /// The database editor's copy is in every language.
 ///
 /// Every editor key (and the few keys the editor added elsewhere) exists in
-/// all 29 ARBs with a non-empty value. Some strings are rightly the same as
+/// all 30 ARBs with a non-empty value. Some strings are rightly the same as
 /// the English ("Editor", "GK", a Filipino loanword), so instead of banning
 /// that, a language may match the English on at most a fifth of them: more
 /// than that means a column was left untranslated.
@@ -37,8 +37,8 @@ void main() {
         f.uri.pathSegments.last.replaceAll('app_', '').replaceAll('.arb', ''),
   ]..remove('en');
 
-  test('there are 29 languages and the editor has copy', () {
-    expect(codes.length + 1, 29);
+  test('there are 30 languages and the editor has copy', () {
+    expect(codes.length + 1, 30);
     expect(keys.length, greaterThan(150));
   });
 
