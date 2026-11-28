@@ -246,8 +246,16 @@ class MatchScoreboard extends StatelessWidget {
   /// in the pitch's corner.
   final Widget? viewSwitch;
 
+  // A scoreboard: home left, away right in every language.
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Directionality(
+    textDirection: TextDirection.ltr,
+
+    child: _buildLtr(context),
+  );
+
+  Widget _buildLtr(BuildContext context) {
     final sideFlex = wholeNames ? 3 : 1;
     final scoreFlex = wholeNames ? 2 : 1;
     final viewSwitch = this.viewSwitch;
@@ -364,14 +372,14 @@ class MatchScoreboard extends StatelessWidget {
                       Expanded(
                         child: _ScoreFigure(
                           '$homeScore',
-                          alignment: Alignment.centerRight,
+                          alignment: AlignmentDirectional.centerEnd,
                         ),
                       ),
                       const _ScoreFigure(' : '),
                       Expanded(
                         child: _ScoreFigure(
                           '$awayScore',
-                          alignment: Alignment.centerLeft,
+                          alignment: AlignmentDirectional.centerStart,
                         ),
                       ),
                     ],
@@ -451,7 +459,7 @@ class MatchScoreboard extends StatelessWidget {
           : Stack(
               children: [
                 card,
-                Positioned(top: 0, right: 0, child: viewSwitch),
+                PositionedDirectional(top: 0, end: 0, child: viewSwitch),
               ],
             ),
     );

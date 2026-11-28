@@ -20,6 +20,7 @@ abstract final class AppTheme {
       colorScheme: scheme,
       scaffoldBackgroundColor: scheme.surface,
       fontFamily: AppFonts.sans,
+      fontFamilyFallback: AppFonts.fallback,
       textTheme: AppTypography.textTheme,
       extensions: const [RatingBandColors.dark],
       dividerTheme: DividerThemeData(

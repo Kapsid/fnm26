@@ -904,7 +904,7 @@ class _OpponentTitle extends StatelessWidget {
       if (nickname case final nick?)
         Flexible(
           child: Padding(
-            padding: const EdgeInsets.only(left: 6),
+            padding: const EdgeInsetsDirectional.only(start: 6),
             child: Text(
               '“$nick”',
               maxLines: 1,
@@ -1212,7 +1212,7 @@ class _XiRow extends StatelessWidget {
           ),
           if (penalised)
             Padding(
-              padding: const EdgeInsets.only(left: 2),
+              padding: const EdgeInsetsDirectional.only(start: 2),
               child: Text(
                 '→$effective',
                 style: AppTypography.labelSmall.copyWith(

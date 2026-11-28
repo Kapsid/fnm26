@@ -51,6 +51,7 @@ const _locales = [
   'ms',
   'sr',
   'ru',
+  'ar',
 ];
 
 void main() {

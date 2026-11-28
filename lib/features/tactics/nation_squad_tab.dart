@@ -449,7 +449,7 @@ class _Chip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(right: 4),
+    padding: const EdgeInsetsDirectional.only(end: 4),
     child: GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -485,7 +485,7 @@ class _ChipDivider extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     width: 1,
     height: 16,
-    margin: const EdgeInsets.only(right: 4, left: 2),
+    margin: const EdgeInsetsDirectional.only(end: 4, start: 2),
     color: AppColors.outlineVariant,
   );
 }
@@ -588,7 +588,7 @@ class _PlayerRow extends StatelessWidget {
                       // manager scans this list for.
                       if (row.starting)
                         const Padding(
-                          padding: EdgeInsets.only(right: 4),
+                          padding: EdgeInsetsDirectional.only(end: 4),
                           child: Icon(
                             Icons.star_rounded,
                             size: 13,
@@ -597,7 +597,7 @@ class _PlayerRow extends StatelessWidget {
                         )
                       else if (row.calledUp)
                         const Padding(
-                          padding: EdgeInsets.only(right: 4),
+                          padding: EdgeInsetsDirectional.only(end: 4),
                           child: Icon(
                             Icons.check_circle,
                             size: 12,

@@ -92,8 +92,16 @@ class _TournamentBracketState extends State<TournamentBracket> {
   /// Null until the first build works out where the tournament is.
   int? _round;
 
+  // A bracket runs from the first round to the final, left to right.
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Directionality(
+    textDirection: TextDirection.ltr,
+
+    child: _buildLtr(context),
+  );
+
+  Widget _buildLtr(BuildContext context) {
     final l = AppLocalizations.of(context);
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),

@@ -441,9 +441,9 @@ class CampaignSquare extends StatelessWidget {
             child: Stack(
               children: [
                 if (best != null)
-                  Positioned(
+                  PositionedDirectional(
                     top: 9,
-                    right: 9,
+                    end: 9,
                     child: CampaignEarnedStars(
                       key: CampaignTile.starsKey,
                       best: best,

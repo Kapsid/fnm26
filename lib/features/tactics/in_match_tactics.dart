@@ -2010,7 +2010,7 @@ class _SquadTabs extends StatelessWidget {
         // ran 213 to 304 and the ON THE PITCH chip 148 to 304, on top of each
         // other. On a 393-wide phone the second tab was simply cut off. That
         // is what "no tabs, overflowing" looked like.
-        Align(alignment: Alignment.centerRight, child: trailing),
+        Align(alignment: AlignmentDirectional.centerEnd, child: trailing),
         const SizedBox(height: AppSpacing.xs),
         // A third of the row each, and a label too long for its third SHRINKS
         // rather than being clipped or scrolled out of reach. All three tabs
@@ -2189,8 +2189,8 @@ class _OnPitchRow extends StatelessWidget {
           color: selected ? AppColors.surfaceContainerHighest : null,
           // The same active bar a selected data-list row wears everywhere
           // else, so "this is the man I am taking off" needs no explaining.
-          border: Border(
-            left: BorderSide(
+          border: BorderDirectional(
+            start: BorderSide(
               color: selected ? AppColors.activeBar : Colors.transparent,
               width: 3,
             ),

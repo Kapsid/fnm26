@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/bidi.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
@@ -250,7 +251,7 @@ class _FactorRow extends StatelessWidget {
           ],
           const SizedBox(width: AppSpacing.sm),
           Text(
-            signed(factor.delta),
+            BidiRun.ltr(context, signed(factor.delta)),
             style: AppTypography.labelMedium.copyWith(color: colour),
           ),
         ],

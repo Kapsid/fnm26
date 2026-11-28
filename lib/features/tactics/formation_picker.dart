@@ -79,8 +79,16 @@ class FormationField extends StatelessWidget {
     if (picked != null) onSelected(picked);
   }
 
+  // A formation diagram is a small pitch: never mirrored.
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Directionality(
+    textDirection: TextDirection.ltr,
+
+    child: _buildLtr(context),
+  );
+
+  Widget _buildLtr(BuildContext context) {
     final l = AppLocalizations.of(context);
     return AppCard(
       onTap: () => _open(context),

@@ -27,6 +27,7 @@ import 'package:fnm/domain/services/nation/nation_names_pt.dart';
 import 'package:fnm/domain/services/nation/nation_names_ro.dart';
 import 'package:fnm/domain/services/nation/nation_names_sr.dart';
 import 'package:fnm/domain/services/nation/nation_names_ru.dart';
+import 'package:fnm/domain/services/nation/nation_names_ar.dart';
 import 'package:fnm/domain/services/nation/nation_names_sv.dart';
 import 'package:fnm/domain/services/nation/nation_names_th.dart';
 import 'package:fnm/domain/services/nation/nation_names_tr.dart';
@@ -79,6 +80,7 @@ void main() {
     'ms': nationNamesMs,
     'sr': nationNamesSr,
     'ru': nationNamesRu,
+    'ar': nationNamesAr,
   };
 
   for (final MapEntry(key: language, value: table) in tables.entries) {

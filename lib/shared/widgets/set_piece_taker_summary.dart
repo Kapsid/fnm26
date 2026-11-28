@@ -166,7 +166,7 @@ class _QuickPickButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: AlignmentDirectional.centerStart,
       child: Material(
         color: Colors.transparent,
         borderRadius: AppRadii.mdAll,

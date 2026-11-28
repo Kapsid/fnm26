@@ -256,9 +256,11 @@ class WholeText extends StatelessWidget {
   /// whatever did not say otherwise, so a short name in a list row floated
   /// into the middle of its column while the flag and the icon beside it
   /// stayed put — the row read as broken, and only for the SHORT names.
-  Alignment get _alignment => switch (textAlign) {
-    TextAlign.right || TextAlign.end => Alignment.centerRight,
+  AlignmentGeometry get _alignment => switch (textAlign) {
+    TextAlign.right => Alignment.centerRight,
+    TextAlign.left => Alignment.centerLeft,
+    TextAlign.end => AlignmentDirectional.centerEnd,
     TextAlign.center => Alignment.center,
-    _ => Alignment.centerLeft,
+    _ => AlignmentDirectional.centerStart,
   };
 }

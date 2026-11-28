@@ -574,7 +574,7 @@ class _EveryChange extends StatelessWidget {
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
     return AppCard(
-      padding: const EdgeInsets.fromLTRB(
+      padding: const EdgeInsetsDirectional.fromSTEB(
         AppSpacing.md,
         AppSpacing.xs,
         AppSpacing.xs,
@@ -739,7 +739,7 @@ class _SectionHeader extends StatelessWidget {
           borderRadius: AppRadii.mdAll,
           onTap: onFold,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(
+            padding: const EdgeInsetsDirectional.fromSTEB(
               AppSpacing.sm,
               AppSpacing.xs,
               AppSpacing.xs,
@@ -842,7 +842,7 @@ class _ItemCard extends StatelessWidget {
         border: conflict
             ? Border.all(color: AppColors.warning.withValues(alpha: 0.6))
             : null,
-        padding: const EdgeInsets.fromLTRB(
+        padding: const EdgeInsetsDirectional.fromSTEB(
           AppSpacing.xs,
           AppSpacing.sm,
           AppSpacing.md,

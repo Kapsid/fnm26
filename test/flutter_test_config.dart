@@ -23,6 +23,14 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
   TestWidgetsFlutterBinding.ensureInitialized();
   await _loadFont('Hanken Grotesk', 'assets/fonts/HankenGrotesk-Variable.ttf');
   await _loadFont('JetBrains Mono', 'assets/fonts/JetBrainsMono-Variable.ttf');
+  // Arabic, the theme's fontFamilyFallback: without it an `ar` screen in a
+  // test is a row of boxes.
+  for (final weight in ['Regular', 'SemiBold', 'ExtraBold']) {
+    await _loadFont(
+      'Noto Sans Arabic',
+      'assets/fonts/NotoSansArabic-$weight.ttf',
+    );
+  }
   await testMain();
 }
 

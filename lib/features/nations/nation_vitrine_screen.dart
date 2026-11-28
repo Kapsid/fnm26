@@ -41,7 +41,7 @@ import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 
 part 'nation_vitrine_tabs.dart';
 part 'nation_vitrine_tablet_layout.dart';
@@ -265,8 +265,8 @@ class _FoldingHeaderScrollState extends State<_FoldingHeaderScroll> {
         final measured = _headerH != null && _barH != null && _tabsH != null;
         return Stack(
           children: [
-            Positioned(
-              left: 0,
+            PositionedDirectional(
+              start: 0,
               top: 0,
               width: width,
               child: Offstage(
@@ -306,7 +306,7 @@ class _FoldingHeaderScrollState extends State<_FoldingHeaderScroll> {
                     ),
                   ),
                   SliverPadding(
-                    padding: EdgeInsets.fromLTRB(
+                    padding: EdgeInsetsDirectional.fromSTEB(
                       widget.padding.left,
                       0,
                       widget.padding.right,
@@ -364,7 +364,10 @@ class _FoldingHeaderDelegate extends SliverPersistentHeaderDelegate {
     return ColoredBox(
       color: background,
       child: Padding(
-        padding: EdgeInsets.only(left: padding.left, right: padding.right),
+        padding: EdgeInsetsDirectional.only(
+          start: padding.left,
+          end: padding.right,
+        ),
         child: Column(
           children: [
             SizedBox(
@@ -521,7 +524,7 @@ class _HeaderCard extends StatelessWidget {
           if (d.isPlayerNation) ...[
             const SizedBox(height: AppSpacing.sm),
             Align(
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerStart,
               child: TacticalChip(l.nationsYourTeam, emphasized: true),
             ),
           ],
@@ -1072,7 +1075,10 @@ class _RankingHistoryCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.xs),
+          // The line above is drawn oldest year on the left, in every
+          // language, so its year axis is too.
           Row(
+            textDirection: TextDirection.ltr,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(

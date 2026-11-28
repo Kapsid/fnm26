@@ -158,7 +158,7 @@ class PlayerMatchMarks extends StatelessWidget {
       icon,
       if (n > 1)
         Padding(
-          padding: const EdgeInsets.only(left: 1),
+          padding: const EdgeInsetsDirectional.only(start: 1),
           child: Text(
             '$n',
             maxLines: 1,
@@ -253,7 +253,7 @@ class NameWithMarks extends StatelessWidget {
             constraints: BoxConstraints(maxWidth: c.maxWidth * maxShare),
             child: FittedBox(
               fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerStart,
               child: m,
             ),
           ),

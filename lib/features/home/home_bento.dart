@@ -516,7 +516,7 @@ class _NewGameTile extends StatelessWidget {
             children: [
               FittedBox(
                 fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
+                alignment: AlignmentDirectional.centerStart,
                 child: Text(
                   title,
                   maxLines: 1,
@@ -573,7 +573,7 @@ class _MenuTile extends StatelessWidget {
             // rather than losing its end.
             child: FittedBox(
               fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerStart,
               child: Text(
                 label,
                 maxLines: 1,

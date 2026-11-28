@@ -376,7 +376,7 @@ class _TrophyGrid extends StatelessWidget {
     return CustomScrollView(
       slivers: [
         SliverPadding(
-          padding: EdgeInsets.fromLTRB(
+          padding: EdgeInsetsDirectional.fromSTEB(
             horizontalChips ? 0 : padding.left,
             padding.top,
             horizontalChips ? 0 : padding.right,
@@ -394,7 +394,7 @@ class _TrophyGrid extends StatelessWidget {
           ),
         ),
         SliverPadding(
-          padding: EdgeInsets.fromLTRB(
+          padding: EdgeInsetsDirectional.fromSTEB(
             padding.left,
             0,
             padding.right,
@@ -423,7 +423,7 @@ class _TrophyGrid extends StatelessWidget {
           ),
         ),
         SliverPadding(
-          padding: EdgeInsets.fromLTRB(
+          padding: EdgeInsetsDirectional.fromSTEB(
             padding.left,
             0,
             padding.right,
@@ -517,9 +517,9 @@ class _TrophyTile extends StatelessWidget {
                     child: _TrophyPicture(trophy: trophy, keyed: true),
                   ),
                 ),
-                Positioned(
+                PositionedDirectional(
                   top: 0,
-                  right: 0,
+                  end: 0,
                   child: _RectangleCheck(
                     png: trophy.png,
                     child: Tooltip(

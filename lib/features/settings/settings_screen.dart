@@ -56,7 +56,7 @@ Future<void> _pickLanguage(
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(
+              padding: const EdgeInsetsDirectional.fromSTEB(
                 AppSpacing.lg,
                 AppSpacing.sm,
                 AppSpacing.xs,

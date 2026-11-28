@@ -132,7 +132,9 @@ class GroundCard extends StatelessWidget {
               line,
               const SizedBox(height: AppSpacing.xs),
               Padding(
-                padding: const EdgeInsets.only(left: 16 + AppSpacing.sm),
+                padding: const EdgeInsetsDirectional.only(
+                  start: 16 + AppSpacing.sm,
+                ),
                 child: Wrap(
                   spacing: AppSpacing.xs,
                   runSpacing: AppSpacing.xs,

@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/config/languages.dart';
 import 'package:fnm/data/classic/classic_world.dart';
 
 /// The licence audit of Classic Cups: no trademark of the tournament's
@@ -47,6 +48,9 @@ void main() {
     'ฟุตบอลโลก',
     'világkupa',
     'vm-cup',
+    'كأس العالم',
+    'مونديال',
+    'فيفا',
     'mascot',
     '™',
     '®',
@@ -90,7 +94,7 @@ void main() {
   test('the new copy in every language says World Championship, never '
       'the trademark', () {
     final arbs = files('lib/l10n', '.arb');
-    expect(arbs, hasLength(30));
+    expect(arbs, hasLength(supportedLanguageCodes.length));
     for (final f in arbs) {
       final lang = f.path.split('app_').last.replaceAll('.arb', '');
       final arb = (jsonDecode(f.readAsStringSync()) as Map)

@@ -85,10 +85,10 @@ class _HubSimulatingOverlayState extends ConsumerState<HubSimulatingOverlay> {
     return Stack(
       children: [
         widget.child,
-        Positioned(
+        PositionedDirectional(
           top: widget.top + AppSpacing.sm,
-          left: AppSpacing.md,
-          right: AppSpacing.md,
+          start: AppSpacing.md,
+          end: AppSpacing.md,
           child: IgnorePointer(
             child: SafeArea(
               bottom: false,

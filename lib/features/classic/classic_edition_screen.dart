@@ -95,7 +95,7 @@ class _EditionBody extends ConsumerWidget {
             children: [
               for (final h in edition.hosts)
                 Padding(
-                  padding: const EdgeInsets.only(right: AppSpacing.xs),
+                  padding: const EdgeInsetsDirectional.only(end: AppSpacing.xs),
                   child: ClassicFlag(classicCode(world, h), width: 30),
                 ),
               const SizedBox(width: AppSpacing.xs),
@@ -335,7 +335,7 @@ class _GroupCard extends StatelessWidget {
                     ),
                     if (wonWith.contains(id))
                       const Padding(
-                        padding: EdgeInsets.only(right: AppSpacing.xs),
+                        padding: EdgeInsetsDirectional.only(end: AppSpacing.xs),
                         child: Icon(
                           Icons.emoji_events_rounded,
                           size: 16,
@@ -508,7 +508,7 @@ class _NationSheetState extends ConsumerState<_NationSheet> {
                   const Spacer(),
                   for (final m in medals)
                     Padding(
-                      padding: const EdgeInsets.only(left: 4),
+                      padding: const EdgeInsetsDirectional.only(start: 4),
                       child: ClassicMedalIcon(
                         icon: m,
                         earned: true,

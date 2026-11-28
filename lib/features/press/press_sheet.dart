@@ -9,6 +9,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/core/util/bidi.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/domain/services/press/conference.dart';
@@ -790,7 +791,7 @@ class PressEffectTile extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
-            signed(value),
+            BidiRun.ltr(context, signed(value)),
             style: AppTypography.titleMedium.copyWith(
               fontSize: 20,
               fontWeight: FontWeight.w700,

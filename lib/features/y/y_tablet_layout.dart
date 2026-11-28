@@ -170,7 +170,7 @@ class _SidePanel extends StatelessWidget {
           Container(
             height: 34,
             color: AppColors.surfaceContainer,
-            padding: const EdgeInsets.only(left: 12),
+            padding: const EdgeInsetsDirectional.only(start: 12),
             child: Row(
               children: [
                 Expanded(

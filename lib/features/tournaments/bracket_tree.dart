@@ -92,8 +92,16 @@ class BracketTree extends StatelessWidget {
     return f.homeScore! >= f.awayScore! ? f.homeNationId : f.awayNationId;
   }
 
+  // A bracket runs from the first round to the final, left to right.
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Directionality(
+    textDirection: TextDirection.ltr,
+
+    child: _buildLtr(context),
+  );
+
+  Widget _buildLtr(BuildContext context) {
     final most = columns.fold<int>(1, (m, c) => math.max(m, c.length));
     // Never shorter than the trophy, its flag and its name.
     final body = math.max(most * slot, 112.0);

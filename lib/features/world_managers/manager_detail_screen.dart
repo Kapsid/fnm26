@@ -19,6 +19,7 @@ import 'package:fnm/features/world_managers/manager_row.dart';
 import 'package:fnm/features/world_managers/world_manager_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
+import 'package:fnm/shared/widgets/directional_icons.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -545,7 +546,7 @@ class _SpellRow extends StatelessWidget {
             ),
           ),
           Icon(
-            isMove ? Icons.east_rounded : Icons.circle,
+            isMove ? DirectionalIcons.onward : Icons.circle,
             size: isMove ? 14 : 8,
             color: isMove
                 ? AppColors.onSurfaceVariant

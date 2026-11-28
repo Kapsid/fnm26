@@ -571,7 +571,7 @@ class _PackCard extends StatelessWidget {
     return AppCard(
       key: EditorListScreen.editKey(pack.id),
       onTap: readable ? onEdit : null,
-      padding: const EdgeInsets.fromLTRB(
+      padding: const EdgeInsetsDirectional.fromSTEB(
         AppSpacing.md,
         AppSpacing.md,
         AppSpacing.xs,

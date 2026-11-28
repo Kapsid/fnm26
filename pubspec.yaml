@@ -142,3 +142,14 @@ flutter:
     - family: JetBrains Mono
       fonts:
         - asset: assets/fonts/JetBrainsMono-Variable.ttf
+    # Arabic: neither font above has a single Arabic glyph. Static instances
+    # (OFL, licence in assets/fonts/NotoSansArabic-OFL.txt), used only as a
+    # fontFamilyFallback (AppFonts.fallback), so Latin text never changes.
+    - family: Noto Sans Arabic
+      fonts:
+        - asset: assets/fonts/NotoSansArabic-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/NotoSansArabic-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/NotoSansArabic-ExtraBold.ttf
+          weight: 800

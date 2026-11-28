@@ -812,7 +812,9 @@ class _Stage extends StatelessWidget {
                           children: [
                             for (final id in groupMembers)
                               Padding(
-                                padding: const EdgeInsets.only(right: 3),
+                                padding: const EdgeInsetsDirectional.only(
+                                  end: 3,
+                                ),
                                 child: DrawFlag(
                                   code(id),
                                   size: 18,
@@ -893,8 +895,8 @@ class _GroupCard extends StatelessWidget {
           ? const BoxDecoration(
               color: AppColors.secondaryContainer,
               borderRadius: AppRadii.smAll,
-              border: Border(
-                left: BorderSide(color: AppColors.primary, width: 3),
+              border: BorderDirectional(
+                start: BorderSide(color: AppColors.primary, width: 3),
               ),
             )
           : null,
@@ -937,7 +939,7 @@ class _EmptySlot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: AlignmentDirectional.centerStart,
       child: Container(
         width: 18,
         height: 18,
@@ -1020,7 +1022,7 @@ class PathSeedFlags extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Align(
-    alignment: Alignment.centerLeft,
+    alignment: AlignmentDirectional.centerStart,
     child: FittedBox(
       fit: BoxFit.scaleDown,
       child: Row(

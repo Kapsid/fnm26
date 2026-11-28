@@ -1194,9 +1194,9 @@ class _ClubPickerState extends State<_ClubPicker> {
     return ListTile(
       key: PlayerEditForm.clubOptionKey(o.club, country: o.country),
       dense: grouped,
-      contentPadding: EdgeInsets.only(
-        left: grouped ? AppSpacing.xl : AppSpacing.md,
-        right: AppSpacing.md,
+      contentPadding: EdgeInsetsDirectional.only(
+        start: grouped ? AppSpacing.xl : AppSpacing.md,
+        end: AppSpacing.md,
       ),
       leading: grouped
           ? null

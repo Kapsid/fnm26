@@ -25,6 +25,7 @@ import 'package:fnm/domain/services/nation/nation_names_pt.dart';
 import 'package:fnm/domain/services/nation/nation_names_ro.dart';
 import 'package:fnm/domain/services/nation/nation_names_sr.dart';
 import 'package:fnm/domain/services/nation/nation_names_ru.dart';
+import 'package:fnm/domain/services/nation/nation_names_ar.dart';
 import 'package:fnm/domain/services/nation/nation_names_sv.dart';
 import 'package:fnm/domain/services/nation/nation_names_th.dart';
 import 'package:fnm/domain/services/nation/nation_names_tr.dart';
@@ -576,6 +577,7 @@ abstract final class NationNames {
       'ms' => nationNamesMs,
       'sr' => nationNamesSr,
       'ru' => nationNamesRu,
+      'ar' => nationNamesAr,
       _ => null,
     };
     return table?[key] ?? enByCode[key] ?? seedName;

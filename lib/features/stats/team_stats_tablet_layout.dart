@@ -403,7 +403,7 @@ class _RatingsGrid extends StatelessWidget {
                 numeric: true,
                 sortKey: (r) => r.meanRating,
                 cell: (r) => Align(
-                  alignment: Alignment.centerRight,
+                  alignment: AlignmentDirectional.centerEnd,
                   child: RatingBadge(r.meanRating, compact: true, decimals: 2),
                 ),
               ),

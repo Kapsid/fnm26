@@ -357,9 +357,9 @@ class _TimelineRow extends StatelessWidget {
       ),
     );
     return Padding(
-      padding: EdgeInsets.only(
-        left: alignEnd ? 0 : AppSpacing.sm,
-        right: alignEnd ? AppSpacing.sm : 0,
+      padding: EdgeInsetsDirectional.only(
+        start: alignEnd ? 0 : AppSpacing.sm,
+        end: alignEnd ? AppSpacing.sm : 0,
       ),
       child: Row(
         mainAxisAlignment: alignEnd
@@ -1196,7 +1196,7 @@ class MatchLineups extends StatelessWidget {
         FittedBox(
           key: ValueKey(('markersUnder', p.id)),
           fit: BoxFit.scaleDown,
-          alignment: Alignment.centerLeft,
+          alignment: AlignmentDirectional.centerStart,
           child: marks,
         ),
     ],
@@ -1275,8 +1275,16 @@ class _MomentumBar extends StatelessWidget {
   static const _duration = Duration(milliseconds: 450);
   static const Curve _curve = Curves.easeOutCubic;
 
+  // Home pushes from the left, as on the scoreboard above it.
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Directionality(
+    textDirection: TextDirection.ltr,
+
+    child: _buildLtr(context),
+  );
+
+  Widget _buildLtr(BuildContext context) {
     final l = AppLocalizations.of(context);
     final h = (homePercent / 100).clamp(0.0, 1.0);
     final homePct = homePercent.round();
@@ -1343,7 +1351,7 @@ class _MomentumBar extends StatelessWidget {
                       duration: _duration,
                       curve: _curve,
                       widthFactor: h,
-                      alignment: Alignment.centerLeft,
+                      alignment: AlignmentDirectional.centerStart,
                       child: DecoratedBox(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
@@ -1764,7 +1772,7 @@ class HalfTimePrompt extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: AlignmentDirectional.centerStart,
                   child: Text(
                     l10n.teamTalkHeading,
                     style: AppTypography.labelSmall.copyWith(
@@ -2271,7 +2279,7 @@ class _PitchCommentaryLineState extends State<PitchCommentaryLine> {
       height: kPitchCommentaryHeight,
       color: AppColors.surfaceContainerLow,
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.marginMobile),
-      alignment: Alignment.centerLeft,
+      alignment: AlignmentDirectional.centerStart,
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 220),
         child: Text(
@@ -2833,8 +2841,8 @@ class MissedPenaltyMark extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          Positioned(
-            left: 0,
+          PositionedDirectional(
+            start: 0,
             top: 1,
             child: Icon(
               Icons.sports_soccer,
@@ -2842,8 +2850,8 @@ class MissedPenaltyMark extends StatelessWidget {
               color: AppColors.onSurfaceVariant,
             ),
           ),
-          Positioned(
-            right: 0,
+          PositionedDirectional(
+            end: 0,
             bottom: 0,
             child: DecoratedBox(
               decoration: BoxDecoration(

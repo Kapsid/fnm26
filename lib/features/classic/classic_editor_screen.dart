@@ -159,7 +159,7 @@ class ClassicEditorScreen extends ConsumerWidget {
 }
 
 const Widget _editedMark = Padding(
-  padding: EdgeInsets.only(right: AppSpacing.xs),
+  padding: EdgeInsetsDirectional.only(end: AppSpacing.xs),
   child: Icon(Icons.edit_rounded, size: 14, color: AppColors.primary),
 );
 
@@ -692,9 +692,9 @@ class _PlayerSheetState extends State<_PlayerSheet> {
         _position != PlayerPosition.gk;
     final error = AppTypography.labelSmall.copyWith(color: AppColors.error);
     return Padding(
-      padding: EdgeInsets.only(
-        left: AppSpacing.marginMobile,
-        right: AppSpacing.marginMobile,
+      padding: EdgeInsetsDirectional.only(
+        start: AppSpacing.marginMobile,
+        end: AppSpacing.marginMobile,
         top: AppSpacing.md,
         bottom: MediaQuery.viewInsetsOf(context).bottom + AppSpacing.md,
       ),
@@ -993,9 +993,9 @@ class _StadiumSheetState extends State<_StadiumSheet> {
     final format = NumberFormat.decimalPattern(l.localeName);
     final error = AppTypography.labelSmall.copyWith(color: AppColors.error);
     return Padding(
-      padding: EdgeInsets.only(
-        left: AppSpacing.marginMobile,
-        right: AppSpacing.marginMobile,
+      padding: EdgeInsetsDirectional.only(
+        start: AppSpacing.marginMobile,
+        end: AppSpacing.marginMobile,
         top: AppSpacing.md,
         bottom: MediaQuery.viewInsetsOf(context).bottom + AppSpacing.md,
       ),

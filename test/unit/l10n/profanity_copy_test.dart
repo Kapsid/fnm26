@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/config/languages.dart';
 
 /// The two strings the profanity filter shows: in every language the game
 /// speaks, translated (not the English left in), with the name placeholder
@@ -15,8 +16,8 @@ void main() {
             jsonDecode(f.readAsStringSync()) as Map<String, Object?>,
   };
 
-  test('all 30 languages have both strings', () {
-    expect(arbs.length, 30);
+  test('every language has both strings', () {
+    expect(arbs.length, supportedLanguageCodes.length);
     for (final MapEntry(key: lang, value: arb) in arbs.entries) {
       for (final k in keys) {
         final v = arb[k];

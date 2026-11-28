@@ -109,7 +109,7 @@ class _ResultsTabletLayout extends ConsumerWidget {
     return Panel(
       title: section.key,
       action: Padding(
-        padding: const EdgeInsets.only(left: AppSpacing.sm),
+        padding: const EdgeInsetsDirectional.only(start: AppSpacing.sm),
         child: Text(
           '${section.current.length + section.older.length}',
           style: TabletText.barMeta,
@@ -258,7 +258,7 @@ class _TabletResultRow extends StatelessWidget {
           Expanded(
             flex: 2,
             child: Align(
-              alignment: Alignment.centerRight,
+              alignment: AlignmentDirectional.centerEnd,
               child: NationTap(
                 careerId: careerId,
                 nationId: f.homeNationId,
@@ -291,7 +291,7 @@ class _TabletResultRow extends StatelessWidget {
           Expanded(
             flex: 2,
             child: Align(
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerStart,
               child: NationTap(
                 careerId: careerId,
                 nationId: f.awayNationId,

@@ -61,8 +61,16 @@ class ShotMapView extends StatelessWidget {
 
   static const Key viewKey = Key('match.shotMap');
 
+  // The shot map is the pitch: never mirrored.
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Directionality(
+    textDirection: TextDirection.ltr,
+
+    child: _buildLtr(context),
+  );
+
+  Widget _buildLtr(BuildContext context) {
     final l = AppLocalizations.of(context);
     final home = [
       for (final s in shots)

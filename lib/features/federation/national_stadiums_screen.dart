@@ -891,7 +891,7 @@ class _StadiumCard extends StatelessWidget {
                   const SizedBox(width: AppSpacing.xs),
                   for (var i = 0; i < NationalStadiums.maxLevel; i++)
                     Padding(
-                      padding: const EdgeInsets.only(left: 2),
+                      padding: const EdgeInsetsDirectional.only(start: 2),
                       child: Icon(
                         i < s.level
                             ? Icons.star_rounded

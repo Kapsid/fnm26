@@ -185,7 +185,7 @@ class _PickLine extends StatelessWidget {
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Align(
-              alignment: Alignment.centerRight,
+              alignment: AlignmentDirectional.centerEnd,
               child: nation == null
                   ? Text(
                       l.friendliesFree,

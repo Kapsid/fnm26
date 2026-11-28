@@ -8,6 +8,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/bidi.dart';
 import 'package:fnm/core/util/career_label.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/features/career/career_summary_providers.dart';
@@ -216,7 +217,10 @@ class _RecordCard extends StatelessWidget {
           ),
           _stat(l.careerStatGoalsForShort, '${s.goalsFor}'),
           _stat(l.careerStatGoalsAgainstShort, '${s.goalsAgainst}'),
-          _stat(l.careerStatGoalDiffShort, '${gd >= 0 ? '+' : ''}$gd'),
+          _stat(
+            l.careerStatGoalDiffShort,
+            BidiRun.ltr(context, '${gd >= 0 ? '+' : ''}$gd'),
+          ),
         ],
       ),
     );

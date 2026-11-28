@@ -39,6 +39,7 @@ const List<String> supportedLanguageCodes = [
   'ms',
   'sr',
   'ru',
+  'ar',
 ];
 
 /// Each language in its own tongue, never translated: a manager who has landed
@@ -74,4 +75,5 @@ const Map<String, String> languageEndonyms = {
   'ms': 'Bahasa Melayu',
   'sr': 'Српски',
   'ru': 'Русский',
+  'ar': 'العربية',
 };

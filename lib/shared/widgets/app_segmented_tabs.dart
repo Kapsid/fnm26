@@ -187,7 +187,7 @@ class AppSegmentedControl extends StatefulWidget {
 
   /// Space around the strip; inside the scroll view when it scrolls, so the
   /// segments run to the edge as they pass.
-  final EdgeInsets padding;
+  final EdgeInsetsGeometry padding;
 
   /// The selected segment's fill; the silver one when null.
   final Color? selectedColor;
@@ -398,7 +398,7 @@ class AppSegmentedTabs extends StatelessWidget {
 
   final List<SegmentTab> tabs;
   final TabController? controller;
-  final EdgeInsets padding;
+  final EdgeInsetsGeometry padding;
   final Color? selectedColor;
 
   /// The strip's usual inset: the page gutter at the sides.

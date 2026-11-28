@@ -29,7 +29,7 @@ GridColumn<T> activeGridColumn<T>({
   cell: (r) => isActive(r)
       ? const FittedBox(
           fit: BoxFit.scaleDown,
-          alignment: Alignment.centerLeft,
+          alignment: AlignmentDirectional.centerStart,
           child: ActiveBadge(),
         )
       : const SizedBox.shrink(),

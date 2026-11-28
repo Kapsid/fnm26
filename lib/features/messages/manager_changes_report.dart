@@ -10,6 +10,7 @@ import 'package:fnm/domain/entities/world_manager.dart';
 import 'package:fnm/features/messages/paged_report.dart';
 import 'package:fnm/features/world_managers/manager_row.dart' show spellEndText;
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/widgets/directional_icons.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
 /// One national team's change in the manager changes report.
@@ -251,7 +252,9 @@ class _ChangeRow extends StatelessWidget {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.only(left: _flag + AppSpacing.sm),
+            padding: const EdgeInsetsDirectional.only(
+              start: _flag + AppSpacing.sm,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -264,7 +267,7 @@ class _ChangeRow extends StatelessWidget {
                           horizontal: AppSpacing.xs,
                         ),
                         child: Icon(
-                          Icons.east_rounded,
+                          DirectionalIcons.onward,
                           size: 13,
                           color: AppColors.onSurfaceVariant,
                         ),

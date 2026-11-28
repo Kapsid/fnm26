@@ -806,7 +806,7 @@ class _NameList extends StatelessWidget {
     Widget rows(List<NameEntry> entries) => SliverList.builder(
       itemCount: entries.length,
       itemBuilder: (context, i) => Padding(
-        padding: EdgeInsets.fromLTRB(
+        padding: EdgeInsetsDirectional.fromSTEB(
           padding.left,
           0,
           padding.right,
@@ -838,7 +838,12 @@ class _NameList extends StatelessWidget {
       slivers: [
         if (note != null)
           SliverPadding(
-            padding: EdgeInsets.fromLTRB(padding.left, 0, padding.right, 0),
+            padding: EdgeInsetsDirectional.fromSTEB(
+              padding.left,
+              0,
+              padding.right,
+              0,
+            ),
             sliver: SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.only(bottom: AppSpacing.sm),

@@ -15,6 +15,15 @@ abstract final class AppFonts {
 
   /// Monospace for technical read-outs (stats, timers, positions).
   static const mono = 'JetBrains Mono';
+
+  /// Drawn where neither face above has the glyph: Arabic, the one script
+  /// the platform fallback cannot be trusted with (an older Android draws it
+  /// unshaped in a few fonts, and a widget test has no platform fonts at
+  /// all). Latin text never reaches it.
+  static const arabic = 'Noto Sans Arabic';
+
+  /// The `fontFamilyFallback` of every style the app builds.
+  static const fallback = <String>[arabic];
 }
 
 /// "Pro Pitch Executive" type scale.
@@ -25,6 +34,7 @@ abstract final class AppFonts {
 abstract final class AppTypography {
   static const displayLarge = TextStyle(
     fontFamily: AppFonts.sans,
+    fontFamilyFallback: AppFonts.fallback,
     fontSize: 48,
     fontWeight: FontWeight.w800,
     height: 56 / 48,
@@ -33,6 +43,7 @@ abstract final class AppTypography {
 
   static const headlineLarge = TextStyle(
     fontFamily: AppFonts.sans,
+    fontFamilyFallback: AppFonts.fallback,
     fontSize: 32,
     fontWeight: FontWeight.w700,
     height: 40 / 32,
@@ -41,6 +52,7 @@ abstract final class AppTypography {
   /// Mobile-tuned variant of [headlineLarge] (smaller, for narrow screens).
   static const headlineLargeMobile = TextStyle(
     fontFamily: AppFonts.sans,
+    fontFamilyFallback: AppFonts.fallback,
     fontSize: 28,
     fontWeight: FontWeight.w700,
     height: 36 / 28,
@@ -48,6 +60,7 @@ abstract final class AppTypography {
 
   static const headlineMedium = TextStyle(
     fontFamily: AppFonts.sans,
+    fontFamilyFallback: AppFonts.fallback,
     fontSize: 24,
     fontWeight: FontWeight.w600,
     height: 32 / 24,
@@ -55,6 +68,7 @@ abstract final class AppTypography {
 
   static const titleMedium = TextStyle(
     fontFamily: AppFonts.sans,
+    fontFamilyFallback: AppFonts.fallback,
     fontSize: 18,
     fontWeight: FontWeight.w600,
     height: 24 / 18,
@@ -62,6 +76,7 @@ abstract final class AppTypography {
 
   static const bodyLarge = TextStyle(
     fontFamily: AppFonts.sans,
+    fontFamilyFallback: AppFonts.fallback,
     fontSize: 18,
     fontWeight: FontWeight.w400,
     height: 28 / 18,
@@ -69,6 +84,7 @@ abstract final class AppTypography {
 
   static const bodyMedium = TextStyle(
     fontFamily: AppFonts.sans,
+    fontFamilyFallback: AppFonts.fallback,
     fontSize: 16,
     fontWeight: FontWeight.w400,
     height: 24 / 16,
@@ -76,6 +92,7 @@ abstract final class AppTypography {
 
   static const bodySmall = TextStyle(
     fontFamily: AppFonts.sans,
+    fontFamilyFallback: AppFonts.fallback,
     fontSize: 13,
     fontWeight: FontWeight.w400,
     height: 18 / 13,
@@ -84,6 +101,7 @@ abstract final class AppTypography {
   /// Monospace "tactical read-out" label (positions, stat values, timers).
   static const labelMedium = TextStyle(
     fontFamily: AppFonts.mono,
+    fontFamilyFallback: AppFonts.fallback,
     fontSize: 14,
     fontWeight: FontWeight.w500,
     height: 20 / 14,
@@ -93,6 +111,7 @@ abstract final class AppTypography {
   /// Button text — sans, semibold, slightly tracked for a "machined" feel.
   static const labelLarge = TextStyle(
     fontFamily: AppFonts.sans,
+    fontFamilyFallback: AppFonts.fallback,
     fontSize: 16,
     fontWeight: FontWeight.w600,
     height: 20 / 16,
@@ -102,6 +121,7 @@ abstract final class AppTypography {
   /// Small monospace label (e.g. compact chips).
   static const labelSmall = TextStyle(
     fontFamily: AppFonts.mono,
+    fontFamilyFallback: AppFonts.fallback,
     fontSize: 12,
     fontWeight: FontWeight.w500,
     height: 16 / 12,

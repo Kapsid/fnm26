@@ -8,6 +8,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/bidi.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -449,8 +450,12 @@ class _Record extends ConsumerWidget {
                   _statRow(l.recordsGoalsLabel, '${h.goalsA}', '${h.goalsB}'),
                   _statRow(
                     l.recordsBiggestWin,
-                    h.biggestWinMarginA == 0 ? '—' : '+${h.biggestWinMarginA}',
-                    h.biggestWinMarginB == 0 ? '—' : '+${h.biggestWinMarginB}',
+                    h.biggestWinMarginA == 0
+                        ? '—'
+                        : BidiRun.ltr(context, '+${h.biggestWinMarginA}'),
+                    h.biggestWinMarginB == 0
+                        ? '—'
+                        : BidiRun.ltr(context, '+${h.biggestWinMarginB}'),
                   ),
                 ],
               ),

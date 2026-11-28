@@ -2913,9 +2913,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               // (A phone only: the tablet's Summary column has the day's
               // scores in view, and there a fresh goal lights its score.)
               if (_elsewhere case final g? when !ft && !_atInterval && !tablet)
-                Positioned(
-                  left: AppSpacing.marginMobile,
-                  right: AppSpacing.marginMobile,
+                PositionedDirectional(
+                  start: AppSpacing.marginMobile,
+                  end: AppSpacing.marginMobile,
                   bottom: AppSpacing.sm,
                   child: Center(
                     child: ConstrainedBox(
@@ -3046,10 +3046,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                       // score, unless a goal's is out.
                       // (The tablet's TV has it on its header's strip.)
                       if (red != null && _goalFlash == null && !tablet)
-                        Positioned(
+                        PositionedDirectional(
                           top: 0,
-                          left: AppSpacing.marginMobile + AppSpacing.sm,
-                          right: AppSpacing.marginMobile + AppSpacing.sm,
+                          start: AppSpacing.marginMobile + AppSpacing.sm,
+                          end: AppSpacing.marginMobile + AppSpacing.sm,
                           child: _RedCardBanner(
                             key: ValueKey(('red', red.minute, red.playerId)),
                             event: red,
@@ -3080,9 +3080,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                                   awayColor: awayC,
                                 ),
                               ),
-                              Positioned(
+                              PositionedDirectional(
                                 top: 0,
-                                right: 0,
+                                end: 0,
                                 child: IconButton(
                                   tooltip: l.assistantClose,
                                   icon: const Icon(Icons.close_rounded),

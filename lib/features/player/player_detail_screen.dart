@@ -654,8 +654,8 @@ class _AttributeBars extends StatelessWidget {
           TableRow(
             children: [
               Padding(
-                padding: const EdgeInsets.only(
-                  right: AppSpacing.md,
+                padding: const EdgeInsetsDirectional.only(
+                  end: AppSpacing.md,
                   top: 5,
                   bottom: 5,
                 ),
@@ -663,7 +663,7 @@ class _AttributeBars extends StatelessWidget {
               ),
               ProfileBar(fraction: ((r.$2 - 20) / 75).clamp(0.04, 1.0)),
               Padding(
-                padding: const EdgeInsets.only(left: AppSpacing.sm),
+                padding: const EdgeInsetsDirectional.only(start: AppSpacing.sm),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
                     minWidth: MediaQuery.textScalerOf(context).scale(26),
@@ -1368,7 +1368,7 @@ class PlayerTraitGlyphs extends StatelessWidget {
           () {
             final (icon, label, _, positive) = _describe(l, t);
             return Padding(
-              padding: const EdgeInsets.only(left: 3),
+              padding: const EdgeInsetsDirectional.only(start: 3),
               child: Tooltip(
                 message: label,
                 child: Icon(

@@ -92,7 +92,7 @@ class _GrievanceSheetState extends ConsumerState<GrievanceSheet> {
                   side: const BorderSide(color: AppColors.outlineVariant),
                 ),
                 child: Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: AlignmentDirectional.centerStart,
                   child: Text(grievanceToneLabel(l, tone)),
                 ),
               ),

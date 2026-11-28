@@ -219,7 +219,7 @@ class _AchievementCard extends StatelessWidget {
           ),
           if (earned)
             const Padding(
-              padding: EdgeInsets.only(left: AppSpacing.sm),
+              padding: EdgeInsetsDirectional.only(start: AppSpacing.sm),
               child: Icon(
                 Icons.check_circle,
                 color: AppColors.positive,

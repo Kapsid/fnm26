@@ -511,9 +511,9 @@ class _NationTile extends StatelessWidget {
             ),
             child: Stack(
               children: [
-                Positioned(
+                PositionedDirectional(
                   top: 8,
-                  left: 9,
+                  start: 9,
                   child: Text(
                     '#${nation.ranking}',
                     style: TabletText.cellNumeric.copyWith(
@@ -523,9 +523,9 @@ class _NationTile extends StatelessWidget {
                   ),
                 ),
                 if (s != null)
-                  Positioned(
+                  PositionedDirectional(
                     top: 10,
-                    right: 9,
+                    end: 9,
                     child: StrengthMeter(tier: s.tier),
                   ),
                 Positioned.fill(

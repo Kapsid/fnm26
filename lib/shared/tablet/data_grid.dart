@@ -437,8 +437,8 @@ class _DataGridState<T> extends State<DataGrid<T>> {
                             c,
                             Align(
                               alignment: c.numeric
-                                  ? Alignment.centerRight
-                                  : Alignment.centerLeft,
+                                  ? AlignmentDirectional.centerEnd
+                                  : AlignmentDirectional.centerStart,
                               child: DefaultTextStyle.merge(
                                 style: c.numeric
                                     ? TabletText.cellNumeric
@@ -467,7 +467,7 @@ class _DataGridState<T> extends State<DataGrid<T>> {
   Widget _cellBox(GridColumn<T> c, Widget child) {
     final padded = c.gapBefore > 0
         ? Padding(
-            padding: EdgeInsets.only(left: c.gapBefore),
+            padding: EdgeInsetsDirectional.only(start: c.gapBefore),
             child: child,
           )
         : child;

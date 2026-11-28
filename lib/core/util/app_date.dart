@@ -50,8 +50,20 @@ abstract final class AppDate {
   /// time this is asked.
   static String _locale(BuildContext context) {
     final code = Localizations.maybeLocaleOf(context)?.languageCode;
+    westernDigits();
     return supportedLanguageCodes.contains(code) ? code! : 'en';
   }
+
+  /// Arabic is written with Western digits (0-9) everywhere in the app, as
+  /// every other figure it prints is; CLDR's Arabic dates otherwise come out
+  /// in Arabic-Indic digits (٢٠٢٦), the one place they would.
+  static void westernDigits() {
+    if (_westernDigits) return;
+    _westernDigits = true;
+    DateFormat.useNativeDigitsByDefaultFor('ar', false);
+  }
+
+  static bool _westernDigits = false;
 
   /// Formats [date] with the pattern the language wants: Czech's, or the English one
   /// for every other language (`intl` supplies the localized month and day

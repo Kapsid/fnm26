@@ -200,7 +200,12 @@ class _TeamRecordTable extends StatelessWidget {
           TableRow(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(0, 5, AppSpacing.md, 5),
+                padding: const EdgeInsetsDirectional.fromSTEB(
+                  0,
+                  5,
+                  AppSpacing.md,
+                  5,
+                ),
                 child: Text(
                   label.capsIn(l.localeName),
                   maxLines: 2,
@@ -211,7 +216,7 @@ class _TeamRecordTable extends StatelessWidget {
               ),
               if (flags)
                 Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: AlignmentDirectional.centerStart,
                   child: code == null
                       ? const SizedBox.shrink()
                       : FlagDisc(code, size: 18),

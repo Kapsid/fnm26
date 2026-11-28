@@ -148,8 +148,16 @@ class MatchShareCard extends StatelessWidget {
   final MatchShareData data;
   final ShareFormat format;
 
+  // A shared result is a scoreboard: home left, away right.
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Directionality(
+    textDirection: TextDirection.ltr,
+
+    child: _buildLtr(context),
+  );
+
+  Widget _buildLtr(BuildContext context) {
     final story = format.isStory;
     final accent = data.plateTheme?.accent ?? AppColors.primary;
     return ShareCanvas(

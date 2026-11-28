@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/bidi.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/data/data_providers.dart';
@@ -245,14 +246,18 @@ class _AfcGroupTable extends StatelessWidget {
                 return Container(
                   key: ValueKey('afcTable.${s.nationId}'),
                   decoration: BoxDecoration(
-                    border: Border(
-                      left: BorderSide(
+                    border: BorderDirectional(
+                      start: BorderSide(
                         color: zone ?? Colors.transparent,
                         width: 3,
                       ),
                     ),
                   ),
-                  padding: const EdgeInsets.only(top: 2, bottom: 2, left: 4),
+                  padding: const EdgeInsetsDirectional.only(
+                    top: 2,
+                    bottom: 2,
+                    start: 4,
+                  ),
                   child: Row(
                     children: [
                       SizedBox(
@@ -279,9 +284,12 @@ class _AfcGroupTable extends StatelessWidget {
                       ),
                       num('${s.played}', style),
                       num(
-                        s.goalDifference > 0
-                            ? '+${s.goalDifference}'
-                            : '${s.goalDifference}',
+                        BidiRun.ltr(
+                          context,
+                          s.goalDifference > 0
+                              ? '+${s.goalDifference}'
+                              : '${s.goalDifference}',
+                        ),
                         style,
                       ),
                       num('${s.points}', style),

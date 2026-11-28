@@ -210,7 +210,7 @@ class _ManagersBodyState extends ConsumerState<ManagersBody>
 
   Widget _chip(String label, bool active, VoidCallback onTap, {Key? key}) {
     return Padding(
-      padding: const EdgeInsets.only(right: AppSpacing.sm),
+      padding: const EdgeInsetsDirectional.only(end: AppSpacing.sm),
       child: ChoiceChip(
         key: key,
         label: Text(label),

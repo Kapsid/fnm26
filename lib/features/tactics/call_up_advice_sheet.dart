@@ -692,7 +692,7 @@ class _AdviceRow extends StatelessWidget {
     );
     final lead = SizedBox(
       width: _leadWidth,
-      child: Align(alignment: Alignment.centerLeft, child: leading),
+      child: Align(alignment: AlignmentDirectional.centerStart, child: leading),
     );
     // A slot as wide as the widest rating at the reader's text size, so the
     // names line up down the list whatever the numbers are.

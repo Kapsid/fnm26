@@ -630,8 +630,8 @@ class _Groups extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: isPlayer ? AppColors.surfaceContainerHigh : null,
-        border: Border(
-          left: BorderSide(
+        border: BorderDirectional(
+          start: BorderSide(
             color: accent ?? Colors.transparent,
             width: 3,
           ),
@@ -840,8 +840,8 @@ class _ContFinalsGroupsState extends State<_ContFinalsGroups> {
     return Container(
       decoration: BoxDecoration(
         color: isPlayer ? AppColors.surfaceContainerHigh : null,
-        border: Border(
-          left: BorderSide(color: accent ?? Colors.transparent, width: 3),
+        border: BorderDirectional(
+          start: BorderSide(color: accent ?? Colors.transparent, width: 3),
         ),
       ),
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 4),

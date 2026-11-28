@@ -283,7 +283,7 @@ class _RegionFilter extends StatelessWidget {
             ),
             for (final c in Confederation.values)
               Padding(
-                padding: const EdgeInsets.only(left: AppSpacing.sm),
+                padding: const EdgeInsetsDirectional.only(start: AppSpacing.sm),
                 child: _chip(
                   context,
                   confederationLabel(l, c).capsIn(l.localeName),
@@ -539,11 +539,11 @@ class RankRow extends StatelessWidget {
     const corner = Radius.circular(AppRadii.base);
     // One visible colour on every side drawn, so a rounded slice can carry a
     // border whose top or foot is simply absent.
-    final border = Border(
+    final border = BorderDirectional(
       top: first ? edge : BorderSide.none,
       bottom: last ? edge : BorderSide.none,
-      left: edge,
-      right: edge,
+      start: edge,
+      end: edge,
     );
     final radius = BorderRadius.vertical(
       top: first ? corner : Radius.zero,
@@ -567,16 +567,16 @@ class RankRow extends StatelessWidget {
         child: Stack(
           children: [
             if (!first)
-              const Positioned(
-                left: 0,
-                right: 0,
+              const PositionedDirectional(
+                start: 0,
+                end: 0,
                 top: 0,
                 height: 1,
                 child: ColoredBox(color: AppColors.surfaceContainerHighest),
               ),
             if (isPlayer)
-              const Positioned(
-                left: 0,
+              const PositionedDirectional(
+                start: 0,
                 top: 0,
                 bottom: 0,
                 width: 3,
@@ -596,7 +596,7 @@ class RankRow extends StatelessWidget {
                     width: MediaQuery.textScalerOf(context).scale(30),
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
+                      alignment: AlignmentDirectional.centerStart,
                       child: Text('$rank', maxLines: 1, style: nameStyle),
                     ),
                   ),

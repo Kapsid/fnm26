@@ -12,6 +12,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/core/util/bidi.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/federation_label.dart';
@@ -786,7 +787,9 @@ class _Upcoming extends StatelessWidget {
                   minHeight: AppSpacing.minHitArea,
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(left: AppSpacing.sm),
+                  padding: const EdgeInsetsDirectional.only(
+                    start: AppSpacing.sm,
+                  ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -872,7 +875,7 @@ class HubHeader extends StatelessWidget {
                   // flag rather than as an overflow anyone can see.
                   Flexible(
                     child: Text(
-                      '$managerName · $date',
+                      '${BidiRun.name(context, managerName)} · $date',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTypography.bodySmall.copyWith(
@@ -1132,8 +1135,8 @@ class _GroupTable extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: isPlayer ? AppColors.surfaceContainerHigh : null,
-        border: Border(
-          left: BorderSide(
+        border: BorderDirectional(
+          start: BorderSide(
             color: zoneColor ?? Colors.transparent,
             width: 3,
           ),
@@ -1200,7 +1203,7 @@ class _GroupTable extends StatelessWidget {
       color: AppColors.onSurfaceVariant,
     );
     return Padding(
-      padding: const EdgeInsets.only(left: 7),
+      padding: const EdgeInsetsDirectional.only(start: 7),
       child: Row(
         children: [
           SizedBox(width: 20, child: Text(a, style: style)),

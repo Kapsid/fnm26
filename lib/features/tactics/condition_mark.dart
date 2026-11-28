@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/bidi.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
@@ -86,7 +87,7 @@ class ConditionMark extends StatelessWidget {
               ),
             if (d != 0)
               Text(
-                signedDelta(d),
+                BidiRun.ltr(context, signedDelta(d)),
                 style: AppTypography.labelSmall.copyWith(
                   color: d > 0 ? AppColors.positive : AppColors.error,
                   fontWeight: FontWeight.w800,
@@ -169,7 +170,10 @@ class LineupConditionStrip extends StatelessWidget {
             child: Row(
               children: [
                 for (final c in chips)
-                  Padding(padding: const EdgeInsets.only(right: 6), child: c),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(end: 6),
+                    child: c,
+                  ),
               ],
             ),
           )

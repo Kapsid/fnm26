@@ -405,7 +405,7 @@ class _StatTile extends StatelessWidget {
         children: [
           FittedBox(
             fit: BoxFit.scaleDown,
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             child: Text(
               label.capsIn(lang),
               maxLines: 1,
@@ -419,7 +419,7 @@ class _StatTile extends StatelessWidget {
           const SizedBox(height: AppSpacing.xs),
           FittedBox(
             fit: BoxFit.scaleDown,
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             child: Text(
               value,
               maxLines: 1,
@@ -432,7 +432,7 @@ class _StatTile extends StatelessWidget {
           const SizedBox(height: AppSpacing.xs),
           FittedBox(
             fit: BoxFit.scaleDown,
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             child: Text(
               detail,
               maxLines: 1,
