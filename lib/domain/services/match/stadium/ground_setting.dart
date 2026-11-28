@@ -65,20 +65,22 @@ enum GroundSetting {
     final scale = GroundScale.of(capacity);
     final roll = varietySeed('setting:$code:$stadium') % 1000 / 1000;
     final island = CityGeography.isIsland(code);
-    if (island && scale == GroundScale.old) return smallIsland;
+    // A rare look, kept rare (owner: most grounds should be ordinary
+    // bowls; a stand short and water behind a goal only now and then).
+    if (island && scale == GroundScale.old && roll < 0.35) return smallIsland;
     final mountainous =
         confederation == Confederation.southAmerica ||
         mountainNations.contains(code);
-    if (altitude >= highFrom && roll < 0.7) return hillside;
+    if (altitude >= highFrom && roll < 0.2) return hillside;
     if (features.contains(CityFeature.mountains) &&
         mountainous &&
-        roll < 0.45) {
+        roll < 0.1) {
       return hillside;
     }
     if (features.contains(CityFeature.coast) &&
         scale != GroundScale.old &&
-        capacity < 45000) {
-      final share = island || seafaring.contains(code) ? 0.55 : 0.2;
+        capacity < 30000) {
+      final share = island || seafaring.contains(code) ? 0.1 : 0.04;
       if (roll < share) return seaside;
     }
     return standard;

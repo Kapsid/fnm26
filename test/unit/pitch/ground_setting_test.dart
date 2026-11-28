@@ -57,21 +57,19 @@ void main() {
   const coast = {CityFeature.coast};
   const mountains = {CityFeature.mountains};
 
-  test('a small island nation plays at a one-stand ground', () {
+  test('a small island nation now and then plays at a one-stand ground', () {
     expect(CityGeography.isIsland('MLT'), isTrue);
     expect(CityGeography.isIsland('FRA'), isFalse);
+    // Rare by design (1.1.4 owner tuning): about a third of an island's
+    // small grounds, never the rule.
     expect(
-      _setting('MLT', 3000, features: coast),
-      GroundSetting.smallIsland,
-    );
-    expect(
-      _setting('LCA', 6000, features: coast),
-      GroundSetting.smallIsland,
+      _share(GroundSetting.smallIsland, 'MLT', 3000, features: coast),
+      inInclusiveRange(0.25, 0.45),
     );
     // A bigger island ground is no small island's.
     expect(
-      _setting('MLT', 17000, features: coast),
-      isNot(GroundSetting.smallIsland),
+      _share(GroundSetting.smallIsland, 'MLT', 17000, features: coast),
+      0,
     );
   });
 
@@ -84,11 +82,11 @@ void main() {
         altitude: 3640,
         conf: Confederation.southAmerica,
       ),
-      inInclusiveRange(0.6, 0.8),
+      inInclusiveRange(0.12, 0.28),
     );
     expect(
       _share(GroundSetting.hillside, 'SUI', 20000, features: mountains),
-      inInclusiveRange(0.35, 0.55),
+      inInclusiveRange(0.04, 0.16),
     );
     // Flat country, or mountains near a city of a country whose grounds
     // stand on the flat: never.
@@ -112,8 +110,9 @@ void main() {
       15000,
       features: coast,
     );
-    expect(nordic, inInclusiveRange(0.45, 0.65));
-    expect(other, inInclusiveRange(0.12, 0.3));
+    // Rare (1.1.4 owner tuning): most coastal grounds are ordinary bowls.
+    expect(nordic, inInclusiveRange(0.05, 0.16));
+    expect(other, inInclusiveRange(0.01, 0.08));
     // Inland, or a giant bowl: never.
     expect(_share(GroundSetting.seaside, 'NOR', 15000), 0);
     expect(
