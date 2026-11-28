@@ -29,11 +29,16 @@ int _window(List<_R> rs, {double minnow = 0}) {
 /// ("my win versus Sweden (6-2 at home) saw my job security go down 1%").
 void main() {
   test('a narrow win that pushes an old upset win out never lowers it', () {
+    // Three old upsets fading out together: one +5 leaves the window while
+    // the other two slide a place further down the fade (see
+    // BoardSatisfaction.fadeOf), more than the plain win brings in. A single
+    // upset leaving no longer drops the bare window at all, since only its
+    // last quarter goes in that step.
     final before = [
-      _r(MatchOutcome.win, underdog: true), // +5, about to drop out
-      for (var i = 0; i < 9; i++) _r(MatchOutcome.draw),
+      for (var i = 0; i < 3; i++) _r(MatchOutcome.win, underdog: true), // +5s
+      for (var i = 0; i < 7; i++) _r(MatchOutcome.draw),
     ];
-    final after = [...before, _r(MatchOutcome.win)]; // +2 in, +5 out
+    final after = [...before, _r(MatchOutcome.win)]; // +2 in, +5s fade
     expect(
       _window(after),
       lessThan(_window(before)),
