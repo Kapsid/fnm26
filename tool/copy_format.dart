@@ -43,6 +43,7 @@ const List<String> kColumns = [
   'th',
   'ms',
   'sr',
+  'ru',
   'ar',
 ];
 
@@ -77,6 +78,7 @@ const List<String> kLanguages = [
   'th',
   'ms',
   'sr',
+  'ru',
   'ar',
 ];
 

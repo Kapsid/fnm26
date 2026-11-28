@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Every page is listed once per language, and each entry names ALL 29
+<!-- Every page is listed once per language, and each entry names ALL 31
      language versions plus x-default (English), which is what tells a search
      engine they are the same page rather than duplicates of each other.
      Generated; see README.md. -->
@@ -15,7 +15,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -31,6 +32,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -49,7 +51,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -65,6 +68,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -83,7 +87,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -99,6 +104,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -117,7 +123,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -133,6 +140,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -151,7 +159,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -167,6 +176,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -185,7 +195,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -201,6 +212,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -219,7 +231,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -235,6 +248,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -253,7 +267,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -269,6 +284,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -287,7 +303,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -303,6 +320,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -321,7 +339,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -337,6 +356,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -355,7 +375,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -371,6 +392,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -389,7 +411,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -405,6 +428,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -423,7 +447,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -439,6 +464,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -457,7 +483,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -473,6 +500,43 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
+    <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://footballnationsmanager.com/tr/"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://footballnationsmanager.com/uk/"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://footballnationsmanager.com/vi/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://footballnationsmanager.com/"/>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://footballnationsmanager.com/ru/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://footballnationsmanager.com/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://footballnationsmanager.com/cs/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://footballnationsmanager.com/fr/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://footballnationsmanager.com/es/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
+    <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
+    <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
+    <xhtml:link rel="alternate" hreflang="fil" href="https://footballnationsmanager.com/fil/"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://footballnationsmanager.com/hi/"/>
+    <xhtml:link rel="alternate" hreflang="hr" href="https://footballnationsmanager.com/hr/"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://footballnationsmanager.com/hu/"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://footballnationsmanager.com/id/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://footballnationsmanager.com/ja/"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://footballnationsmanager.com/ko/"/>
+    <xhtml:link rel="alternate" hreflang="ms" href="https://footballnationsmanager.com/ms/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://footballnationsmanager.com/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -491,7 +555,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -507,6 +572,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -525,7 +591,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -541,6 +608,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -559,7 +627,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -575,6 +644,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -593,7 +663,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -609,6 +680,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -627,7 +699,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -643,6 +716,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -661,7 +735,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -677,6 +752,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -695,7 +771,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -711,6 +788,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -729,7 +807,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -745,6 +824,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -763,7 +843,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -779,6 +860,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -797,7 +879,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -813,6 +896,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -831,7 +915,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -847,6 +932,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -865,7 +951,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -881,6 +968,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -899,7 +987,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -915,6 +1004,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -933,7 +1023,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -949,6 +1040,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -967,7 +1059,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
@@ -983,6 +1076,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
@@ -1001,7 +1095,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1017,6 +1112,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1035,7 +1131,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1051,6 +1148,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1069,7 +1167,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1085,6 +1184,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1103,7 +1203,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1119,6 +1220,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1137,7 +1239,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1153,6 +1256,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1171,7 +1275,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1187,6 +1292,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1205,7 +1311,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1221,6 +1328,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1239,7 +1347,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1255,6 +1364,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1273,7 +1383,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1289,6 +1400,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1307,7 +1419,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1323,6 +1436,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1341,7 +1455,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1357,6 +1472,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1375,7 +1491,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1391,6 +1508,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1409,7 +1527,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1425,6 +1544,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1443,7 +1563,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1459,6 +1580,43 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://footballnationsmanager.com/tr/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://footballnationsmanager.com/uk/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://footballnationsmanager.com/vi/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://footballnationsmanager.com/privacy.html"/>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://footballnationsmanager.com/ru/privacy.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://footballnationsmanager.com/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://footballnationsmanager.com/cs/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://footballnationsmanager.com/fr/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://footballnationsmanager.com/es/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="fil" href="https://footballnationsmanager.com/fil/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://footballnationsmanager.com/hi/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="hr" href="https://footballnationsmanager.com/hr/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://footballnationsmanager.com/hu/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://footballnationsmanager.com/id/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://footballnationsmanager.com/ja/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://footballnationsmanager.com/ko/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ms" href="https://footballnationsmanager.com/ms/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://footballnationsmanager.com/nb/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1477,7 +1635,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1493,6 +1652,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1511,7 +1671,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1527,6 +1688,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1545,7 +1707,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1561,6 +1724,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1579,7 +1743,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1595,6 +1760,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1613,7 +1779,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1629,6 +1796,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1647,7 +1815,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1663,6 +1832,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1681,7 +1851,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1697,6 +1868,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1715,7 +1887,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1731,6 +1904,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1749,7 +1923,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1765,6 +1940,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1783,7 +1959,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1799,6 +1976,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1817,7 +1995,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1833,6 +2012,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1851,7 +2031,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1867,6 +2048,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1885,7 +2067,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1901,6 +2084,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1919,7 +2103,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1935,6 +2120,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1953,7 +2139,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
@@ -1969,6 +2156,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
@@ -1987,7 +2175,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2003,6 +2192,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2021,7 +2211,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2037,6 +2228,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2055,7 +2247,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2071,6 +2264,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2089,7 +2283,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2105,6 +2300,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2123,7 +2319,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2139,6 +2336,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2157,7 +2355,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2173,6 +2372,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2191,7 +2391,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2207,6 +2408,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2225,7 +2427,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2241,6 +2444,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2259,7 +2463,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2275,6 +2480,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2293,7 +2499,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2309,6 +2516,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2327,7 +2535,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2343,6 +2552,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2361,7 +2571,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2377,6 +2588,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2395,7 +2607,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2411,6 +2624,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2429,7 +2643,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2445,6 +2660,43 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
+    <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
+    <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://footballnationsmanager.com/tr/support.html"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://footballnationsmanager.com/uk/support.html"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://footballnationsmanager.com/vi/support.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://footballnationsmanager.com/support.html"/>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://footballnationsmanager.com/ru/support.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://footballnationsmanager.com/support.html"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://footballnationsmanager.com/cs/support.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://footballnationsmanager.com/fr/support.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://footballnationsmanager.com/es/support.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
+    <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
+    <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
+    <xhtml:link rel="alternate" hreflang="fil" href="https://footballnationsmanager.com/fil/support.html"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://footballnationsmanager.com/hi/support.html"/>
+    <xhtml:link rel="alternate" hreflang="hr" href="https://footballnationsmanager.com/hr/support.html"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://footballnationsmanager.com/hu/support.html"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://footballnationsmanager.com/id/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://footballnationsmanager.com/ja/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://footballnationsmanager.com/ko/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ms" href="https://footballnationsmanager.com/ms/support.html"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://footballnationsmanager.com/nb/support.html"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2463,7 +2715,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2479,6 +2732,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2497,7 +2751,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2513,6 +2768,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2531,7 +2787,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2547,6 +2804,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2565,7 +2823,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2581,6 +2840,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2599,7 +2859,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2615,6 +2876,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2633,7 +2895,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2649,6 +2912,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2667,7 +2931,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2683,6 +2948,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2701,7 +2967,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2717,6 +2984,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2735,7 +3003,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2751,6 +3020,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2769,7 +3039,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2785,6 +3056,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2803,7 +3075,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2819,6 +3092,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2837,7 +3111,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2853,6 +3128,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2871,7 +3147,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2887,6 +3164,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2905,7 +3183,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2921,6 +3200,7 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
@@ -2939,7 +3219,8 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
     <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
     <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
@@ -2955,6 +3236,118 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
     <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
+    <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
+    <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://footballnationsmanager.com/tr/support.html"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://footballnationsmanager.com/uk/support.html"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://footballnationsmanager.com/vi/support.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://footballnationsmanager.com/support.html"/>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://footballnationsmanager.com/ar/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://footballnationsmanager.com/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://footballnationsmanager.com/cs/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://footballnationsmanager.com/fr/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://footballnationsmanager.com/es/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/"/>
+    <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/"/>
+    <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/"/>
+    <xhtml:link rel="alternate" hreflang="fil" href="https://footballnationsmanager.com/fil/"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://footballnationsmanager.com/hi/"/>
+    <xhtml:link rel="alternate" hreflang="hr" href="https://footballnationsmanager.com/hr/"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://footballnationsmanager.com/hu/"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://footballnationsmanager.com/id/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://footballnationsmanager.com/ja/"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://footballnationsmanager.com/ko/"/>
+    <xhtml:link rel="alternate" hreflang="ms" href="https://footballnationsmanager.com/ms/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://footballnationsmanager.com/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/"/>
+    <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://footballnationsmanager.com/tr/"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://footballnationsmanager.com/uk/"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://footballnationsmanager.com/vi/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://footballnationsmanager.com/"/>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://footballnationsmanager.com/ar/privacy.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://footballnationsmanager.com/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://footballnationsmanager.com/cs/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://footballnationsmanager.com/fr/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://footballnationsmanager.com/es/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/privacy.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/privacy.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="fil" href="https://footballnationsmanager.com/fil/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://footballnationsmanager.com/hi/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="hr" href="https://footballnationsmanager.com/hr/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://footballnationsmanager.com/hu/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://footballnationsmanager.com/id/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://footballnationsmanager.com/ja/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://footballnationsmanager.com/ko/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ms" href="https://footballnationsmanager.com/ms/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://footballnationsmanager.com/nb/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://footballnationsmanager.com/tr/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://footballnationsmanager.com/uk/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://footballnationsmanager.com/vi/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://footballnationsmanager.com/privacy.html"/>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://footballnationsmanager.com/ar/support.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://footballnationsmanager.com/support.html"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://footballnationsmanager.com/cs/support.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://footballnationsmanager.com/fr/support.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://footballnationsmanager.com/es/support.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://footballnationsmanager.com/de/support.html"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://footballnationsmanager.com/pt/support.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://footballnationsmanager.com/it/support.html"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://footballnationsmanager.com/ar/support.html"/>
+<xhtml:link rel="alternate" hreflang="bg" href="https://footballnationsmanager.com/bg/support.html"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://footballnationsmanager.com/da/support.html"/>
+    <xhtml:link rel="alternate" hreflang="el" href="https://footballnationsmanager.com/el/support.html"/>
+    <xhtml:link rel="alternate" hreflang="fi" href="https://footballnationsmanager.com/fi/support.html"/>
+    <xhtml:link rel="alternate" hreflang="fil" href="https://footballnationsmanager.com/fil/support.html"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://footballnationsmanager.com/hi/support.html"/>
+    <xhtml:link rel="alternate" hreflang="hr" href="https://footballnationsmanager.com/hr/support.html"/>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://footballnationsmanager.com/hu/support.html"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://footballnationsmanager.com/id/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://footballnationsmanager.com/ja/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://footballnationsmanager.com/ko/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ms" href="https://footballnationsmanager.com/ms/support.html"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://footballnationsmanager.com/nb/support.html"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://footballnationsmanager.com/nl/support.html"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://footballnationsmanager.com/pl/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://footballnationsmanager.com/ro/support.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://footballnationsmanager.com/ru/support.html"/>
     <xhtml:link rel="alternate" hreflang="sr" href="https://footballnationsmanager.com/sr/support.html"/>
     <xhtml:link rel="alternate" hreflang="sv" href="https://footballnationsmanager.com/sv/support.html"/>
     <xhtml:link rel="alternate" hreflang="th" href="https://footballnationsmanager.com/th/support.html"/>

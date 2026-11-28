@@ -26,6 +26,7 @@ import 'package:fnm/domain/services/nation/nation_names_pl.dart';
 import 'package:fnm/domain/services/nation/nation_names_pt.dart';
 import 'package:fnm/domain/services/nation/nation_names_ro.dart';
 import 'package:fnm/domain/services/nation/nation_names_sr.dart';
+import 'package:fnm/domain/services/nation/nation_names_ru.dart';
 import 'package:fnm/domain/services/nation/nation_names_ar.dart';
 import 'package:fnm/domain/services/nation/nation_names_sv.dart';
 import 'package:fnm/domain/services/nation/nation_names_th.dart';
@@ -78,6 +79,7 @@ void main() {
     'th': nationNamesTh,
     'ms': nationNamesMs,
     'sr': nationNamesSr,
+    'ru': nationNamesRu,
     'ar': nationNamesAr,
   };
 

@@ -86,6 +86,13 @@ void main() {
     );
   });
 
+  testWidgets('a Russian phone reads Russian', (tester) async {
+    final russian = await render(tester, [const Locale('ru', 'RU')]);
+
+    expect(russian.locale.languageCode, 'ru');
+    expect(russian.greeting, 'ПРЕВЬЮ МАТЧА');
+  });
+
   testWidgets('a supported language further down the device list still wins', (
     tester,
   ) async {

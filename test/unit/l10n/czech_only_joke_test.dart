@@ -109,6 +109,7 @@ void main() {
       'th',
       'ms',
       'sr',
+      'ru',
       'ar',
     ]) {
       final offenders = [
@@ -187,6 +188,7 @@ void main() {
         'th',
         'ms',
         'sr',
+        'ru',
         'ar',
       ]) {
         final c = copy(locale);

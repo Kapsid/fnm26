@@ -45,6 +45,7 @@ void main() {
       'th',
       'ms',
       'sr',
+      'ru',
       'ar',
     ])
       if (File('lib/l10n/app_$code.arb').existsSync())

@@ -38,6 +38,7 @@ const List<String> supportedLanguageCodes = [
   'th',
   'ms',
   'sr',
+  'ru',
   'ar',
 ];
 
@@ -73,5 +74,6 @@ const Map<String, String> languageEndonyms = {
   'th': 'ไทย',
   'ms': 'Bahasa Melayu',
   'sr': 'Српски',
+  'ru': 'Русский',
   'ar': 'العربية',
 };

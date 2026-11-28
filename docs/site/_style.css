@@ -534,7 +534,7 @@ footer .legal { flex-basis: 100%; margin: 0; font-size: 12px; line-height: 1.5; 
   list-style: none;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: repeat(14, auto);
+  grid-template-rows: repeat(16, auto);
   grid-auto-flow: column;
   gap: 1px 4px;
   width: min(380px, calc(100vw - 2 * var(--pad)));
@@ -582,7 +582,7 @@ footer .legal { flex-basis: 100%; margin: 0; font-size: 12px; line-height: 1.5; 
    wholly in the platform's own UI face rather than letting the browser stitch
    fallback glyphs into Hanken words, which looks like two fonts per line.
    The Latin wordmark keeps Hanken on every page. */
-:lang(el), :lang(bg), :lang(uk) {
+:lang(el), :lang(bg), :lang(uk), :lang(ru) {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans', 'Helvetica Neue', Arial, sans-serif;
 }
 :lang(hi) {
@@ -607,6 +607,52 @@ footer .legal { flex-basis: 100%; margin: 0; font-size: 12px; line-height: 1.5; 
 .hero h1 { letter-spacing: -0.015em; }
 :lang(ja) { word-break: auto-phrase; line-break: strict; }
 :lang(ko) { word-break: keep-all; }
+
+/* ---------- Arabic: the one right-to-left language ---------- */
+
+/* Platform Arabic faces vary a lot (and some Android browsers have only a
+   Naskh), so the Arabic pages carry their own Noto Sans Arabic, served from
+   this origin like Hanken (licence in fonts-license.txt). The unicode-range
+   keeps a Latin page from ever downloading it: only the menu's one Arabic
+   entry would use it there. */
+@font-face {
+  font-family: 'Noto Sans Arabic';
+  src: url('NotoSansArabic-400.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F, U+2066-2069;
+}
+@font-face {
+  font-family: 'Noto Sans Arabic';
+  src: url('NotoSansArabic-700.woff2') format('woff2');
+  font-weight: 600 800;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F, U+2066-2069;
+}
+:lang(ar) {
+  font-family: 'Noto Sans Arabic', 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, 'Geeza Pro', 'Segoe UI', Tahoma, sans-serif;
+}
+/* Tracking pulls joined Arabic letters apart; its marks want more leading. */
+:lang(ar) :is(h1, h2, h3, .claim, .device, .lang summary, .lang li) { letter-spacing: 0; }
+:lang(ar) :is(h1, h2, h3) { line-height: 1.4; }
+:lang(ar) .hero h1 { letter-spacing: -0.015em; line-height: 1.08; }
+
+/* Right to left: what is pinned to a side moves to the other one. Flex rows,
+   grids and text alignment mirror on their own; these are the absolute
+   positions and the one physical padding. */
+[dir=rtl] .doc ul { padding-left: 0; padding-inline-start: 20px; }
+[dir=rtl] .lang ul { right: auto; left: 0; }
+[dir=rtl] .lang summary { padding: 5px 10px 5px 11px; }
+[dir=rtl] .lang summary::after { margin: -3px 2px 0 0; }
+[dir=rtl] .lang details[open] summary::after { margin-top: 3px; }
+[dir=rtl] .dev-phone { right: auto; left: 0; }
+[dir=rtl] .stamp { right: auto; left: -14px; transform: rotate(-6deg); }
+[dir=rtl] .shot::after { right: auto; left: 18px; }
+[dir=rtl] .show-shots .shot::after { right: auto; left: 11px; }
+[dir=rtl] #lb .x { right: auto; left: 14px; }
+[dir=rtl] #lb .p { left: auto; right: 14px; }
+[dir=rtl] #lb .n { right: auto; left: 14px; }
+[dir=rtl] .doc .nf-list { padding-right: 0; }
 
 /* A claim too long for one line at 3.4vw wraps, balanced, instead (the
    desktop layout above already lets every claim wrap). */

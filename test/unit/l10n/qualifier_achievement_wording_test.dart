@@ -44,6 +44,7 @@ void main() {
     'th',
     'ms',
     'sr',
+    'ru',
     'ar',
   ];
   const keys = ['achQualWcDesc', 'achQualContDesc'];

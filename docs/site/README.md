@@ -12,6 +12,7 @@ page for page:
 
     index.html     cs/index.html     bg/ cs/ da/ de/ el/ es/ fi/ fil/ fr/ hi/ hr/ hu/ id/ it/
     privacy.html   cs/privacy.html   ja/ ko/ ms/ nb/ nl/ pl/ pt/ ro/ sr/ sv/ th/ tr/ uk/ vi/
+                                     ru/ ar/
     support.html   cs/support.html   (the same three files in each)
     404.html       (one, shared, every language)
 
@@ -24,7 +25,7 @@ A language with its own screenshots holds a `shots/` folder and
 without them uses the ENGLISH artwork (`../shots/`, `../hero-*.jpg`) with its
 own captions and alt text. `shots/README.md` lists which languages have their
 own set and how the sets were made (since the 28-language site, all of
-them do, except `sr/`, which still shows the English set). Only `cs/` has localised store badges;
+them do, except `sr/`, `ru/` and `ar/`, which still show the English set). Only `cs/` has localised store badges;
 every other language uses the English badges and `og-image.jpg`.
 
 ### The language menu
@@ -32,7 +33,8 @@ every other language uses the English badges and `og-image.jpg`.
 Every page carries a small pill at the top right (globe, the current
 language's own name, a chevron) that opens a menu of all 29 languages, each
 in its own name (Deutsch, 日本語, Ελληνικά ...), ordered by that name: Latin
-script first, then Greek, Cyrillic, Devanagari, Thai, Hangul and Japanese.
+script first, then Greek, Cyrillic, Arabic, Devanagari, Thai, Hangul and
+Japanese.
 The names are the app's own endonyms (`settings_screen.dart`). Every entry
 links to the SAME page in that language, not to the homepage, and the current
 one is lit and not a link.
@@ -45,11 +47,23 @@ identical on every page except for the paths and which entry is current:
 **if you add a page, add all 29 versions and give each the full menu**, or
 the menu will quietly drop somebody on the wrong page.
 
+### Right to left: Arabic
+
+`ar/` is the one right-to-left language: its pages carry `lang="ar"
+dir="rtl"`, so flex rows, grids and text alignment mirror on their own, and
+the `[dir=rtl]` block at the end of `_style.css` moves the few things pinned
+to a side (the menu's drop-down, the leaning phone, the zoom badges, the
+lightbox's arrows). The carousel's arrows swap their glyphs and its script
+scrolls the other way. Arabic is set in the self-hosted Noto Sans Arabic
+(`NotoSansArabic-400/700.woff2`, OFL), whose `unicode-range` keeps it from
+loading on any other page. The wordmark stays Latin and left to right
+(`lang="en" dir="ltr"`). Write figures with Western digits, as the app does.
+
 ### Scripts the font does not cover
 
 Hanken Grotesk covers Latin, Vietnamese included, but no Greek, Cyrillic,
 Devanagari, Thai, Japanese or Korean. `_style.css` sets those pages
-(`:lang(el)`, `bg`, `uk`, `hi`, `th`, `ja`, `ko`) wholly in the platform's
+(`:lang(el)`, `bg`, `uk`, `ru`, `hi`, `th`, `ja`, `ko`) wholly in the platform's
 UI face with a per-script fallback list, rather than letting the browser
 stitch fallback glyphs into Hanken words. The wordmark keeps Hanken and
 carries `lang="en"` (in Turkish, `text-transform: uppercase` would otherwise
@@ -118,12 +132,13 @@ Two things that go wrong with FTP in particular:
   Korean 세계 선수권, Malay Kejohanan Dunia, Norwegian Verdensmesterskapet, Dutch
   Wereldkampioenschap, Polish Mistrzostwa Świata, Romanian Campionatul Mondial,
   Swedish Världsmästerskapet, Thai ชิงแชมป์โลก, Turkish Dünya Şampiyonası,
-  Ukrainian Чемпіонат світу, Vietnamese Giải vô địch thế giới (inflected as the
+  Ukrainian Чемпіонат світу, Russian Чемпионат мира, Arabic بطولة العالم
+  (never كأس العالم or مونديال), Vietnamese Giải vô địch thế giới (inflected as the
   grammar needs).
   Never "Coupe du monde", "Copa del Mundo", "Mundial" on its own, "WM-Pokal"
   "Copa do Mundo", "Coppa del Mondo" or "Mondiali", and never the local
   "cup" word either (ワールドカップ, 월드컵, Puchar Świata, Piala Dunia,
-  ฟุตบอลโลก, Dünya Kupası, Кубок світу ...).
+  ฟุตบอลโลก, Dünya Kupası, Кубок світу, Кубок мира ...).
 - The app's `lib/l10n/app_<lang>.arb` is the authority for every other name
   the site uses, too (Illimité / Ilimitado / Unlimited / sem limites, the save
   buttons, Settings, and so on). A site that calls a thing one name and the app
@@ -132,7 +147,7 @@ Two things that go wrong with FTP in particular:
   German uses "Sie", French "vous", Spanish and Italian "tú"/"tu", matching the app.
   The register of the 21 newer languages follows their ARB too: informal
   ("you" as ti/du/sinä/te/ty/sen...) in bg, da, el, fi, fil, hr, hu, nb, nl, pl,
-  sv, tr, uk, vi; formal in hi (आप), id (Anda) and ro (dumneavoastră); polite
+  sv, tr, uk, ru, vi; formal in hi (आप), id (Anda) and ro (dumneavoastră); polite
   neutral in ja, ko, ms and th. "Unlimited" stays "Unlimited" except where the
   app translates it (el Απεριόριστο, hi अनलिमिटेड, ja 無制限版, ko 무제한, ms Tanpa Had).
 - The privacy policy is a legal text: the 28 translations say exactly what
@@ -185,7 +200,7 @@ Two things to keep in mind whenever you edit:
 - **Bump `?v=` on the stylesheet link** in every page, all 88 of them (29
   languages times three, plus the 404). `.htaccess` tells
   browsers to hold CSS for an hour, and without the bump that hour is exactly
-  how long your change stays invisible. It is at `?v=19` now.
+  how long your change stays invisible. It is at `?v=21` now.
 - **The language trees move together.** A new page needs all 29 versions,
   30 hreflang lines, a sitemap entry per language and a menu entry in
   each, and nothing here will catch a half-done set.

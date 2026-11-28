@@ -1969,7 +1969,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get hubTblP => 'ل';
 
   @override
-  String get hubTblGd => '+/-';
+  String get hubTblGd => '±';
 
   @override
   String get hubTblPts => 'ن';

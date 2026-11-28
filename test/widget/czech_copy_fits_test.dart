@@ -51,6 +51,7 @@ const _locales = [
   'th',
   'ms',
   'sr',
+  'ru',
   'ar',
 ];
 

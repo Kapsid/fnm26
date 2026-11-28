@@ -6,7 +6,7 @@ import 'package:fnm/core/config/languages.dart';
 
 /// The world-managers copy is in every language.
 ///
-/// Every key the feature added exists in all 29 ARBs, and outside English none
+/// Every key the feature added exists in all 30 ARBs, and outside English none
 /// is left as the English text. A few strings are rightly the same word in a
 /// language (a loanword, a bare placeholder pair); those are listed by
 /// language below rather than waived everywhere.
@@ -131,6 +131,7 @@ void main() {
       'ro',
       'ms',
       'sr',
+      'ru',
       'ar',
     },
   };
