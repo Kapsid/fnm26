@@ -43,6 +43,7 @@ const List<String> kColumns = [
   'th',
   'ms',
   'sr',
+  'ar',
 ];
 
 /// The language columns, in order — each is `lib/l10n/app_<code>.arb`.
@@ -76,6 +77,7 @@ const List<String> kLanguages = [
   'th',
   'ms',
   'sr',
+  'ar',
 ];
 
 /// The column index of language [code] in a row.

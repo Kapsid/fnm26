@@ -634,6 +634,7 @@ const Map<String, List<String>> profanityWords = {
   'ko': ['*씨발*', '*씨빨*', '*좆*', '*병신*', '*개새끼*'],
   'ja': ['*まんこ*', '*ちんぽ*'],
   'th': ['*เย็ด*', '*ควย*'],
+  'ar': ['شرموط*', 'قحبة', 'قحبه', 'منيوك', 'كسمك', 'عرص', 'نيك'],
 };
 
 /// Real words and names that hold a refused stem, compared after folding

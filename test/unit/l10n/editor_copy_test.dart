@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/config/languages.dart';
 
 /// The database editor's copy is in every language.
 ///
@@ -37,8 +38,8 @@ void main() {
         f.uri.pathSegments.last.replaceAll('app_', '').replaceAll('.arb', ''),
   ]..remove('en');
 
-  test('there are 29 languages and the editor has copy', () {
-    expect(codes.length + 1, 29);
+  test('every language has an ARB and the editor has copy', () {
+    expect(codes.length + 1, supportedLanguageCodes.length);
     expect(keys.length, greaterThan(150));
   });
 

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/config/languages.dart';
 
 /// The world-managers copy is in every language.
 ///
@@ -130,6 +131,7 @@ void main() {
       'ro',
       'ms',
       'sr',
+      'ar',
     },
   };
 
@@ -140,8 +142,8 @@ void main() {
         f.uri.pathSegments.last.replaceAll('app_', '').replaceAll('.arb', ''),
   ]..remove('en');
 
-  test('there are 29 languages and every key is in English', () {
-    expect(codes.length + 1, 29);
+  test('every language has an ARB and every key is in English', () {
+    expect(codes.length + 1, supportedLanguageCodes.length);
     expect([
       for (final k in keys)
         if (en[k] == null) k,

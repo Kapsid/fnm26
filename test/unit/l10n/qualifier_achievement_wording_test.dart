@@ -44,11 +44,12 @@ void main() {
     'th',
     'ms',
     'sr',
+    'ar',
   ];
   const keys = ['achQualWcDesc', 'achQualContDesc'];
   // Every locale's word for a final, a finals stage or a final tournament.
   final finalWords = RegExp(
-    'final|finál|finał|závěrečn|endrunde|eindtoernooi|eindronde|τελικ|финал|фінал|chung kết|finaali|loppukilpailu|döntő|završni|huling|pangwakas|finále|फ़ाइनल|फाइनल|決勝|本大会|본선|결승|รอบสุดท้าย|ชิงชนะเลิศ',
+    'final|finál|finał|závěrečn|endrunde|eindtoernooi|eindronde|τελικ|финал|фінал|chung kết|finaali|loppukilpailu|döntő|završni|huling|pangwakas|finále|फ़ाइनल|फाइनल|決勝|本大会|본선|결승|รอบสุดท้าย|ชิงชนะเลิศ|نهائي|نهائيات',
     caseSensitive: false,
   );
 

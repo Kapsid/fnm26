@@ -158,6 +158,7 @@ void main() {
       'fil': ['putangina', 'putang ina'],
       'hi': ['chutiya', 'madarchod', 'bhenchod'],
       'ko': ['씨발'],
+      'ar': ['شرموطة', 'قحبة', 'منيوك', 'كسمك'],
     };
     for (final MapEntry(key: language, value: words) in offensive.entries) {
       test(language, () {
