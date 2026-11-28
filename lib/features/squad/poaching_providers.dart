@@ -12,6 +12,7 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
+import 'package:fnm/domain/services/federation/naturalization_suitors.dart';
 import 'package:fnm/domain/services/nation/dormant_nations.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/player/poaching.dart';
@@ -246,6 +247,13 @@ class PoachingService {
     final store = _ref.read(internationalRetirementRepositoryProvider);
     final roll = Poaching.rollKind(career.inGameDate);
     if (await store.hasMarker(careerId, roll)) return;
+    // At most one approach a cycle. An approach made before the cycle marker
+    // existed is dated by when it was made.
+    final cycle = career.cyclePointer;
+    if (await store.hasMarker(careerId, Poaching.cycleKind(cycle)) ||
+        cases.values.any((c) => CareerService.cycleAt(c.since) == cycle)) {
+      return;
+    }
     final comp = _ref.read(competitionRepositoryProvider);
     // Nothing to tie him in: no competitive match of the manager's is
     // scheduled yet. The quarter's roll waits for one.
@@ -262,7 +270,28 @@ class PoachingService {
         career.nationId,
       ),
     );
-    if (rng.nextDouble() >= Poaching.approachChance) {
+    // Who would ask: a stronger side (see Poaching.pickRival). How keen it
+    // is scales the quarter's chance.
+    final nations = await _ref
+        .read(nationRepositoryProvider)
+        .forCareer(careerId);
+    Nation? home;
+    for (final n in nations) {
+      if (n.id == career.nationId) home = n;
+    }
+    final rival = home == null
+        ? null
+        : Poaching.pickRival(
+            home,
+            nations,
+            rng,
+            excluded: DormantNations.ids.difference(DormantNations.additions),
+          );
+    if (home == null ||
+        rival == null ||
+        rng.nextDouble() >=
+            Poaching.approachChance *
+                NaturalizationSuitors.appetite(home, rival, nations)) {
       await store.addMarkers(careerId, 0, [roll]);
       return;
     }
@@ -283,6 +312,27 @@ class PoachingService {
     final ranked = [...pool]..sort((a, b) => b.overall.compareTo(a.overall));
     final walked = await _ref.read(walkoutsProvider(careerId).future);
     final pending = await repo.pendingNaturalization(careerId);
+    // A man who has already been the subject of a naturalisation, any way
+    // and whatever came of it, is never the subject of another.
+    final offered = {
+      for (final o in await repo.naturalizationOffers(careerId)) o.playerId,
+    };
+    // He has to interest the rival: walk into its squad, or nearly.
+    final bar = Poaching.interestBar(
+      (await _ref
+              .read(playerRepositoryProvider)
+              .byNation(
+                rival.id,
+                agingYears: years,
+                saveSeed: career.rngSeed,
+                careerId: careerId,
+              ))
+          .map((p) => p.overall),
+    );
+    if (bar == null) {
+      await store.addMarkers(careerId, 0, [roll]);
+      return;
+    }
     final leaders = {
       career.captainPlayerId,
       career.viceCaptain1PlayerId,
@@ -299,7 +349,9 @@ class PoachingService {
     final candidates = <PoachCandidate>[];
     for (final p in ranked.take(Poaching.poolTop)) {
       if (p.age < PlayerLifecycle.seniorMinAge ||
+          p.overall < bar ||
           cases.containsKey(p.id) ||
+          offered.contains(p.id) ||
           walked.contains(p.id) ||
           leaders.contains(p.id) ||
           pending?.playerId == p.id) {
@@ -319,22 +371,7 @@ class PoachingService {
       if (Poaching.isTarget(c)) candidates.add(c);
     }
     final target = Poaching.pickTarget(candidates, rng);
-    final nations = await _ref
-        .read(nationRepositoryProvider)
-        .forCareer(careerId);
-    Nation? home;
-    for (final n in nations) {
-      if (n.id == career.nationId) home = n;
-    }
-    final rival = home == null
-        ? null
-        : Poaching.pickRival(
-            home,
-            nations,
-            rng,
-            excluded: DormantNations.ids.difference(DormantNations.additions),
-          );
-    if (target == null || rival == null || home == null) {
+    if (target == null) {
       await store.addMarkers(careerId, 0, [roll]);
       return;
     }
@@ -349,6 +386,7 @@ class PoachingService {
     }
     await store.addMarkers(careerId, 0, [
       roll,
+      Poaching.cycleKind(cycle),
       Poaching.openKind(target.id, rival.id, since),
     ]);
     await comp.addTextMessage(

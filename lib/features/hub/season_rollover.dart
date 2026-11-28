@@ -722,8 +722,9 @@ extension SeasonRollover on SeasonService {
   /// announced in the inbox. Most are mid-tier, still-developing players, but
   /// there is a small chance of a marquee name — and, realistically, a genuine
   /// star only ever surfaces from a strong footballing nation (a minnow simply
-  /// hasn't got one). Two hits queue: the second appears once the first is
-  /// answered.
+  /// hasn't got one). At most one offer a cycle, never twice for the same
+  /// man, and only from a side stronger than the manager's (see
+  /// `NaturalizationSuitors.offerSources`).
   /// Rolls this cycle's naturalisation offer, weighted by the naturalisation
   /// budget just allocated for it. Called from the budget-setup event, so the
   /// investment is in place when the chance is computed (a strong naturalisation
@@ -773,24 +774,44 @@ extension SeasonRollover on SeasonService {
     final career = await _careers.byId(careerId);
     if (career == null) return;
 
-    final others = nations.values.where((n) => n.id != nationId).toList()
-      ..sort((a, b) => a.ranking.compareTo(b.ranking)); // strongest first
-    if (others.isEmpty) return;
+    // At most one offer a cycle: a cycle that already had one (this roll's
+    // or an earlier build's second roll) gets no other. A player lured away
+    // by a rival is stored in the same table but is no offer TO the manager.
+    final offers = await _careers.naturalizationOffers(careerId);
+    if (offers.any(
+      (o) => o.cycle == nextCycle && !o.status.startsWith(poachedStatusPrefix),
+    )) {
+      return;
+    }
+    // Only from a stronger side (or, for a side at the very top, another top
+    // one), likelier the stronger it is; never from the bottom of the table
+    // or a dormant micro-nation (see NaturalizationSuitors.offerSources).
+    final home = nations[nationId];
+    if (home == null) return;
+    final weighted = NaturalizationSuitors.offerSources(
+      home,
+      nations.values.toList(),
+    );
+    if (weighted.isEmpty) return;
+    final stars = weighted.take(20).toList(); // strongest first
     final playerRepo = _ref.read(playerRepositoryProvider);
     final agingYears = (cycleStart.year - CareerService.cycleStart.year).clamp(
       0,
       400,
     );
 
-    // Never re-offer a player already secured; keep the two rolls distinct.
+    // Never offer a man twice, whatever came of the first offer (accepted,
+    // declined, still pending, or lured away by a rival).
     final taken = {
+      for (final o in offers) o.playerId,
       for (final l in await _careers.acceptedNaturalizations(careerId))
         l.playerId,
     };
     final pending = await _careers.pendingNaturalization(careerId);
     if (pending != null) taken.add(pending.playerId);
 
-    // Two independent rolls per cycle.
+    // Two independent rolls per cycle, as many chances as ever, but the
+    // first offer made ends the cycle's search: one offer a cycle at most.
     for (var attempt = 0; attempt < 2; attempt++) {
       final rng = SeededRng(
         career.rngSeed ^ (nextCycle * 0x4E17) ^ (attempt * 0x51ED) ^ 0x9A72,
@@ -805,10 +826,8 @@ extension SeasonRollover on SeasonService {
       // significantly better than the squad should be a lucky find.
       final marquee = rng.nextDouble() < 0.02;
       final sources = marquee
-          ? others
-                .take(20)
-                .toList() // only strong nations breed stars
-          : others;
+          ? stars // only strong nations breed stars
+          : weighted;
       final minR = marquee ? kNaturalizationStarMin : 64;
       final maxAge = marquee
           ? kNaturalizationStarMaxAge
@@ -818,7 +837,7 @@ extension SeasonRollover on SeasonService {
 
       final candidates = <Player>[];
       for (var i = 0; i < 8 && candidates.length < 12; i++) {
-        final n = sources[rng.nextInt(sources.length)];
+        final n = NaturalizationSuitors.pick(sources, rng)!;
         final pool = await playerRepo.byNation(
           n.id,
           agingYears: agingYears,
@@ -886,6 +905,7 @@ extension SeasonRollover on SeasonService {
         ]),
         year: SeasonService.finalsYear(nextCycle),
       );
+      break;
     }
   }
 }

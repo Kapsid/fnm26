@@ -378,6 +378,24 @@ class DriftCareerRepository implements CareerRepository {
   }
 
   @override
+  Future<List<NaturalizationOfferRow>> naturalizationOffers(
+    int careerId,
+  ) async {
+    final rows = await (_db.select(
+      _db.naturalizedPlayers,
+    )..where((t) => t.careerId.equals(careerId))).get();
+    return [
+      for (final r in rows)
+        (
+          playerId: r.playerId,
+          sourceNationId: r.sourceNationId,
+          cycle: r.cycle,
+          status: r.status,
+        ),
+    ];
+  }
+
+  @override
   Future<List<NaturalizationLink>> acceptedNaturalizations(
     int careerId,
   ) async {
